@@ -6,6 +6,10 @@ import { emptyBudget } from '../lib/budget.ts';
 
 const json=(body,status=200)=>Response.json(body,{status});
 const deferred=()=>{let resolve;const promise=new Promise(r=>{resolve=r;});return {promise,resolve};};
+test('the transport does not bind an injected fetch to its own instance',async()=>{
+  const sync=new BudgetSync(function(){assert.equal(this,undefined);return Promise.resolve(json({budget:null,revision:0}));});
+  assert.deepEqual(await sync.load(),{budget:null});
+});
 test('a delayed read cannot roll back a successful save or its revision',async()=>{
   const late=deferred(),writes=[];let reads=0;
   const sync=new BudgetSync(async(_url,options)=>{
@@ -53,6 +57,7 @@ test('duplicate saves and reads during a write cannot race a pending mutation',a
 });
 test('Google failures have actionable French messages and never echo callback content',()=>{
   assert.match(googleErrorMessage('access_denied'),/annulée/);
+  assert.match(googleErrorMessage('state_mismatch'),/Relancez/);
   assert.match(googleErrorMessage('account_not_linked'),/réglages/);
   assert.match(googleErrorMessage("email_doesn't_match"),/même adresse/);
   assert.equal(googleErrorMessage(null),'');

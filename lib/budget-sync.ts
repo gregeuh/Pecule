@@ -12,7 +12,10 @@ export class BudgetSync {
   private readSequence = 0;
   private writing = false;
   private request: typeof fetch;
-  constructor(request: typeof fetch = fetch) { this.request = request; }
+  constructor(request: typeof fetch = (...args) => fetch(...args)) {
+    // Never invoke Window.fetch as a method of this class (illegal receiver).
+    this.request = (...args) => request(...args);
+  }
 
   async load(): Promise<{ budget: Budget | null } | null> {
     if (this.writing) return null;
