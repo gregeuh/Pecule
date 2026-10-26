@@ -1,9 +1,9 @@
 export type Account = { id: string; name: string; bank: string; type: "current" | "savings" | "cash"; openingBalance: number; openingDate: string; color: string };
-export type Transaction = { id: string; label: string; amount: number; date: string; accountId: string; category: string; note: string; ruleId?: string; transferId?: string; goalId?: string };
-export type Rule = { id: string; label: string; amount: number; accountId: string; category: string; startDate: string; endDate: string; frequency: "monthly" | "weekly" | "yearly"; timing: "date" | "last-business-day"; day: number; active: boolean; holidays: "FR" | "none"; excludedDates: string[] };
+export type Transaction = { id: string; label: string; amount: number; date: string; accountId: string; category: string; note: string; merchantId?: string; ruleId?: string; transferId?: string; goalId?: string };
+export type Rule = { merchantId?: string; id: string; label: string; amount: number; accountId: string; category: string; startDate: string; endDate: string; frequency: "monthly" | "weekly" | "yearly"; timing: "date" | "last-business-day"; day: number; active: boolean; holidays: "FR" | "none"; excludedDates: string[] };
 export type Goal = { id: string; name: string; target: number; saved: number; monthly: number; color: string; icon: string; deadline: string };
-export type Budget = { version: 1; name: string; accounts: Account[]; transactions: Transaction[]; rules: Rule[]; goals: Goal[]; settings: { horizon: "salary" | "month"; reserve: number; holidayCalendar: "FR" | "none" } };
-export const categories = ["Alimentation", "Restaurants", "Transport", "Logement", "Abonnements", "Shopping", "Loisirs", "Santé", "Salaire", "Autres revenus", "Autres", "Virement"];
+export type Budget = { version: 1; name: string; accounts: Account[]; transactions: Transaction[]; rules: Rule[]; goals: Goal[]; settings: { horizon: "salary" | "month"; reserve: number; holidayCalendar: "FR" | "none"; spendingPlan?: { monthlyIncome: number | null; groups: Record<string, "needs" | "wants" | "savings" | "unassigned"> } } };
+export const categories = ["Alimentation", "Restaurants", "Transport", "Logement", "Abonnements", "Télécommunications", "Énergie", "Assurances", "Impôts", "Éducation", "Épargne", "Dettes", "Shopping", "Loisirs", "Santé", "Salaire", "Autres revenus", "Autres", "Virement"];
 export const colors = ["#335cff", "#a48bdb", "#edac69", "#5b9b86", "#d77992", "#5b99c1"];
 export const money = (cents: number, decimals = true) => new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: decimals ? 2 : 0, maximumFractionDigits: decimals ? 2 : 0 }).format(cents / 100);
 export const dateISO = (d: Date) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
@@ -39,7 +39,7 @@ export function occurrences(rule: Rule, from: string, to: string): Transaction[]
       if(s>=start && s<=end) dates.push(s);
     }
   }
-  return dates.filter(s=>!rule.excludedDates.includes(s)).map(s=>({id:`r:${rule.id}:${s}`,label:rule.label,amount:rule.amount,date:s,accountId:rule.accountId,category:rule.category,note:"Opération récurrente",ruleId:rule.id}));
+  return dates.filter(s=>!rule.excludedDates.includes(s)).map(s=>({id:`r:${rule.id}:${s}`,label:rule.label,amount:rule.amount,date:s,accountId:rule.accountId,category:rule.category,note:"Opération récurrente",ruleId:rule.id,...(rule.merchantId?{merchantId:rule.merchantId}:{})}));
 }
 export function materialize(budget: Budget, today = todayISO()): Budget {
   const ids=new Set(budget.transactions.map(t=>t.id));

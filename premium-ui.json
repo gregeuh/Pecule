@@ -1,12 +1,20 @@
 {
   "profile": "product-admin",
   "sourceRoots": [
-    "app/sign-in",
-    "app/sign-out"
+    "app"
   ],
   "locale": "fr-FR",
   "canonicalMap": "UX-CONTRACT.md",
   "requiredCapabilities": [
-    "Form"
-  ]
+    "Form",
+    "Select/Listbox",
+    "Date",
+    "Scrollbar",
+    "Toast",
+    "CRUD"
+  ],
+  "ownership": {
+    "Select/Listbox": "native",
+    "Date": "native"
+  }
 }

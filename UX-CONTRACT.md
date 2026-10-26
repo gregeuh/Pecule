@@ -1,14 +1,28 @@
 # Contrat de la migration Vercel
 
-Source : demande du 26 octobre 2026 de déployer la base GitHub. Les fonctions de budget restent celles du 23 octobre.
+Source : demande du 26 octobre 2026 de déployer la base GitHub. Nouvelle demande : reproduire les fonctions et l’interface visibles de la version Vercel du 26 octobre. Sources observées : interface publique, feuille CSS et bundle client publics ; pas d’archive de code serveur récupérée.
 
 | Capability | Canonical owner | Source of truth | Allowed variants | Verification |
 |---|---|---|---|---|
-| Form | app/sign-in/page.tsx, .field | UX-CONTRACT.md | sign-in / sign-up | Browser validation, keyboard, submit and error |
+| Form | app/validated-form.tsx, FormField, .field | UX-CONTRACT.md | create / edit / auth | Constraint errors in French, focus and submit |
+| Select/Listbox | native select | UX-CONTRACT.md | platform-owned popup | Keyboard and chosen value |
+| Date | native date input | UX-CONTRACT.md | platform-owned calendar | Date bounds and keyboard |
+| Scrollbar | app/reference.css | DESIGN.md | document / modal | Visible and usable |
+| Toast | BudgetApp toast | UX-CONTRACT.md | success / error | Live region |
+| CRUD | BudgetApp save and API revision check | app/api/budget/route.ts | create / edit / delete confirmation | Unit tests and demo browser workflow |
 
 
 La connexion et la création de compte aboutissent à /. La déconnexion nécessite une action explicite. Les erreurs conservent le formulaire. La démo reste accessible sans compte.
 
 Les tables pecule_git_* sont séparées des anciennes tables. Les previews utilisent pecule_preview_*. Aucun compte ou budget antérieur n’est migré automatiquement. Les mots de passe sont traités exclusivement par Better Auth.
 
-Les pages et réponses personnelles ne sont jamais mises en cache. Les contrôles, dates, sélections et calculs du budget existant ne sont pas refondus dans cette migration.
+Les pages et réponses personnelles ne sont jamais mises en cache. Les contrôles natifs de date et de sélection conservent leurs interactions système. Les formulaires partagent une validation explicite en français et bloquent les envois invalides.
+
+## Répartition 50/30/20
+La fonction lib/spending-plan.ts est la source des calculs : revenus réellement reçus et prévus du mois, ou montant manuel ; virements internes exclus ; un virement courant/épargne complet compte une fois et les retraits soustraient l’épargne. Les remboursements diminuent les catégories de dépense sans augmenter le revenu. Aucun solde initial ou réserve d’objectif ne compte comme nouvelle épargne. Les centimes des trois repères totalisent exactement le revenu. Les préférences sont incluses dans le budget validé et synchronisé.
+
+## Logos et apparence
+Les 3 470 entrées du catalogue et leurs logos sont stockés dans le dépôt. Les noms non reconnus ou ambigus conservent une icône générique. Un choix manuel de logo ou de catégorie prime sur la suggestion. Le thème est local à l’appareil et son mode automatique suit les changements système. Les mots de passe et données personnelles ne sont jamais dans ces préférences locales.
+
+## Première utilisation
+Le parcours propose comptes, salaire, charges, objectifs puis récapitulatif. Les étapes facultatives sont passables. Le budget est envoyé uniquement après validation finale et authentification. Les montants de démonstration ne sont jamais copiés dans le nouveau budget.

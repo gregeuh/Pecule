@@ -11,6 +11,9 @@ function createAuth() {
     baseURL: process.env.VERCEL_ENV === "preview" ? undefined : process.env.BETTER_AUTH_URL,
     secret: process.env.BETTER_AUTH_SECRET,
     emailAndPassword: { enabled: true, minPasswordLength: 12 },
+    socialProviders: process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET ? {
+      google: { clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET }
+    } : {},
     user: { modelName: `${tablePrefix}user` },
     session: { modelName: `${tablePrefix}session` },
     account: { modelName: `${tablePrefix}account` },
