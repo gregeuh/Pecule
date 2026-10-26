@@ -26,3 +26,6 @@ Les 3 470 entrées du catalogue et leurs logos sont stockés dans le dépôt. Le
 
 ## Première utilisation
 Le parcours propose comptes, salaire, charges, objectifs puis récapitulatif. Les étapes facultatives sont passables. Le budget est envoyé uniquement après validation finale et authentification. Les montants de démonstration ne sont jamais copiés dans le nouveau budget.
+
+## Connexion et synchronisation
+Les retours Google reviennent au formulaire ou aux réglages avec un message français connu ; aucun code d’erreur arbitraire n’est affiché. Le rattachement reste soumis à la même adresse e-mail vérifiée par Better Auth. Une réponse de chargement antérieure à une sauvegarde ne peut remplacer son résultat. Les conflits de révision refusent l’écriture et imposent un rechargement. Une session expirée propose de se reconnecter.
