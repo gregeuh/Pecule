@@ -44,7 +44,7 @@ try {
     async function home() {
       await page.getByRole('navigation', { name: mobile ? 'Navigation mobile' : 'Navigation principale' }).getByRole('button', { name: mobile ? 'Accueil' : 'Vue d’ensemble', exact: true }).click();
     }
-    const colors = [];
+    const colors = [], surfaces = [];
     for (const [tone, label, amount] of [['negative', 'Négatif', -1], ['attention', 'Attention', days * 1000 - 1], ['comfort', 'Confort', days * 1000]]) {
       if (await page.locator('input[name="reserve"]').count() === 0) await page.locator('.clarte-header-actions').getByRole('button', { name: 'Réglages', exact: true }).click();
       await page.locator('input[name="reserve"]').fill(((maximumAvailable - amount) / 100).toFixed(2));
@@ -53,16 +53,21 @@ try {
       assert.equal(await page.locator('.clarte-budget').getAttribute('data-budget-tone'), tone);
       assert.equal((await page.locator('.budget-signal').innerText()).trim(), label);
       assert.equal(cents(await page.locator('.clarte-amount').innerText()), amount);
-      const style = await page.locator('.clarte-available').evaluate(element => { const css = getComputedStyle(element); return { color: css.color, background: css.backgroundColor }; });
+      const style = await page.locator('.clarte-budget').evaluate(element => { const amount = getComputedStyle(element.querySelector('.clarte-amount')); return { color: amount.color, background: getComputedStyle(element).backgroundColor }; });
       const values = [luminance(style.color), luminance(style.background)].sort((a, b) => b - a);
       const contrast = (values[0] + .05) / (values[1] + .05);
       assert(contrast >= 4.5, `${label} must have accessible contrast.`);
-      colors.push(style.background);
+      colors.push(style.color);
+      surfaces.push(style.background);
+      const indicator = await page.locator('.budget-signal').evaluate(element => ({background:getComputedStyle(element).backgroundColor,border:getComputedStyle(element).borderTopWidth}));
+      assert.equal(indicator.background, 'rgba(0, 0, 0, 0)');
+      assert.equal(indicator.border, '0px');
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'The page must not overflow horizontally.');
       await page.locator('.clarte-budget').screenshot({ path: `${output}/${mobile ? 'mobile' : 'desktop'}-${theme}-${tone}.png` });
       report.checks.push({ mobile, theme, tone, label, contrast: Number(contrast.toFixed(2)) });
     }
-    assert.equal(new Set(colors).size, 3, 'Each status must have a distinct rendered color.');
+    assert.equal(new Set(colors).size, 3, 'Each amount must have a distinct rendered status color.');
+    assert.equal(new Set(surfaces).size, 1, 'The card must keep a neutral surface for every status.');
     await page.locator('.clarte-header-actions').getByRole('button', { name: 'Masquer les montants' }).click();
     assert.equal(await page.locator('.clarte-budget').getAttribute('data-budget-tone'), null);
     assert.equal(await page.locator('.budget-signal').count(), 0);

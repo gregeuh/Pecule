@@ -1,53 +1,60 @@
-/* Financial status surfaces. Their threshold is defined by the budget policy. */
+/* Keep the budget surface neutral; only the amount and its small label signal status. */
 :root {
-  --budget-negative-bg: #aa394e;
-  --budget-attention-bg: #984b00;
-  --budget-comfort-bg: #21634e;
-  --budget-signal-ink: #ffffff;
+  --budget-negative-ink: #aa394e;
+  --budget-attention-ink: #984b00;
+  --budget-comfort-ink: #21634e;
 }
 :root[data-theme="dark"] {
-  --budget-negative-bg: #572331;
-  --budget-attention-bg: #56340c;
-  --budget-comfort-bg: #163e31;
+  --budget-negative-ink: #ff9cae;
+  --budget-attention-ink: #ffdcac;
+  --budget-comfort-ink: #8addb4;
 }
-.clarte-budget[data-budget-tone="negative"] { --budget-signal-bg: var(--budget-negative-bg); }
-.clarte-budget[data-budget-tone="attention"] { --budget-signal-bg: var(--budget-attention-bg); }
-.clarte-budget[data-budget-tone="comfort"] { --budget-signal-bg: var(--budget-comfort-bg); }
-.clarte-dashboard .clarte-budget[data-budget-tone] {
-  background: var(--budget-signal-bg);
+.clarte-budget[data-budget-tone="negative"] { --budget-signal-ink: var(--budget-negative-ink); }
+.clarte-budget[data-budget-tone="attention"] { --budget-signal-ink: var(--budget-attention-ink); }
+.clarte-budget[data-budget-tone="comfort"] { --budget-signal-ink: var(--budget-comfort-ink); }
+.clarte-dashboard .clarte-budget {
+  background: var(--card);
+  color: var(--ink);
+  padding: 28px;
+}
+.clarte-dashboard .clarte-budget .clarte-available {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+.clarte-dashboard .clarte-budget[data-budget-tone] .clarte-amount {
   color: var(--budget-signal-ink);
 }
-.clarte-dashboard .clarte-budget[data-budget-tone] .clarte-available {
-  background: var(--budget-signal-bg);
-  color: var(--budget-signal-ink);
+.clarte-dashboard .clarte-available-title > p {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+.clarte-dashboard .clarte-available-title > .icon-button,
+.clarte-dashboard .clarte-desktop-until,
+.clarte-dashboard .clarte-daily-desktop > span,
+.clarte-dashboard .clarte-mobile-period > span,
+.clarte-dashboard .clarte-formula dt {
+  color: var(--muted);
 }
 .budget-signal {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 5px 10px;
-  margin-top: 14px;
-  min-height: 30px;
-  border: 1px solid currentColor;
-  border-radius: 8px;
-  color: inherit;
+  gap: 5px;
+  color: var(--budget-signal-ink);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.5;
 }
-.budget-signal-description {
-  margin-top: 9px;
-  font-size: 12px;
-  line-height: 1.7;
-  color: inherit;
-}
 @media (max-width: 760px) {
-  .clarte-dashboard .clarte-budget[data-budget-tone] { background: transparent; color: var(--ink); }
+  .clarte-dashboard .clarte-budget { padding: 20px; }
 }
 @media (forced-colors: active) {
-  .clarte-dashboard .clarte-budget[data-budget-tone],
-  .clarte-dashboard .clarte-budget[data-budget-tone] .clarte-available {
+  .clarte-dashboard .clarte-budget {
     background: Canvas;
     color: CanvasText;
   }
+  .clarte-dashboard .clarte-budget[data-budget-tone] .clarte-amount,
+  .budget-signal { color: CanvasText; }
 }
