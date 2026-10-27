@@ -62,3 +62,8 @@
 .conflict-panel { padding: 20px; }
 .main-wrap > .conflict-panel { margin: 24px 32px 0; }
 @media(max-width:760px) { .main-wrap > .conflict-panel { margin: 20px; } }
+.modal .card.conflict-panel { padding: 20px; }
+.conflict-panel .field > span { display: flex; align-items: center; gap: 8px; }
+.conflict-panel .field input[type=radio] { flex: 0 0 auto; margin: 0; }
+.card.spending-insights,.card.recurring-suggestions { padding: 24px; }
+@media(max-width:760px) { .card.spending-insights,.card.recurring-suggestions { padding: 20px; } }

@@ -108,7 +108,7 @@ try {
  assert.equal((await api(page,'/api/budget','PUT',{budget:remote,revision:current.data.revision})).status,200);
  await page.getByRole('button',{name:'Enregistrer le compte',exact:true}).click();
  const panel=page.getByRole('region',{name:'Résoudre les modifications concurrentes'});await panel.waitFor();
- assert.equal(await page.locator('input[name="name"]').inputValue(),'Compte QA mon choix');await panel.screenshot({path:path.join(output,'conflict-choices.png')});
+ assert.equal(await page.locator('input[name="name"]').inputValue(),'Compte QA mon choix');assert(await panel.evaluate(element=>parseFloat(getComputedStyle(element).paddingLeft)>=20));await panel.screenshot({path:path.join(output,'conflict-choices.png')});
  await panel.getByRole('radio',{name:'Ma modification'}).check();
  // A temporary error must leave the explicit choice and draft intact.
  await page.route('**/api/budget',async route=>{if(route.request().method()==='PUT'){await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:'QA service temporairement indisponible'})});await page.unroute('**/api/budget');}else await route.fallback();});
