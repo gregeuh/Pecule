@@ -28,3 +28,11 @@ Le 26 octobre : 22 tests de domaine réussis ; compilation Next.js et TypeScript
 
 ## Contrôle connexion et Google
 Le 26 octobre, après publication : /api/auth/ok répond 200 ; /api/auth-options confirme Google activé ; les noms des variables Google sont présents en production, sans lecture de leurs secrets. Ajout de tests de synchronisation simulant deux appareils, réponses retardées, échec de session et double envoi. La création de compte réelle, la persistance dans PostgreSQL et le consentement Google nécessitent toujours une session utilisateur et ne sont pas déclarés vérifiés par ces tests simulés.
+
+## Vérification réelle du parcours connecté — 27 octobre 2026
+
+Le test `tests/e2e/connected-budget.mjs` a été exécuté sur `https://pecule-budget.vercel.app/` avec deux comptes dédiés et des données fictives. Réussite : inscription e-mail, session sécurisée, création du budget sans données de démonstration, import CSV réellement enregistré par l’API PostgreSQL, conservation des références et notes, solde vérifié, rechargement complet, déconnexion, refus d’un mauvais mot de passe, reconnexion dans un second navigateur mobile et relecture identique. Le second utilisateur ne voit aucun budget du premier. Les sessions de test sont déconnectées après les contrôles ; aucun budget personnel n’a été modifié.
+
+Le bouton Google ouvre le fournisseur attendu avec le callback de production. Le consentement sur un vrai compte Google, le retour authentifié et la récupération du budget de ce compte restent soumis à une validation utilisateur distincte. Le test ne prétend pas les couvrir.
+
+La commande, les garde-fous et les limites sont décrits dans `tests/e2e/README.md`. Les rapports locaux sans secrets sont dans `outputs/p1-connected/` ; les identifiants de test sont exclusivement dans le dossier ignoré `.sites-runtime/`.
