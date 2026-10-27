@@ -11,7 +11,8 @@
     "Date",
     "Scrollbar",
     "Toast",
-    "CRUD"
+    "CRUD",
+    "Table Selection"
   ],
   "ownership": {
     "Select/Listbox": "native",

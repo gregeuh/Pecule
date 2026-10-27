@@ -30,3 +30,9 @@ La réception et l’usage réel des e-mails de réinitialisation exigent un ser
 ## Assistance P2
 
 `node tests/e2e/budget-assistance.mjs` vérifie uniquement la démonstration, sur ordinateur/téléphone et dans les deux thèmes : règle de catégorie explicite, suggestion de récurrence après import historique, confirmation de création, seuil quotidien, seuil de catégorie, analyse et confidentialité lors du masquage des montants. Les barres ne révèlent aucun montant masqué. Aucune écriture serveur n’est autorisée par ce test.
+
+## Outils bancaires complets
+
+`npm run test:e2e:bank-tools` vérifie la démo sur ordinateur/téléphone et dans les thèmes clair/sombre. Il importe des opérations fictives sur deux comptes, rapproche un solde avec pointage paginé, modifie quarante-cinq opérations sur deux pages, déplace un lot entre comptes, détecte l’invalidation du rapprochement, reprend le brouillon après ajout d’une opération manquante, puis associe et dissocie un virement sans changer les soldes. Aucune écriture serveur n’est autorisée.
+
+`npm run test:e2e:bank-tools:connected` utilise les mêmes opt-in et paramètres de transport que les autres tests connectés. Les identifiants restent dans `.sites-runtime/bank-tools/<hôte>/accounts.json` et ne doivent jamais être affichés. Seul le budget du compte QA généré est remplacé. Le test confirme un rapprochement depuis le navigateur, vérifie son empreinte et son historique en PostgreSQL, conserve les références et catégories d’origine lors d’une association, refuse une moitié de virement et une écriture de révision obsolète, puis vérifie la dissociation et la persistance après rechargement.

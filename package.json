@@ -16,7 +16,9 @@
     "db:generate": "drizzle-kit generate",
     "test:e2e:imports": "node tests/e2e/import-recovery.mjs",
     "test:e2e:recovery": "node tests/e2e/budget-recovery.mjs",
-    "test:e2e:assistance": "node tests/e2e/budget-assistance.mjs"
+    "test:e2e:assistance": "node tests/e2e/budget-assistance.mjs",
+    "test:e2e:bank-tools": "node tests/e2e/bank-tools.mjs",
+    "test:e2e:bank-tools:connected": "node tests/e2e/bank-tools-connected.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

@@ -69,3 +69,7 @@ Les reprises de brouillon, la liste des imports et la comparaison de versions ut
 ## Assistance budgétaire
 
 Les analyses restent repliées par défaut dans Opérations pour préserver la densité de la page. Les barres utilisent la couleur primaire existante, sans nouvelle palette. Les propositions de récurrences reprennent les cartes neutres et les boutons secondaires. Les alertes de catégories occupent une ligne discrète sous le disponible ; aucun aplat rouge/orange/vert ne revient. Les réglages de seuil et les règles mémorisées réutilisent les cartes de réglages existantes.
+
+## Vérification des données bancaires
+
+Les trois parcours se trouvent dans les écrans existants : comptes pour le rapprochement, opérations pour la sélection et les virements. Les panneaux réutilisent le dialogue large et les champs natifs. app/bank-tools.css est chargé après les styles de référence et possède les listes bornées, cases à cocher, récapitulatifs neutres et actions de ces parcours. Les sélections de page et de tous les résultats sont distinctes. Les avertissements sont textuels et reprennent les composants existants ; aucun nouvel aplat de couleur ne concurrence le montant disponible. Les montants restent masqués dans les listes et récapitulatifs lorsque le mode de confidentialité est actif ; les champs de saisie restent visibles pendant leur édition explicite.

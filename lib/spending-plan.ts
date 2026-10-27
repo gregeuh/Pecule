@@ -15,13 +15,13 @@ export function spendingPlan(budget: Budget, month: string, today: string) {
     const amounts: Record<PlanGroup, number> = { needs: 0, wants: 0, savings: 0, unassigned: 0 };
     let unassignedCount = 0;
     const transfers = new Map<string, Transaction[]>();
-    for (const t of rows) if (t.transferId) transfers.set(t.transferId, [...(transfers.get(t.transferId) ?? []), t]);
+    for (const t of b.transactions) if (t.transferId) transfers.set(t.transferId, [...(transfers.get(t.transferId) ?? []), t]);
     for (const t of rows) {
       const account = accounts.get(t.accountId); if (!account) continue;
       if (t.transferId) {
         if (account.type !== "savings") continue;
         const pair = transfers.get(t.transferId) ?? [];
-        if (pair.length === 2 && pair.reduce((n,t)=>n+t.amount,0) === 0 && pair.every(p => p.date === t.date && accounts.has(p.accountId)) && pair.some(p=>accounts.get(p.accountId)?.type !== "savings")) amounts.savings += t.amount;
+        if (pair.length === 2 && pair.reduce((n,t)=>n+t.amount,0) === 0 && pair[0].accountId !== pair[1].accountId && pair.every(p => accounts.has(p.accountId)) && pair.some(p=>accounts.get(p.accountId)?.type !== "savings")) amounts.savings += t.amount;
         continue;
       }
       const group = categoryGroup(t.category, b);
