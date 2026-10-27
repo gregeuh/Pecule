@@ -1,0 +1,194 @@
+/* Canonical palette: Atelier. Keep reference.css for the established geometry. */
+:root {
+  color-scheme: light;
+  --bg: #f7f5f1;
+  --card: #ffffff;
+  --ink: #252c2b;
+  --muted: #626965;
+  --subtle: #707671;
+  --line: #e2e3dc;
+  /* Existing consumers keep their semantic alias; the brand is now evergreen. */
+  --blue: #235746;
+  --blue-soft: #e5eee8;
+  --green: #21634e;
+  --action-bg: #235746;
+  --action-hover: #194332;
+  --soft-hover: #d5e5db;
+  --on-action: #ffffff;
+  --apricot-surface: #f5c39e;
+  --apricot-ink: #57341f;
+  --apricot-muted: #70492e;
+  --apricot-hover: #edb78e;
+  --lavender-surface: #e2d6f5;
+  --lavender-ink: #46345e;
+  --lavender-muted: #635176;
+  --lavender-accent: #725199;
+  --lavender-track: #cdbbe6;
+  --danger: #aa394e;
+  --error-ink: #8e263b;
+  --error-bg: #fff0f2;
+  --caution-ink: #714818;
+  --caution-bg: #fff0dc;
+  --overlay: #172b246b;
+  --toast-bg: #252c2b;
+  --toast-ink: #ffffff;
+  --scroll-thumb: #a2ada5;
+  --scroll-hover: #687e71;
+  --dock-bg: #ffffffed;
+  --dock-shadow: 0 8px 28px #253c3020;
+  --category-icon-ink: var(--category-color);
+  --category-icon-surface: var(--category-background);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d0e0e;
+  --card: #1a1d1c;
+  --ink: #f2f3ef;
+  --muted: #b7bdb7;
+  --subtle: #a2aaa3;
+  --line: #363d38;
+  --blue: #a4d9be;
+  --blue-soft: #253b30;
+  --green: #8addb4;
+  --action-bg: #a4d9be;
+  --action-hover: #c0e8d1;
+  --soft-hover: #324c3e;
+  --on-action: #173b2d;
+  --apricot-surface: #3d2b21;
+  --apricot-ink: #ffd7b8;
+  --apricot-muted: #dfb99e;
+  --apricot-hover: #51382a;
+  --lavender-surface: #30263f;
+  --lavender-ink: #ecddff;
+  --lavender-muted: #cbb7df;
+  --lavender-accent: #c4a1e9;
+  --lavender-track: #58426e;
+  --danger: #ff9cae;
+  --error-ink: #ffc2ce;
+  --error-bg: #472737;
+  --caution-ink: #ffdcac;
+  --caution-bg: #443622;
+  --overlay: #000000b8;
+  --toast-bg: #e5eee8;
+  --toast-ink: #173b2d;
+  --scroll-thumb: #58645b;
+  --scroll-hover: #879b8d;
+  --dock-bg: #1a1d1cf2;
+  --dock-shadow: 0 8px 28px #00000066;
+  --category-icon-ink: color-mix(in srgb, var(--category-color) 45%, #f2f3ef);
+  --category-icon-surface: color-mix(in srgb, var(--category-color) 20%, #1a1d1c);
+}
+
+/* next-themes resolves system preference before paint and on device changes. */
+body { background: var(--bg); color: var(--ink); }
+input, select, textarea { accent-color: var(--blue); caret-color: var(--blue); }
+input::placeholder, textarea::placeholder { color: var(--subtle); opacity: 1; }
+button:focus-visible, a:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, summary:focus-visible {
+  outline-color: var(--blue);
+}
+::selection { background: var(--soft-hover); color: var(--ink); }
+
+.brand, .clarte-mobile-logo, .auth-logo { color: var(--blue); }
+.sidebar, .card, .clarte-card, .quick-action, .navigation-menu > button,
+.filter-select, .metric-strip, .setup-summary { background: var(--card); }
+.primary, .floating-action-trigger, .dock-add-icon, .setup-monogram,
+.setup-aside { background: var(--action-bg); color: var(--on-action); }
+.setup-aside h2 { color: var(--on-action); }
+.primary:hover, .floating-action-trigger:hover,
+.mobile-nav.floating-nav > .dock-add:hover .dock-add-icon {
+  background: var(--action-hover);
+}
+.floating-action-trigger { border-color: transparent; box-shadow: var(--dock-shadow); }
+.secondary, .nav-item.active, .avatar, .navigation-menu-icon,
+.settings-icon, .empty-icon { background: var(--blue-soft); color: var(--blue); }
+.secondary:hover, .nav-item:hover, .icon-button:hover,
+.quick-action:hover, .navigation-menu > button:hover { background: var(--soft-hover); }
+.icon-button:hover { color: var(--blue); }
+.danger { background: #aa394e; color: #ffffff; }
+.danger:hover { background: #8e263b; }
+.danger-icon, .field-error { color: var(--danger); }
+.toast > svg, .toast button { color: inherit; }
+
+/* Apricot identifies upcoming events; it never conveys a financial warning. */
+.clarte-forecast, .clarte-upcoming {
+  background: var(--apricot-surface);
+  color: var(--apricot-ink);
+}
+.clarte-upcoming { padding: 24px; border-radius: 16px; }
+.clarte-forecast .clarte-section-title > span,
+.clarte-forecast .clarte-footnote, .clarte-calendar span,
+.clarte-upcoming .clarte-due small { color: var(--apricot-muted); }
+.clarte-forecast .text-button, .clarte-upcoming .text-button,
+.clarte-upcoming .clarte-due:hover strong { color: var(--apricot-ink); }
+.clarte-calendar > button, .clarte-calendar > button.current,
+.clarte-upcoming .clarte-icon { background: color-mix(in srgb, var(--apricot-surface) 60%, var(--card)); color: var(--apricot-ink); }
+.clarte-calendar > button:hover { background: var(--apricot-hover); }
+
+/* Lavender belongs to savings goals, not to the available balance. */
+.clarte-goal, .goal-intro { background: var(--lavender-surface); color: var(--lavender-ink); }
+.clarte-goal .clarte-goal-mobile, .clarte-goal-desktop > p,
+.goal-intro p, .goal-intro h2 > span { color: var(--lavender-muted); }
+.clarte-goal > svg, .goal-intro-icon { color: var(--lavender-accent); }
+.goal-intro-icon { background: var(--lavender-track); }
+.goal-card .progress-track { background: var(--lavender-track); }
+
+/* Old screen-local literals must follow the same theme as the shared controls. */
+.account-balance, .goal-amount strong, .rule-amount, .detail-amount,
+.goal-intro h2, .settings-card h2, .settings-links a, .restore-backup,
+.sign-in-prompt h3, .calculation-detail > div strong, .install-content li strong,
+.import-row > span > strong, .import-row > strong { color: var(--ink); }
+.account-kind, .account-card > p, .account-card-bottom,
+.goal-amount > span, .goal-progress-label, .rule-bottom > small,
+.settings-card > p, .settings-links, .restore-backup, .sign-in-prompt p,
+.sign-in-prompt small, .file-drop span, .import-row small,
+.install-content li p, .calculation-detail > p, .calculation-detail > div,
+.add-tile > small, .add-tile > strong, .quick-action > small,
+.segmented button { color: var(--muted); }
+.rule-amount small, .settings-brand small { color: var(--muted); }
+.file-drop strong { color: var(--blue); }
+.settings-links button, .settings-links a, .account-details-link { color: var(--blue); }
+.rule-bottom, .account-card-bottom, .category-label, .date-group > span,
+.toolbar, .filter-bar, .toast, .setup-note { border-color: var(--line); }
+.category-label { background: var(--bg); }
+.month-control, .date-chip, .quiet-pill, .quick-action,
+.bank-import-preview, .import-row.disabled { background: var(--card); }
+.progress-track { background: var(--line); }
+.positive, .transaction-amount.positive strong { color: var(--green); }
+.category-icon, .quick-action-icon {
+  color: var(--category-icon-ink);
+  background: var(--category-icon-surface);
+}
+.bank-icon, .goal-icon {
+  color: color-mix(in srgb, var(--item-color) 70%, var(--ink));
+  background: color-mix(in srgb, var(--item-color) 15%, var(--card));
+}
+.goal-card .progress-track > span {
+  background: color-mix(in srgb, var(--item-color) 75%, var(--ink));
+}
+.clarte-dashboard .clarte-budget { background: var(--card); }
+
+@media (max-width: 760px) {
+  .clarte-upcoming { padding: 20px; }
+  .mobile-nav.floating-nav {
+    background: var(--dock-bg);
+    box-shadow: var(--dock-shadow);
+  }
+  .mobile-nav.floating-nav > button.active {
+    background: var(--blue-soft);
+    color: var(--blue);
+  }
+  .dock-add-icon { color: var(--on-action); }
+}
+
+@media (forced-colors: active) {
+  .clarte-forecast, .clarte-upcoming, .clarte-goal, .goal-intro,
+  .category-icon, .quick-action-icon, .bank-icon, .goal-icon {
+    background: Canvas; color: CanvasText;
+  }
+  .clarte-forecast *, .clarte-upcoming *, .clarte-goal *, .goal-intro * {
+    color: CanvasText;
+  }
+  .mobile-nav.floating-nav > button.active { outline: 1px solid Highlight; }
+}

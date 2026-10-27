@@ -1,11 +1,13 @@
 ---
 version: alpha
 colors:
-  background: "#f5f7fa"
+  background: "#f7f5f1"
   surface: "#ffffff"
-  ink: "#182b45"
-  muted: "#526681"
-  primary: "#3559d5"
+  ink: "#252c2b"
+  muted: "#626965"
+  primary: "#235746"
+  apricot: "#f5c39e"
+  lavender: "#e2d6f5"
   budget-negative: "#aa394e"
   budget-attention: "#984b00"
   budget-comfort: "#21634e"
@@ -25,7 +27,7 @@ omitted:
 Pécule est un outil personnel de budget en français. La demande du 26 octobre impose de retrouver l’interface visible sur pecule-budget.vercel.app à partir du code Git disponible. La référence est le tableau de bord bleu « clarté », la navigation à six vues, la répartition 50/30/20 et les thèmes clair/sombre.
 
 ## Colors
-Les variables de app/reference.css, relevées dans la feuille de styles publique du site de référence, sont la source de vérité : --bg, --card, --ink, --muted, --blue. Les pages de compte utilisent ces variables et les classes .field, .primary, .card et .form-error.
+La palette canonique est désormais possédée par `app/atelier.css`, chargé après `app/reference.css` et les styles de fonctionnalité : --bg, --card, --ink, --muted et --blue. `app/reference.css` conserve la géométrie et les polices de référence. Les pages de compte utilisent ces variables et les classes .field, .primary, .card et .form-error.
 
 ## Typography
 DM Sans pour le texte et Manrope pour les titres, auto-hébergées dans public/fonts, comme le site de référence. Les champs de connexion utilisent 16px pour éviter le zoom automatique sur iPhone.
@@ -73,3 +75,25 @@ Les analyses restent repliées par défaut dans Opérations pour préserver la d
 ## Vérification des données bancaires
 
 Les trois parcours se trouvent dans les écrans existants : comptes pour le rapprochement, opérations pour la sélection et les virements. Les panneaux réutilisent le dialogue large et les champs natifs. app/bank-tools.css est chargé après les styles de référence et possède les listes bornées, cases à cocher, récapitulatifs neutres et actions de ces parcours. Les sélections de page et de tous les résultats sont distinctes. Les avertissements sont textuels et reprennent les composants existants ; aucun nouvel aplat de couleur ne concurrence le montant disponible. Les montants restent masqués dans les listes et récapitulatifs lorsque le mode de confidentialité est actif ; les champs de saisie restent visibles pendant leur édition explicite.
+
+
+## Palette Atelier — décision du 27 octobre 2026
+
+L’utilisateur a validé les couleurs de la deuxième proposition : vert profond, abricot et lavande. Cette livraison adopte uniquement la palette, sans réorganiser les écrans ni changer les calculs. Le sombre utilise un fond noir neutre et des surfaces charbon, sans bleu marine. La carte du disponible reste neutre pour chaque état financier.
+
+Propriété modèle B : `app/atelier.css` → variables sémantiques existantes → composants partagés ; le présent document reflète les valeurs acceptées. L’alias historique `--blue` est conservé pour les consommateurs existants, mais porte maintenant l’accent vert profond. Les couleurs personnelles des comptes et des objectifs stockées dans les budgets sont préservées ; les icônes et les pistes adaptent leur surface au thème via `--item-color`. Les icônes de catégories et d’actions utilisent `--category-color` et `--category-background`, jamais un fond clair imposé en sombre.
+
+| Rôle | Clair | Sombre | Consommateurs |
+|---|---|---|---|
+| colors.background → --bg | #f7f5f1 | #0d0e0e | document, dialogues |
+| colors.surface → --card | #ffffff | #1a1d1c | cartes, champs, menus |
+| colors.ink → --ink | #252c2b | #f2f3ef | texte principal |
+| colors.muted → --muted | #626965 | #b7bdb7 | labels et descriptions |
+| colors.primary → --blue | #235746 | #a4d9be | liens, navigation, focus |
+| --action-bg / --on-action | #235746 / #ffffff | #a4d9be / #173b2d | boutons et ajout flottant |
+| colors.apricot → --apricot-surface | #f5c39e | #3d2b21 | prévision et échéances |
+| --apricot-ink / --apricot-muted | #57341f / #70492e | #ffd7b8 / #dfb99e | texte des échéances |
+| colors.lavender → --lavender-surface | #e2d6f5 | #30263f | objectif et introduction épargne |
+| --lavender-ink / --lavender-muted | #46345e / #635176 | #ecddff / #cbb7df | texte des objectifs |
+
+L’abricot des échéances ne signifie pas une alerte. Les tons rouge/orange/vert du disponible restent exclusivement ceux de `app/budget-signal.css`. Les montants masqués et les trois états gardent le même fond neutre. Les couleurs forcées suivent Canvas/CanvasText. Le thème automatique est résolu avant peinture par next-themes et suit les changements de préférence système. La navigation mobile conserve sa géométrie flottante, avec un onglet actif teinté et une ombre sobre adaptée au thème.

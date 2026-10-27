@@ -3,6 +3,7 @@ import "./globals.css";
 import "./reference.css";
 import "./budget-signal.css";
 import "./bank-tools.css";
+import "./atelier.css";
 import AppearanceProvider from "./theme-provider";
 export const metadata: Metadata = {
   title: "PECULE — Votre argent, l’esprit léger",
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, statusBarStyle: "default", title: "PECULE" },
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg", apple: "/icons/apple-touch-icon.png" },
 };
-export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#f7f8fa" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f7f5f1" }, { media: "(prefers-color-scheme: dark)", color: "#0d0e0e" }] };
 export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
   return <html lang="fr" suppressHydrationWarning><body><AppearanceProvider>{children}</AppearanceProvider></body></html>;
 }
