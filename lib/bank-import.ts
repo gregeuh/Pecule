@@ -3,7 +3,7 @@ import type { Budget, Transaction } from "./budget";
 
 export const MAX_IMPORT_BYTES=2_000_000, MAX_IMPORT_ROWS=5000;
 export type Columns={date:number;label:number;amount:number;debit:number;credit:number;category:number;note:number;reference:number;currency:number};
-export type ImportPlan={rows:string[][];header:number;columns:Columns;mode:"signed"|"split";dateOrder:"dmy"|"mdy";balanceMode:"new"|"history";accountId:string;today:string};
+export type ImportPlan={rows:string[][];header:number;columns:Columns;mode:"signed"|"split";dateOrder:"dmy"|"mdy";balanceMode:"new"|"history";accountId:string;today:string;keepExtra?:boolean};
 export type ImportRow={index:number;transaction:Transaction;errors:string[];warnings:string[];duplicate:boolean;defaultSelected:boolean};
 const normalize=(s:string)=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 
@@ -73,7 +73,13 @@ export function previewBankImport(budget:Budget,plan:ImportPlan):ImportRow[] {
   const seen=new Map<string,number>(),seenRefs=new Set<string>();
   return plan.rows.slice(plan.header+1).map((row,index)=>{
     const c=plan.columns,get=(i:number)=>i>=0?(row[i]??"").trim():"",errors=[...mappingErrors],warnings:string[]=[];
-    const date=dateValue(get(c.date),plan.dateOrder),label=get(c.label).replace(/\s+/g," "),category=get(c.category)||"Autres",note=get(c.note);
+    const date=dateValue(get(c.date),plan.dateOrder),label=get(c.label).replace(/\s+/g," "),category=get(c.category)||"Autres";
+    const notes=[get(c.note)];
+    if(plan.keepExtra!==false){
+      const used=new Set(Object.entries(c).filter(([key,value])=>value>=0&&(plan.mode==="signed"?!["debit","credit"].includes(key):key!=="amount")).map(([,value])=>value));
+      row.forEach((value,column)=>{if(!used.has(column)&&value.trim())notes.push(`${plan.rows[plan.header][column]?.trim()||`Colonne ${column+1}`} : ${value.trim()}`);});
+    }
+    const note=notes.filter(Boolean).join("\n");
     let amount:number|null=null;
     if(plan.mode==="signed")amount=parseBankAmount(get(c.amount));
     else {const debit=get(c.debit)?parseBankAmount(get(c.debit)):0,credit=get(c.credit)?parseBankAmount(get(c.credit)):0;if(debit!==null&&credit!==null&&credit>=0&&!(debit!==0&&credit!==0))amount=credit-Math.abs(debit);}
@@ -83,7 +89,8 @@ export function previewBankImport(budget:Budget,plan:ImportPlan):ImportRow[] {
     if(date&&date>plan.today)errors.push("Opération future : importez uniquement les opérations comptabilisées.");
     if(!label||label.length>120)errors.push("Le libellé doit contenir de 1 à 120 caractères.");
     if(amount===null||amount===0)errors.push("Montant invalide ou nul ; vérifiez les signes et les colonnes débit/crédit.");
-    if(category.length>120||note.length>1000)errors.push("Catégorie ou note trop longue.");
+    if(category.length>120)errors.push("La catégorie dépasse 120 caractères.");
+    if(note.length>1000)errors.push("Les notes dépassent 1 000 caractères. Corrigez le fichier ou désactivez les colonnes supplémentaires. Aucune donnée n’est tronquée.");
     if(c.currency>=0&&!/^(EUR|€)$/i.test(get(c.currency)))errors.push("Seuls les montants en euros sont acceptés, sans conversion.");
     if(date&&account){if(plan.balanceMode==="new"&&date<=account.openingDate)errors.push("Déjà compris dans le solde de référence : choisissez le mode historique, ou corrigez la référence du compte.");if(plan.balanceMode==="history"&&date>account.openingDate)errors.push("Cette opération suit la date de référence : utilisez le mode nouvelles opérations.");}
     const reference=get(c.reference);if(reference.length>120)errors.push("La référence bancaire dépasse 120 caractères.");
