@@ -45,3 +45,6 @@ Réutiliser les classes existantes. Ne pas introduire de connexion basée sur le
 ## Réconciliation de la référence
 
 Les valeurs du 23 octobre ont été remplacées par les couleurs et polices observées le 26 octobre sur le site demandé. Le tableau de bord est reproduit avec ses classes clarte-*. Les calculs et opérations CRUD conservent la base Git, et la répartition 50/30/20 suit les règles publiquement livrées par le site de référence. Le montant de la carte d’objectif est corrigé pour porter uniquement sur cet objectif.
+
+## Import bancaire
+Le parcours réutilise les champs, listes de diagnostic, boutons et récapitulatifs de l’application. app/bank-import.tsx possède le parcours ; les classes bank-import-* dans app/bank-import.css adaptent la grille de colonnes et le récapitulatif sans modifier les autres écrans. La sélection et les données du relevé restent en mémoire, jamais dans l’URL ni dans le stockage local.

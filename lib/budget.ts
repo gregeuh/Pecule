@@ -1,5 +1,5 @@
 export type Account = { id: string; name: string; bank: string; type: "current" | "savings" | "cash"; openingBalance: number; openingDate: string; color: string };
-export type Transaction = { id: string; label: string; amount: number; date: string; accountId: string; category: string; note: string; merchantId?: string; ruleId?: string; transferId?: string; goalId?: string };
+export type Transaction = { id: string; label: string; amount: number; date: string; accountId: string; category: string; note: string; merchantId?: string; ruleId?: string; transferId?: string; goalId?: string; importRef?: string; importBatch?: string; balanceIncluded?: boolean };
 export type Rule = { merchantId?: string; id: string; label: string; amount: number; accountId: string; category: string; startDate: string; endDate: string; frequency: "monthly" | "weekly" | "yearly"; timing: "date" | "last-business-day"; day: number; active: boolean; holidays: "FR" | "none"; excludedDates: string[] };
 export type Goal = { id: string; name: string; target: number; saved: number; monthly: number; color: string; icon: string; deadline: string };
 export type Budget = { version: 1; name: string; accounts: Account[]; transactions: Transaction[]; rules: Rule[]; goals: Goal[]; settings: { horizon: "salary" | "month"; reserve: number; holidayCalendar: "FR" | "none"; spendingPlan?: { monthlyIncome: number | null; groups: Record<string, "needs" | "wants" | "savings" | "unassigned"> } } };
@@ -58,7 +58,7 @@ export function futureTransactions(budget: Budget, from: string, to: string): Tr
 }
 export function accountBalance(budget: Budget, id: string, at = todayISO()): number {
   const b=materialize(budget,at), acc=b.accounts.find(a=>a.id===id); if(!acc || at<acc.openingDate) return 0;
-  return acc.openingBalance+b.transactions.filter(t=>t.accountId===id && t.date>=acc.openingDate && t.date<=at).reduce((s,t)=>s+t.amount,0);
+  return acc.openingBalance+b.transactions.filter(t=>t.accountId===id && !t.balanceIncluded && t.date>=acc.openingDate && t.date<=at).reduce((s,t)=>s+t.amount,0);
 }
 export function overview(budget: Budget, today = todayISO()) {
   const b=materialize(budget,today), current=b.accounts.filter(a=>a.type!=="savings"), ids=new Set(current.map(a=>a.id));

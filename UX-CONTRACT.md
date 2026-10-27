@@ -29,3 +29,10 @@ Le parcours propose comptes, salaire, charges, objectifs puis récapitulatif. Le
 
 ## Connexion et synchronisation
 Les retours Google reviennent au formulaire ou aux réglages avec un message français connu ; aucun code d’erreur arbitraire n’est affiché. Le rattachement reste soumis à la même adresse e-mail vérifiée par Better Auth. Une réponse de chargement antérieure à une sauvegarde ne peut remplacer son résultat. Les conflits de révision refusent l’écriture et imposent un rechargement. Une session expirée propose de se reconnecter.
+
+## Import bancaire CSV
+Le composant app/bank-import.tsx et lib/bank-import.ts remplacent l’import local de BudgetApp. Lecture du fichier sur l’appareil, 2 Mo et 5 000 lignes maximum ; aucun stockage local persistant du relevé. UTF-8, Windows-1252 et UTF-16 avec BOM ; séparateur automatique ou manuel, en-tête sélectionnable, dates françaises ou américaines explicitement choisies. Montants signés ou colonnes débit/crédit ; euros uniquement ; lignes futures ou malformées exclues. Un fichier contenant plusieurs comptes doit être séparé.
+
+Chaque ligne et son diagnostic sont accessibles par pages de 40. Les références déjà présentes sont exclues. Sans référence, les occurrences déjà comptabilisées sont dédupliquées par compte/date/libellé/montant ; les répétitions et rapprochements possibles sont décochés et soumis au choix explicite. Pas de rapprochement automatique des virements. Le récapitulatif affiche compte, période, crédits, débits et impact sur le solde, puis demande confirmation. Aucune écriture avant cette étape. Les échecs de sauvegarde conservent l’aperçu et les choix.
+
+Les nouvelles opérations doivent suivre la date de référence. Le mode historique accepte les opérations jusqu’à cette date avec balanceIncluded=true : elles enrichissent l’historique sans modifier les soldes. Les références, lots et indicateurs historiques sont conservés par validation et sauvegarde JSON, ainsi que lors d’une modification d’opération. Les références bancaires sont uniques par compte côté serveur.
