@@ -1,0 +1,53 @@
+/* Financial status surfaces. Their threshold is defined by the budget policy. */
+:root {
+  --budget-negative-bg: #aa394e;
+  --budget-attention-bg: #984b00;
+  --budget-comfort-bg: #21634e;
+  --budget-signal-ink: #ffffff;
+}
+:root[data-theme="dark"] {
+  --budget-negative-bg: #572331;
+  --budget-attention-bg: #56340c;
+  --budget-comfort-bg: #163e31;
+}
+.clarte-budget[data-budget-tone="negative"] { --budget-signal-bg: var(--budget-negative-bg); }
+.clarte-budget[data-budget-tone="attention"] { --budget-signal-bg: var(--budget-attention-bg); }
+.clarte-budget[data-budget-tone="comfort"] { --budget-signal-bg: var(--budget-comfort-bg); }
+.clarte-dashboard .clarte-budget[data-budget-tone] {
+  background: var(--budget-signal-bg);
+  color: var(--budget-signal-ink);
+}
+.clarte-dashboard .clarte-budget[data-budget-tone] .clarte-available {
+  background: var(--budget-signal-bg);
+  color: var(--budget-signal-ink);
+}
+.budget-signal {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  margin-top: 14px;
+  min-height: 30px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.budget-signal-description {
+  margin-top: 9px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: inherit;
+}
+@media (max-width: 760px) {
+  .clarte-dashboard .clarte-budget[data-budget-tone] { background: transparent; color: var(--ink); }
+}
+@media (forced-colors: active) {
+  .clarte-dashboard .clarte-budget[data-budget-tone],
+  .clarte-dashboard .clarte-budget[data-budget-tone] .clarte-available {
+    background: Canvas;
+    color: CanvasText;
+  }
+}

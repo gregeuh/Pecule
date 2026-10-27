@@ -12,6 +12,7 @@
     "start": "next start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "test:e2e:connected": "node tests/e2e/connected-budget.mjs",
+    "test:e2e:signal": "node tests/e2e/available-signal.mjs",
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {

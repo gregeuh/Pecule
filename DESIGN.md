@@ -6,6 +6,9 @@ colors:
   ink: "#182b45"
   muted: "#526681"
   primary: "#3559d5"
+  budget-negative: "#aa394e"
+  budget-attention: "#984b00"
+  budget-comfort: "#21634e"
 typography:
   body:
     fontFamily: '"DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
@@ -50,3 +53,11 @@ Les valeurs du 23 octobre ont été remplacées par les couleurs et polices obse
 Le parcours réutilise les champs, listes de diagnostic, boutons et récapitulatifs de l’application. app/bank-import.tsx possède le parcours ; les classes bank-import-* dans app/bank-import.css adaptent la grille de colonnes et le récapitulatif sans modifier les autres écrans. La sélection et les données du relevé restent en mémoire, jamais dans l’URL ni dans le stockage local.
 
 La case « Conserver les colonnes supplémentaires dans les notes » et la divulgation native « Données reprises » rendent les données supplémentaires inspectables avant confirmation. Les valeurs restent du texte, avec retours à la ligne et repli des longues références ; les styles héritent des variables existantes sans nouvelle palette.
+
+## Signal du disponible
+
+À la demande de l’utilisateur, la carte du disponible utilise rouge / orange / vert pour « Négatif », « Attention » et « Confort ». L’identité bleue du reste du produit est conservée. Chaque état comporte une icône Lucide, son libellé et une explication ; la couleur seule ne porte jamais le sens.
+
+`app/budget-signal.css` est la source canonique des surfaces du signal : `colors.budget-negative` → `--budget-negative-bg`, `colors.budget-attention` → `--budget-attention-bg`, `colors.budget-comfort` → `--budget-comfort-bg`. Le texte est blanc (`--budget-signal-ink`). En thème sombre, ces surfaces deviennent respectivement `#572331`, `#56340c` et `#163e31`. Les contrastes du texte blanc dépassent 4,5:1 dans les deux thèmes. Les couleurs forcées utilisent Canvas et CanvasText tout en conservant le libellé.
+
+Le signal remplace le fond de la carte existante ; sur mobile, seule sa partie disponible est colorée, en conservant la formule sur le fond habituel. Les montants masqués, les données en erreur de chargement et les budgets sans compte courant/espèces n’exposent aucun état financier. Le masquage retire également le fond de statut et son explication.

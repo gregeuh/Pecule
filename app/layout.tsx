@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./reference.css";
+import "./budget-signal.css";
 import AppearanceProvider from "./theme-provider";
 export const metadata: Metadata = {
   title: "PECULE — Votre argent, l’esprit léger",
