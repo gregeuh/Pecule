@@ -18,3 +18,11 @@ Le bouton Google est exercé jusqu’à l’ouverture du fournisseur ; l’URL d
 Pour un Chromium déjà installé, définir `PECULE_E2E_CHROMIUM=/chemin/vers/chromium`. Dans un conteneur qui l’exige, `PECULE_E2E_NO_SANDBOX=1` adapte uniquement le sandbox du navigateur.
 
 Si le proxy TLS du cloud est approuvé par Node mais absent du magasin de Chromium, `PECULE_E2E_NODE_TRANSPORT=1 NODE_USE_ENV_PROXY=1` fait passer les requêtes par `fetch` de Node avec la vérification TLS et les autorités fournies par l’environnement. Ne pas désactiver la vérification TLS ni ignorer les erreurs HTTPS.
+
+## Récupération P1
+
+`node tests/e2e/import-recovery.mjs` vérifie en démonstration la reprise du relevé, la sélection, l’étape de confirmation et l’annulation du lot, sur ordinateur et téléphone. Aucune écriture serveur.
+
+`node tests/e2e/budget-recovery.mjs` nécessite les mêmes variables explicites que le test connecté. Il crée/réutilise un compte fictif distinct dans `.sites-runtime/p1-recovery/<hôte>/`, dont le budget est réinitialisé pour vérifier les conflits de révision, les modifications indépendantes et la conservation après erreur 503. Ne jamais lui fournir de compte personnel. Un déploiement de prévisualisation et la production ont des identifiants isolés. Les preuves restent dans `outputs/p1-recovery/`.
+
+La réception et l’usage réel des e-mails de réinitialisation exigent un service configuré ; voir `docs/password-reset.md`. Les tests de navigateur sans ce service vérifient uniquement l’indisponibilité explicite et les liens invalides, pas une livraison d’e-mail.

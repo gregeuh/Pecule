@@ -61,3 +61,7 @@ Après retour utilisateur, le grand fond rouge/orange/vert est remplacé par la 
 `app/budget-signal.css` possède les couleurs de texte : `colors.budget-negative` → `--budget-negative-ink`, `colors.budget-attention` → `--budget-attention-ink`, `colors.budget-comfort` → `--budget-comfort-ink`. Les valeurs claires sont `#aa394e`, `#984b00` et `#21634e`. En thème sombre, les textes deviennent `#ff9cae`, `#ffdcac` et `#8addb4` sur la surface `--card`. Les contrastes sont vérifiés sur les surfaces réelles. Les autres textes, soldes de la formule et montants par jour gardent les couleurs neutres du produit.
 
 Le libellé reste visible sans couleur et expose son explication par son nom accessible et son titre. Les couleurs forcées utilisent Canvas/CanvasText. Les montants masqués, les erreurs de chargement et les budgets sans compte courant/espèces n’exposent aucun signal financier ; le fond de la carte reste neutre dans tous les cas.
+
+## Récupération et imports
+
+Les reprises de brouillon, la liste des imports et la comparaison de versions utilisent les cartes neutres, les champs natifs et les confirmations existantes. Aucune grande surface de couleur n’est ajoutée. La comparaison traduit les champs financiers en français et conserve les deux versions visibles avant le choix. Les nouvelles pages de récupération de compte reprennent la carte d’authentification existante.

@@ -3,6 +3,8 @@ import { nextCookies } from "better-auth/next-js";
 import { getMigrations } from "better-auth/db/migration";
 import { getPool, tablePrefix } from "./postgres";
 
+import { passwordResetEnabled, sendPasswordResetEmail } from "./reset-email";
+
 let instance: ReturnType<typeof createAuth> | undefined;
 export function getAuth() { return instance ??= createAuth(); }
 function createAuth() {
@@ -10,7 +12,11 @@ function createAuth() {
     database: getPool(),
     baseURL: process.env.VERCEL_ENV === "preview" ? undefined : process.env.BETTER_AUTH_URL,
     secret: process.env.BETTER_AUTH_SECRET,
-    emailAndPassword: { enabled: true, minPasswordLength: 12 },
+    emailAndPassword: {
+      enabled: true, minPasswordLength: 12, maxPasswordLength: 128,
+      resetPasswordTokenExpiresIn: 1800, revokeSessionsOnPasswordReset: true,
+      ...(passwordResetEnabled() ? { sendResetPassword: async ({user,url}: {user:{email:string};url:string}) => { try { await sendPasswordResetEmail(user.email,url); } catch { console.error("Password reset email could not be delivered"); } } } : {}),
+    },
     socialProviders: process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET ? {
       google: { clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET }
     } : {},

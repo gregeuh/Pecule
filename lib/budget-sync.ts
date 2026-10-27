@@ -8,6 +8,8 @@ export class BudgetRequestError extends Error {
 // Each browser keeps its own revision; the server arbitrates competing devices.
 export class BudgetSync {
   private revision = 0;
+  private baseline: Budget | null = null;
+  getBaseline(): Budget | null { return this.baseline ? structuredClone(this.baseline) : null; }
   private generation = 0;
   private readSequence = 0;
   private writing = false;
@@ -16,6 +18,8 @@ export class BudgetSync {
     // Never invoke Window.fetch as a method of this class (illegal receiver).
     this.request = (...args) => request(...args);
   }
+
+  invalidateReads(): void { this.generation++; }
 
   async load(): Promise<{ budget: Budget | null } | null> {
     if (this.writing) return null;
@@ -27,6 +31,7 @@ export class BudgetSync {
       if (!current()) return null;
       if (!response.ok) throw new BudgetRequestError(result.error || "Impossible de charger votre budget.", response.status);
       this.revision = result.revision;
+      this.baseline = result.budget ? structuredClone(result.budget) : null;
       return { budget: result.budget };
     } catch (error) {
       if (!current()) return null;
@@ -46,6 +51,7 @@ export class BudgetSync {
       const result = await response.json();
       if (!response.ok) throw new BudgetRequestError(result.error || "Impossible d’enregistrer votre budget.", response.status);
       this.revision = result.revision;
+      this.baseline = structuredClone(budget);
     } finally { this.writing = false; }
   }
 }

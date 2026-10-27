@@ -5,7 +5,8 @@ import { googleErrorMessage } from "../../lib/auth-feedback";
 
 export default function SignIn() {
   const [google,setGoogle]=useState(false);
-  useEffect(()=>{let active=true;void fetch("/api/auth-options").then(r=>r.json()).then(data=>{if(active)setGoogle(data.google===true);}).catch(()=>{});return()=>{active=false;};},[]);
+  const [resetEnabled,setResetEnabled]=useState(false);
+  useEffect(()=>{let active=true;void fetch("/api/auth-options").then(r=>r.json()).then(data=>{if(active){setGoogle(data.google===true);setResetEnabled(data.passwordReset===true);}}).catch(()=>{});return()=>{active=false;};},[]);
   const [signup, setSignup] = useState(false);
   const [busy, setBusy] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -55,6 +56,7 @@ export default function SignIn() {
       <div className="auth-feedback">{error && <div className="form-error" role="alert" tabIndex={-1} ref={errorRef}>{error}</div>}</div>
       <button className="primary full-width" type="submit" disabled={busy}>{busy ? "Connexion en cours…" : signup ? "Créer mon compte" : "Me connecter"}</button>
     </form>
+    {!signup&&resetEnabled&&<a className="auth-link" href="/forgot-password">Mot de passe oublié ?</a>}
     <button type="button" className="auth-link" disabled={busy} onClick={() => { setSignup(!signup); setError(""); }}>{signup ? "J’ai déjà un compte" : "Créer un compte"}</button>
     <a className="auth-link" href="/">Découvrir la démonstration</a>
   </section></main>;

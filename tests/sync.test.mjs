@@ -63,3 +63,8 @@ test('Google failures have actionable French messages and never echo callback co
   assert.equal(googleErrorMessage(null),'');
   assert.doesNotMatch(googleErrorMessage('<script>secret</script>'),/secret|script/);
 });
+test('opening an editor invalidates a background read without advancing its baseline',async()=>{
+ const late=deferred();const sync=new BudgetSync(()=>late.promise);
+ const loading=sync.load();sync.invalidateReads();late.resolve(json({budget:emptyBudget('Obsolète'),revision:9}));
+ assert.equal(await loading,null);assert.equal(sync.getBaseline(),null);
+});
