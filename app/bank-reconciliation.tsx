@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { confirmReconciliation, latestReconciliation, ledgerFingerprint, reconciliationHints, reconciliationRows } from "../lib/bank-reconciliation";
 import { accountBalance, money, shortDate, type Budget, type Transaction } from "../lib/budget";
-import { parseAmount } from "../lib/csv";
+import { parseBankAmount } from "../lib/bank-import";
 import { FormField, ValidatedForm } from "./validated-form";
 export type ReconciliationDraft={date:string;balance:string;checked:string[];query:string};
 type Props={budget:Budget;accountId:string;today:string;hidden:boolean;saving:boolean;serverError:string;initialDraft?:ReconciliationDraft;onDraftChange:(id:string,draft:ReconciliationDraft)=>void;save:(b:Budget,message:string)=>Promise<boolean>;onDone:()=>void;onEdit:(t:Transaction)=>void;onAdd:(date:string,amount:number)=>void;onEditAccount:()=>void;onTransfers:()=>void};
@@ -13,7 +13,7 @@ export default function BankReconciliation({budget,accountId,today,hidden,saving
  useEffect(()=>{onDraftChange(accountId,{date,balance,checked:[...checked],query});},[onDraftChange,accountId,date,balance,checked,query]);
  useEffect(()=>{let active=true;if(!last)return;void ledgerFingerprint(budget,accountId,last.date).then(fingerprint=>{if(!active)return;const valid=fingerprint===last.fingerprint&&accountBalance(budget,accountId,last.date)===last.bankBalance;setStatus(valid?'valid':'changed');if(valid&&!initial.current){const ids=reconciliationRows(budget,accountId,last.date).map(t=>t.id);setChecked(new Set(ids));initial.current=true;}}).catch(()=>{if(active)setStatus('changed');});return()=>{active=false;};},[budget,accountId,last]);
  const result=useMemo(()=>{try{return {rows:reconciliationRows(budget,accountId,date),error:''};}catch(cause){return {rows:[],error:cause instanceof Error?cause.message:'Date invalide.'};}},[budget,accountId,date]);
- const bank=parseAmount(balance),ledger=result.error?null:accountBalance(budget,accountId,date),difference=bank!==null&&ledger!==null?bank-ledger:null;
+ const bank=parseBankAmount(balance),ledger=result.error?null:accountBalance(budget,accountId,date),difference=bank!==null&&ledger!==null?bank-ledger:null;
  const pointed=account.openingBalance+result.rows.filter(t=>checked.has(t.id)).reduce((sum,t)=>sum+t.amount,0),remaining=result.rows.filter(t=>!checked.has(t.id)).length;
  const hints=useMemo(()=>reconciliationHints(result.rows,difference??0),[result.rows,difference]);
  const filtered=result.rows.filter(t=>(t.label+' '+t.note+' '+(t.importRef??'')).toLocaleLowerCase('fr').includes(query.toLocaleLowerCase('fr'))),safePage=Math.min(page,Math.max(0,Math.ceil(filtered.length/40)-1)),visible=filtered.slice(safePage*40,(safePage+1)*40),history=[...(account.reconciliations??[])].reverse();

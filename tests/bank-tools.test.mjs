@@ -7,6 +7,7 @@ import { bulkEditable, buildBulkEdit } from '../lib/bulk-transactions.ts';
 import { linkTransfer, unlinkTransfer, transferCandidates, transferSuggestions } from '../lib/transfer-matching.ts';
 import { spendingPlan } from '../lib/spending-plan.ts';
 import { spendingInsights } from '../lib/spending-insights.ts';
+import { parseBankAmount } from '../lib/bank-import.ts';
 import { mergeBudgets } from '../lib/budget-merge.ts';
 const today='2026-10-27';
 const account=(id,type='current',openingDate='2026-09-01')=>({id,name:`Compte ${id}`,type,bank:'QA',openingBalance:100000,openingDate,color:'#335cff'});
@@ -76,4 +77,8 @@ test('the latest reconciliation uses actual timestamps and prefers the last appe
  const a=account('a');const record=(confirmedAt,bankBalance)=>({date:'2026-10-20',bankBalance,fingerprint:'a'.repeat(64),confirmedAt});
  a.reconciliations=[record('2026-10-27T10:00:00Z',100),record('2026-10-27T10:00:00.123Z',200)];assert.equal(latestReconciliation(a).bankBalance,200);
  a.reconciliations.push(record('2026-10-27T10:00:00.123Z',300));assert.equal(latestReconciliation(a).bankBalance,300);
+});
+
+test('an overdrawn bank balance accepts the copied Unicode minus and rejects malformed grouping',async()=>{
+ const b=base();b.accounts[0].openingBalance=-10000;b.transactions=[];const balance=parseBankAmount('−100,00 €');assert.equal(balance,-10000);const confirmed=await confirmReconciliation(b,'a',today,balance,new Set());assert.equal(latestReconciliation(confirmed.accounts[0]).bankBalance,-10000);assert.equal(parseBankAmount('12.34.56,78'),null);
 });
