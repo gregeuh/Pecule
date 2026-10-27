@@ -40,3 +40,7 @@ La réception et l’usage réel des e-mails de réinitialisation exigent un ser
 ### Navigation mobile et accueil compact
 
 `PECULE_E2E_NO_SANDBOX=1 npm run test:e2e:mobile` vérifie en démonstration les largeurs 320, 390, 600 et 1440 px, dans les deux thèmes. Le test couvre les quatre destinations, le bouton d’ajout séparé, le menu Plus et ses destinations, le focus et Échap, le détail du disponible, les montants masqués, l’ordre des sections et la disposition ordinateur. Il refuse toute écriture `/api/budget`. Pour vérifier une publication, utiliser `PECULE_E2E_BASE_URL`, avec `PECULE_E2E_NODE_TRANSPORT=1 NODE_USE_ENV_PROXY=1` si le proxy système est requis ; aucune désactivation TLS.
+
+### Icônes personnalisées
+
+`PECULE_E2E_NO_SANDBOX=1 npm run test:e2e:icons` vérifie le lien manuel, sa validation, son aperçu, l’édition et le retrait, le retour au catalogue, les récurrences et le repli en cas d’image inaccessible sur mobile/ordinateur et clair/sombre. Les images externes sont interceptées par des fixtures, sans requête Internet réelle vers leur hébergeur. Toute écriture d’un budget personnel est interdite ; la démo reste en mémoire. PECULE_E2E_BASE_URL et le transport Node optionnel permettent la validation d’une publication.

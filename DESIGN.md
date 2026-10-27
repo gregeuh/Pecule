@@ -106,3 +106,7 @@ Sur mobile, le disponible, le budget quotidien et l’horizon précèdent « Com
 
 
 Le dock mobile est possédé par `app/mobile-dock.tsx` : défilement descendant au-delà de 80 px et 24 px de mouvement → format compact ; remontée de 12 px → format complet ; retour dans les 32 premiers pixels → complet. Le petit seuil évite les oscillations et la position est bornée aux limites du document pour ignorer le rebond élastique. L’écoute est passive et regroupée par requestAnimationFrame. Les icônes et le bouton d’ajout restent touchables (au moins 44 px) ; les noms accessibles restent présents. Le focus clavier et un dialogue ouvert imposent le format complet. L’animation de 220 ms se limite à la navigation fixe, sans déplacer le contenu ; elle est désactivée en réduction des animations. Le format ordinateur reste inchangé.
+
+## Icônes personnalisées par lien
+
+Le sélecteur partagé `app/merchant-fields.tsx` conserve le catalogue et ajoute un lien d’image HTTPS appliqué explicitement, un aperçu et un retrait. Les champs et actions utilisent les primitives et tokens Atelier, avec repli des textes sur mobile. `MerchantIcon` donne priorité au lien manuel, sans changer l’identité de marque ni la catégorie ; une image inaccessible revient à l’icône de catégorie. Le navigateur charge l’image avec referrerPolicy=no-referrer, sans proxy serveur ni incorporation HTML. L’aperçu annonce chargement, réussite ou échec. Le lien est porté par `customIconUrl` sur les opérations et récurrences ; il est conservé dans les budgets et sauvegardes JSON.

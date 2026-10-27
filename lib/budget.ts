@@ -1,8 +1,8 @@
 import type { Reconciliation } from "./bank-reconciliation";
 export type CategoryRule = { key:string;title:string;direction:"income"|"expense";category:string };
 export type Account = { reconciliations?:Reconciliation[]; id: string; name: string; bank: string; type: "current" | "savings" | "cash"; openingBalance: number; openingDate: string; color: string };
-export type Transaction = { id: string; label: string; amount: number; date: string; accountId: string; category: string; note: string; merchantId?: string; ruleId?: string; transferId?: string; transferOriginalCategory?:string; goalId?: string; importRef?: string; importBatch?: string; balanceIncluded?: boolean };
-export type Rule = { merchantId?: string; id: string; label: string; amount: number; accountId: string; category: string; startDate: string; endDate: string; frequency: "monthly" | "weekly" | "yearly"; timing: "date" | "last-business-day"; day: number; active: boolean; holidays: "FR" | "none"; excludedDates: string[] };
+export type Transaction = { id: string; label: string; amount: number; date: string; accountId: string; category: string; note: string; merchantId?: string; customIconUrl?: string; ruleId?: string; transferId?: string; transferOriginalCategory?:string; goalId?: string; importRef?: string; importBatch?: string; balanceIncluded?: boolean };
+export type Rule = { merchantId?: string; customIconUrl?: string; id: string; label: string; amount: number; accountId: string; category: string; startDate: string; endDate: string; frequency: "monthly" | "weekly" | "yearly"; timing: "date" | "last-business-day"; day: number; active: boolean; holidays: "FR" | "none"; excludedDates: string[] };
 export type Goal = { id: string; name: string; target: number; saved: number; monthly: number; color: string; icon: string; deadline: string };
 export type Budget = { version: 1; name: string; accounts: Account[]; transactions: Transaction[]; rules: Rule[]; goals: Goal[]; settings: { categoryRules?:CategoryRule[]; dailyComfortCents?:number; categoryLimits?:Record<string,number>; horizon: "salary" | "month"; reserve: number; holidayCalendar: "FR" | "none"; spendingPlan?: { monthlyIncome: number | null; groups: Record<string, "needs" | "wants" | "savings" | "unassigned"> } } };
 export const categories = ["Alimentation", "Restaurants", "Transport", "Logement", "Abonnements", "Télécommunications", "Énergie", "Assurances", "Impôts", "Éducation", "Épargne", "Dettes", "Shopping", "Loisirs", "Santé", "Salaire", "Autres revenus", "Autres", "Virement"];
@@ -41,7 +41,7 @@ export function occurrences(rule: Rule, from: string, to: string): Transaction[]
       if(s>=start && s<=end) dates.push(s);
     }
   }
-  return dates.filter(s=>!rule.excludedDates.includes(s)).map(s=>({id:`r:${rule.id}:${s}`,label:rule.label,amount:rule.amount,date:s,accountId:rule.accountId,category:rule.category,note:"Opération récurrente",ruleId:rule.id,...(rule.merchantId?{merchantId:rule.merchantId}:{})}));
+  return dates.filter(s=>!rule.excludedDates.includes(s)).map(s=>({id:`r:${rule.id}:${s}`,label:rule.label,amount:rule.amount,date:s,accountId:rule.accountId,category:rule.category,note:"Opération récurrente",ruleId:rule.id,...(rule.merchantId?{merchantId:rule.merchantId}:{}),...(rule.customIconUrl?{customIconUrl:rule.customIconUrl}:{})}));
 }
 export function materialize(budget: Budget, today = todayISO()): Budget {
   const ids=new Set(budget.transactions.map(t=>t.id));

@@ -168,6 +168,13 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
   background: color-mix(in srgb, var(--item-color) 75%, var(--ink));
 }
 .clarte-dashboard .clarte-budget { background: var(--card); }
+.custom-icon-fields { border-top: 1px solid var(--line); padding-top: 18px; }
+.custom-icon-fields .field > span { display: flex; align-items: center; gap: 8px; }
+.custom-icon-fields input { width: 100%; }
+.custom-icon-fields .field-error { margin: 8px 0; font-size: 13px; }
+.custom-icon-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 12px; }
+.custom-icon-preview { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+.custom-icon-preview p { color: var(--muted); display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 1.6; }
 
 @media (max-width: 760px) {
   .clarte-upcoming { padding: 20px; }

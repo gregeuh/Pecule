@@ -29,7 +29,7 @@ export function recurringSuggestions(budget:Budget,today:string):RecurringSugges
    else {const year=date.getFullYear()+(frequency==='yearly'?step:0),month=date.getMonth()+(frequency==='monthly'?step:0);next=dateISO(new Date(year,month,Math.min(day,new Date(year,month+1,0).getDate()),12));}
   }
   if(next<=today||next>'2100-12-31')continue;
-  suggestions.push({key,count:rows.length,lastDate:last.date,rule:{label:last.label,amount:last.amount,accountId:last.accountId,category:last.category,startDate:next,endDate:'',frequency,timing:'date',day,active:true,holidays:budget.settings.holidayCalendar,excludedDates:[],...(last.merchantId?{merchantId:last.merchantId}:{})}});
+  suggestions.push({key,count:rows.length,lastDate:last.date,rule:{label:last.label,amount:last.amount,accountId:last.accountId,category:last.category,startDate:next,endDate:'',frequency,timing:'date',day,active:true,holidays:budget.settings.holidayCalendar,excludedDates:[],...(last.merchantId?{merchantId:last.merchantId}:{}),...(last.customIconUrl?{customIconUrl:last.customIconUrl}:{})}});
  }
  return suggestions.sort((a,b)=>a.rule.startDate.localeCompare(b.rule.startDate));
 }
