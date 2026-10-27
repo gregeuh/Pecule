@@ -36,6 +36,31 @@ try {
       assert(boxes.every(box => Math.abs(box.top - boxes[0].top) < 1 && box.width >= 44 && box.height >= 44), 'Four usable targets must fit on one row.');
       const dock = await page.locator('.mobile-dock').boundingBox(), add = await page.locator('.mobile-add').boundingBox(), group = await nav.boundingBox();
       assert(group.x + group.width < add.x && dock.y + dock.height <= 900 - 10);
+      const dockElement = page.locator('.mobile-dock');
+      const scrollTo = async y => { await page.evaluate(y => window.scrollTo({ top: y, behavior: 'instant' }), y); };
+      await scrollTo(350);
+      await page.waitForFunction(() => document.querySelector('.mobile-dock').dataset.compact === 'true');
+      const compact = await dockElement.boundingBox();
+      assert(compact.height < dock.height && compact.width < dock.width, 'Scrolling down must reduce both height and width.');
+      assert.deepEqual(await nav.getByRole('button').allTextContents(), ['Accueil', 'Opérations', 'Comptes', 'Plus']);
+      assert(await nav.getByRole('button').evaluateAll(nodes => nodes.every(node => node.getBoundingClientRect().height >= 44 && node.getBoundingClientRect().width >= 44)));
+      await page.screenshot({ path: `${output}/${prefix}-compact.png` });
+      await scrollTo(352);
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      await scrollTo(350);
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      assert.equal(await dockElement.getAttribute('data-compact'), 'true', 'Tiny reversals must not make the dock flicker.');
+      await scrollTo(320);
+      await page.waitForFunction(() => document.querySelector('.mobile-dock').dataset.compact === 'false');
+      assert.equal((await dockElement.boundingBox()).height, dock.height, 'Scrolling up restores the full navigation.');
+      await scrollTo(700);
+      await page.waitForFunction(() => document.querySelector('.mobile-dock').dataset.compact === 'true');
+      await page.keyboard.press('Tab');
+      await nav.getByRole('button', { name: 'Accueil', exact: true }).focus();
+      assert.equal((await dockElement.boundingBox()).height, dock.height, 'Keyboard focus exposes every label.');
+      await page.evaluate(() => document.activeElement.blur());
+      await scrollTo(0);
+      await page.waitForFunction(() => document.querySelector('.mobile-dock').dataset.compact === 'false');
       assert.equal(await page.locator('.clarte-formula').isVisible(), false);
       const recent = await page.locator('.clarte-recent').boundingBox(), accounts = await page.locator('.clarte-accounts').boundingBox(), goal = await page.locator('.clarte-goal').boundingBox();
       assert(recent.y < accounts.y && accounts.y < goal.y);
@@ -94,7 +119,7 @@ try {
     assert.deepEqual(errors, []);
     report.checks.push({ width, theme, status: 'passed', serverWrites: 0 });
     await context.close();
-    console.log(`PASS ${prefix}: ${mobile ? 'four destinations, separate add, More, focus, compact home and privacy' : 'desktop layout preserved'}`);
+    console.log(`PASS ${prefix}: ${mobile ? 'four destinations, directional scroll, separate add, More, focus, compact home and privacy' : 'desktop layout preserved'}`);
   }
   report.status = 'passed';
 } catch (error) { report.status = 'failed'; report.error = error.message; throw error; }
