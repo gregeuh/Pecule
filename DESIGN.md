@@ -81,7 +81,7 @@ Les trois parcours se trouvent dans les écrans existants : comptes pour le rapp
 
 L’utilisateur a validé les couleurs de la deuxième proposition : vert profond, abricot et lavande. Cette livraison adopte uniquement la palette, sans réorganiser les écrans ni changer les calculs. Le sombre utilise un fond noir neutre et des surfaces charbon, sans bleu marine. La carte du disponible reste neutre pour chaque état financier.
 
-Propriété modèle B : `app/atelier.css` → variables sémantiques existantes → composants partagés ; le présent document reflète les valeurs acceptées. L’alias historique `--blue` est conservé pour les consommateurs existants, mais porte maintenant l’accent vert profond. Les couleurs personnelles des comptes et des objectifs stockées dans les budgets sont préservées ; les icônes et les pistes adaptent leur surface au thème via `--item-color`. Les icônes de catégories et d’actions utilisent `--category-color` et `--category-background`, jamais un fond clair imposé en sombre.
+Propriété modèle B : `app/atelier.css` → variables sémantiques existantes → composants partagés ; le présent document reflète les valeurs acceptées. L’alias historique `--blue` est conservé pour les consommateurs existants, mais porte maintenant l’accent vert profond. La projection SVG utilise également --blue, --line, --muted et --card pour sa courbe, son quadrillage et son point sélectionné. Les couleurs personnelles des comptes et des objectifs stockées dans les budgets sont préservées ; les icônes et les pistes adaptent leur surface au thème via `--item-color`. Les icônes de catégories et d’actions utilisent `--category-color` et `--category-background`, jamais un fond clair imposé en sombre.
 
 | Rôle | Clair | Sombre | Consommateurs |
 |---|---|---|---|
