@@ -4,6 +4,7 @@ import "./reference.css";
 import "./budget-signal.css";
 import "./bank-tools.css";
 import "./atelier.css";
+import "./mobile-navigation.css";
 import AppearanceProvider from "./theme-provider";
 export const metadata: Metadata = {
   title: "PECULE — Votre argent, l’esprit léger",

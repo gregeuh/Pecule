@@ -94,3 +94,9 @@ L’API vérifie l’intégrité de chaque virement : deux écritures non nulles
 ## Apparence Atelier
 
 La palette vert profond / abricot / lavande est commune aux six vues, aux réglages, à l’authentification et aux parcours bancaires. Elle ne change ni navigation, ni états, ni données. Le sélecteur partagé ThemePicker conserve clair / sombre / automatique, la confidentialité garde son comportement. L’abricot identifie des échéances, sans remplacer le signal financier du disponible. `app/atelier.css` est le propriétaire des adaptations visuelles ; `app/reference.css` conserve la structure. Les surfaces des champs et les icônes suivent les deux thèmes, les couleurs personnalisées enregistrées ne sont pas réécrites.
+
+## Navigation et accueil mobiles
+
+Source : validation utilisateur des améliorations 1 et 2 le 27 octobre 2026. Le dock comporte quatre boutons de navigation (Accueil, Opérations, Comptes, Plus) et un ajout distinct. Plus ouvre le dialogue partagé avec les destinations secondaires ; aucune fonction n’est retirée. La destination secondaire courante est indiquée dans le dialogue, et Plus reste visuellement actif. Échap, croix et fond ferment le dialogue et rendent le focus au déclencheur ; choisir une destination ferme le dialogue et place le focus sur son titre. L’arrière-plan est inerte pendant un dialogue. Le bouton d’ajout garde le parcours d’actions existant.
+
+Sur mobile, le détail du calcul est accessible par le bouton textuel « Comprendre mon disponible » ; aucun calcul ni signal n’est changé. Les opérations récentes précèdent comptes et objectifs, avec trois lignes et Tout voir. L’absence d’échéances possède un état explicite. Les montants masqués restent masqués dans l’accueil et le détail. Les interactions et zones sûres sont vérifiées par tests/e2e/mobile-navigation.mjs en démonstration, sans écritures personnelles. La disposition ordinateur est conservée.

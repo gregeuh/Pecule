@@ -1,0 +1,88 @@
+/* Mobile shell: four destinations, a separate add action, one row. */
+.mobile-dock, .clarte-calculation-link { display: none; }
+.clarte-upcoming-empty { color: var(--apricot-muted); font-size: 13px; line-height: 1.6; }
+.navigation-menu-icon { color: var(--blue); }
+.navigation-menu > button { margin-top: 8px; }
+.navigation-menu > button > svg { color: var(--muted); }
+
+@media (max-width: 760px) {
+  html { scroll-padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
+  .mobile-dock {
+    position: fixed;
+    z-index: 45;
+    left: 16px;
+    right: 16px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 520px;
+    margin-inline: auto;
+  }
+  .mobile-dock .mobile-nav.floating-nav {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    flex: 1;
+    gap: 2px;
+    width: auto;
+    height: 64px;
+    padding: 5px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    transform: none;
+  }
+  .mobile-dock .mobile-nav.floating-nav > button {
+    min-height: 52px;
+    min-width: 0;
+    padding: 5px 0;
+    border-radius: 18px;
+    gap: 4px;
+    font-size: 10px;
+  }
+  .mobile-add {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    border-radius: 50%;
+    background: var(--action-bg);
+    color: var(--on-action);
+    box-shadow: var(--dock-shadow);
+  }
+  .mobile-add:hover { background: var(--action-hover); }
+  main { padding-bottom: calc(108px + env(safe-area-inset-bottom)); }
+  .toast { bottom: calc(94px + env(safe-area-inset-bottom)); }
+  .clarte-header { margin-bottom: 18px; }
+  .clarte-mobile-title { margin-bottom: 20px; }
+  .clarte-mobile-title p { margin-top: 6px; }
+  .clarte-grid { gap: 20px; }
+  .clarte-dashboard .clarte-budget { padding: 20px; }
+  .clarte-dashboard .clarte-formula,
+  .clarte-available-title > .icon-button { display: none; }
+  .clarte-amount-row { margin: 12px 0 6px; }
+  .clarte-mobile-period { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .clarte-mobile-period > strong { font-size: 17px; }
+  .clarte-mobile-period > span { font-size: 12px; }
+  .clarte-calculation-link {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 10px;
+    min-height: 36px;
+    font-size: 12px;
+  }
+  .budget-alerts { order: 1; margin: 0; }
+  .clarte-upcoming { order: 2; }
+  .clarte-recent { order: 3; }
+  .clarte-recent > .clarte-transaction:nth-of-type(n + 4) { display: none; }
+  .clarte-accounts { order: 4; margin-top: 0; }
+  .clarte-goal { order: 5; }
+  .clarte-plan-link { order: 6; }
+  .clarte-chart { order: 7; }
+  .clarte-account, .clarte-transaction { min-height: 60px; }
+}
+@media (forced-colors: active) {
+  .mobile-add { border: 1px solid ButtonText; }
+}

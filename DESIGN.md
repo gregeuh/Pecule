@@ -97,3 +97,9 @@ Propriété modèle B : `app/atelier.css` → variables sémantiques existantes 
 | --lavender-ink / --lavender-muted | #46345e / #635176 | #ecddff / #cbb7df | texte des objectifs |
 
 L’abricot des échéances ne signifie pas une alerte. Les tons rouge/orange/vert du disponible restent exclusivement ceux de `app/budget-signal.css`. Les montants masqués et les trois états gardent le même fond neutre. Les couleurs forcées suivent Canvas/CanvasText. Le thème automatique est résolu avant peinture par next-themes et suit les changements de préférence système. La navigation mobile conserve sa géométrie flottante, avec un onglet actif teinté et une ombre sobre adaptée au thème.
+
+## Navigation et accueil mobiles — 27 octobre 2026
+
+`app/mobile-navigation.css`, chargé après Atelier, possède la structure mobile à 760 px et moins. Quatre destinations sur une seule ligne : Accueil, Opérations, Comptes, Plus. Le bouton d’ajout circulaire est distinct du groupe de navigation. Plus ouvre le dialogue canonique de BudgetApp : récurrences, épargne, répartition et réglages ; il conserve l’indication de destination courante. Les surfaces et le focus utilisent exclusivement les tokens Atelier, dans les deux thèmes.
+
+Sur mobile, le disponible, le budget quotidien et l’horizon précèdent « Comprendre mon disponible », qui ouvre le détail existant. La formule reste visible sur ordinateur. L’ordre mobile est disponible, alertes éventuelles, échéances, trois dernières opérations, comptes, objectif, répartition, projection. Le document garde son défilement naturel et un espace inférieur réserve le dock et les zones sûres. La navigation ordinateur conserve sa disposition.

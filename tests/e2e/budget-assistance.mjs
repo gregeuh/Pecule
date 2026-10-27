@@ -14,7 +14,7 @@ try{
   const page=await context.newPage();page.setDefaultTimeout(20000);const errors=[],writes=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(r.method()==='PUT'&&r.url().endsWith('/api/budget'))writes.push('unexpected write');});
   await page.goto(origin);await page.locator('.clarte-budget').waitFor();
   const nav=page.getByRole('navigation',{name:mobile?'Navigation mobile':'Navigation principale'});
-  async function go(name){await nav.getByRole('button',{name,exact:true}).click();}
+  async function go(name){if(mobile&&name==='Récurrences'){await nav.getByRole('button',{name:'Plus',exact:true}).click();await page.getByRole('navigation',{name:'Navigation complémentaire'}).getByRole('button',{name:/^Récurrences/}).click();}else await nav.getByRole('button',{name,exact:true}).click();}
   async function add(){await go('Opérations');await page.getByRole('button',{name:'Nouvelle opération',exact:true}).click();}
   await add();await page.locator('input[name="label"]').fill('QA marchand mémorisé');await page.locator('input[name="amount"]').fill('12.34');await page.locator('select[name="category"]').selectOption('Loisirs');await page.locator('input[name="rememberCategory"]').check();await page.getByRole('button',{name:'Enregistrer l’opération',exact:true}).click();await page.getByRole('dialog').waitFor({state:'hidden'});
   await add();await page.locator('input[name="label"]').fill('QA marchand mémorisé');assert.equal(await page.locator('select[name="category"]').inputValue(),'Loisirs');await page.getByRole('button',{name:'Fermer',exact:true}).click();
