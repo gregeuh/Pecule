@@ -26,3 +26,7 @@ Si le proxy TLS du cloud est approuvé par Node mais absent du magasin de Chromi
 `node tests/e2e/budget-recovery.mjs` nécessite les mêmes variables explicites que le test connecté. Il crée/réutilise un compte fictif distinct dans `.sites-runtime/p1-recovery/<hôte>/`, dont le budget est réinitialisé pour vérifier les conflits de révision, les modifications indépendantes et la conservation après erreur 503. Ne jamais lui fournir de compte personnel. Un déploiement de prévisualisation et la production ont des identifiants isolés. Les preuves restent dans `outputs/p1-recovery/`.
 
 La réception et l’usage réel des e-mails de réinitialisation exigent un service configuré ; voir `docs/password-reset.md`. Les tests de navigateur sans ce service vérifient uniquement l’indisponibilité explicite et les liens invalides, pas une livraison d’e-mail.
+
+## Assistance P2
+
+`node tests/e2e/budget-assistance.mjs` vérifie uniquement la démonstration, sur ordinateur/téléphone et dans les deux thèmes : règle de catégorie explicite, suggestion de récurrence après import historique, confirmation de création, seuil quotidien, seuil de catégorie, analyse et confidentialité lors du masquage des montants. Les barres ne révèlent aucun montant masqué. Aucune écriture serveur n’est autorisée par ce test.

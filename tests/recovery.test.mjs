@@ -38,3 +38,8 @@ test('undo batch removes its edited rows, preserves unrelated rows and opening b
 test('linked financial operations prevent partial batch deletion',()=>{
  for(const field of ['transferId','goalId','ruleId']){const b=fixture();b.transactions[0].importBatch='batch';b.transactions[0][field]='linked';assert.throws(()=>removeImportBatch(b,'batch'),/liées/);assert.equal(b.transactions.length,2);}
 });
+
+test('a validated response with different property order is the same financial entity',()=>{
+ const base=fixture(),local=structuredClone(base),remote=structuredClone(base);local.transactions[0].amount=-777;remote.transactions[0]=Object.fromEntries(Object.entries(local.transactions[0]).reverse());
+ const result=mergeBudgets(base,local,remote);assert.equal(result.conflicts.length,0);assert.equal(result.budget.transactions.length,2);assert.equal(result.budget.transactions[0].amount,-777);
+});

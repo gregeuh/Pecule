@@ -1,3 +1,5 @@
+import { preferredCategory } from "./category-rules.ts";
+import { suggestCategory } from "./merchants.ts";
 import { parseCSV, parseCSVDate, transactionKey } from "./csv.ts";
 import type { Budget, Transaction } from "./budget";
 
@@ -73,7 +75,7 @@ export function previewBankImport(budget:Budget,plan:ImportPlan):ImportRow[] {
   const seen=new Map<string,number>(),seenRefs=new Set<string>();
   return plan.rows.slice(plan.header+1).map((row,index)=>{
     const c=plan.columns,get=(i:number)=>i>=0?(row[i]??"").trim():"",errors=[...mappingErrors],warnings:string[]=[];
-    const date=dateValue(get(c.date),plan.dateOrder),label=get(c.label).replace(/\s+/g," "),category=get(c.category)||"Autres";
+    const date=dateValue(get(c.date),plan.dateOrder),label=get(c.label).replace(/\s+/g," "),sourceCategory=get(c.category);
     const notes=[get(c.note)];
     if(plan.keepExtra!==false){
       const used=new Set(Object.entries(c).filter(([key,value])=>value>=0&&(plan.mode==="signed"?!["debit","credit"].includes(key):key!=="amount")).map(([,value])=>value));
@@ -83,6 +85,7 @@ export function previewBankImport(budget:Budget,plan:ImportPlan):ImportRow[] {
     let amount:number|null=null;
     if(plan.mode==="signed")amount=parseBankAmount(get(c.amount));
     else {const debit=get(c.debit)?parseBankAmount(get(c.debit)):0,credit=get(c.credit)?parseBankAmount(get(c.credit)):0;if(debit!==null&&credit!==null&&credit>=0&&!(debit!==0&&credit!==0))amount=credit-Math.abs(debit);}
+    const category=sourceCategory||preferredCategory(budget.settings.categoryRules,label,undefined,(amount??0)>0)||suggestCategory(label,(amount??0)>0)||"Autres";
     if(row.length!==plan.rows[plan.header].length)errors.push("Nombre de colonnes différent de l’en-tête.");
     if(!account)errors.push("Choisissez un compte de destination.");
     if(!date)errors.push("Date invalide : vérifiez le format choisi.");

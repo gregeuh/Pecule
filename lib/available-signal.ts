@@ -19,9 +19,11 @@ const signals = {
   },
 } as const;
 
-export function getAvailableSignal(availableCents: number, remainingDays: number) {
+export function getAvailableSignal(availableCents: number, remainingDays: number, dailyComfortCents = DAILY_COMFORT_CENTS) {
   // Compare cents before rounding the daily display: 9.999 €/day is still attention.
-  const minimumForComfort = DAILY_COMFORT_CENTS * Math.max(1, remainingDays);
+  const threshold=Number.isSafeInteger(dailyComfortCents)&&dailyComfortCents>0?dailyComfortCents:DAILY_COMFORT_CENTS;
+  const minimumForComfort = threshold * Math.max(1, remainingDays);
   const tone: AvailableTone = availableCents < 0 ? "negative" : availableCents < minimumForComfort ? "attention" : "comfort";
-  return signals[tone];
+  const amount=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:2}).format(threshold/100);
+  return tone==="negative"?signals[tone]:{...signals[tone],description:tone==="attention"?`Moins de ${amount} disponibles par jour sur cette période.`:`Au moins ${amount} disponibles par jour sur cette période.`};
 }

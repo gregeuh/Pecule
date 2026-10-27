@@ -65,3 +65,7 @@ Le libellé reste visible sans couleur et expose son explication par son nom acc
 ## Récupération et imports
 
 Les reprises de brouillon, la liste des imports et la comparaison de versions utilisent les cartes neutres, les champs natifs et les confirmations existantes. Aucune grande surface de couleur n’est ajoutée. La comparaison traduit les champs financiers en français et conserve les deux versions visibles avant le choix. Les nouvelles pages de récupération de compte reprennent la carte d’authentification existante.
+
+## Assistance budgétaire
+
+Les analyses restent repliées par défaut dans Opérations pour préserver la densité de la page. Les barres utilisent la couleur primaire existante, sans nouvelle palette. Les propositions de récurrences reprennent les cartes neutres et les boutons secondaires. Les alertes de catégories occupent une ligne discrète sous le disponible ; aucun aplat rouge/orange/vert ne revient. Les réglages de seuil et les règles mémorisées réutilisent les cartes de réglages existantes.

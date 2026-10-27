@@ -35,3 +35,30 @@
 .conflict-values div { display: flex; gap: 12px; padding: 4px 0; }
 .conflict-values dt { color: var(--muted); flex: 0 0 40%; }
 .conflict-values dd { margin: 0; overflow-wrap: anywhere; min-width: 0; }
+
+.spending-insights,.recurring-suggestions { margin-bottom: 20px; }
+.spending-insights > summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
+.spending-insights > summary:hover { color: var(--blue); }
+.insight-content { display: grid; gap: 18px; padding-top: 20px; }
+.insight-content > p,.recurring-suggestions > p { color: var(--muted); line-height: 1.6; }
+.insight-totals { display: flex; flex-wrap: wrap; gap: 24px; margin: 0; }
+.insight-totals dt { color: var(--muted); font-size: 12px; }
+.insight-totals dd { margin: 6px 0 0; font-size: 20px; font-weight: 600; }
+.insight-list,.preference-list { list-style: none; padding: 0; margin: 0; }
+.insight-list li { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 10px 0; }
+.insight-track { grid-column: 1 / -1; height: 4px; background: var(--line); border-radius: 4px; overflow: hidden; }
+.insight-track > span { display: block; height: 100%; background: var(--blue); }
+.preference-list li { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.preference-list li > span { min-width: 0; overflow-wrap: anywhere; }
+.preference-list small { display: block; color: var(--muted); margin-top: 5px; }
+.settings-card > h3 { margin: 24px 0 16px; }
+
+.budget-alerts { color: var(--muted); font-size: 13px; line-height: 1.6; display: flex; flex-wrap: wrap; gap: 8px 16px; margin: -8px 0 20px; }
+.spending-insights,.recurring-suggestions { padding: 24px; }
+@media(max-width:760px) { .spending-insights,.recurring-suggestions { padding: 20px; } }
+.insight-totals { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); }
+@media(max-width:760px) { .insight-totals { grid-template-columns: repeat(2,minmax(0,1fr)); } .insight-totals > div:last-child { grid-column: 1 / -1; } }
+.spending-insights > summary:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
+.conflict-panel { padding: 20px; }
+.main-wrap > .conflict-panel { margin: 24px 32px 0; }
+@media(max-width:760px) { .main-wrap > .conflict-panel { margin: 20px; } }

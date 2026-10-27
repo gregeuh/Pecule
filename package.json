@@ -13,7 +13,10 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "test:e2e:connected": "node tests/e2e/connected-budget.mjs",
     "test:e2e:signal": "node tests/e2e/available-signal.mjs",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "test:e2e:imports": "node tests/e2e/import-recovery.mjs",
+    "test:e2e:recovery": "node tests/e2e/budget-recovery.mjs",
+    "test:e2e:assistance": "node tests/e2e/budget-assistance.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

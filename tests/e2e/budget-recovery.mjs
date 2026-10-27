@@ -47,6 +47,11 @@ async function newContext(mobile = false) {
       await route.fulfill({ status: response.status, headers, body: Buffer.from(await response.arrayBuffer()) });
     });
   }
+  if(process.env.PECULE_E2E_BYPASS_COOKIE_FILE){
+    const jar=await readFile(process.env.PECULE_E2E_BYPASS_COOKIE_FILE,'utf8');
+    const cookies=jar.split('\n').filter(line=>line&&(line.startsWith('#HttpOnly_')||!line.startsWith('#'))).map(line=>{const [domain,,cookiePath,secure,expires,name,value]=line.replace(/^#HttpOnly_/,'').split('\t');return {domain,path:cookiePath,secure:secure==='TRUE',expires:Number(expires)||-1,name,value,httpOnly:line.startsWith('#HttpOnly_')};});
+    await context.addCookies(cookies);
+  }
   contexts.push(context);
   const page = await context.newPage();
   page.setDefaultTimeout(30_000);
@@ -92,7 +97,7 @@ try {
  let current=await api(page,'/api/budget');
  assert(!current.data.budget||current.data.budget.name.startsWith('QA P1'),'Only dedicated test budgets may be replaced');
  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Paris',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
- const fixture={version:1,name:'QA P1 récupération',accounts:[{id:'qa-recovery-account',name:'Compte QA récupération',bank:'',type:'current',openingBalance:100000,openingDate:today.slice(0,7)+'-01',color:'#335cff'}],transactions:[],rules:[],goals:[],settings:{horizon:'month',reserve:0,holidayCalendar:'FR'}};
+ const fixture={version:1,name:'QA P1 récupération',accounts:[{id:'qa-recovery-account',name:'Compte QA récupération',bank:'',type:'current',openingBalance:100000,openingDate:today.slice(0,7)+'-01',color:'#335cff'}],transactions:[],rules:[],goals:[],settings:{horizon:'month',reserve:0,holidayCalendar:'FR',dailyComfortCents:1500,categoryLimits:{Restaurants:1000},categoryRules:[{key:'label:qa service',title:'QA service',direction:'expense',category:'Abonnements'}]}};
  assert.equal((await api(page,'/api/budget','PUT',{budget:fixture,revision:current.data.revision})).status,200);
  await page.goto(origin);await page.locator('.clarte-budget').waitFor();
  await page.getByRole('navigation',{name:'Navigation principale'}).getByRole('button',{name:'Mes comptes',exact:true}).click();
@@ -103,7 +108,7 @@ try {
  assert.equal((await api(page,'/api/budget','PUT',{budget:remote,revision:current.data.revision})).status,200);
  await page.getByRole('button',{name:'Enregistrer le compte',exact:true}).click();
  const panel=page.getByRole('region',{name:'Résoudre les modifications concurrentes'});await panel.waitFor();
- assert.equal(await page.locator('input[name="name"]').inputValue(),'Compte QA mon choix');
+ assert.equal(await page.locator('input[name="name"]').inputValue(),'Compte QA mon choix');await panel.screenshot({path:path.join(output,'conflict-choices.png')});
  await panel.getByRole('radio',{name:'Ma modification'}).check();
  // A temporary error must leave the explicit choice and draft intact.
  await page.route('**/api/budget',async route=>{if(route.request().method()==='PUT'){await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:'QA service temporairement indisponible'})});await page.unroute('**/api/budget');}else await route.fallback();});
@@ -126,7 +131,23 @@ try {
  await panel.getByRole('button',{name:'Enregistrer les versions choisies'}).click();await page.getByRole('dialog').waitFor({state:'hidden'});
  current=await api(page,'/api/budget');assert.equal(current.data.budget.accounts[0].bank,'QA banque locale');assert.equal(current.data.budget.transactions[0].note,'QA troisième modification');
  await record('Independent edits and a second revision conflict preserve all three devices’ changes');
- assert.equal(accountBalance(current.data.budget,fixture.accounts[0].id,today),99250);
+ assert.equal(accountBalance(current.data.budget,fixture.accounts[0].id,today),99250);assert.deepEqual(current.data.budget.settings,fixture.settings);
+ // Simulate a committed transaction whose response is lost. Retry must reuse its exact IDs.
+ await page.getByRole('navigation',{name:'Navigation principale'}).getByRole('button',{name:'Opérations',exact:true}).click();
+ await page.getByRole('button',{name:'Nouvelle opération',exact:true}).click();
+ await page.locator('input[name="label"]').fill('QA réponse perdue');await page.locator('input[name="amount"]').fill('1.23');
+ await page.route('**/api/budget',async route=>{
+   if(route.request().method()!=='PUT')return route.fallback();
+   const request=route.request();const committed=await fetch(request.url(),{method:'PUT',headers:request.headers(),body:request.postDataBuffer()});
+   assert.equal(committed.status,200,'Synthetic transaction must commit before simulating the lost response');
+   await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:'QA réponse perdue après sauvegarde'})});await page.unroute('**/api/budget');
+ });
+ await page.getByRole('button',{name:'Enregistrer l’opération',exact:true}).click();await panel.waitFor();
+ await panel.getByText('La sauvegarde n’a pas pu être confirmée.',{exact:false}).waitFor();
+ await panel.getByRole('button',{name:'Enregistrer les versions choisies'}).click();
+ await page.waitForTimeout(800);await panel.getByRole('button',{name:'Enregistrer les versions choisies'}).click();await page.getByRole('dialog').waitFor({state:'hidden'});
+ current=await api(page,'/api/budget');assert.equal(current.data.budget.transactions.filter(t=>t.label==='QA réponse perdue').length,1);assert.equal(accountBalance(current.data.budget,fixture.accounts[0].id,today),99127);
+ await record('A committed transaction with a lost response is recovered without a duplicate');
  await page.screenshot({path:path.join(output,'connected-recovery.png')});
  await api(page,'/api/auth/sign-out','POST',{});
  await record('Recovery result persisted in PostgreSQL; dedicated account signed out');
