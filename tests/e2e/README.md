@@ -44,3 +44,7 @@ La réception et l’usage réel des e-mails de réinitialisation exigent un ser
 ### Icônes personnalisées
 
 `PECULE_E2E_NO_SANDBOX=1 npm run test:e2e:icons` vérifie le lien manuel, sa validation, son aperçu, l’édition et le retrait, le retour au catalogue, les récurrences et le repli en cas d’image inaccessible sur mobile/ordinateur et clair/sombre. Les images externes sont interceptées par des fixtures, sans requête Internet réelle vers leur hébergeur. Toute écriture d’un budget personnel est interdite ; la démo reste en mémoire. PECULE_E2E_BASE_URL et le transport Node optionnel permettent la validation d’une publication.
+
+### Dimensions et contrôles mobiles
+
+`PECULE_E2E_NO_SANDBOX=1 npm run test:e2e:sizing` parcourt les vues, formulaires, import, rapprochement et connexion en 320/390/600 px ainsi qu’en paysage 740 × 390, clair/sombre. Il mesure les débordements du document et des cartes/dialogues, les champs à 16 px, les cases natives à 20 px, les zones tactiles et le maintien de l’en-tête lors du défilement. Il teste aussi un nom de compte long et un gros solde, uniquement en démonstration sans PUT serveur. `PECULE_SIZING_QUICK=1` limite le contrôle à 390 px dans les deux thèmes pour vérifier une publication. Le transport Node et PECULE_E2E_BASE_URL suivent les autres tests ; aucune désactivation TLS.

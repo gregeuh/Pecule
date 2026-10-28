@@ -1,0 +1,167 @@
+/* Shared mobile geometry. Palette and financial states stay owned by Atelier. */
+@media (max-width: 760px) {
+  :root { --mobile-control: 48px; --mobile-target: 44px; }
+  .app-shell *, .modal *, .auth-shell *, .setup-page * { min-width: 0; }
+  .app-shell main { padding-left: max(24px, env(safe-area-inset-left)); padding-right: max(24px, env(safe-area-inset-right)); }
+  .page-overview main { padding-top: max(24px, env(safe-area-inset-top)); }
+  .topbar { height: calc(76px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); padding-left: max(24px, env(safe-area-inset-left)); padding-right: max(24px, env(safe-area-inset-right)); }
+  .mobile-dock { left: max(16px, env(safe-area-inset-left)); right: max(16px, env(safe-area-inset-right)); }
+
+  .field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+  .field select, .field textarea {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-height: var(--mobile-control);
+    padding: 10px 12px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .field input[type="date"] { inline-size: 100%; min-inline-size: 0; }
+  .field input::-webkit-date-and-time-value { min-height: 1.5em; text-align: left; }
+  .field textarea { min-height: 120px; }
+  .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .field > span, .field small, .field-hint { overflow-wrap: anywhere; }
+  input, select, textarea { scroll-margin-block: 16px; }
+
+  /* Native choices must never inherit a text field's padding or minimum height. */
+  input[type="checkbox"], input[type="radio"],
+  .field input[type="checkbox"], .field input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    min-height: 20px;
+    min-width: 20px;
+    max-width: 20px;
+    flex: 0 0 20px;
+    padding: 0;
+    margin: 2px 0 0;
+    border: 0;
+    border-radius: 0;
+    accent-color: var(--blue);
+  }
+  .bank-import-confirm, .bank-tools .bank-tools-check,
+  .selection-toolbar .bank-tools-check, .conflict-panel .field {
+    min-height: var(--mobile-target);
+    padding-block: 6px;
+    gap: 12px;
+  }
+  .bank-import-confirm > span, .bank-tools-check > span { min-width: 0; overflow-wrap: anywhere; }
+  .color-choices { display: grid; grid-template-columns: repeat(6, 44px); gap: 10px; }
+  .form-grid .color-choices { grid-template-columns: repeat(3, 44px); }
+  .color-choices > label { width: 44px; height: 44px; }
+  .color-choices input[type="radio"] {
+    width: 100%; height: 100%; min-width: 0; min-height: 0; max-width: none;
+    margin: 0; padding: 0;
+  }
+  .setup-choices input { margin-top: 0; }
+  .transaction-select-toggle { flex-basis: 44px; width: 44px; }
+  .transaction-select-toggle input { margin: 0; }
+
+  .primary, .secondary, .danger { min-height: var(--mobile-control); line-height: 1.5; white-space: normal; }
+  .primary.compact, .secondary.compact, .danger.compact { min-height: var(--mobile-target); }
+  .icon-button, .icon-button.small, .topbar .icon-button,
+  .clarte-header-actions .icon-button, .modal-heading .icon-button,
+  .setup-charge .icon-button, .setup-summary button {
+    width: 44px; height: 44px; min-width: 44px; min-height: 44px; flex-shrink: 0;
+  }
+  .text-button, .link-button, .clarte-calculation-link,
+  .clarte-section-title .text-button {
+    min-width: var(--mobile-target);
+    min-height: var(--mobile-target);
+    line-height: 1.5;
+    white-space: normal;
+  }
+  .clarte-section-title > .text-button { flex-shrink: 0; }
+  .demo-banner button, .clarte-chart > summary,
+  .spending-insights > summary, .brand-picker > summary { min-height: var(--mobile-target); }
+  .account-details-link { min-height: var(--mobile-target); }
+  .plan-explanation a { display: inline-flex; align-items: center; min-height: var(--mobile-target); }
+  .danger-icon { min-width: 44px; min-height: 48px; }
+  .toast { padding: 10px 12px; }
+  .toast > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .toast button { width: 44px; height: 44px; min-width: 44px; min-height: 44px; flex-shrink: 0; margin-left: 0; }
+  .form-actions { flex-wrap: wrap; align-items: stretch; gap: 10px; }
+  .form-actions > .primary { min-width: 0; }
+  .page-heading h1, .modal-heading h2, .rule-card h3,
+  .account-card h3, .goal-card h3 { overflow-wrap: anywhere; }
+
+  .modal-backdrop { padding-top: max(12px, env(safe-area-inset-top)); }
+  .modal, .modal.actions-modal {
+    max-height: calc(100dvh - max(12px, env(safe-area-inset-top)));
+    padding: 20px max(20px, env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+    scroll-padding-block: 84px 24px;
+  }
+  .modal-heading {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    align-items: center;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    padding-block: 8px 12px;
+    margin-bottom: 20px;
+  }
+  .modal-heading h2 { font-size: 22px; line-height: 1.35; }
+  .modal-heading > .icon-button { margin: 0; }
+
+  .transactions-card .toolbar { gap: 12px; padding: 16px; }
+  .toolbar .search-input, .bank-tools .search-input {
+    display: flex; align-items: center; gap: 8px; min-height: 48px; min-width: 0;
+    width: 100%; padding: 8px 12px; background: var(--bg);
+    border: 1px solid var(--line); border-radius: 12px;
+  }
+  .search-input input { flex: 1; width: 100%; min-width: 0; min-height: 28px; font-size: 16px; line-height: 1.5; }
+  .transactions-card .toolbar-actions {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%;
+  }
+  .toolbar-actions .compact { min-height: 48px; padding: 10px; font-size: 12px; }
+  .filter-bar { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 16px; }
+  .segmented { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; gap: 2px; padding: 4px; }
+  .segmented button { min-height: 44px; padding: 8px 4px; font-size: 12px; text-align: center; }
+  .filter-select { width: 100%; min-width: 0; max-width: none; min-height: 48px; font-size: 16px; }
+  .month-control { width: 100%; margin-left: 0; justify-content: space-between; gap: 8px; }
+  .month-control button { min-width: 44px; min-height: 44px; }
+  .month-control strong { font-size: 13px; }
+  .selection-toolbar { padding-inline: 0; }
+  .transaction-select-row { padding-left: 0; }
+  .transaction-row.full { min-height: 72px; gap: 10px; }
+  .transaction-title > strong { white-space: normal; overflow-wrap: anywhere; }
+  .transaction-title > small { flex-wrap: wrap; white-space: normal; overflow-wrap: anywhere; }
+  .transaction-amount { min-width: 0; max-width: 45%; white-space: normal; overflow-wrap: anywhere; }
+  .bank-tools-pages, .bank-import-pages {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 8px;
+  }
+  .bank-tools-pages > span, .bank-import-pages > span { grid-column: 1 / -1; grid-row: 1; text-align: center; }
+
+  .metric-strip > div, .metric-strip > div + div {
+    flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; padding-block: 12px;
+  }
+  .metric-strip span { flex: 1; font-size: 12px; }
+  .metric-strip strong { flex: 0 1 auto; max-width: 60%; margin-top: 0; font-size: 20px; line-height: 1.4; text-align: right; }
+  .clarte-transaction > b, .clarte-account > b, .clarte-due > b {
+    flex-shrink: 1; max-width: 48%; white-space: normal; overflow-wrap: anywhere; text-align: right;
+  }
+  .goal-amount { flex-wrap: wrap; gap: 6px; }
+  .goal-amount strong, .rule-amount { max-width: 100%; overflow-wrap: anywhere; }
+  .bank-tools-list > li { flex-wrap: wrap; }
+  .bank-tools-list > li > .bank-tools-check { flex: 1 1 180px; }
+  .bank-tools-summary { padding: 16px; }
+  .bank-import-review dl > div { flex-wrap: wrap; gap: 6px 16px; }
+  .bank-import-review dd { margin-left: 0; max-width: 100%; overflow-wrap: anywhere; }
+  .calculation-detail > div { flex-wrap: wrap; gap: 6px 16px; }
+  .calculation-detail > div strong { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+
+  .auth-shell { padding: 24px 16px; }
+  .auth-card { padding: 24px 20px; }
+  .auth-card .brand, .clarte-mobile-logo, .mobile-brand { min-height: 44px; }
+  .field .password-input > input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]) { padding-right: 52px; }
+}
+@media (max-width: 480px) {
+  .form-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .color-choices { grid-template-columns: repeat(3, 44px); }
+  .custom-icon-actions { align-items: stretch; }
+  .custom-icon-actions > .secondary { flex: 1 1 100%; }
+}
+@media (max-width: 359px) {
+  .app-shell main, .topbar { padding-left: max(18px, env(safe-area-inset-left)); padding-right: max(18px, env(safe-area-inset-right)); }
+}
