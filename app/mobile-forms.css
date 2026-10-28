@@ -1,6 +1,28 @@
+/* Constrain mobile pages, including wide touch-device orientations. */
+/* The shared fade-in replaced translateX(-50%) with translateY(), widening the page. */
+.toast { animation-name: viewport-toast-in; }
+@keyframes viewport-toast-in {
+  from { opacity: 0; transform: translate(-50%, 5px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+@media (max-width: 760px), (hover: none) and (pointer: coarse) {
+  /* Clip only horizontal overflow; keep the natural vertical scroller and zoom. */
+  html, body {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    overflow-x: clip;
+    overscroll-behavior-x: none;
+  }
+  /* Avoid automatic focus zoom in wide phone orientations as well. */
+  .field input:not([type="checkbox"]):not([type="radio"]), .field select,
+  .field textarea, .filter-select, .search-input input { font-size: 16px; }
+}
 /* Shared mobile geometry. Palette and financial states stay owned by Atelier. */
 @media (max-width: 760px) {
   :root { --mobile-control: 48px; --mobile-target: 44px; }
+  .app-shell, .auth-shell, .setup-page { inline-size: 100%; max-inline-size: 100%; min-inline-size: 0; }
+  .main-wrap { width: 100%; max-width: 100%; margin-left: 0; }
+  .app-shell main { min-width: 0; max-width: 100%; }
   .app-shell *, .modal *, .auth-shell *, .setup-page * { min-width: 0; }
   .app-shell main { padding-left: max(24px, env(safe-area-inset-left)); padding-right: max(24px, env(safe-area-inset-right)); }
   .page-overview main { padding-top: max(24px, env(safe-area-inset-top)); }
@@ -87,6 +109,9 @@
 
   .modal-backdrop { padding-top: max(12px, env(safe-area-inset-top)); }
   .modal, .modal.actions-modal {
+    max-inline-size: 100%;
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
     max-height: calc(100dvh - max(12px, env(safe-area-inset-top)));
     padding: 20px max(20px, env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
     scroll-padding-block: 84px 24px;
