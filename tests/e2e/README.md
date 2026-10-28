@@ -75,3 +75,12 @@ réduction des animations ; uniquement la démonstration, aucun PUT autorisé.
 `PECULE_E2E_QUICK=1` limite le contrôle public à deux contextes mobiles sombres,
 avec/sans animations. `PECULE_E2E_ENGINE=webkit` sélectionne WebKit.
 Les rapports et captures sont dans `outputs/signature-interactions`.
+
+### Transitions des menus
+
+`npm run test:e2e:menus` vérifie la continuité réelle du même panneau et du même
+fond, la saisie pendant le changement de menu, les fermetures, le refus d’une
+sauvegarde pendant la sortie, les divulgations inversées et le retour du focus.
+Clair/sombre, mobile/ordinateur et réduction des animations ; démonstration
+uniquement, zéro PUT. `PECULE_E2E_QUICK=1` limite à deux profils mobiles sombres.
+Rapports et captures : `outputs/menu-motion`. WebKit : `PECULE_E2E_ENGINE=webkit`.

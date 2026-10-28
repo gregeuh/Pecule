@@ -1,0 +1,9 @@
+/* WAAPI owns dialog motion: one backdrop stays mounted when a menu becomes a form. */
+.modal-backdrop.modal-motion, .modal-backdrop.modal-motion > .modal { animation: none; }
+.modal-motion .modal { transform-origin: center center; }
+.modal-motion .modal[data-motion="switching"] { overflow-x: clip; }
+.animated-details { box-sizing: border-box; }
+@media (prefers-reduced-motion: reduce) {
+  .modal-motion *, .animated-details { scroll-behavior: auto; }
+}
+.modal-motion .modal[data-motion="closing"] { pointer-events: none; }

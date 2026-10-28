@@ -8,6 +8,7 @@ import "./mobile-navigation.css";
 import "./mobile-forms.css";
 import "./motion.css";
 import "./signature-interactions.css";
+import "./menu-motion.css";
 import AppearanceProvider from "./theme-provider";
 export const metadata: Metadata = {
   title: "PECULE — Votre argent, l’esprit léger",
