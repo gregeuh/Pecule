@@ -163,3 +163,7 @@ Lorsqu’une occurrence liée à une récurrence est effectivement sauvegardée,
 `app/animated-details.tsx` conserve les éléments details/summary natifs, leur contenu direct et leur clavier. Il accompagne le dépliage (260 ms) et le repli (170 ms), y compris une inversion en cours de mouvement, puis rétablit la hauteur naturelle et le débordement d’origine. Catalogue, analyses, projection, réglages de répartition et détails bancaires partagent ce comportement. La réduction des animations applique directement l’état final, y compris si la préférence change pendant un mouvement.
 
 `app/menu-motion.css` retire les anciennes animations CSS du dialogue pour éviter leur superposition avec ce propriétaire. Le focus reste piégé pendant la sortie, revient au déclencheur initial après une fermeture, et rejoint le titre de la destination choisie depuis Plus. Les boutons visibles seulement sur mobile ou dans une divulgation repliée sont exclus du parcours Tab lorsqu’ils sont cachés. Le verrou de fermeture refuse une nouvelle sauvegarde pendant la sortie, sans modifier les règles financières.
+
+## Ajout depuis le menu flottant — 28 octobre 2026
+
+À la demande utilisateur, les boutons « Ajouter une opération » des en-têtes ordinateur sont supprimés : le menu flottant portefeuille/+ est l’entrée globale. Les actions propres aux pages, dont « Nouvelle opération » dans Opérations et les états vides, restent disponibles.
