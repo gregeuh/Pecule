@@ -8,7 +8,7 @@ const browser=await chromium.launch({headless:true,executablePath:process.env.PE
 const report={origin,checks:[],personalAccounts:false};
 try{
  for(const mobile of [false,true]){
-  const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:1000},reducedMotion:'reduce'});
+  const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:1000},reducedMotion:'no-preference'});
   if(process.env.PECULE_E2E_NODE_TRANSPORT==='1')await context.route(`${origin}/**`,async route=>{const req=route.request(),res=await fetch(req.url(),{method:req.method(),headers:req.headers(),body:req.postDataBuffer()||undefined,redirect:'manual'});const headers=Object.fromEntries(res.headers);delete headers['content-encoding'];delete headers['content-length'];delete headers['transfer-encoding'];const cookies=res.headers.getSetCookie();if(cookies.length)headers['set-cookie']=cookies.join('\n');await route.fulfill({status:res.status,headers,body:Buffer.from(await res.arrayBuffer())});});
   const page=await context.newPage();page.setDefaultTimeout(20000);const errors=[],writes=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(r.method()==='PUT'&&r.url().endsWith('/api/budget'))writes.push(r.url());});
   await page.goto(origin);await page.locator('.clarte-budget').waitFor();
@@ -30,6 +30,9 @@ try{
   await page.locator('.bank-import-confirm input').check();
   await page.getByRole('button',{name:'Importer 1 opérations',exact:true}).click();
   await page.getByRole('dialog').waitFor({state:'hidden'});
+  const notice=page.locator('.toast[data-kind=import]');await notice.waitFor();
+  await notice.locator('.confirmation-art[data-complete=true]').waitFor();
+  await page.screenshot({path:`${output}/${mobile?'mobile':'desktop'}-signature.png`});
   await page.getByRole('button',{name:'Mes imports',exact:true}).click();
   assert.match(await page.getByRole('dialog').innerText(),/1 opérations/);
   await page.getByRole('button',{name:'Annuler cet import',exact:true}).click();

@@ -62,3 +62,5 @@ succès, opération, validations répétées, récurrence, préférences et thè
 Il vérifie le chargement Lottie, l’absence de WASM en réduction des animations,
 le repli sans WASM, la lisibilité et l’absence d’écriture API. Captures/rapports :
 `outputs/motion`. WebKit : `PECULE_E2E_ENGINE=webkit` avec le navigateur installé.
+
+Les variantes de signature sont vérifiées par `test:e2e:motion` (opération, récurrence, préférences, épargne et objectif atteint) et `test:e2e:imports` (relevé classé). Les scènes attendent le signal de fin du lecteur réel ; les tests ne modifient que la démonstration. `tests/confirmation-kind.test.mjs` contrôle le choix du retour, dont les restaurations et conflits qui ne doivent pas annoncer un faux jalon.

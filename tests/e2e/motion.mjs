@@ -26,10 +26,18 @@ try {
     await page.getByRole('dialog').waitFor({state:'hidden'});
     const notice=page.locator('.toast[data-success=true]');await notice.waitFor();
     assert.match(await notice.innerText(),/Démonstration/);
-    if(!reduced)await notice.locator('.confirmation-art[data-ready=true]').waitFor();
+    assert.equal(await notice.getAttribute("data-kind"),"operation");
+    if(!reduced)await notice.locator('.confirmation-art[data-complete=true]').waitFor();
     else {assert.equal(wasm.length,0);assert.equal(await notice.evaluate(e=>getComputedStyle(e).animationName),'none');}
+    if(width===390 && theme==='light' && !reduced) {
+      await page.emulateMedia({reducedMotion:'reduce'});
+      await page.waitForFunction(()=>!document.querySelector('.toast .confirmation-art')?.hasAttribute('data-ready'));
+      assert(await notice.locator('.confirmation-fallback').isVisible());
+      await page.emulateMedia({reducedMotion:'no-preference'});
+      await notice.locator('.confirmation-art[data-complete=true]').waitFor();
+    }
     await notice.evaluate(e=>Promise.all(e.getAnimations({subtree:true}).map(a=>a.finished.catch(()=>{}))));
-    assert(await notice.locator("span:not(.confirmation-art)").evaluate(e=>e.getBoundingClientRect().width>120),"The message must have room to read");
+    assert(await notice.locator(".notice-copy").evaluate(e=>e.getBoundingClientRect().width>120),"The message must have room to read");
     await page.screenshot({path:`${output}/${engine}-${width}-${theme}-${reduced?'reduced':'motion'}.png`});
     // The same message must produce a fresh instance and accessible confirmation.
     const first=await notice.elementHandle();
@@ -39,12 +47,33 @@ try {
     await page.getByRole('button',{name:'Fermer la notification',exact:true}).click();
     if(width===390){await page.locator('.mobile-add').click();}else{await page.locator('.floating-action-trigger').click();}
     await page.getByRole('button',{name:/Une récurrence/}).click();await page.locator('input[name=label]').fill('QA récurrence animée');await page.locator('input[name=amount]').fill('5');await page.getByRole('button',{name:'Enregistrer la récurrence',exact:true}).click();await page.getByRole('dialog').waitFor({state:'hidden'});await notice.waitFor();
+    assert.equal(await notice.getAttribute('data-kind'),'recurrence');
+    if(!reduced)await notice.locator('.confirmation-art[data-complete=true]').waitFor();
     await page.getByRole('button',{name:'Fermer la notification',exact:true}).click();
     if(width===390){await nav.getByRole('button',{name:'Plus',exact:true}).click();await page.getByRole('dialog').getByRole('button',{name:/Réglages/}).click();}
     else await page.getByRole('button',{name:'Réglages',exact:true}).first().click();
     await page.getByRole('button',{name:'Enregistrer mes préférences',exact:true}).click();await notice.waitFor();
+    assert.equal(await notice.getAttribute('data-kind'),'settings');
+    if(!reduced)await notice.locator('.confirmation-art[data-complete=true]').waitFor();
     await page.getByRole('button',{name:'Fermer la notification',exact:true}).click();
     await page.locator('#theme-preference').selectOption(theme==='light'?'dark':'light');await notice.waitFor();assert.match(await notice.innerText(),/cet appareil/);
+    if(width===390 && !reduced) {
+      await page.getByRole('button',{name:'Fermer la notification',exact:true}).click();
+      await nav.getByRole('button',{name:'Plus',exact:true}).click();
+      await page.getByRole('dialog').getByRole('button',{name:/Mon épargne/}).click();
+      const card=page.locator('.goal-card').first();await card.getByRole('button',{name:/Modifier/}).click();
+      await page.locator('input[name=target]').fill('1000');await page.locator('input[name=saved]').fill('100');
+      await page.getByRole('button',{name:'Enregistrer mon objectif',exact:true}).click();await notice.waitFor();
+      assert.equal(await notice.getAttribute('data-kind'),'savings');
+      await notice.locator('.confirmation-art[data-complete=true]').waitFor();
+      await page.screenshot({path:`${output}/${engine}-${theme}-savings.png`});
+      await page.getByRole('button',{name:'Fermer la notification',exact:true}).click();
+      await card.getByRole('button',{name:/Modifier/}).click();await page.locator('input[name=saved]').fill('1000');
+      await page.getByRole('button',{name:'Enregistrer mon objectif',exact:true}).click();await notice.waitFor();
+      assert.equal(await notice.getAttribute('data-kind'),'goal');
+      await notice.locator('.confirmation-art[data-complete=true]').waitFor();
+      await page.screenshot({path:`${output}/${engine}-${theme}-milestone.png`});
+    }
     assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
     assert.deepEqual(errors,[]);assert.deepEqual(writes,[]);
     report.checks.push({width,theme,reduced,status:'passed',serverWrites:0});

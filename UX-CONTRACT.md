@@ -9,7 +9,7 @@ Source : demande du 26 octobre 2026 de déployer la base GitHub. Nouvelle demand
 | Select/Listbox | native select | UX-CONTRACT.md | platform-owned popup | Keyboard and chosen value |
 | Date | native date input | UX-CONTRACT.md | platform-owned calendar | Date bounds and keyboard |
 | Scrollbar | app/reference.css | DESIGN.md | document / modal | Visible and usable |
-| Toast | BudgetApp toast | UX-CONTRACT.md | success / error | Live region |
+| Toast | app/budget-notice.tsx / BudgetApp | UX-CONTRACT.md | success / information / error | Live region and tests/e2e/motion.mjs |
 | CRUD | BudgetApp save and API revision check | app/api/budget/route.ts | create / edit / delete confirmation | Unit tests and demo browser workflow |
 
 
@@ -128,3 +128,7 @@ Le retour du 28 octobre sur le titre fixe de la saisie d’opération remplace, 
 ## Retours animés de validation
 
 Demande utilisateur du 28 octobre : illustration après validation d’une opération, d’une récurrence ou d’un réglage. La notification canonique est `app/budget-notice.tsx`, alimentée par BudgetApp : succès seulement après une sauvegarde confirmée (ou explicitement marqué Démonstration), y compris après résolution d’un conflit. Les erreurs/informations ne portent jamais de coche de réussite. Chaque nouvelle validation relance sa propre illustration, même avec un texte identique. Le changement local de thème confirme son application sur cet appareil. Le texte est annoncé par une région de statut, reste 6,5 s et possède une fermeture accessible ; aucune illustration ne bloque l’interaction. L’échec du lecteur garde une coche statique et ne change jamais le résultat de l’enregistrement. La réduction des animations évite le téléchargement du lecteur et du WASM.
+
+## Variantes de la signature animée
+
+`lib/confirmation-kind.ts` choisit la scène d’après le parcours soumis : opération/virement, récurrence, import, objectif/versement, préférences ou confirmation générique. Aucun classement par recherche dans le texte du message. Le jalon « Objectif atteint » exige un objectif existant précédemment sous sa cible, désormais à sa cible, pendant une action explicite sur l’épargne ; restauration, import et suppression ne célèbrent pas ce jalon. Après conflit, le choix de scène est recalculé entre la version distante et la version réellement validée. L’animation ne déplace pas d’argent et n’ajoute aucune étape de validation. Le symbole statique, le texte, le bouton de fermeture et le résultat financier restent indépendants de son chargement.

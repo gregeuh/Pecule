@@ -8,19 +8,23 @@
   color: inherit;
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
-  flex: 0 0 48px;
+  width: 72px;
+  height: 72px;
+  flex: 0 0 72px;
 }
 .confirmation-art > * { grid-area: 1 / 1; }
-.confirmation-art canvas { width: 48px; height: 48px; opacity: 0; }
+.confirmation-art canvas { width: 72px; height: 72px; opacity: 0; }
 .confirmation-art[data-ready="true"] canvas { opacity: 1; }
 .confirmation-art[data-ready="true"] .confirmation-fallback { visibility: hidden; }
-.toast { width: max-content; min-width: min(340px, calc(100vw - 32px)); max-width: min(480px, calc(100vw - 32px)); animation-duration: var(--motion-arrival); animation-timing-function: var(--motion-settle); }
+.toast { width: max-content; min-width: min(360px, calc(100vw - 32px)); max-width: min(480px, calc(100vw - 32px)); animation-duration: var(--motion-arrival); animation-timing-function: var(--motion-settle); }
 .toast[data-success="true"] { gap: 8px; padding-block: 8px; }
-.toast > .confirmation-art { flex: 0 0 48px; }
+.toast > .confirmation-art { flex: 0 0 72px; }
 .toast > svg { flex-shrink: 0; }
-.toast > span:not(.confirmation-art) { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.notice-copy { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.notice-copy > strong { color: inherit; font-size: 13px; line-height: 1.4; font-weight: 650; }
+.notice-copy > span { color: inherit; font-size: 12px; line-height: 1.5; }
+.toast[data-kind="goal"] .confirmation-art { flex-basis: 88px; width: 88px; height: 88px; }
+.toast[data-kind="goal"] .confirmation-art canvas { width: 88px; height: 88px; }
 .toast button { min-width: 44px; min-height: 44px; flex-shrink: 0; }
 .modal-backdrop { animation: pecule-overlay-in 160ms ease-out; }
 .modal { animation: pecule-dialog-in var(--motion-arrival) var(--motion-settle); }
