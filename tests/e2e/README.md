@@ -53,3 +53,12 @@ La réception et l’usage réel des e-mails de réinitialisation exigent un ser
 Le contrôle de dimensions vérifie également les limites géométriques des éléments (même si le cadre coupe le débordement), les offsets horizontaux des pages et dialogues, les gestes tactiles horizontaux/verticaux et le zoom dans Chromium. `PECULE_E2E_ENGINE=webkit` utilise un navigateur WebKit Playwright installé : il vérifie les mêmes limites et la retenue horizontale, avec défilement programmatique, les gestes synthétiques WebKit mobiles n’étant pas disponibles. Cela ne remplace pas une vérification sur un iPhone physique.
 
 `npm run test:e2e:viewport` mesure les limites du document et des messages de confirmation à chaque frame de leur animation normale, en 393/430 px, paysage 844 px et ordinateur 1440 px, clair/sombre. Le même script accepte `PECULE_E2E_ENGINE=webkit` avec un navigateur installé. Les écritures sont exclusivement en démonstration ; aucune requête PUT du budget n’est autorisée. Ce contrôle vise les débordements transitoires que les captures en réduction d’animations ne révèlent pas.
+
+### Animations et confirmations
+
+`npm run test:e2e:motion` exerce uniquement la démo anonyme, sur mobile/ordinateur,
+clair/sombre, avec et sans réduction des animations : validation refusée sans
+succès, opération, validations répétées, récurrence, préférences et thème local.
+Il vérifie le chargement Lottie, l’absence de WASM en réduction des animations,
+le repli sans WASM, la lisibilité et l’absence d’écriture API. Captures/rapports :
+`outputs/motion`. WebKit : `PECULE_E2E_ENGINE=webkit` avec le navigateur installé.

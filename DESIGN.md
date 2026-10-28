@@ -127,3 +127,11 @@ La retenue horizontale s’applique aussi aux appareils tactiles en paysage larg
 ## Défilement de la saisie d’opération — 28 octobre 2026
 
 Retour utilisateur sur le titre fixe « Ajouter une opération » : la variante canonique `.operation-modal` laisse son en-tête défiler naturellement sur mobile, sans animation de masquage ni espace réservé au titre. Le titre et la croix reviennent en remontant. « Annuler » en bas du formulaire permet de quitter pendant la saisie sans revenir tout en haut. Les autres dialogues conservent leur comportement existant ; la variante reste possédée par le dialogue de BudgetApp et mobile-forms.css.
+
+## Animations et confirmations — 28 octobre 2026
+
+La confirmation de sauvegarde est le moment expressif : une illustration Lottie originale de Pécule trace une coche avec trois accents Atelier abricot/lavande, une seule fois en 800 ms. `app/confirmation-art.tsx` utilise le lecteur officiel LottieFiles, chargé à la demande, son WASM auto-hébergé et un canevas borné à 48 px. Le texte du message reste immédiat, accompagné d’une coche SVG de secours. Aucun appel à un service d’illustrations, aucune donnée budgétaire transmise. Les couleurs de la coche héritent du message ; les accents reprennent les valeurs Atelier acceptées.
+
+`app/motion.css` possède les durées communes : pression 120 ms, arrivée 260 ms avec décélération ; dock 280 ms. Les fenêtres apparaissent depuis le bas sur mobile, plus discrètement sur ordinateur, sans retarder le focus ni la fermeture. Le titre de saisie continue de défiler naturellement. Les pages ne cachent pas leurs cartes derrière une animation de chargement. En réduction des animations, les déplacements et le lecteur Lottie sont supprimés au profit de la coche et du texte immédiats. Le lecteur s’arrête hors écran/en arrière-plan et ne boucle pas.
+
+Le portefeuille Lottie accueille une liste d’opérations encore vide ; il se joue une fois, sans boucle. La courbe se dessine à l’ouverture de la projection, et les barres d’objectif accompagnent les mises à jour. Le franchissement d’un objectif ajoute une félicitation à la confirmation de sauvegarde.

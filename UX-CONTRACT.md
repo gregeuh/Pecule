@@ -124,3 +124,7 @@ Précision utilisateur : PWA sur iPhone. La prévention du rebond s’applique a
 
 
 Le retour du 28 octobre sur le titre fixe de la saisie d’opération remplace, pour ce parcours, l’en-tête mobile collant : dans `.operation-modal`, le titre défile avec les champs. Le formulaire conserve libellé accessible, piégeage du focus et fermeture par Échap/fond/croix. Un bouton Annuler mobile ferme sans enregistrer en bas de formulaire. Aucun mouvement ou redimensionnement artificiel n’intervient pendant le défilement.
+
+## Retours animés de validation
+
+Demande utilisateur du 28 octobre : illustration après validation d’une opération, d’une récurrence ou d’un réglage. La notification canonique est `app/budget-notice.tsx`, alimentée par BudgetApp : succès seulement après une sauvegarde confirmée (ou explicitement marqué Démonstration), y compris après résolution d’un conflit. Les erreurs/informations ne portent jamais de coche de réussite. Chaque nouvelle validation relance sa propre illustration, même avec un texte identique. Le changement local de thème confirme son application sur cet appareil. Le texte est annoncé par une région de statut, reste 6,5 s et possède une fermeture accessible ; aucune illustration ne bloque l’interaction. L’échec du lecteur garde une coche statique et ne change jamais le résultat de l’enregistrement. La réduction des animations évite le téléchargement du lecteur et du WASM.

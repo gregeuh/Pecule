@@ -22,11 +22,13 @@
     "test:e2e:recovery": "node tests/e2e/budget-recovery.mjs",
     "test:e2e:assistance": "node tests/e2e/budget-assistance.mjs",
     "test:e2e:bank-tools": "node tests/e2e/bank-tools.mjs",
-    "test:e2e:bank-tools:connected": "node tests/e2e/bank-tools-connected.mjs"
+    "test:e2e:bank-tools:connected": "node tests/e2e/bank-tools-connected.mjs",
+    "test:e2e:motion": "node tests/e2e/motion.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
     "@hookform/resolvers": "^5.7.1",
+    "@lottiefiles/dotlottie-web": "^0.81.0",
     "@shadcn/react": "^0.3.0",
     "better-auth": "1.7.13",
     "class-variance-authority": "0.7.1",
