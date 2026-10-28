@@ -94,3 +94,8 @@ opacité inférieure à 1 du panneau mobile ou de son parent, un flou mobile et 
 débordement latéral. Le voile est séparé et la sortie descendante est mesurée.
 `PECULE_E2E_ENGINE=webkit` sélectionne WebKit ; `PECULE_E2E_QUICK=1` réduit à deux
 profils mobiles. Rapports/captures : outputs/mobile-sheet. Démo uniquement, aucun PUT.
+
+
+### Finitions Atelier et projection
+
+`npm run test:e2e:visual` couvre 320/390/600/1440 px en clair et sombre : accueil, opérations, comptes, récurrences, épargne, répartition, réglages et formulaire. Vérifie les totaux journaliers, le filtrage et la recherche vide, la confidentialité et la projection au toucher/clavier. Aucun PUT et aucun compte personnel. `PECULE_E2E_ENGINE=webkit` utilise le moteur WebKit avec les dépendances indiquées plus haut ; `PECULE_E2E_QUICK=1` limite à 390 px dans les deux thèmes. Rapports et captures dans `outputs/visual-refinement/`. `PECULE_E2E_NODE_TRANSPORT=1 NODE_USE_ENV_PROXY=1` pour le transport HTTPS géré.

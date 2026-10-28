@@ -3,6 +3,11 @@
   color-scheme: light;
   --bg: #f7f5f1;
   --card: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-inset: #efeee9;
+  --surface-shadow: 0 8px 26px #253c3009;
+  --goal-surface: #f2ecfa;
+  --forecast-surface: #fcf0e5;
   --ink: #252c2b;
   --muted: #626965;
   --subtle: #707671;
@@ -36,14 +41,17 @@
   --scroll-hover: #687e71;
   --dock-bg: #ffffffed;
   --dock-shadow: 0 8px 28px #253c3020;
-  --category-icon-ink: var(--category-color);
-  --category-icon-surface: var(--category-background);
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
   --bg: #0d0e0e;
   --card: #1a1d1c;
+  --surface-raised: #242725;
+  --surface-inset: #121413;
+  --surface-shadow: 0 10px 28px #00000029;
+  --goal-surface: #292232;
+  --forecast-surface: #30251e;
   --ink: #f2f3ef;
   --muted: #b7bdb7;
   --subtle: #a2aaa3;
@@ -76,8 +84,6 @@
   --scroll-hover: #879b8d;
   --dock-bg: #1a1d1cf2;
   --dock-shadow: 0 8px 28px #00000066;
-  --category-icon-ink: color-mix(in srgb, var(--category-color) 45%, #f2f3ef);
-  --category-icon-surface: color-mix(in srgb, var(--category-color) 20%, #1a1d1c);
 }
 
 /* next-themes resolves system preference before paint and on device changes. */
@@ -113,7 +119,7 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
 
 /* Apricot identifies upcoming events; it never conveys a financial warning. */
 .clarte-forecast, .clarte-upcoming {
-  background: var(--apricot-surface);
+  background: var(--forecast-surface);
   color: var(--apricot-ink);
 }
 .clarte-upcoming { padding: 24px; border-radius: 16px; }
@@ -127,7 +133,7 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
 .clarte-calendar > button:hover { background: var(--apricot-hover); }
 
 /* Lavender belongs to savings goals, not to the available balance. */
-.clarte-goal, .goal-intro { background: var(--lavender-surface); color: var(--lavender-ink); }
+.clarte-goal, .goal-intro { background: var(--goal-surface); color: var(--lavender-ink); }
 .clarte-goal .clarte-goal-mobile, .clarte-goal-desktop > p,
 .goal-intro p, .goal-intro h2 > span { color: var(--lavender-muted); }
 .clarte-goal > svg, .goal-intro-icon { color: var(--lavender-accent); }
@@ -157,8 +163,12 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
 .progress-track { background: var(--line); }
 .positive, .transaction-amount.positive strong { color: var(--green); }
 .category-icon, .quick-action-icon {
-  color: var(--category-icon-ink);
-  background: var(--category-icon-surface);
+  color: color-mix(in srgb, var(--category-color) 65%, var(--ink));
+  background: var(--category-background);
+}
+:root[data-theme="dark"] .category-icon, :root[data-theme="dark"] .quick-action-icon {
+  color: color-mix(in srgb, var(--category-color) 45%, var(--ink));
+  background: color-mix(in srgb, var(--category-color) 20%, var(--card));
 }
 .bank-icon, .goal-icon {
   color: color-mix(in srgb, var(--item-color) 70%, var(--ink));
@@ -198,4 +208,139 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
     color: CanvasText;
   }
   .mobile-nav.floating-nav > button.active { outline: 1px solid Highlight; }
+}
+
+/* Atelier refinement: type, hierarchy and surfaces share one canonical owner. */
+h1, h2, h3 { text-wrap: balance; }
+h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-height: 1.16; }
+.clarte-desktop-title h1 { max-width: 22ch; font-size: clamp(30px, 3vw, 42px); }
+.clarte-desktop-title p, .page-heading p { color: var(--muted); line-height: 1.65; }
+.clarte-header { margin-bottom: 32px; }
+.clarte-main, .clarte-aside { gap: 28px; }
+.clarte-grid { gap: 28px; }
+.clarte-card, .clarte-dashboard .clarte-budget { padding: 28px; }
+.clarte-section-title { align-items: center; gap: 12px; margin-bottom: 20px; }
+.clarte-section-title h2 { font-size: 18px; line-height: 1.4; letter-spacing: -.025em; }
+.clarte-dashboard .clarte-budget { box-shadow: var(--surface-shadow); }
+.clarte-amount { font-size: clamp(42px, 4.5vw, 66px); letter-spacing: -.035em; line-height: 1.2; }
+.clarte-amount-row { margin-block: 24px 30px; }
+.clarte-available-title > p { font-weight: 600; }
+.clarte-daily-desktop > strong { font-size: 24px; letter-spacing: -.025em; }
+.clarte-formula { border-top: 1px solid var(--line); padding-top: 22px; gap: 20px; }
+.clarte-formula dt { font-size: 12px; line-height: 1.6; }
+.clarte-formula dd { margin-top: 8px; font-size: 20px; }
+.clarte-forecast .clarte-section-title > span { font-size: 12px; }
+.clarte-calendar > button { border: 1px solid transparent; background: transparent; }
+.clarte-calendar > button.current { background: var(--apricot-surface); }
+.clarte-calendar > button:hover { border-color: var(--apricot-muted); }
+.clarte-forecast .clarte-calendar span { color: var(--apricot-muted); }
+.clarte-goal { padding: 28px; }
+.clarte-goal h2 { letter-spacing: -.025em; line-height: 1.4; }
+.clarte-goal .primary { background: var(--lavender-ink); color: var(--goal-surface); }
+.clarte-goal .primary:hover { background: var(--lavender-accent); }
+.clarte-account, .clarte-transaction { gap: 14px; border-bottom: 1px solid var(--line); }
+.clarte-account:has(+ .clarte-accounts-total), .clarte-transaction:last-of-type { border-bottom: 0; }
+.clarte-account > span, .clarte-transaction > span { min-width: 0; }
+.clarte-account strong, .clarte-transaction strong { line-height: 1.45; }
+.clarte-account small, .clarte-transaction small { line-height: 1.6; }
+.clarte-account > b, .clarte-transaction > b { font-size: 14px; font-variant-numeric: tabular-nums; }
+.clarte-accounts-total { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 18px; }
+.clarte-accounts-total > strong { font-size: 28px; letter-spacing: -.03em; }
+.clarte-plan-link { background: var(--blue-soft); }
+.clarte-plan-link h2 { margin-top: 0; color: var(--blue); }
+.clarte-plan-link p { max-width: 45ch; }
+.clarte-footer { color: var(--muted); font-size: 12px; line-height: 1.7; padding-top: 24px; }
+
+/* Ledger: typography and real daily groups, independent of page boundaries. */
+.transaction-mobile-category { display: none; }
+.transaction-row { border-color: var(--line); gap: 14px; }
+.transaction-title > strong { font-size: 14px; line-height: 1.5; }
+.transaction-title > small { line-height: 1.7; }
+.transaction-amount strong, .rule-amount, .account-balance,
+.goal-amount strong, .metric-strip strong, .clarte-amount, .clarte-formula dd,
+.clarte-daily-desktop > strong, .clarte-mobile-period > strong,
+.clarte-accounts-total strong, .day-summary b, .projection dd, .chart-summary > strong {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.025em;
+}
+.date-group { justify-content: space-between; align-items: baseline; gap: 12px; padding: 24px 0 10px; }
+.date-group > strong { color: var(--ink); font-size: 13px; font-weight: 600; }
+.date-group > .day-summary { display: flex; align-items: baseline; justify-content: flex-end; flex-wrap: wrap; gap: 4px 10px; background: transparent; padding: 0; text-align: right; }
+.day-summary small { color: var(--muted); font-size: 11px; text-transform: none; }
+.day-summary b { color: var(--ink); font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+.transactions-card .transaction-groups > div:has(> .date-group) + div:has(> .date-group) { border-top: 1px solid var(--line); margin-top: 10px; }
+.transactions-card .table-footer { font-size: 12px; line-height: 1.7; }
+
+/* Projection: useful figures precede interaction; native range owns keyboard/touch. */
+.projection-outlook { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin: 22px 0 26px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+.projection-outlook > div { min-width: 0; }
+.projection-outlook dt { color: var(--muted); font-size: 12px; line-height: 1.6; }
+.projection-outlook dd { color: var(--ink); margin: 8px 0 0; font-family: var(--font-display); font-size: 22px; font-weight: 650; overflow-wrap: anywhere; }
+.clarte-chart .chart-summary { flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 18px; }
+.clarte-chart .chart-summary > strong { color: var(--ink); font-size: 28px; }
+.clarte-chart .chart-summary > span { color: var(--muted); max-width: none; font-size: 12px; }
+.chart-axis { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.chart-dates { color: var(--muted); font-size: 11px; }
+.projection-control { display: flex; flex-direction: column; margin-top: 22px; color: var(--muted); font-size: 12px; }
+.projection-control > span { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.projection-control strong { color: var(--ink); font-weight: 600; }
+.projection-control input[type="range"] { width: 100%; min-width: 0; min-height: 44px; padding: 0; cursor: pointer; accent-color: var(--blue); background: transparent; }
+
+/* Dark surfaces: document < card < dialog, without blue legacy surfaces. */
+:root[data-theme="dark"] .modal { background: var(--surface-raised); }
+:root[data-theme="dark"] .modal-heading { background: var(--surface-raised); }
+:root[data-theme="dark"] .field input:not([type="checkbox"]):not([type="radio"]),
+:root[data-theme="dark"] .field select, :root[data-theme="dark"] .field textarea,
+:root[data-theme="dark"] .filter-select, :root[data-theme="dark"] .search-input,
+:root[data-theme="dark"] .bank-import-preview { background: var(--surface-inset); }
+:root[data-theme="dark"] .merchant-icon:not(.merchant-icon-dark) { background: var(--surface-raised); }
+:root[data-theme="dark"] .chart-summary > strong { color: var(--ink); }
+:root[data-theme="dark"] .chart-summary > span { color: var(--muted); }
+:root[data-theme="dark"] .category-label { background: var(--surface-inset); }
+
+@media (max-width: 760px) {
+  .clarte-header { margin-bottom: 24px; }
+  .clarte-mobile-title { margin-bottom: 28px; }
+  .clarte-mobile-title h1 { font-size: 30px; letter-spacing: -.035em; line-height: 1.2; }
+  .clarte-mobile-title p { color: var(--muted); font-size: 13px; line-height: 1.7; margin-top: 8px; }
+  .clarte-grid { gap: 24px; }
+  .clarte-dashboard .clarte-budget { padding: 26px 22px; }
+  .clarte-amount { font-size: clamp(38px, 11.5vw, 54px); }
+  .clarte-amount[data-long="true"] { font-size: clamp(27px, 8vw, 38px); }
+  .clarte-amount-row { margin-block: 18px 14px; }
+  .clarte-mobile-period > strong { font-size: 19px; }
+  .clarte-mobile-period > span { margin-top: 4px; line-height: 1.6; }
+  .clarte-calculation-link { margin-top: 18px; min-height: 44px; font-size: 12px; }
+  .clarte-card, .clarte-upcoming { padding: 22px; }
+  .clarte-section-title h2 { font-size: 17px; }
+  .clarte-section-title { margin-bottom: 18px; }
+  .clarte-account, .clarte-transaction { min-height: 72px; gap: 12px; }
+  .clarte-account strong, .clarte-transaction strong { font-size: 14px; }
+  .clarte-account small, .clarte-transaction small { font-size: 12px; }
+  .clarte-account > b, .clarte-transaction > b { font-size: 13px; }
+  .clarte-goal { padding: 24px 22px; }
+  .clarte-goal h2 { font-size: 16px; }
+  .clarte-plan-link h2 { font-size: 18px; }
+  .transaction-mobile-category { display: inline; }
+  .transaction-row.full { min-height: 82px; padding-block: 16px; }
+  .transaction-title > small { display: block; font-size: 12px; }
+  .transaction-title > small > svg { display: inline; margin-left: 5px; vertical-align: middle; }
+  .transaction-amount strong { font-size: 14px; }
+  .transaction-amount > small { display: none; }
+  .date-group { align-items: flex-start; padding-top: 22px; }
+  .date-group > strong { font-size: 12px; }
+  .date-group > .day-summary { flex-direction: column; align-items: flex-end; flex-shrink: 0; max-width: 48%; gap: 4px; }
+  .projection-outlook { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .projection-outlook > div:last-child { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: baseline; gap: 14px; }
+  .projection-outlook dd { font-size: 20px; }
+  .projection-outlook > div:last-child dd { font-size: 16px; margin: 0; text-align: right; }
+  .clarte-chart .chart-summary > span { flex-basis: 100%; line-height: 1.7; }
+}
+@media (forced-colors: active) {
+  .clarte-plan-link, .clarte-dashboard .clarte-budget,
+  :root[data-theme="dark"] .modal, :root[data-theme="dark"] .modal-heading,
+  :root[data-theme="dark"] .field input, :root[data-theme="dark"] .field select,
+  :root[data-theme="dark"] .field textarea { background: Canvas; color: CanvasText; }
+  .clarte-plan-link h2, .clarte-goal .primary { color: CanvasText; }
+  .day-summary b, .date-group > strong, .projection dd { color: CanvasText; }
 }

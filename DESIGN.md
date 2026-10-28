@@ -113,7 +113,7 @@ Le sélecteur partagé `app/merchant-fields.tsx` conserve le catalogue et ajoute
 
 ## Calibrage mobile — 28 octobre 2026
 
-`app/mobile-forms.css`, chargé en dernier, possède les dimensions communes des contrôles jusqu’à 760 px. Les champs et filtres utilisent une police de 16 px et une hauteur de 48 px, les actions tactiles au moins 44 px. À 480 px et moins, les formulaires classiques passent sur une colonne pour garder les valeurs des dates et des listes lisibles. Les cases natives mesurent 20 px et n’héritent plus du remplissage d’un champ texte ; leurs labels donnent une zone tactile plus grande. Les couleurs sont des boutons radio sous des pastilles de 44 px. La sélection d’une opération passe par un label tactile sans changer son état ni son nom accessible.
+`app/mobile-forms.css`, chargé après la structure mobile, possède les dimensions communes des contrôles jusqu’à 760 px. Les champs et filtres utilisent une police de 16 px et une hauteur de 48 px, les actions tactiles au moins 44 px. À 480 px et moins, les formulaires classiques passent sur une colonne pour garder les valeurs des dates et des listes lisibles. Les cases natives mesurent 20 px et n’héritent plus du remplissage d’un champ texte ; leurs labels donnent une zone tactile plus grande. Les couleurs sont des boutons radio sous des pastilles de 44 px. La sélection d’une opération passe par un label tactile sans changer son état ni son nom accessible.
 
 Les actions d’Opérations forment une grille régulière 2 × 2 ; l’export possède un libellé visible. Filtres et recherche ont des dimensions communes, la pagination conserve deux actions égales sous le compteur. Les résumés financiers utilisent des lignes compactes label/montant, et les libellés et montants longs peuvent se replier sans perdre leur valeur. Les dialogues restent dans la hauteur dynamique de l’écran et conservent leur en-tête accessible pendant le défilement. Ces ajustements ne changent ni les calculs ni la palette Atelier ni la navigation adaptative.
 
@@ -175,3 +175,24 @@ L’enregistrement utilisateur révèle une superposition des cartes et du dock 
 La correction ne change ni les données ni les destinations, le focus, les cibles tactiles ou le format du dock. Le contrôleur commun conserve ses annulations, son verrou de sauvegarde pendant la sortie et l’état immédiat en réduction des animations. `tests/e2e/mobile-sheet.mjs` échantillonne chaque frame des ouvertures/fermetures répétées : opacité du panneau mobile et du parent à 1, voile séparé sans flou mobile, sortie descendante, absence de débordement horizontal. Les contrôles WebKit restent des contrôles du moteur, distincts du conteneur PWA d’un iPhone physique.
 
 Les images finales de sortie restent appliquées jusqu’au démontage React du dialogue ; elles ne sont annulées qu’après retrait du DOM. Cela empêche un retour d’une frame à la position initiale, aussi bien sur mobile que sur ordinateur.
+
+
+## Hiérarchie et surfaces Atelier — 28 octobre 2026
+
+Les six améliorations visuelles validées ensemble conservent DM Sans / Manrope et la palette Atelier. `app/atelier.css` reste l’unique propriétaire des tokens et des finitions ; il est chargé après les règles de géométrie mobile, avant les animations et la présence des menus. Les styles de mouvement restent les seuls propriétaires des transitions de dialogue.
+
+L’accueil affirme son titre, son disponible et son budget quotidien ; la formule se sépare par une ligne sur ordinateur et reste accessible par le lien existant sur mobile. Les sections emploient une respiration de 24–28 px et des titres de 17–18 px. Les nombres financiers utilisent des chiffres tabulaires, avec repli des valeurs longues. Le disponible conserve son fond neutre et ses couleurs de statut limitées au texte.
+
+| Token CSS canonique | Clair | Sombre | Usage |
+|---|---|---|---|
+| --surface-raised | #ffffff | #242725 | dialogues, au-dessus des cartes charbon |
+| --surface-inset | #efeee9 | #121413 | champs et surfaces encastrées sombres |
+| --forecast-surface | #fcf0e5 | #30251e | échéances et calendrier, textes abricot |
+| --goal-surface | #f2ecfa | #292232 | objectifs, textes lavande |
+| --surface-shadow | 0 8px 26px #253c3009 | 0 10px 28px #00000029 | relief discret du disponible |
+
+Les accents abricot/lavande plus saturés restent disponibles pour la date actuelle, les icônes et les contrôles. Le lien vers la répartition utilise le vert doux existant. Les icônes de catégories partagées sont possédées par `app/category-icon.tsx` et réutilisées dans l’accueil et les opérations. Leurs mélanges sont calculés sur l’élément portant --category-color, jamais sur :root, pour que les variables locales soient effectivement résolues dans les deux thèmes.
+
+Les groupes quotidiens d’Opérations présentent date, nombre et net des opérations filtrées de la journée. Catégorie et compte sont visibles sur téléphone ; le montant reste aligné à droite. Les totaux concernent le résultat filtré complet, même si une journée est répartie sur deux pages. Aucun changement du tri ni de la pagination par quarante.
+
+`app/projection-chart.tsx` possède la projection en lecture seule : repères visibles aujourd’hui / à trente jours / minimum avec sa date ; sélection au toucher, à la souris ou par curseur natif de 0 à 30 jours. La sélection persiste après le toucher et ne requiert pas d’infobulle. Les graduations partagent la transformation de la courbe. Le masquage couvre les nouveaux repères, le curseur accessible et le tableau alternatif. Aucune modification des calculs de solde ou de récurrences. Vérification : `tests/e2e/visual-refinement.mjs` en clair/sombre, de 320 à 1440 px, moteurs Chromium et WebKit.

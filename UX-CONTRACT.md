@@ -150,3 +150,12 @@ AnimatedDetails conserve la sémantique native et applique l’état open final 
 ## Panneau mobile opaque pendant les transitions
 
 Retour vidéo utilisateur du 28 octobre : supprimer la superposition visible entre le panneau qui se ferme et les cartes/dock du dessous. Le conteneur de dialogue garde une opacité de 1 ; `.modal-shade` est un enfant décoratif sans interaction et seul propriétaire du voile animé. Le panneau tactile reste opaque pendant son déplacement hors du viewport, sans flou de fond mobile. Les champs et actions ne deviennent pas transparents au-dessus des données. Fermeture et retour du focus restent gérés par useModalMotion/BudgetApp ; le fond reste inert jusqu’à la fin de la sortie. Tests : tests/e2e/mobile-sheet.mjs et tests/e2e/menu-motion.mjs.
+
+
+## Lecture visuelle et exploration de la projection
+
+Source : validation utilisateur des six améliorations visuelles le 28 octobre 2026. Les surfaces et la typographie évoluent ensemble dans Atelier, en préservant les calculs de `lib/budget.ts`, la présence canonique des menus et les parcours d’enregistrement. Le sombre distingue document noir, cartes charbon, champs encastrés et dialogue surélevé.
+
+Les totaux journaliers sont le net signé de toutes les opérations du résultat filtré à cette date, y compris les virements affichés. Le titre d’aide le précise ; il ne s’agit ni d’un solde bancaire ni d’un total de dépenses. Les filtres, sélections, actions groupées et pages restent inchangés. La confidentialité s’applique immédiatement aux nouveaux totaux.
+
+La projection reste une lecture des comptes courants/espèces et des récurrences prévues sur trente jours. Le curseur natif possède nom accessible et valeur date/montant, masquée si nécessaire ; clavier et toucher sont équivalents. La sélection d’un jour ne crée ni ne modifie de donnée. Les trois repères sont accessibles sans interaction. L’ancien tableau alternatif hebdomadaire est conservé. Tests en démonstration uniquement, sans écriture API.
