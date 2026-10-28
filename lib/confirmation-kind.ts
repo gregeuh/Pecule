@@ -1,6 +1,6 @@
 import type { Budget } from "./budget";
 
-export type ConfirmationKind = "confirmation" | "operation" | "recurrence" | "import" | "savings" | "goal" | "settings";
+export type ConfirmationKind = "confirmation" | "occurrence" | "operation" | "recurrence" | "import" | "savings" | "goal" | "settings";
 
 type FeedbackBudget = Pick<Budget,"goals"> & Partial<Pick<Budget,"rules"|"transactions"|"accounts">>;
 const changed = (before: unknown, after: unknown) => before !== after && JSON.stringify(before) !== JSON.stringify(after);
@@ -15,6 +15,7 @@ export function confirmationKind(context: string | undefined, before: FeedbackBu
     if (reached) return "goal";
     if (context !== "transfer" || JSON.stringify(before.goals) !== JSON.stringify(after.goals)) return "savings";
   }
+  if (context === "occurrence") return "occurrence";
   if (context === "transaction" || context === "transfer") return "operation";
   if (context === "rule") return "recurrence";
   if (context === "import") return "import";

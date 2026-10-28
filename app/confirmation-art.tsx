@@ -14,7 +14,7 @@ import settings from "./animations/settings.json";
 
 const animations = { confirmation, wallet, operation, recurrence, import: imported, savings, goal, settings };
 const fallbackIcons = { confirmation: Check, wallet: Wallet, operation: Wallet, recurrence: Repeat2, import: Files, savings: Coins, goal: ShieldCheck, settings: SlidersHorizontal };
-type ArtKind = ConfirmationKind | "wallet";
+type ArtKind = Exclude<ConfirmationKind,"occurrence"> | "wallet";
 
 /** Original Pécule scenes, played once with the official, locally hosted LottieFiles renderer. */
 export default function ConfirmationArt({ variant = "confirmation" }: { variant?: ArtKind }) {

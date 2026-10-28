@@ -23,7 +23,8 @@
     "test:e2e:assistance": "node tests/e2e/budget-assistance.mjs",
     "test:e2e:bank-tools": "node tests/e2e/bank-tools.mjs",
     "test:e2e:bank-tools:connected": "node tests/e2e/bank-tools-connected.mjs",
-    "test:e2e:motion": "node tests/e2e/motion.mjs"
+    "test:e2e:motion": "node tests/e2e/motion.mjs",
+    "test:e2e:signature": "node tests/e2e/signature-interactions.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

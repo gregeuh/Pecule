@@ -132,3 +132,11 @@ Demande utilisateur du 28 octobre : illustration après validation d’une opér
 ## Variantes de la signature animée
 
 `lib/confirmation-kind.ts` choisit la scène d’après le parcours soumis : opération/virement, récurrence, import, objectif/versement, préférences ou confirmation générique. Aucun classement par recherche dans le texte du message. Le jalon « Objectif atteint » exige un objectif existant précédemment sous sa cible, désormais à sa cible, pendant une action explicite sur l’épargne ; restauration, import et suppression ne célèbrent pas ce jalon. Après conflit, le choix de scène est recalculé entre la version distante et la version réellement validée. L’animation ne déplace pas d’argent et n’ajoute aucune étape de validation. Le symbole statique, le texte, le bouton de fermeture et le résultat financier restent indépendants de son chargement.
+
+## Portefeuille, objectifs et états animés
+
+Demande utilisateur : intégrer les six idées proposées. `NavigationIndicator` déplace uniquement un fond décoratif ; les boutons et leur ordre restent stables. `PrivacyShutter` n’expose aucun montant et ne retarde pas leur remplacement. `GoalIllustration` est masqué aux technologies d’assistance, la barre de progression et ses valeurs restent inchangées.
+
+`ImportJourney` reflète les états de BankImport. Le pourcentage provient de ProgressEvent.loaded / total, uniquement lorsque lengthComputable est vrai. Aucun pourcentage de validation des lignes ou de sauvegarde n’est simulé. FileReader est annulé au démontage, et le numéro de lecture invalide les callbacks tardifs. Les limites de 2 Mo / 5 000 lignes et les étapes de confirmation restent identiques.
+
+La variante de notification occurrence ne s’active que pour une transaction sauvegardée qui porte réellement ruleId. `lib/occurrence-feedback.ts` lit la première date prévue après la date enregistrée et aujourd’hui, jusqu’à 400 jours ; sans date, un texte explicite remplace la prochaine page. Le calendrier n’insère ni n’avance d’opération et ne marque aucun paiement bancaire comme effectué. Le changement de la série conserve sa confirmation de récurrence existante.

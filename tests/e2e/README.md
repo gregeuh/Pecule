@@ -64,3 +64,14 @@ le repli sans WASM, la lisibilité et l’absence d’écriture API. Captures/ra
 `outputs/motion`. WebKit : `PECULE_E2E_ENGINE=webkit` avec le navigateur installé.
 
 Les variantes de signature sont vérifiées par `test:e2e:motion` (opération, récurrence, préférences, épargne et objectif atteint) et `test:e2e:imports` (relevé classé). Les scènes attendent le signal de fin du lecteur réel ; les tests ne modifient que la démonstration. `tests/confirmation-kind.test.mjs` contrôle le choix du retour, dont les restaurations et conflits qui ne doivent pas annoncer un faux jalon.
+
+### Six interactions de signature
+
+`npm run test:e2e:signature` vérifie le portefeuille du menu, le volet de
+confidentialité (valeurs immédiatement masquées), l’alignement du repère de
+navigation, les silhouettes d’objectifs et leur pourcentage réel, le reçu d’une
+occurrence et les étapes réelles du CSV. Mobile/ordinateur, clair/sombre et
+réduction des animations ; uniquement la démonstration, aucun PUT autorisé.
+`PECULE_E2E_QUICK=1` limite le contrôle public à deux contextes mobiles sombres,
+avec/sans animations. `PECULE_E2E_ENGINE=webkit` sélectionne WebKit.
+Les rapports et captures sont dans `outputs/signature-interactions`.
