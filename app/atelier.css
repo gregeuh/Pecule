@@ -471,3 +471,19 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 @media (forced-colors:active) {
   .modal-motion > .modal { border: 1px solid CanvasText; }
 }
+
+/* Completion pass: the same states across the dashboard and banking workflows. */
+.empty-state { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.empty-state h3 { margin-top: 6px; }
+.empty-state p { margin-top: 0; color: var(--muted); }
+.empty-state > button, .empty-state > a { max-width: 100%; min-height: 44px; margin-top: 10px; }
+.form-error { border-radius: 12px; padding: 14px 16px; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.feedback-error { display: flex; align-items: flex-start; gap: 10px; }
+.feedback-error > svg { flex-shrink: 0; margin-top: 2px; }
+.feedback-error > div { min-width: 0; }
+.loading-state { display: flex; align-items: flex-start; justify-content: center; gap: 14px; max-width: 440px; padding: 20px; text-align: left; color: var(--muted); }
+.loading-state > svg { flex-shrink: 0; color: var(--blue); margin-top: 5px; }
+.boot-screen .loading-state h1 { color: var(--ink); font-size: 22px; margin: 0; line-height: 1.4; }
+.loading-state p { font-size: 13px; line-height: 1.7; margin-top: 8px; }
+@media (prefers-reduced-motion:reduce) { .loading-state .spin { animation: none; } }
+@media (forced-colors:active) { .form-error { border: 1px solid CanvasText; } }

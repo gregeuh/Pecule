@@ -104,3 +104,5 @@ profils mobiles. Rapports/captures : outputs/mobile-sheet. Démo uniquement, auc
 ### Cohérence de l’ensemble du site
 
 `npm run test:e2e:coherence` vérifie les sept vues, rubriques des réglages, activité dépliable des comptes, filtres et états des récurrences. En démonstration isolée, il sauvegarde une note repliée puis la relit, révèle une erreur dans un champ caché, met une récurrence en pause et crée une série terminée. Aucun compte personnel ni PUT serveur. Profils 320/390/600/1440, clair/sombre ; `PECULE_E2E_ENGINE=webkit`, `PECULE_E2E_QUICK=1` et transport Node comme pour la suite visuelle. Rapports/captures : `outputs/site-coherence/`. Le test de dimensions ouvre explicitement les options du compte avant d’inspecter ses couleurs.
+
+La suite de cohérence couvre aussi l’historique d’import vide → import, le rejet d’un fichier de plus de 2 Mo, et les options de récurrence repliées : date de fin invalide révélée/focalisée, correction puis enregistrement avec options repliées. Les assertions d’alerte ciblent le dialogue, pour exclure l’annonceur de navigation Next.js.

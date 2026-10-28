@@ -170,3 +170,9 @@ L’activité de compte est une lecture : solde existant, opérations enregistr�
 Les états de récurrence sont des filtres de lecture : endDate antérieure à aujourd’hui → Terminée ; sinon active → Active ; sinon En pause. Les filtres ne modifient ni les échéances ni les booléens enregistrés. La date de prochaine échéance reste produite par le moteur existant ; l’absence dans l’horizon borné n’est pas présentée comme une fin.
 
 Une rubrique facultative repliée conserve sa saisie et ses contraintes. À la validation, les rubriques contenant la première erreur s’ouvrent, leurs animations en cours sont annulées et le focus rejoint le champ. Annuler ferme sans sauvegarde, suivant le dialogue partagé. Vérification dédiée : `test:e2e:coherence`, sur démonstration isolée seulement ; création et relecture d’une note repliée, erreur cachée, série terminée, mise en pause, filtres et navigation de réglages. Aucun PUT serveur autorisé dans ces tests.
+
+## Complétion des finitions proposées
+
+Source : demande utilisateur de finir les améliorations précédentes, hors automatisation Apple Pay explicitement abandonnée. Les états vides invitent à une action sans annoncer une sauvegarde ; les erreurs restent textuelles, localisées et accessibles, sans illustration de succès. L’action depuis l’historique vide ouvre l’import existant et conserve sa vérification avant confirmation.
+
+Les options facultatives de récurrence restent montées. Le contrôle de date de fin, déjà existant, révèle désormais le champ et l’y focalise en cas d’inversion ; le calcul des échéances n’est pas modifié. L’attente initiale est indéterminée. Les budgets personnels et les paramètres d’authentification restent hors du périmètre.

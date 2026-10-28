@@ -1,5 +1,11 @@
 "use client";
 import { Children, cloneElement, createContext, isValidElement, useContext, useId, useState, type FormHTMLAttributes, type ReactNode, type ReactElement } from "react";
+import { ErrorMessage } from "./interface-feedback";
+export function revealFormControl(control:HTMLElement){
+  let details=control.closest("details");
+  while(details){details.dispatchEvent(new Event("pecule:reveal"));details.open=true;details=details.parentElement?.closest("details")??null;}
+  control.focus();
+}
 const Errors=createContext<Record<string,string>>({});
 export function ValidatedForm({onSubmit,children,...props}:FormHTMLAttributes<HTMLFormElement>){
   const [errors,setErrors]=useState<Record<string,string>>({});
@@ -7,11 +13,9 @@ export function ValidatedForm({onSubmit,children,...props}:FormHTMLAttributes<HT
     const controls=[...event.currentTarget.querySelectorAll<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>('input,select,textarea')];
     const invalid=controls.filter(c=>c.willValidate&&!c.checkValidity());
     if(invalid.length){event.preventDefault();const next:Record<string,string>={};for(const c of invalid)next[c.name]=c.validity.valueMissing?"Ce champ est obligatoire.":c.validity.typeMismatch?"Vérifiez le format de ce champ.":c.validity.rangeUnderflow||c.validity.rangeOverflow?"Le montant ou la date est hors des limites autorisées.":"Vérifiez la valeur de ce champ.";setErrors(next);
-      let details=invalid[0].closest("details");
-      while(details){details.dispatchEvent(new Event("pecule:reveal"));details.open=true;details=details.parentElement?.closest("details")??null;}
-      invalid[0].focus();return;}
+      revealFormControl(invalid[0]);return;}
     setErrors({});void onSubmit?.(event);
-  }} onInput={()=>{if(Object.keys(errors).length)setErrors({});}}><Errors.Provider value={errors}>{children}{Object.keys(errors).length>0&&<p className="form-error" role="alert">Vérifiez les champs signalés avant d’enregistrer.</p>}</Errors.Provider></form>;
+  }} onInput={()=>{if(Object.keys(errors).length)setErrors({});}}><Errors.Provider value={errors}>{children}{Object.keys(errors).length>0&&<ErrorMessage>Vérifiez les champs signalés avant d’enregistrer.</ErrorMessage>}</Errors.Provider></form>;
 }
 export function FormField({label,children,hint}:{label:string;children:ReactNode;hint?:string}){
   const errors=useContext(Errors),id=useId();let name="";
