@@ -167,3 +167,11 @@ Lorsqu’une occurrence liée à une récurrence est effectivement sauvegardée,
 ## Ajout depuis le menu flottant — 28 octobre 2026
 
 À la demande utilisateur, les boutons « Ajouter une opération » des en-têtes ordinateur sont supprimés : le menu flottant portefeuille/+ est l’entrée globale. Les actions propres aux pages, dont « Nouvelle opération » dans Opérations et les états vides, restent disponibles.
+
+## Fermeture des panneaux sur iPhone — 28 octobre 2026
+
+L’enregistrement utilisateur révèle une superposition des cartes et du dock pendant la fermeture : le panneau et son parent étaient tous deux fondus, avec un backdrop-filter sur le parent. La correction sépare un voile `.modal-shade` du panneau dans le même conteneur canonique. Le parent ne change plus d’opacité. Sur téléphone et écran tactile, le panneau reste entièrement opaque et glisse depuis/vers le bas, jusqu’au-delà du viewport ; sa sortie dure 200 ms. Le voile seul change d’opacité. Le flou est désactivé sur ce voile mobile afin d’éviter la composition instable du backdrop-filter sur iOS. Les animations d’opacité du panneau sur ordinateur restent conservées.
+
+La correction ne change ni les données ni les destinations, le focus, les cibles tactiles ou le format du dock. Le contrôleur commun conserve ses annulations, son verrou de sauvegarde pendant la sortie et l’état immédiat en réduction des animations. `tests/e2e/mobile-sheet.mjs` échantillonne chaque frame des ouvertures/fermetures répétées : opacité du panneau mobile et du parent à 1, voile séparé sans flou mobile, sortie descendante, absence de débordement horizontal. Les contrôles WebKit restent des contrôles du moteur, distincts du conteneur PWA d’un iPhone physique.
+
+Les images finales de sortie restent appliquées jusqu’au démontage React du dialogue ; elles ne sont annulées qu’après retrait du DOM. Cela empêche un retour d’une frame à la position initiale, aussi bien sur mobile que sur ordinateur.

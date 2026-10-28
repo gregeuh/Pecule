@@ -25,7 +25,8 @@
     "test:e2e:bank-tools:connected": "node tests/e2e/bank-tools-connected.mjs",
     "test:e2e:motion": "node tests/e2e/motion.mjs",
     "test:e2e:signature": "node tests/e2e/signature-interactions.mjs",
-    "test:e2e:menus": "node tests/e2e/menu-motion.mjs"
+    "test:e2e:menus": "node tests/e2e/menu-motion.mjs",
+    "test:e2e:sheets": "node tests/e2e/mobile-sheet.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

@@ -84,3 +84,13 @@ sauvegarde pendant la sortie, les divulgations inversées et le retour du focus.
 Clair/sombre, mobile/ordinateur et réduction des animations ; démonstration
 uniquement, zéro PUT. `PECULE_E2E_QUICK=1` limite à deux profils mobiles sombres.
 Rapports et captures : `outputs/menu-motion`. WebKit : `PECULE_E2E_ENGINE=webkit`.
+
+### Régression iPhone : transparence à la fermeture
+
+`npm run test:e2e:sheets` échantillonne les frames de quatre ouvertures/fermetures
+successives de Plus/du portefeuille, aux largeurs 390 et 440 px, en clair/sombre,
+avec réduction des animations et avec un contrôle ordinateur. Il refuse une
+opacité inférieure à 1 du panneau mobile ou de son parent, un flou mobile et un
+débordement latéral. Le voile est séparé et la sortie descendante est mesurée.
+`PECULE_E2E_ENGINE=webkit` sélectionne WebKit ; `PECULE_E2E_QUICK=1` réduit à deux
+profils mobiles. Rapports/captures : outputs/mobile-sheet. Démo uniquement, aucun PUT.
