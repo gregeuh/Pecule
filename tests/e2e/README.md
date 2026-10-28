@@ -99,3 +99,8 @@ profils mobiles. Rapports/captures : outputs/mobile-sheet. Démo uniquement, auc
 ### Finitions Atelier et projection
 
 `npm run test:e2e:visual` couvre 320/390/600/1440 px en clair et sombre : accueil, opérations, comptes, récurrences, épargne, répartition, réglages et formulaire. Vérifie les totaux journaliers, le filtrage et la recherche vide, la confidentialité et la projection au toucher/clavier. Aucun PUT et aucun compte personnel. `PECULE_E2E_ENGINE=webkit` utilise le moteur WebKit avec les dépendances indiquées plus haut ; `PECULE_E2E_QUICK=1` limite à 390 px dans les deux thèmes. Rapports et captures dans `outputs/visual-refinement/`. `PECULE_E2E_NODE_TRANSPORT=1 NODE_USE_ENV_PROXY=1` pour le transport HTTPS géré.
+
+
+### Cohérence de l’ensemble du site
+
+`npm run test:e2e:coherence` vérifie les sept vues, rubriques des réglages, activité dépliable des comptes, filtres et états des récurrences. En démonstration isolée, il sauvegarde une note repliée puis la relit, révèle une erreur dans un champ caché, met une récurrence en pause et crée une série terminée. Aucun compte personnel ni PUT serveur. Profils 320/390/600/1440, clair/sombre ; `PECULE_E2E_ENGINE=webkit`, `PECULE_E2E_QUICK=1` et transport Node comme pour la suite visuelle. Rapports/captures : `outputs/site-coherence/`. Le test de dimensions ouvre explicitement les options du compte avant d’inspecter ses couleurs.

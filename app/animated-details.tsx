@@ -17,7 +17,8 @@ export default function AnimatedDetails({children,className,onClick,...props}:Co
   useEffect(()=>{
     const media=matchMedia("(prefers-reduced-motion: reduce)");
     const reduce=()=>{if(media.matches)settle();};media.addEventListener("change",reduce);
-    return()=>{dispose();media.removeEventListener("change",reduce);};
+    const current=element.current,reveal=()=>{desired.current=true;settle();};current?.addEventListener("pecule:reveal",reveal);
+    return()=>{dispose();media.removeEventListener("change",reduce);current?.removeEventListener("pecule:reveal",reveal);};
   },[settle,dispose]);
   const toggle=(event:MouseEvent<HTMLDetailsElement>)=>{
     onClick?.(event);if(event.defaultPrevented)return;

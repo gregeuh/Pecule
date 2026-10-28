@@ -344,3 +344,122 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
   .clarte-plan-link h2, .clarte-goal .primary { color: CanvasText; }
   .day-summary b, .date-group > strong, .projection dd { color: CanvasText; }
 }
+
+/* Site-wide rhythm: canonical page and section hierarchy beyond the dashboard. */
+.page-heading { align-items: center; gap: 24px; margin-block: 12px 32px; }
+.page-heading > div { min-width: 0; }
+.page-heading h1 { font-size: clamp(28px, 3vw, 38px); max-width: 24ch; }
+.page-heading p { font-size: 14px; margin-top: 10px; max-width: 65ch; }
+.page-heading > .primary { flex-shrink: 0; }
+.section-heading { gap: 16px; margin-block: 30px 18px; }
+.section-heading h2, .settings-group > header h2 { font-size: 20px; line-height: 1.4; letter-spacing: -.025em; }
+.section-heading > span { color: var(--muted); font-size: 13px; }
+.account-grid, .goal-grid, .rule-grid { gap: 24px; align-items: start; }
+.account-card, .goal-card, .rule-card, .settings-card, .settings-panel { padding: 26px; }
+.account-card h3, .goal-card h3, .rule-card h3, .settings-card h2, .settings-card h3, .settings-panel h2, .settings-panel h3 { font-size: 19px; line-height: 1.45; letter-spacing: -.025em; }
+.account-card > p, .goal-card > p, .rule-card > p, .settings-card > p, .settings-panel > p { color: var(--muted); font-size: 13px; line-height: 1.75; }
+.account-balance, .goal-amount > strong, .rule-amount { font-family: var(--font-display); font-size: 32px; line-height: 1.35; overflow-wrap: anywhere; }
+.account-kind { color: var(--muted); text-transform: none; letter-spacing: normal; font-size: 12px; }
+.account-card .account-kind { display: block; margin-block: 18px 6px; }
+.account-card-bottom, .rule-bottom { padding-top: 18px; margin-top: 18px; }
+.card-actions { gap: 4px; }
+.card-actions > button { min-height: 44px; min-width: 44px; }
+.rule-card.paused { opacity: 1; background: var(--surface-inset); }
+.rule-card[data-rule-state="ended"] .status-pill { color: var(--muted); background: var(--line); }
+.rule-bottom { flex-wrap: wrap; gap: 12px; }
+.rule-bottom > small { line-height: 1.7; }
+.goal-remaining { color: var(--lavender-muted); background: var(--goal-surface); border-radius: 10px; padding: 12px 14px; line-height: 1.6; }
+.goal-remaining strong { color: var(--lavender-ink); font-variant-numeric: tabular-nums; }
+.goal-intro { padding: 28px; margin-bottom: 28px; }
+.goal-intro h2 { font-size: clamp(24px, 3vw, 32px); line-height: 1.4; }
+.metric-strip { margin-bottom: 28px; }
+.empty { padding: 40px 20px; }
+.empty h3 { margin-top: 16px; font-size: 19px; line-height: 1.4; }
+.empty p { max-width: 48ch; margin-inline: auto; line-height: 1.75; }
+.empty .text-button { margin-top: 16px; min-height: 44px; }
+.info-callout { align-items: flex-start; gap: 14px; margin-block: 24px; }
+.info-callout > svg { flex-shrink: 0; margin-top: 2px; }
+.info-callout p { font-size: 13px; line-height: 1.75; }
+
+/* Settings are real sections, navigated by native links without remounting forms. */
+.settings-workspace { display: flex; flex-direction: column; gap: 40px; }
+.settings-index { display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.settings-index a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 18px; border-radius: 10px; color: var(--blue); background: var(--blue-soft); font-size: 13px; font-weight: 600; text-decoration: none; }
+.settings-index a:hover { background: var(--soft-hover); }
+.settings-group { min-width: 0; scroll-margin-top: 92px; }
+.settings-group > header { margin-bottom: 20px; }
+.settings-group > header p { margin-top: 7px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.settings-group > .settings-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 24px; align-items: start; }
+.settings-group .settings-card { min-width: 0; }
+.settings-card > .secondary { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 12px 18px; text-decoration: none; }
+.settings-card .account-email { overflow-wrap: anywhere; }
+.settings-workspace .settings-brand { margin-top: 0; }
+
+/* Native disclosures keep optional fields in the form and reveal invalid controls. */
+.form-options { margin-block: 20px; border-block: 1px solid var(--line); }
+.form-options > summary, .account-activity > summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; color: var(--blue); font-weight: 600; font-size: 13px; cursor: pointer; }
+.form-options > summary::-webkit-details-marker, .account-activity > summary::-webkit-details-marker { display: none; }
+.form-options > summary:hover, .account-activity > summary:hover { color: var(--ink); }
+.form-options > summary > svg, .account-activity > summary > svg { flex-shrink: 0; transition: transform 180ms ease; }
+.form-options[open] > summary > svg, .account-activity[open] > summary > svg { transform: rotate(180deg); }
+.form-options-body { padding-block: 12px 20px; }
+.form-options-body > .field:first-child { margin-top: 0; }
+.form-options-body .field:last-child { margin-bottom: 0; }
+.form-options textarea { min-height: 96px; }
+
+/* Inline account activity shares merchant/category identity with the ledger. */
+.account-activity { border-top: 1px solid var(--line); margin-top: 20px; }
+.account-activity > div { padding-bottom: 16px; }
+.account-activity h4 { color: var(--muted); font-size: 12px; font-weight: 600; margin-block: 18px 8px; }
+.account-activity-row { display: flex; gap: 10px; align-items: center; width: 100%; min-height: 68px; padding-block: 12px; text-align: left; border-bottom: 1px solid var(--line); }
+.account-activity-row > span:not(.category-icon):not(.merchant-icon) { flex: 1; min-width: 0; }
+.account-activity-row strong { display: block; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.account-activity-row small { display: block; color: var(--muted); font-size: 11px; line-height: 1.65; }
+.account-activity-row b { color: var(--ink); font-size: 12px; font-variant-numeric: tabular-nums; max-width: 45%; overflow-wrap: anywhere; text-align: right; }
+.account-activity-row:hover strong { color: var(--blue); }
+.account-activity .text-button { min-height: 44px; margin-top: 12px; }
+.active-filters { display: flex; flex-wrap: wrap; gap: 8px; padding: 18px 24px; border-bottom: 1px solid var(--line); }
+.active-filters > button, .recurrence-filters > button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 14px; border-radius: 10px; background: var(--blue-soft); color: var(--blue); font-size: 12px; font-weight: 600; overflow-wrap: anywhere; max-width: 100%; }
+.active-filters > button > svg { flex-shrink: 0; }
+.active-filters > button:hover, .recurrence-filters > button:hover { background: var(--soft-hover); }
+.active-filters > .text-button { background: transparent; }
+.recurrence-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.recurrence-filters > button { background: var(--card); color: var(--muted); }
+.recurrence-filters > button[aria-pressed="true"] { background: var(--action-bg); color: var(--on-action); }
+.recurrence-filters > button > span { font-variant-numeric: tabular-nums; font-size: 11px; }
+
+@media (max-width:760px) {
+  .page-heading { flex-direction: column; align-items: stretch; margin-block: 12px 26px; gap: 22px; }
+  .page-heading h1 { font-size: 28px; }
+  .page-heading p { font-size: 13px; }
+  .page-heading > .primary { align-self: flex-start; min-height: 48px; }
+  .section-heading { margin-top: 26px; flex-wrap: wrap; }
+  .section-heading h2 { font-size: 18px; }
+  .account-grid, .goal-grid, .rule-grid { gap: 20px; }
+  .account-card, .goal-card, .rule-card, .settings-card, .settings-panel { padding: 22px; }
+  .account-card h3, .goal-card h3, .rule-card h3 { font-size: 19px; }
+  .account-balance, .goal-amount > strong, .rule-amount { font-size: 30px; }
+  .settings-workspace { gap: 32px; }
+  .settings-index { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .settings-index a { padding: 12px; min-height: 48px; }
+  .settings-group > .settings-grid { grid-template-columns: minmax(0,1fr); gap: 20px; }
+  .settings-group > header h2 { font-size: 20px; }
+  .settings-group { scroll-margin-top: 88px; }
+  .active-filters { padding: 16px; }
+  .recurrence-filters { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  .recurrence-filters > button { justify-content: space-between; min-height: 48px; }
+  .form-options > summary { min-height: 56px; }
+  .goal-intro { padding: 22px; }
+}
+@media (prefers-reduced-motion:reduce) { .form-options > summary > svg, .account-activity > summary > svg { transition: none; } }
+@media (forced-colors:active) {
+  .goal-remaining, .rule-card.paused, .settings-index a, .active-filters > button, .recurrence-filters > button { color: CanvasText; background: Canvas; }
+  .recurrence-filters > button[aria-pressed="true"] { outline: 2px solid Highlight; }
+}
+
+.recurrence-help { border-block: 1px solid var(--line); margin-bottom: 26px; padding-block: 4px; }
+.recurrence-help > summary { display: flex; gap: 10px; align-items: center; min-height: 48px; list-style: none; cursor: pointer; color: var(--blue); font-size: 13px; font-weight: 600; }
+.recurrence-help > summary::-webkit-details-marker { display: none; }
+.recurrence-help > summary > svg:last-child { margin-left: auto; }
+.recurrence-help > p { color: var(--muted); max-width: 70ch; font-size: 13px; line-height: 1.75; padding-block: 10px 18px; }
+.modal-form-cancel { display: flex; justify-content: center; width: 100%; min-height: 44px; margin-top: 16px; }

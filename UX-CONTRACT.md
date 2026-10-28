@@ -159,3 +159,14 @@ Source : validation utilisateur des six améliorations visuelles le 28 octobre 2
 Les totaux journaliers sont le net signé de toutes les opérations du résultat filtré à cette date, y compris les virements affichés. Le titre d’aide le précise ; il ne s’agit ni d’un solde bancaire ni d’un total de dépenses. Les filtres, sélections, actions groupées et pages restent inchangés. La confidentialité s’applique immédiatement aux nouveaux totaux.
 
 La projection reste une lecture des comptes courants/espèces et des récurrences prévues sur trente jours. Le curseur natif possède nom accessible et valeur date/montant, masquée si nécessaire ; clavier et toucher sont équivalents. La sélection d’un jour ne crée ni ne modifie de donnée. Les trois repères sont accessibles sans interaction. L’ancien tableau alternatif hebdomadaire est conservé. Tests en démonstration uniquement, sans écriture API.
+
+
+## Organisation globale et formulaires progressifs
+
+Source : « go alors » utilisateur après les propositions de cohérence globale, simplification des formulaires et identité visuelle. Les réglages sont regroupés sans modifier les destinations ni les confirmations de sauvegarde/restauration. Les filtres personnels restent en mémoire, suivant l’exception de confidentialité documentée ; les liens de rubriques ne portent aucune donnée budgétaire.
+
+L’activité de compte est une lecture : solde existant, opérations enregistrées et prévisions produites par `futureTransactions`, sans création d’occurrence. Une échéance de récurrence ouvre toujours l’éditeur de série existant. Le net et les transferts conservent les règles de `lib/budget.ts`. Le reste à épargner est max(0, cible - suivi), pas un solde bancaire.
+
+Les états de récurrence sont des filtres de lecture : endDate antérieure à aujourd’hui → Terminée ; sinon active → Active ; sinon En pause. Les filtres ne modifient ni les échéances ni les booléens enregistrés. La date de prochaine échéance reste produite par le moteur existant ; l’absence dans l’horizon borné n’est pas présentée comme une fin.
+
+Une rubrique facultative repliée conserve sa saisie et ses contraintes. À la validation, les rubriques contenant la première erreur s’ouvrent, leurs animations en cours sont annulées et le focus rejoint le champ. Annuler ferme sans sauvegarde, suivant le dialogue partagé. Vérification dédiée : `test:e2e:coherence`, sur démonstration isolée seulement ; création et relecture d’une note repliée, erreur cachée, série terminée, mise en pause, filtres et navigation de réglages. Aucun PUT serveur autorisé dans ces tests.

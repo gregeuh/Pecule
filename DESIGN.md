@@ -196,3 +196,16 @@ Les accents abricot/lavande plus saturés restent disponibles pour la date actue
 Les groupes quotidiens d’Opérations présentent date, nombre et net des opérations filtrées de la journée. Catégorie et compte sont visibles sur téléphone ; le montant reste aligné à droite. Les totaux concernent le résultat filtré complet, même si une journée est répartie sur deux pages. Aucun changement du tri ni de la pagination par quarante.
 
 `app/projection-chart.tsx` possède la projection en lecture seule : repères visibles aujourd’hui / à trente jours / minimum avec sa date ; sélection au toucher, à la souris ou par curseur natif de 0 à 30 jours. La sélection persiste après le toucher et ne requiert pas d’infobulle. Les graduations partagent la transformation de la courbe. Le masquage couvre les nouveaux repères, le curseur accessible et le tableau alternatif. Aucune modification des calculs de solde ou de récurrences. Vérification : `tests/e2e/visual-refinement.mjs` en clair/sombre, de 320 à 1440 px, moteurs Chromium et WebKit.
+
+
+## Cohérence des écrans et formulaires — 28 octobre 2026
+
+La validation utilisateur suivante étend les finitions à toutes les vues. `atelier.css` possède une hiérarchie commune : titres de page 28–38 px, sous-titres 13–14 px, titres de section 18–20 px, montants 30–32 px ; grilles espacées de 20–24 px et contrôles de carte de 44 px minimum. Les calculs et couleurs personnelles restent ceux du budget.
+
+Réglages utilise quatre sections natives : Apparence, Budget, Données et Compte. Les liens d’ancrage ne démontent pas les formulaires ; les sous-titres de cartes sont de niveau 3 sous les titres de section de niveau 2. Le compte Google et la déconnexion sont regroupés sous Compte ; la sauvegarde, l’export et la restauration restent sous Données, avec leur confirmation inchangée.
+
+Les cartes de comptes partagent `AccountActivity` : divulgation native animée, trois dernières opérations et trois prochaines sur trente jours, avec états vides explicites et ouverture des éditeurs canoniques. Les filtres actifs d’Opérations sont des boutons de retrait indépendants, accompagnés d’une remise à zéro. Les objectifs affichent le montant réel restant, sans promettre de prochain virement ni de date d’atteinte.
+
+Les récurrences présentent les états Actives / En pause / Terminées et leurs compteurs. La fin passée d’une série la classe Terminée, même si son booléen active est resté vrai. Un horizon de recherche sans occurrence ne prouve pas une fin ; son texte dit explicitement « Aucune échéance sur 12 mois ». L’aide sur les dates se déplie à la demande.
+
+`FormOptions` réutilise AnimatedDetails pour la note, la banque/couleur et la personnalisation d’objectif. Les champs restent montés, y compris repliés, et sont soumis normalement. L’édition d’une note non vide l’ouvre initialement. `ValidatedForm` révèle les ancêtres details d’un champ invalide avant de lui donner le focus ; un événement partagé annule aussi un repli encore animé. Les formulaires de compte, de récurrence et d’objectif disposent d’Annuler, comme celui d’opération. Les états vides financiers utilisent le portefeuille déjà auto-hébergé ; recherche et erreurs gardent leur iconographie explicite, sans illustration de succès.
