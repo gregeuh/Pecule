@@ -1,4 +1,5 @@
 /* Constrain mobile pages, including wide touch-device orientations. */
+.operation-cancel { display: none; }
 /* The shared fade-in replaced translateX(-50%) with translateY(), widening the page. */
 .toast { animation-name: viewport-toast-in; }
 @keyframes viewport-toast-in {
@@ -128,6 +129,9 @@
   }
   .modal-heading h2 { font-size: 22px; line-height: 1.35; }
   .modal-heading > .icon-button { margin: 0; }
+  .modal.operation-modal { scroll-padding-block: 20px 24px; }
+  .modal.operation-modal .modal-heading { position: static; }
+  .operation-modal .operation-cancel { display: inline-flex; flex-basis: 100%; }
 
   .transactions-card .toolbar { gap: 12px; padding: 16px; }
   .toolbar .search-input, .bank-tools .search-input {

@@ -122,3 +122,8 @@ Le cadre mobile borne explicitement html/body et les enveloppes de page à la la
 
 
 La retenue horizontale s’applique aussi aux appareils tactiles en paysage large. Les champs y conservent une police de 16 px pour éviter le zoom automatique à la prise de focus. L’animation partagée des toasts conserve explicitement translateX(-50%) dans chaque image-clé ; l’ancienne animation verticale pouvait remplacer cette translation et dépasser temporairement le bord droit. `tests/e2e/mobile-viewport.mjs` mesure les limites du message à chaque frame de son apparition avec les animations actives, en portrait, paysage et sur ordinateur. Les contrôles WebKit portent sur son moteur de rendu, pas sur un iPhone physique ni son conteneur PWA.
+
+
+## Défilement de la saisie d’opération — 28 octobre 2026
+
+Retour utilisateur sur le titre fixe « Ajouter une opération » : la variante canonique `.operation-modal` laisse son en-tête défiler naturellement sur mobile, sans animation de masquage ni espace réservé au titre. Le titre et la croix reviennent en remontant. « Annuler » en bas du formulaire permet de quitter pendant la saisie sans revenir tout en haut. Les autres dialogues conservent leur comportement existant ; la variante reste possédée par le dialogue de BudgetApp et mobile-forms.css.

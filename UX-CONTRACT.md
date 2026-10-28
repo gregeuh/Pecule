@@ -121,3 +121,6 @@ Le signalement du 28 octobre concernant les pages qui se déplacent latéralemen
 
 
 Précision utilisateur : PWA sur iPhone. La prévention du rebond s’applique aux écrans tactiles, y compris le paysage large, sans désactiver le zoom utilisateur. Les champs restent à 16 px afin de limiter le zoom automatique iOS. Les messages de confirmation doivent rester centrés pendant leur animation, sans élargissement temporaire du document. Le test mobile-viewport mesure leurs bords pendant l’animation dans Chromium et WebKit, avec des profils de téléphone et un contrôle ordinateur.
+
+
+Le retour du 28 octobre sur le titre fixe de la saisie d’opération remplace, pour ce parcours, l’en-tête mobile collant : dans `.operation-modal`, le titre défile avec les champs. Le formulaire conserve libellé accessible, piégeage du focus et fermeture par Échap/fond/croix. Un bouton Annuler mobile ferme sans enregistrer en bas de formulaire. Aucun mouvement ou redimensionnement artificiel n’intervient pendant le défilement.
