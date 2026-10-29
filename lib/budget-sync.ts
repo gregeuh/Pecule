@@ -14,9 +14,18 @@ export class BudgetSync {
   private readSequence = 0;
   private writing = false;
   private request: typeof fetch;
-  constructor(request: typeof fetch = (...args) => fetch(...args)) {
+  private readonly timeoutMs:number;
+  constructor(request: typeof fetch = (...args) => fetch(...args), timeoutMs = 20_000) {
+    this.timeoutMs=timeoutMs;
     // Never invoke Window.fetch as a method of this class (illegal receiver).
     this.request = (...args) => request(...args);
+  }
+
+  private async exchange(options:RequestInit){
+    const controller=new AbortController();let timer:ReturnType<typeof setTimeout>|undefined;
+    const timeout=new Promise<never>((_,reject)=>{timer=setTimeout(()=>{reject(new BudgetRequestError("La connexion prend trop de temps. Votre saisie est conservée ; vérifiez la synchronisation avant de réessayer.",504));controller.abort();},this.timeoutMs);});
+    try{return await Promise.race([(async()=>{const response=await this.request("/api/budget",{...options,signal:controller.signal});const result=await response.json();return {response,result};})(),timeout]);}
+    finally{clearTimeout(timer);}
   }
 
   invalidateReads(): void { this.generation++; }
@@ -26,8 +35,7 @@ export class BudgetSync {
     const generation = this.generation, sequence = ++this.readSequence;
     const current = () => generation === this.generation && sequence === this.readSequence && !this.writing;
     try {
-      const response = await this.request("/api/budget", { cache: "no-store" });
-      const result = await response.json();
+      const {response,result} = await this.exchange({ cache: "no-store" });
       if (!current()) return null;
       if (!response.ok) throw new BudgetRequestError(result.error || "Impossible de charger votre budget.", response.status);
       this.revision = result.revision;
@@ -44,11 +52,10 @@ export class BudgetSync {
     this.writing = true;
     this.generation++;
     try {
-      const response = await this.request("/api/budget", {
+      const {response,result} = await this.exchange({
         method: "PUT", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ budget, revision: this.revision }),
       });
-      const result = await response.json();
       if (!response.ok) throw new BudgetRequestError(result.error || "Impossible d’enregistrer votre budget.", response.status);
       this.revision = result.revision;
       this.baseline = structuredClone(budget);

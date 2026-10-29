@@ -487,3 +487,7 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 .loading-state p { font-size: 13px; line-height: 1.7; margin-top: 8px; }
 @media (prefers-reduced-motion:reduce) { .loading-state .spin { animation: none; } }
 @media (forced-colors:active) { .form-error { border: 1px solid CanvasText; } }
+
+.draft-status { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 12px 14px; margin-bottom: 18px; border-radius: 12px; background: var(--blue-soft); color: var(--blue); font-size: 12px; line-height: 1.7; }
+.draft-status .text-button { min-height: 44px; font-size: 12px; }
+.metric-note { color: var(--muted); font-size: 12px; line-height: 1.7; margin: -12px 0 22px; }

@@ -68,3 +68,25 @@ test('opening an editor invalidates a background read without advancing its base
  const loading=sync.load();sync.invalidateReads();late.resolve(json({budget:emptyBudget('Obsolète'),revision:9}));
  assert.equal(await loading,null);assert.equal(sync.getBaseline(),null);
 });
+
+test('a suspended response body times out and releases the save lock without advancing revision',async()=>{
+ let calls=0;const revisions=[];
+ const sync=new BudgetSync(async(_url,options)=>{revisions.push(JSON.parse(options.body).revision);calls++;return calls===1?{json:()=>new Promise(()=>{})}:json({revision:1});},10);
+ await assert.rejects(sync.save(emptyBudget()),e=>e instanceof BudgetRequestError&&e.status===504);
+ await sync.save(emptyBudget());assert.deepEqual(revisions,[0,0]);
+});
+test('a timed-out write can be reconciled with the server before a later write',async()=>{
+ let revision=0,budget=null,first=true,signal;
+ const sync=new BudgetSync(async(_url,options)=>{
+  if(options.method!=='PUT')return json({budget,revision});
+  signal=options.signal;const incoming=JSON.parse(options.body);assert.equal(incoming.revision,revision);budget=incoming.budget;revision++;
+  if(first){first=false;return new Promise(()=>{});}return json({revision});
+ },10);
+ const value={...emptyBudget(),name:'Saved despite response loss'};
+ await assert.rejects(sync.save(value),e=>e.status===504);assert.equal(signal.aborted,true);
+ assert.deepEqual((await sync.load()).budget,value);await sync.save({...value,name:'Next edit'});assert.equal(revision,2);
+});
+test('a transport abort cannot mask the actionable timeout result',async()=>{
+ const sync=new BudgetSync((_url,options)=>new Promise((_,reject)=>options.signal.addEventListener('abort',()=>reject(new DOMException('Aborted','AbortError')))),10);
+ await assert.rejects(sync.load(),e=>e instanceof BudgetRequestError&&e.status===504);
+});

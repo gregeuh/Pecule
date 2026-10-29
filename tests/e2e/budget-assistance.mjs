@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
-import { todayISO, parseDate, dateISO } from '../../lib/budget.ts';
+import { todayISO, parseDate, dateISO, overview, demoBudget } from '../../lib/budget.ts';
 const origin=new URL(process.env.PECULE_E2E_BASE_URL||'http://127.0.0.1:3001').origin;
 const output='outputs/budget-assistance';await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true,executablePath:process.env.PECULE_E2E_CHROMIUM||'/usr/bin/chromium',args:process.env.PECULE_E2E_NO_SANDBOX==='1'?['--no-sandbox']:[]});
@@ -25,7 +25,7 @@ try{
   await go('Récurrences');const suggestions=page.locator('.recurring-suggestions');await suggestions.getByText('QA abonnement stable',{exact:true}).waitFor();await suggestions.getByRole('button',{name:'Vérifier',exact:true}).click();assert.equal(await page.locator('input[name="label"]').inputValue(),'QA abonnement stable');assert.equal(await page.locator('select[name="frequency"]').inputValue(),'monthly');assert((await page.locator('input[name="date"]').inputValue())>today);
   await page.getByRole('button',{name:'Enregistrer la récurrence',exact:true}).click();await page.getByRole('dialog').waitFor({state:'hidden'});assert.equal(await page.locator('.recurring-suggestions').count(),0);assert.equal(await page.locator('.rule-card').filter({hasText:'QA abonnement stable'}).count(),1);
   if(mobile)await page.getByRole('button',{name:'Réglages',exact:true}).click();else await page.locator('.sidebar').getByRole('button',{name:'Réglages',exact:true}).click();
-  await page.locator('input[name="dailyComfort"]').fill('500');await page.getByRole('button',{name:'Enregistrer mon seuil quotidien',exact:true}).click();
+  await page.locator('input[name="dailyComfort"]').fill(String(Math.ceil(Math.max(0,overview(demoBudget(todayISO()),todayISO()).available)/100)+1));await page.getByRole('button',{name:'Enregistrer mon seuil quotidien',exact:true}).click();
   await page.locator('select[name="limitCategory"]').selectOption('Restaurants');await page.locator('input[name="limitAmount"]').fill('1');await page.getByRole('button',{name:'Enregistrer le seuil de catégorie',exact:true}).click();
   assert.match(await page.locator('.settings-card').filter({has:page.getByRole('heading',{name:'Mes règles de catégories',exact:true})}).textContent(),/QA marchand mémorisé/);
   await go(mobile?'Accueil':'Vue d’ensemble');assert.equal(await page.locator('.clarte-budget').getAttribute('data-budget-tone'),'attention');await page.locator('.budget-alerts').getByText(/1 seuil de catégorie atteint/).waitFor();

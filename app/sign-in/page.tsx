@@ -1,7 +1,9 @@
 "use client";
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { authClient } from "../../lib/auth-client";
-import { googleErrorMessage } from "../../lib/auth-feedback";
+import { useOAuthError } from "../browser-preferences";
 
 export default function SignIn() {
   const [google,setGoogle]=useState(false);
@@ -10,13 +12,13 @@ export default function SignIn() {
   const [signup, setSignup] = useState(false);
   const [busy, setBusy] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useOAuthError();
   const errorRef = useRef<HTMLDivElement>(null);
   function fail(message: string) {
     setError(message);
     requestAnimationFrame(() => errorRef.current?.focus());
   }
-  useEffect(()=>{const message=googleErrorMessage(new URLSearchParams(window.location.search).get("error"));if(message)fail(message);},[]);
+  useEffect(()=>{if(error)requestAnimationFrame(()=>errorRef.current?.focus());},[error]);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy) return;
@@ -38,15 +40,15 @@ export default function SignIn() {
         fail(result.error.status === 429 ? "Trop de tentatives. Patientez une minute avant de réessayer." : result.error.status >= 500 ? "La connexion est temporairement indisponible. Réessayez dans un instant." : signup ? "Le compte n’a pas pu être créé. Si vous avez déjà un compte, connectez-vous." : "Vérifiez votre adresse e-mail et votre mot de passe.");
         return;
       }
-      window.location.assign("/");
+      window.location.assign(new URL("/",window.location.origin).href);
     } catch { fail("Impossible de joindre PECULE. Vérifiez votre connexion puis réessayez."); }
     finally { setBusy(false); }
   }
   return <main className="auth-shell"><section className="card auth-card" aria-labelledby="auth-title">
-    <a className="brand" href="/" aria-label="PECULE, accueil"><img src="/favicon.svg" alt="" /><span>pecule<span className="brand-dot">.</span></span></a>
+    <Link className="brand" href="/" aria-label="PECULE, accueil"><Image unoptimized width={32} height={32} src="/favicon.svg" alt="" /><span>pecule<span className="brand-dot">.</span></span></Link>
     <h1 id="auth-title">{signup ? "Votre budget commence ici." : "Retrouvez votre espace."}</h1>
     <p>{signup ? "Créez votre compte pour retrouver votre budget sur tous vos appareils." : "Connectez-vous avec votre adresse e-mail."}</p>
-    {google&&<button type="button" className="secondary full-width auth-google" disabled={busy} onClick={async()=>{setBusy(true);setError("");try{const result=await authClient.signIn.social({provider:"google",callbackURL:"/",errorCallbackURL:"/sign-in"});if(result.error){fail("La connexion Google a échoué. Réessayez ou utilisez votre adresse e-mail.");setBusy(false);}}catch{fail("Impossible de joindre Google. Réessayez.");setBusy(false);}}}><img src="/brands/catalogue/google.svg" width={20} height={20} alt=""/>Continuer avec Google</button>}
+    {google&&<button type="button" className="secondary full-width auth-google" disabled={busy} onClick={async()=>{setBusy(true);setError("");try{const result=await authClient.signIn.social({provider:"google",callbackURL:"/",errorCallbackURL:"/sign-in"});if(result.error){fail("La connexion Google a échoué. Réessayez ou utilisez votre adresse e-mail.");setBusy(false);}}catch{fail("Impossible de joindre Google. Réessayez.");setBusy(false);}}}><Image unoptimized src="/brands/catalogue/google.svg" width={20} height={20} alt=""/>Continuer avec Google</button>}
     <form onSubmit={submit} noValidate aria-busy={busy}>
       {signup && <label className="field"><span>Votre prénom</span><input name="name" autoComplete="given-name" maxLength={60} required disabled={busy} /></label>}
       <label className="field"><span>Adresse e-mail</span><input name="email" type="email" autoComplete="email" required maxLength={254} disabled={busy} /></label>
@@ -58,6 +60,6 @@ export default function SignIn() {
     </form>
     {!signup&&resetEnabled&&<a className="auth-link" href="/forgot-password">Mot de passe oublié ?</a>}
     <button type="button" className="auth-link" disabled={busy} onClick={() => { setSignup(!signup); setError(""); }}>{signup ? "J’ai déjà un compte" : "Créer un compte"}</button>
-    <a className="auth-link" href="/">Découvrir la démonstration</a>
+    <Link className="auth-link" href="/">Découvrir la démonstration</Link>
   </section></main>;
 }
