@@ -1,3 +1,4 @@
+import { revealHomeDetails } from './ui-helpers.mjs';
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
@@ -32,6 +33,8 @@ try {
     page.on('request', request => { if (request.method() === 'PUT' && new URL(request.url()).pathname === '/api/budget') writes.push('unexpected server write'); });
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(origin);
+    await page.locator('.clarte-dashboard').waitFor();
+    await revealHomeDetails(page);
     await page.locator('.budget-signal').waitFor();
     assert.match(await page.locator('.demo-banner').textContent(), /fictives/);
     await page.waitForFunction(value => document.documentElement.dataset.theme === value, theme);
@@ -43,6 +46,7 @@ try {
     assert(maximumAvailable >= days * 1000, 'The synthetic demo must support every tested allowance.');
     async function home() {
       await page.getByRole('navigation', { name: mobile ? 'Navigation mobile' : 'Navigation principale' }).getByRole('button', { name: mobile ? 'Accueil' : 'Vue d’ensemble', exact: true }).click();
+      await revealHomeDetails(page);
     }
     const colors = [], surfaces = [];
     for (const [tone, label, amount] of [['negative', 'Négatif', -1], ['attention', 'Attention', days * 1000 - 1], ['comfort', 'Confort', days * 1000]]) {

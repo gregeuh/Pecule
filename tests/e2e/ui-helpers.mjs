@@ -1,6 +1,7 @@
 /** Follow the same disclosures and filter confirmation as a real visitor. */
 export async function revealHomeDetails(page) {
  const panel=page.locator('.clarte-more');
+ if((page.viewportSize()?.width??1440)<=760)await panel.waitFor();
  if(await panel.count()&&!await panel.evaluate(n=>n.open))await panel.locator(':scope > summary').click();
 }
 export async function revealLedgerTools(page) {

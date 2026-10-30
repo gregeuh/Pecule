@@ -14,7 +14,7 @@ try {
     await routeOrigin(context);
     const page=await context.newPage(),errors=[],writes=[],wasm=[];
     page.on('pageerror',e=>errors.push(e.message)); page.on('request',r=>{if(r.method()==='PUT')writes.push(r.url());if(r.url().endsWith('.wasm'))wasm.push(r.url());});
-    await page.goto(origin); await page.locator('.clarte-budget').waitFor();
+    await page.goto(origin); await page.locator('.clarte-dashboard').waitFor();
     const nav=page.getByRole('navigation',{name:width===390?'Navigation mobile':'Navigation principale'});
     await nav.getByRole('button',{name:'Opérations',exact:true}).click();
     await page.getByRole('button',{name:'Nouvelle opération',exact:true}).click();
@@ -80,6 +80,6 @@ try {
     await context.close();console.log(`PASS ${engine} ${width} ${theme} reduced=${reduced}: validation, Lottie, repeat, settings, theme, bounds`);
   }
   // A failed illustration never suppresses the confirmation or blocks saving.
-  const context=await browser.newContext({viewport:{width:390,height:844}});await routeOrigin(context);await context.route('**/*.wasm',r=>r.abort());const page=await context.newPage();await page.goto(origin);await page.locator('.clarte-budget').waitFor();await page.getByRole('navigation',{name:'Navigation mobile'}).getByRole('button',{name:'Opérations',exact:true}).click();await page.getByRole('button',{name:'Nouvelle opération',exact:true}).click();await page.locator('input[name=label]').fill('QA fallback');await page.locator('input[name=amount]').fill('1');await page.getByRole('button',{name:'Enregistrer l’opération',exact:true}).click();await page.locator('.toast[data-success=true] .confirmation-fallback').waitFor();await context.close();report.fallback='passed';report.status='passed';
+  const context=await browser.newContext({viewport:{width:390,height:844}});await routeOrigin(context);await context.route('**/*.wasm',r=>r.abort());const page=await context.newPage();await page.goto(origin);await page.locator('.clarte-dashboard').waitFor();await page.getByRole('navigation',{name:'Navigation mobile'}).getByRole('button',{name:'Opérations',exact:true}).click();await page.getByRole('button',{name:'Nouvelle opération',exact:true}).click();await page.locator('input[name=label]').fill('QA fallback');await page.locator('input[name=amount]').fill('1');await page.getByRole('button',{name:'Enregistrer l’opération',exact:true}).click();await page.locator('.toast[data-success=true] .confirmation-fallback').waitFor();await context.close();report.fallback='passed';report.status='passed';
 } catch(e){report.status='failed';report.error=e.message;throw e;}
 finally {await writeFile(`${output}/${engine}-report.json`,JSON.stringify(report,null,2));await browser.close();}

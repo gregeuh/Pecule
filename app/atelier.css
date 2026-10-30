@@ -604,3 +604,30 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
   .transactions-card .toolbar .search-input input { font-size: 16px; }
   .operation-filter-trigger { padding-inline: 12px; gap: 7px; }
 }
+
+/* The account balances lead the home screen; the available amount is a forecast. */
+.clarte-accounts-primary { margin: 0; }
+.clarte-accounts-primary .clarte-account { display: grid; grid-template-columns: 40px minmax(0,1fr) auto; gap: 14px; border-bottom: 1px solid var(--line); min-height: 96px; }
+.clarte-accounts-primary .clarte-account > b { min-width: 0; max-width: none; margin: 0; font-size: clamp(23px,2.2vw,32px); line-height: 1.35; white-space: normal; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.clarte-accounts-primary .clarte-account strong { font-size: 16px; }
+.clarte-accounts-primary .clarte-accounts-total { display: flex; flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px; margin: 20px 0; border: 0; padding-top: 0; }
+.clarte-accounts-primary .clarte-accounts-total strong { font-size: 20px; }
+.clarte-accounts-empty { color: var(--muted); font-size: 14px; line-height: 1.7; padding-block: 12px; }
+.clarte-aside .clarte-amount { font-size: clamp(28px,2.8vw,40px); }
+.clarte-aside .clarte-amount-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+.clarte-aside .clarte-daily-desktop { text-align: left; }
+.clarte-aside .clarte-available-title { flex-wrap: wrap; }
+.clarte-aside .clarte-desktop-until { margin-left: 0; }
+.clarte-aside .clarte-formula { grid-template-columns: minmax(0,1fr); gap: 12px; }
+.clarte-aside .clarte-formula > div { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 12px; }
+.clarte-aside .clarte-formula dd { font-size: 18px; margin: 0; }
+@media (max-width:760px) {
+  .clarte-accounts-primary .clarte-account { grid-template-columns: 36px minmax(0,1fr); gap: 3px 12px; padding-block: 16px; }
+  .clarte-accounts-primary .clarte-account > .clarte-icon { grid-row: span 2; }
+  .clarte-accounts-primary .clarte-account > b { grid-column: 2; font-size: 28px; text-align: left; }
+  .clarte-accounts-primary .clarte-account strong { font-size: 15px; }
+  .clarte-accounts-primary .clarte-account small { margin-top: 2px; }
+  .clarte-accounts-primary .clarte-accounts-total strong { font-size: 19px; }
+}
+.clarte-accounts-primary { order: 0; }
+@media (max-width:760px) { .clarte-next { order: 1; } }

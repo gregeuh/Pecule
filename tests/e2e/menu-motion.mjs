@@ -11,7 +11,7 @@ try{
  const scenarios=process.env.PECULE_E2E_QUICK==='1'?[{width:390,theme:'dark',reduced:false},{width:390,theme:'dark',reduced:true}]:[...[390,1440].flatMap(width=>['light','dark'].map(theme=>({width,theme,reduced:false}))),{width:390,theme:'dark',reduced:true}];
  for(const {width,theme,reduced} of scenarios){
   const context=await browser.newContext({viewport:{width,height:900},isMobile:width===390,hasTouch:width===390,reducedMotion:reduced?'reduce':'no-preference'});await routeOrigin(context);await context.addInitScript(t=>localStorage.setItem('pecule-theme',t),theme);
-  const page=await context.newPage(),errors=[],writes=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(r.method()==='PUT')writes.push(r.url());});await page.goto(origin);await page.locator('.clarte-budget').waitFor();
+  const page=await context.newPage(),errors=[],writes=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(r.method()==='PUT')writes.push(r.url());});await page.goto(origin);await page.locator('.clarte-dashboard').waitFor();
   const add=page.locator(width===390?'.mobile-add':'.floating-action-trigger'),dialog=page.getByRole('dialog');
   await add.click();await dialog.waitFor();const panel=await dialog.elementHandle(),shade=await page.locator('.modal-backdrop').elementHandle();
   await page.getByRole('button',{name:/Une dépense/}).dispatchEvent('click');await page.getByRole('heading',{name:'Ajouter une opération',exact:true}).waitFor();

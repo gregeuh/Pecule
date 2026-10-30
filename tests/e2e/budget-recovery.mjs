@@ -99,7 +99,7 @@ try {
  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Paris',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
  const fixture={version:1,name:'QA P1 récupération',accounts:[{id:'qa-recovery-account',name:'Compte QA récupération',bank:'',type:'current',openingBalance:100000,openingDate:today.slice(0,7)+'-01',color:'#335cff'}],transactions:[],rules:[],goals:[],settings:{horizon:'month',reserve:0,holidayCalendar:'FR',dailyComfortCents:1500,categoryLimits:{Restaurants:1000},categoryRules:[{key:'label:qa service',title:'QA service',direction:'expense',category:'Abonnements'}]}};
  assert.equal((await api(page,'/api/budget','PUT',{budget:fixture,revision:current.data.revision})).status,200);
- await page.goto(origin);await page.locator('.clarte-budget').waitFor();
+ await page.goto(origin);await page.locator('.clarte-dashboard').waitFor();
  await page.getByRole('navigation',{name:'Navigation principale'}).getByRole('button',{name:'Mes comptes',exact:true}).click();
  await page.getByRole('button',{name:/Modifier Compte QA récupération/}).click();
  await page.locator('input[name="name"]').fill('Compte QA mon choix');

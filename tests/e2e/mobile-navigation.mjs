@@ -26,7 +26,7 @@ try {
     page.on('pageerror', error => errors.push(error.message));
     page.on('request', request => { if (request.method() === 'PUT' && request.url().endsWith('/api/budget')) writes.push(request.url()); });
     await page.goto(origin);
-    await page.locator('.clarte-budget').waitFor();
+    await page.locator('.clarte-dashboard').waitFor();
     await page.evaluate(() => document.fonts.ready);
     const prefix = `${width}-${theme}`;
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
@@ -63,10 +63,11 @@ try {
       await scrollTo(0);
       await page.waitForFunction(() => document.querySelector('.mobile-dock').dataset.compact === 'false');
       assert.equal(await page.locator('.clarte-formula').isVisible(), false);
-      assert.equal(await page.locator('.clarte-accounts').isVisible(),false);
+      assert.equal(await page.locator('.clarte-accounts').isVisible(),true);
+      assert.equal(await page.locator('.clarte-budget').isVisible(),false);
       await revealHomeDetails(page);
       const recent = await page.locator('.clarte-recent').boundingBox(), accounts = await page.locator('.clarte-accounts').boundingBox(), goal = await page.locator('.clarte-goal').boundingBox();
-      assert(recent.y < accounts.y && accounts.y < goal.y);
+      assert(accounts.y < recent.y && recent.y < goal.y);
       assert.equal(await page.locator('.clarte-recent > .clarte-transaction:visible').count(), 3);
       const amount = await page.locator('.clarte-amount').innerText();
       await page.getByRole('button', { name: 'Comprendre mon disponible', exact: true }).click();

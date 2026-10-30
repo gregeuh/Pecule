@@ -11,7 +11,7 @@ try{
  const scenarios=process.env.PECULE_E2E_QUICK==='1'?[{width:390,theme:'dark',reduced:false},{width:390,theme:'dark',reduced:true}]:[...[390,1440].flatMap(width=>['light','dark'].map(theme=>({width,theme,reduced:false}))),{width:390,theme:'dark',reduced:true}];
  for(const {width,theme,reduced} of scenarios){
   const context=await browser.newContext({viewport:{width,height:900},isMobile:width===390,hasTouch:width===390,reducedMotion:reduced?'reduce':'no-preference'});await routeOrigin(context);await context.addInitScript(t=>localStorage.setItem('pecule-theme',t),theme);
-  const page=await context.newPage(),errors=[],writes=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(r.method()==='PUT')writes.push(r.url());});await page.goto(origin);await page.locator('.clarte-budget').waitFor();
+  const page=await context.newPage(),errors=[],writes=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(r.method()==='PUT')writes.push(r.url());});await page.goto(origin);await page.locator('.clarte-dashboard').waitFor();
   const nav=page.getByRole('navigation',{name:width===390?'Navigation mobile':'Navigation principale'});
   const indicator=nav.locator('.navigation-indicator');
   async function checkMarker(){await indicator.locator('xpath=self::*[@data-ready="true"]').waitFor();await indicator.evaluate(e=>Promise.all(e.getAnimations().map(a=>a.finished.catch(()=>{}))));const marker=await indicator.boundingBox(),button=await nav.locator('button[aria-current=page]').boundingBox();for(const key of ['x','y','width','height'])assert(Math.abs(marker[key]-button[key])<=1,`Marker ${key} ${marker[key]} != ${button[key]}`);}
