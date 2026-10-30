@@ -644,3 +644,76 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 .balance-adjust-note { color: var(--muted); font-size: 13px; line-height: 1.7; margin: 18px 0 24px; }
 .balance-adjust-difference { font-variant-numeric: tabular-nums; }
 @media (max-width:760px) { .clarte-account-entry .balance-adjust-trigger { margin-left: 48px; } }
+
+/* Daily capture keeps the same Atelier controls and an explicit, calm review ritual. */
+.capture-routine { order: 0; }
+.capture-routine .clarte-section-title { align-items: flex-start; margin-bottom: 10px; }
+.capture-status, .daily-review > p, .favorites-manager > p { color: var(--muted); font-size: 13px; line-height: 1.7; margin-bottom: 18px; }
+.capture-actions, .reminder-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.capture-actions > button { min-height: 44px; }
+.capture-favorites { border-top: 1px solid var(--line); margin-top: 22px; padding-top: 18px; }
+.capture-favorites > div:first-child { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.capture-favorites h3 { font-size: 14px; }
+.favorite-shortcuts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; margin-top: 12px; }
+.favorite-shortcuts > button { justify-content: flex-start; min-width: 0; padding: 12px; gap: 9px; text-align: left; white-space: normal; }
+.favorite-shortcuts > button > span { min-width: 0; overflow-wrap: anywhere; }
+.favorite-shortcuts small { display: block; margin-top: 4px; font-weight: 400; font-size: 12px; font-variant-numeric: tabular-nums; }
+.favorite-shortcuts .merchant-icon, .favorite-shortcuts .category-icon { width: 28px; height: 28px; flex-shrink: 0; }
+.favorite-shortcuts img { width: 22px; height: 22px; }
+.capture-links { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; margin-top: 16px; }
+.capture-links button { min-height: 44px; font-size: 12px; }
+.review-week { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; margin-block: 18px 24px; }
+.review-week > button { text-align: left; min-height: 62px; border-radius: 12px; padding: 10px; background: var(--surface-inset); color: var(--ink); border: 1px solid var(--line); cursor: pointer; }
+.review-week > button.selected { background: var(--blue-soft); border-color: var(--blue); }
+.review-week small { display: block; color: var(--muted); margin-top: 5px; font-size: 11px; }
+.review-state { font-size: 13px; color: var(--blue); padding-bottom: 16px; }
+.daily-review h3 { font-size: 16px; margin: 28px 0 14px; }
+.review-rows { padding: 0; list-style: none; }
+.review-rows > li { border-bottom: 1px solid var(--line); }
+.review-rows > li > button { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 0; min-height: 64px; text-align: left; cursor: pointer; }
+.review-rows strong, .review-rows small { display: block; overflow-wrap: anywhere; }
+.review-rows small { color: var(--muted); margin-top: 5px; font-size: 12px; }
+.review-rows b { flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.review-accounts { border-block: 1px solid var(--line); padding-bottom: 22px; margin-block: 20px; }
+.review-accounts > button { display: flex; gap: 10px; margin-top: 10px; width: 100%; justify-content: flex-start; white-space: normal; text-align: left; }
+.review-accounts > button > svg:last-child { margin-left: auto; }
+.favorite-record { border-bottom: 1px solid var(--line); padding-block: 22px; }
+.favorite-record > div:first-child { display: flex; align-items: center; gap: 12px; }
+.favorite-record > div > span { min-width: 0; flex: 1; }
+.favorite-record h3 { font-size: 16px; overflow-wrap: anywhere; }
+.favorite-record small { color: var(--muted); font-size: 12px; display: block; margin-top: 5px; }
+.favorite-record > div > strong { font-variant-numeric: tabular-nums; font-size: 14px; }
+.favorite-record-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
+.favorite-record-actions .destructive-action { margin-left: auto; }
+.favorite-empty { padding-block: 24px; }
+.reminder-settings h3 { display: flex; gap: 10px; align-items: center; }
+.reminder-settings .reminder-actions { margin-top: 16px; }
+.reminder-settings > details { border-top: 1px solid var(--line); margin-top: 20px; }
+.reminder-settings summary { min-height: 48px; cursor: pointer; padding-top: 14px; }
+.reminder-other { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding-block: 12px; font-size: 13px; }
+.reminder-status { display: flex; align-items: flex-start; gap: 8px; margin-top: 18px; color: var(--blue); font-size: 13px; }
+.balance-find-missing { padding-block: 18px; margin-bottom: 16px; border-block: 1px solid var(--line); }
+.balance-find-missing h3 { font-size: 15px; }
+.balance-find-missing p { color: var(--muted); font-size: 13px; line-height: 1.7; margin-block: 10px 16px; }
+.balance-find-missing .text-button { min-height: 44px; margin-top: 8px; }
+.balance-correction > .primary { margin-bottom: 20px; }
+@media (max-width:760px) {
+ .capture-actions { align-items: stretch; }
+ .capture-actions > button { flex: 1 1 160px; }
+ .favorite-shortcuts { grid-template-columns: repeat(2,minmax(0,1fr)); }
+ .review-week { grid-template-columns: repeat(3,minmax(0,1fr)); }
+ .favorite-record > div:first-child { flex-wrap: wrap; }
+ .favorite-record > div > strong { margin-left: 50px; }
+ .review-rows b { max-width: 45%; overflow-wrap: anywhere; }
+ .modal .form-actions:has([value="continue"]) { display: flex; flex-direction: column; align-items: stretch; }
+ .modal .form-actions:has([value="continue"]) > button { min-height: 48px; }
+}
+@media (forced-colors:active) { .review-week > button.selected { outline: 2px solid Highlight; } }
+.merchant-options { border-block: 1px solid var(--line); margin-block: 8px 24px; padding-block: 4px; }
+.merchant-options > summary { display: flex; align-items: center; gap: 12px; min-height: 52px; list-style: none; cursor: pointer; color: var(--blue); font-size: 13px; font-weight: 600; }
+.merchant-options > summary::-webkit-details-marker { display: none; }
+.merchant-options > summary > svg { margin-left: auto; flex-shrink: 0; }
+.merchant-options[open] > summary > svg { transform: rotate(180deg); }
+.review-rows button > span { min-width: 0; flex: 1; }
+.review-rows button > svg { flex-shrink: 0; color: var(--muted); }
+.review-rows button:hover { background: var(--blue-soft); }

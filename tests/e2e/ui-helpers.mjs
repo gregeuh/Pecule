@@ -28,3 +28,6 @@ export async function shiftOperationMonth(page,name) {
  }
  return month;
 }
+
+export async function revealMerchantOptions(page){const panel=page.locator('.merchant-options');if(await panel.count()&&!await panel.evaluate(n=>n.open))await panel.locator(':scope > summary').click();}
+export async function acknowledgeBalanceCorrection(page){const panel=page.locator('.balance-correction');if(await panel.count()){if(!await panel.evaluate(n=>n.open))await panel.locator(':scope > summary').click();await panel.getByRole('checkbox',{name:/J’ai vérifié les opérations/}).check();}}

@@ -126,6 +126,23 @@ Les captures mobiles sont en page entière ; les captures ordinateur restent lim
 
 `node tests/e2e/account-home.mjs` vérifie 320/390/1440 px en clair/sombre : section unique en tête, tous les comptes, concordance avec la page Comptes, confidentialité et total masqué, ouverture/annulation de l’éditeur avec retour du focus, ajout d’un compte d’espèces à zéro, opération future sans effet sur les soldes, nom long et solde négatif important, limites horizontales et axe WCAG A/AA. Contextes de démonstration isolés et absence de PUT serveur vérifiée. `PECULE_E2E_QUICK=1` limite à 390/1440 px ; variables moteur, transport Node et répertoire de sortie comme ui-six. Les captures utilisent le viewport, y compris sur mobile. Le disponible est désormais accessible dans le détail mobile et la colonne secondaire ordinateur.
 
-### Ajustement direct du solde
+### Ajustement guidé du solde
 
 `node tests/e2e/account-adjustment.mjs` couvre 320/390/1440 px en clair/sombre ; `PECULE_E2E_QUICK=1` limite à 390/1440 et `PECULE_E2E_ENGINE=webkit` sélectionne WebKit. Démo isolée sans PUT : ouvrir depuis accueil/Comptes, erreurs et focus, annulation/reprise de brouillon, solde négatif/zéro, formats français, succès et effacement, brouillons isolés par compte, confidentialité, revenus/dépenses et nombre d’opérations inchangés, contrôle axe WCAG A/AA. Rapports/captures : outputs/account-adjustment, variable PECULE_E2E_OUTPUT disponible. `tests/account-balance.test.mjs` vérifie séparément conservation du registre, références, récurrences matérialisées, exclusions, limites et idempotence.
+
+
+### Saisie quotidienne complète
+
+`node tests/e2e/daily-capture.mjs` exerce la démonstration isolée : favoris créer/modifier/utiliser/supprimer, compte mémorisé, saisie en série, revue explicite et invalidation après changement, rattrapage, correction guidée et accès aux rappels. Profils 320/390/1440 px, clair/sombre, réduction des animations ; `PECULE_E2E_QUICK=1` limite à 390/1440, `PECULE_E2E_ENGINE=webkit` sélectionne WebKit installé. Les écritures PUT sont interdites. Rapports/captures : `outputs/daily-capture`, ou `PECULE_E2E_OUTPUT`. URL et transport Node suivent les suites précédentes. Cette suite ne prouve pas les animations normales ni la réception d’une notification système.
+
+Le parcours connecté nécessite une prévisualisation avec base PostgreSQL et clés Push configurées ; la base locale n’est pas disponible dans cet environnement. Exécution prévue sur cette prévisualisation :
+
+```sh
+PECULE_E2E_BASE_URL=https://<previsualisation> \
+PECULE_E2E_ALLOW_ACCOUNT_CREATION=1 \
+node tests/e2e/capture-connected.mjs
+```
+
+Ce test exige l’opt-in, crée/réutilise deux comptes QA `pecule.example.invalid` et refuse de réinitialiser un budget qui ne porte pas le nom de fixture attendu. Les identifiants restent dans `.sites-runtime/capture/<hôte>/accounts.json` avec permissions 0600, sans affichage ni versionnement. Il vérifie réellement la persistance API authentifiée du favori, du compte et de la revue après rechargement, le stockage/retrait d’abonnement et l’isolation entre les deux utilisateurs. Les mécaniques navigateur de permission/abonnement Push sont simulées ; seule la réponse de succès du test d’envoi est interceptée pour vérifier son affichage. Aucun envoi OS réel n’est validé. `PECULE_E2E_CRON_SECRET_FILE` peut fournir un secret local non journalisé pour vérifier que le planificateur ignore une journée QA vérifiée ; `PECULE_E2E_BYPASS_COOKIE_FILE` peut fournir les cookies de protection preview. Ne jamais versionner ces fichiers. Rapport sans secrets : `outputs/capture-connected/report.json`.
+
+Les unités attendues pour cette livraison sont au nombre de 122, avec les règles financières, empreintes de revue, favoris, validation et horaires Paris/DST. Ce nombre attendu et la présence des scripts ne sont pas une preuve de réussite : consulter les résultats des commandes et les rapports de l’exécution. La livraison Web Push réelle doit être contrôlée sur un appareil ayant accordé sa permission, séparément de ces tests.

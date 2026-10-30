@@ -243,6 +243,17 @@ Les finitions restent dans `atelier.css` : cibles tactiles d’au moins 44 px, f
 
 À la demande de l’utilisateur, « Mes comptes » mène désormais l’accueil sur mobile et ordinateur. Le nom, le type et le solde de chaque compte restent visibles sans ouvrir les détails ; le montant de chaque compte porte la hiérarchie. Le total reste secondaire. La même section existante conserve Gérer, Ajouter un compte et l’éditeur de compte. Sur mobile, le disponible prévisionnel rejoint « Votre budget en détail » ; sur ordinateur il occupe la colonne secondaire. Les tokens Atelier et le calcul canonique des soldes sont conservés.
 
-### Ajustement rapide du solde
+### Ajustement guidé du solde
 
 Chaque compte présente « Ajuster le solde » sur l’accueil et la page Comptes. L’action est distincte du bouton de compte et n’est pas imbriquée dedans. AccountBalanceAdjustment réutilise le panneau canonique, FormField et ValidatedForm : compte, solde actuel, nouveau solde, écart et effet de la correction. Le nouveau montant reste vide à l’ouverture, y compris en confidentialité. Aucun nouveau token ni moteur de dialogue. La saisie accepte les formats français ; les erreurs de domaine utilisent le champ partagé avec association accessible et focus.
+
+
+## Saisie quotidienne — 30 octobre 2026
+
+Source : `docs/daily-capture-brief.md`. `app/capture-routine.tsx` et `app/capture-favorites.tsx` prolongent l’accueil et les panneaux canoniques de BudgetApp, avec les tokens Atelier et les contrôles partagés. Les soldes restent en tête ; le rituel présente une action de saisie, une revue volontaire, six raccourcis favoris au maximum sur l’accueil et les liens de rattrapage/rappel. Pas de score ni de série punitive. Les montants des favoris et de la revue suivent le masquage global.
+
+Les favoris disposent d’un état vide et d’un gestionnaire créer/modifier/supprimer ; leur utilisation prépare le formulaire existant. Le montant reste prioritaire, la date et le compte sont visibles, la note reste progressive. « Enregistrer et continuer » reprend le compte et la date après confirmation de sauvegarde et remet le focus au montant. Les contrats de persistance, de brouillon et de revue sont dans UX-CONTRACT.md.
+
+L’ajustement de solde propose d’abord de vérifier les opérations ou d’ajouter l’écriture manquante. En présence d’un écart, « Corriger tout de même la référence » divulgue l’effet sur les anciens soldes et exige une case explicite avant l’enregistrement. Le nouveau montant reste une saisie volontaire ; les valeurs calculées suivent la confidentialité.
+
+`app/reminder-settings.tsx` réutilise les réglages existants : plage horaire de Paris, activation sur cet appareil, test, désactivation et liste des autres appareils. Les états de chargement, indisponibilité avec réessai, navigateur non pris en charge et permission refusée sont textuels. La permission est demandée seulement à l’activation. Sur iPhone, l’aide explique l’installation depuis Safari et iOS 16.4 minimum. Aucune nouvelle palette, aucun moteur de panneau ou de mouvement ; la réduction des animations conserve les règles partagées. La livraison réelle d’une notification reste à vérifier sur un appareil autorisé.
