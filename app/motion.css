@@ -1,0 +1,85 @@
+/* One motion language: immediate touch feedback, soft arrivals, a single success illustration. */
+:root {
+  --motion-press: 120ms;
+  --motion-arrival: 260ms;
+  --motion-settle: cubic-bezier(0.16, 1, 0.3, 1);
+}
+.confirmation-art {
+  color: inherit;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  flex: 0 0 72px;
+}
+.confirmation-art > * { grid-area: 1 / 1; }
+.confirmation-art canvas { width: 72px; height: 72px; opacity: 0; }
+.confirmation-art[data-ready="true"] canvas { opacity: 1; }
+.confirmation-art[data-ready="true"] .confirmation-fallback { visibility: hidden; }
+.toast { width: max-content; min-width: min(360px, calc(100vw - 32px)); max-width: min(480px, calc(100vw - 32px)); animation-duration: var(--motion-arrival); animation-timing-function: var(--motion-settle); }
+.toast[data-success="true"] { gap: 8px; padding-block: 8px; }
+.toast > .confirmation-art { flex: 0 0 72px; }
+.toast > svg { flex-shrink: 0; }
+.notice-copy { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.notice-copy > strong { color: inherit; font-size: 13px; line-height: 1.4; font-weight: 650; }
+.notice-copy > span { color: inherit; font-size: 12px; line-height: 1.5; }
+.toast[data-kind="goal"] .confirmation-art { flex-basis: 88px; width: 88px; height: 88px; }
+.toast[data-kind="goal"] .confirmation-art canvas { width: 88px; height: 88px; }
+.toast button { min-width: 44px; min-height: 44px; flex-shrink: 0; }
+.modal-backdrop { animation: pecule-overlay-in 160ms ease-out; }
+.modal { animation: pecule-dialog-in var(--motion-arrival) var(--motion-settle); }
+.primary, .secondary, .icon-button, .quick-action, .mobile-add,
+.floating-action-trigger, .mobile-dock .mobile-nav.floating-nav > button {
+  transition: transform var(--motion-press) ease-out, background-color 160ms ease, color 160ms ease;
+}
+.primary:active:not(:disabled), .secondary:active:not(:disabled),
+.icon-button:active:not(:disabled), .quick-action:active:not(:disabled),
+.mobile-add:active, .floating-action-trigger:active { transform: scale(0.97); }
+.mobile-dock .mobile-nav.floating-nav > button:active { transform: scale(0.96); }
+@keyframes pecule-overlay-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pecule-dialog-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to { opacity: 1; transform: none; }
+}
+@media (max-width: 760px) {
+  .mobile-dock { transition: max-width 280ms var(--motion-settle); }
+  .mobile-dock .mobile-nav.floating-nav { transition: height 280ms var(--motion-settle), padding 280ms var(--motion-settle); }
+  .mobile-dock .mobile-nav.floating-nav > button {
+    transition: min-height 280ms var(--motion-settle), gap 280ms var(--motion-settle),
+      transform var(--motion-press) ease-out, background-color 160ms ease, color 160ms ease;
+  }
+  .mobile-dock .mobile-nav.floating-nav > button > span { transition: max-height 220ms var(--motion-settle), opacity 120ms ease; }
+  .mobile-add {
+    transition: width 280ms var(--motion-settle), height 280ms var(--motion-settle),
+      flex-basis 280ms var(--motion-settle), transform var(--motion-press) ease-out, background-color 160ms ease;
+  }
+  .modal { animation-name: pecule-sheet-in; }
+}
+@keyframes pecule-sheet-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+  .modal-backdrop, .modal, .toast, .fade-in { animation: none; }
+  .primary, .secondary, .icon-button, .quick-action, .mobile-add, .floating-action-trigger,
+  .mobile-dock, .mobile-dock .mobile-nav.floating-nav,
+  .mobile-dock .mobile-nav.floating-nav > button,
+  .mobile-dock .mobile-nav.floating-nav > button > span { transition: none; }
+  .primary:active, .secondary:active, .icon-button:active, .quick-action:active,
+  .mobile-add:active, .floating-action-trigger:active,
+  .mobile-dock .mobile-nav.floating-nav > button:active { transform: none; }
+  .confirmation-art canvas { display: none; }
+  .confirmation-art[data-ready="true"] .confirmation-fallback { visibility: visible; }
+}
+@media (forced-colors: active) {
+  .confirmation-art canvas { display: none; }
+  .confirmation-art[data-ready="true"] .confirmation-fallback { visibility: visible; }
+}
+.wallet-art { width: 80px; height: 80px; margin: 0 auto 12px; color: var(--blue); }
+.wallet-art canvas { width: 80px; height: 80px; }
+@media (prefers-reduced-motion: no-preference) {
+  .clarte-chart[open] .projection-line { animation: pecule-projection-in 500ms var(--motion-settle); }
+  .progress-track > span { transition: width 300ms var(--motion-settle); }
+}
+@keyframes pecule-projection-in { from { stroke-dasharray: 1; stroke-dashoffset: 1; } to { stroke-dasharray: 1; stroke-dashoffset: 0; } }

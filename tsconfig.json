@@ -28,9 +28,9 @@
       ]
     },
     "types": [
-      "node",
-      "@cloudflare/workers-types"
-    ]
+      "node"
+    ],
+    "allowImportingTsExtensions": true
   },
   "include": [
     "next-env.d.ts",
@@ -48,6 +48,9 @@
     ".wrangler",
     ".sites-runtime",
     "outputs",
-    "work"
+    "work",
+    "worker",
+    "vite.config.ts",
+    "db/index.ts"
   ]
 }

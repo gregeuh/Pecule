@@ -1,0 +1,54 @@
+import { revealLedgerTools } from './ui-helpers.mjs';
+import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { chromium } from 'playwright';
+import { todayISO } from '../../lib/budget.ts';
+const origin=new URL(process.env.PECULE_E2E_BASE_URL||'http://127.0.0.1:3001').origin;
+const output='outputs/import-recovery';await mkdir(output,{recursive:true});
+const browser=await chromium.launch({headless:true,executablePath:process.env.PECULE_E2E_CHROMIUM||'/usr/bin/chromium',args:process.env.PECULE_E2E_NO_SANDBOX==='1'?['--no-sandbox']:[]});
+const report={origin,checks:[],personalAccounts:false};
+try{
+ for(const mobile of [false,true]){
+  const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:1000},reducedMotion:'no-preference'});
+  if(process.env.PECULE_E2E_NODE_TRANSPORT==='1')await context.route(`${origin}/**`,async route=>{const req=route.request(),res=await fetch(req.url(),{method:req.method(),headers:req.headers(),body:req.postDataBuffer()||undefined,redirect:'manual'});const headers=Object.fromEntries(res.headers);delete headers['content-encoding'];delete headers['content-length'];delete headers['transfer-encoding'];const cookies=res.headers.getSetCookie();if(cookies.length)headers['set-cookie']=cookies.join('\n');await route.fulfill({status:res.status,headers,body:Buffer.from(await res.arrayBuffer())});});
+  const page=await context.newPage();page.setDefaultTimeout(20000);const errors=[],writes=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(r.method()==='PUT'&&r.url().endsWith('/api/budget'))writes.push(r.url());});
+  await page.goto(origin);await page.locator('.clarte-budget').waitFor();
+  const nav=page.getByRole('navigation',{name:mobile?'Navigation mobile':'Navigation principale'});
+  await nav.getByRole('button',{name:'Opérations',exact:true}).click();
+  await revealLedgerTools(page);await page.getByRole('button',{name:'Importer',exact:true}).click();
+  const today=todayISO();
+  await page.locator('input[type=file]').setInputFiles({name:'qa-recovery.csv',mimeType:'text/csv',buffer:Buffer.from(`Date;Libellé;Montant;Référence\n${today};QA brouillon conservé;-12,34;QA-DRAFT-001\n${today};QA ligne décochée;-56,78;QA-DRAFT-002\n`)});
+  await page.getByText('QA ligne décochée',{exact:false}).locator('..').locator('..').locator('input[type=checkbox]').uncheck();
+  await page.getByRole('button',{name:'Fermer',exact:true}).click();
+  await revealLedgerTools(page);await page.getByRole('button',{name:'Reprendre l’import',exact:true}).click();
+  assert.match(await page.locator('.import-summary').textContent(),/1 sélectionnées/);
+  assert.equal(await page.locator('.import-row input:checked').count(),1);
+  await page.getByRole('button',{name:'Vérifier 1 opérations',exact:false}).click();
+  await page.keyboard.press('Escape');
+  await revealLedgerTools(page);await page.getByRole('button',{name:'Reprendre l’import',exact:true}).click();
+  assert.equal(await page.getByRole('heading',{name:'Vérifier avant d’importer'}).count(),1);
+  assert.equal(await page.locator('.bank-import-confirm input').isChecked(),false);
+  await page.locator('.bank-import-confirm input').check();
+  await page.getByRole('button',{name:'Importer 1 opérations',exact:true}).click();
+  await page.getByRole('dialog').waitFor({state:'hidden'});
+  const notice=page.locator('.toast[data-kind=import]');await notice.waitFor();
+  await notice.locator('.confirmation-art[data-complete=true]').waitFor();
+  await page.screenshot({path:`${output}/${mobile?'mobile':'desktop'}-signature.png`});
+  await revealLedgerTools(page);await page.getByRole('button',{name:'Mes imports',exact:true}).click();
+  assert.match(await page.getByRole('dialog').innerText(),/1 opérations/);
+  await page.getByRole('button',{name:'Annuler cet import',exact:true}).click();
+  await page.getByRole('button',{name:'Annuler',exact:true}).click();
+  assert.equal(await page.getByRole('button',{name:/QA brouillon conservé/}).count(),1);
+  await revealLedgerTools(page);await page.getByRole('button',{name:'Mes imports',exact:true}).click();
+  await page.getByRole('button',{name:'Annuler cet import',exact:true}).click();
+  await page.getByRole('button',{name:'Confirmer',exact:true}).click();
+  await page.getByRole('dialog').waitFor({state:'hidden'});
+  assert.equal(await page.getByRole('button',{name:/QA brouillon conservé/}).count(),0);
+  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  await page.screenshot({path:`${output}/${mobile?'mobile':'desktop'}.png`});
+  assert.deepEqual(writes,[]);assert.deepEqual(errors,[]);
+  report.checks.push({mobile,draft:'passed',selection:'passed',review:'passed',cancelDeletion:'passed',batchDeletion:'passed',serverWrites:0});
+  await context.close();console.log(`PASS: ${mobile?'mobile':'desktop'} import draft, review, confirmed batch undo`);
+ }
+ report.status='passed';
+}finally{await writeFile(`${output}/report.json`,JSON.stringify(report,null,2));await browser.close();}
