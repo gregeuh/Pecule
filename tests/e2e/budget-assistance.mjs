@@ -1,3 +1,4 @@
+import { revealLedgerTools } from './ui-helpers.mjs';
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
@@ -18,7 +19,7 @@ try{
   async function add(){await go('Opérations');await page.getByRole('button',{name:'Nouvelle opération',exact:true}).click();}
   await add();await page.locator('input[name="label"]').fill('QA marchand mémorisé');await page.locator('input[name="amount"]').fill('12.34');await page.locator('select[name="category"]').selectOption('Loisirs');await page.locator('input[name="rememberCategory"]').check();await page.getByRole('button',{name:'Enregistrer l’opération',exact:true}).click();await page.getByRole('dialog').waitFor({state:'hidden'});
   await add();await page.locator('input[name="label"]').fill('QA marchand mémorisé');assert.equal(await page.locator('select[name="category"]').inputValue(),'Loisirs');await page.getByRole('button',{name:'Fermer',exact:true}).click();
-  await page.getByRole('button',{name:'Importer',exact:true}).click();
+  await revealLedgerTools(page);await page.getByRole('button',{name:'Importer',exact:true}).click();
   const today=todayISO(),date=parseDate(today);const prior=Array.from({length:3},(_,i)=>dateISO(new Date(date.getFullYear(),date.getMonth()-3+i,15,12)));
   await page.locator('input[type=file]').setInputFiles({name:'qa-recurrence.csv',mimeType:'text/csv',buffer:Buffer.from('Date;Libellé;Montant\n'+prior.map(d=>`${d};QA abonnement stable;-9,99`).join('\n')+'\n')});
   await page.locator('select[name="bank-balance-mode"]').selectOption('history');await page.getByRole('button',{name:'Vérifier 3 opérations',exact:false}).click();await page.locator('.bank-import-confirm input').check();await page.getByRole('button',{name:'Importer 3 opérations',exact:true}).click();await page.getByRole('dialog').waitFor({state:'hidden'});

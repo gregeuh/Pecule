@@ -1,3 +1,4 @@
+import { revealHomeDetails } from './ui-helpers.mjs';
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
@@ -62,6 +63,8 @@ try {
       await scrollTo(0);
       await page.waitForFunction(() => document.querySelector('.mobile-dock').dataset.compact === 'false');
       assert.equal(await page.locator('.clarte-formula').isVisible(), false);
+      assert.equal(await page.locator('.clarte-accounts').isVisible(),false);
+      await revealHomeDetails(page);
       const recent = await page.locator('.clarte-recent').boundingBox(), accounts = await page.locator('.clarte-accounts').boundingBox(), goal = await page.locator('.clarte-goal').boundingBox();
       assert(recent.y < accounts.y && accounts.y < goal.y);
       assert.equal(await page.locator('.clarte-recent > .clarte-transaction:visible').count(), 3);

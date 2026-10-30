@@ -1,3 +1,4 @@
+import { revealHomeDetails } from './ui-helpers.mjs';
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {chromium,webkit} from 'playwright';
@@ -24,7 +25,7 @@ try{
   await page.getByRole('button',{name:'Fermer',exact:true}).dispatchEvent('click');
   if(!reduced){await dialog.locator('form').evaluate(e=>e.requestSubmit());}
   await dialog.waitFor({state:'hidden'});assert.equal(await page.locator('.toast[data-success=true]').count(),0);await page.waitForFunction(selector=>document.querySelector(selector)===document.activeElement,width===390?'.mobile-add':'.floating-action-trigger');
-  const chart=page.locator('.clarte-chart');await chart.locator(':scope > summary').click();await chart.evaluate(e=>Promise.all(e.getAnimations().map(a=>a.finished.catch(()=>{}))));assert(await chart.evaluate(e=>e.open));await chart.locator(':scope > summary').click();await page.waitForFunction(()=>!document.querySelector('.clarte-chart').open);
+  await revealHomeDetails(page);const chart=page.locator('.clarte-chart');await chart.locator(':scope > summary').click();await chart.evaluate(e=>Promise.all(e.getAnimations().map(a=>a.finished.catch(()=>{}))));assert(await chart.evaluate(e=>e.open));await chart.locator(':scope > summary').click();await page.waitForFunction(()=>!document.querySelector('.clarte-chart').open);
   if(width===390){const nav=page.getByRole('navigation',{name:'Navigation mobile'});await nav.getByRole('button',{name:'Plus',exact:true}).click();await page.getByRole('navigation',{name:'Navigation complémentaire'}).getByRole('button',{name:/Réglages/}).click();await dialog.waitFor({state:'hidden'});await page.waitForFunction(()=>document.querySelector('#main-content h1')===document.activeElement,null,{timeout:5000}).catch(async error=>{console.log(await page.evaluate(()=>({heading:document.querySelector('#main-content h1')?.textContent,active:document.activeElement?.outerHTML.slice(0,250),inert:document.querySelector('.main-wrap')?.inert})));throw error;});}
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.deepEqual(errors,[]);assert.deepEqual(writes,[]);report.checks.push({width,theme,reduced,continuity:'passed',reverse:'passed',draft:'passed',closeGuard:'passed',focus:'passed',disclosures:'passed',serverWrites:0});await context.close();console.log(`PASS ${engine} ${width} ${theme} reduced=${reduced}: menu continuity, exit, interrupted disclosures, draft and focus`);
  }

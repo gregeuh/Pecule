@@ -15,3 +15,6 @@ function locationSubscribe(notify:()=>void){window.addEventListener("popstate",n
 const callbackSnapshot=()=>googleErrorMessage(new URLSearchParams(window.location.search).get("error"));
 export function useOAuthError(){const callback=useSyncExternalStore(locationSubscribe,callbackSnapshot,()=>"");const [local,setLocal]=useState<string|null>(null);return [local??callback,setLocal] as const;}
 export function useGoogleReturn(){return useSyncExternalStore(locationSubscribe,()=>new URLSearchParams(window.location.search).get("connection")==="google",()=>false);}
+const compactQuery="(max-width: 760px)";
+function compactSubscribe(notify:()=>void){const query=matchMedia(compactQuery);query.addEventListener("change",notify);return()=>query.removeEventListener("change",notify);}
+export function useCompactViewport(){return useSyncExternalStore(compactSubscribe,()=>matchMedia(compactQuery).matches,()=>false);}

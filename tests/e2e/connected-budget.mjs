@@ -1,3 +1,4 @@
+import { revealLedgerTools } from './ui-helpers.mjs';
 import assert from 'node:assert/strict';
 import { randomBytes, randomUUID } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
@@ -126,7 +127,7 @@ try {
   assert.equal(reset.status, 200);
   await first.page.reload();
   await first.page.getByRole('navigation', { name: 'Navigation principale' }).getByRole('button', { name: 'Opérations', exact: true }).click();
-  await first.page.getByRole('button', { name: 'Importer', exact: true }).click();
+  await revealLedgerTools(first.page);await first.page.getByRole('button', { name: 'Importer', exact: true }).click();
   const csv = 'Date;Libellé;Débit;Crédit;Catégorie;Note;Référence;Date de valeur;Bénéficiaire;Devise\n23/10/2026;Courses fictives P1;42,50;;Alimentation;Ticket de test;QA-P1-001;24/10/2026;Commerce fictif;EUR\n24/10/2026;Revenu fictif P1;;200,00;Autres revenus;Test;QA-P1-002;24/10/2026;Employeur fictif;EUR';
   await first.page.locator('.bank-import input[type=file]').setInputFiles({ name: 'releve-fictif-p1.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });
   await first.page.getByText('Données reprises', { exact: true }).first().click();
