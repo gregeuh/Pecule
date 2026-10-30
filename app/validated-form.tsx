@@ -28,10 +28,10 @@ export function ValidatedForm({onSubmit,children,draftKey,...props}:FormHTMLAttr
     setErrors({});void onSubmit?.(event);
   }} onInput={()=>{capture(true);if(Object.keys(errors).length)setErrors({});}}><FormDraftValues.Provider key={reset} value={snapshot}><Errors.Provider value={errors}>{restored&&snapshot&&<p className="draft-status" role="status">Votre saisie non enregistrée a été reprise.<button type="button" className="text-button" onClick={()=>{if(draftKey)store?.clear(draftKey);edited.current=false;form.current?.reset();setRestored(false);setErrors({});setReset(n=>n+1);}}>Effacer la saisie</button></p>}{children}{Object.keys(errors).length>0&&<ErrorMessage>Vérifiez les champs signalés avant d’enregistrer.</ErrorMessage>}</Errors.Provider></FormDraftValues.Provider></form>;
 }
-export function FormField({label,children,hint}:{label:string;children:ReactNode;hint?:string}){
+export function FormField({label,children,hint,error:externalError}:{label:string;children:ReactNode;hint?:string;error?:string}){
   const errors=useContext(Errors),id=useId();let name="";
   function find(nodes:ReactNode){Children.forEach(nodes,node=>{if(!isValidElement(node))return;const p=node.props as {name?:string;children?:ReactNode};if(p.name&&!name)name=p.name;else if(p.children)find(p.children);});}find(children);
-  const error=errors[name];
+  const error=externalError||errors[name];
   function annotate(nodes:ReactNode):ReactNode{return Children.map(nodes,node=>{if(!isValidElement(node))return node;const element=node as ReactElement<Record<string,unknown>>;const p=element.props;if(p.name===name&&(["input","select","textarea"].includes(String(element.type))||typeof element.type==="function"))return cloneElement(element,{id,"aria-invalid":!!error,"aria-describedby":[hint?`${id}-hint`:null,error?`${id}-error`:null].filter(Boolean).join(" ")||undefined});if(p.children)return cloneElement(element,{},annotate(p.children as ReactNode));return element;});}
   return <label className={`field ${error?"has-error":""}`} htmlFor={id}><span>{label}</span>{annotate(children)}{hint&&<small id={`${id}-hint`}>{hint}</small>}{error&&<small className="field-error" id={`${id}-error`}>{error}</small>}</label>;
 }

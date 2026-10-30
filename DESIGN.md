@@ -242,3 +242,7 @@ Les finitions restent dans `atelier.css` : cibles tactiles d’au moins 44 px, f
 ### Accueil centré sur les comptes — 30 octobre 2026
 
 À la demande de l’utilisateur, « Mes comptes » mène désormais l’accueil sur mobile et ordinateur. Le nom, le type et le solde de chaque compte restent visibles sans ouvrir les détails ; le montant de chaque compte porte la hiérarchie. Le total reste secondaire. La même section existante conserve Gérer, Ajouter un compte et l’éditeur de compte. Sur mobile, le disponible prévisionnel rejoint « Votre budget en détail » ; sur ordinateur il occupe la colonne secondaire. Les tokens Atelier et le calcul canonique des soldes sont conservés.
+
+### Ajustement rapide du solde
+
+Chaque compte présente « Ajuster le solde » sur l’accueil et la page Comptes. L’action est distincte du bouton de compte et n’est pas imbriquée dedans. AccountBalanceAdjustment réutilise le panneau canonique, FormField et ValidatedForm : compte, solde actuel, nouveau solde, écart et effet de la correction. Le nouveau montant reste vide à l’ouverture, y compris en confidentialité. Aucun nouveau token ni moteur de dialogue. La saisie accepte les formats français ; les erreurs de domaine utilisent le champ partagé avec association accessible et focus.

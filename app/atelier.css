@@ -631,3 +631,16 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 }
 .clarte-accounts-primary { order: 0; }
 @media (max-width:760px) { .clarte-next { order: 1; } }
+
+/* Balance correction is a distinct action, never nested inside the account button. */
+.clarte-account-entry { border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+.clarte-accounts-primary .clarte-account-entry .clarte-account { border-bottom: 0; }
+.clarte-account-entry .balance-adjust-trigger { display: flex; min-height: 44px; margin-left: 54px; font-size: 12px; }
+.account-card > .balance-adjust-trigger { margin-top: 16px; }
+.balance-adjust-account { font-weight: 700; overflow-wrap: anywhere; margin-bottom: 20px; }
+.balance-adjust-current { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-bottom: 22px; margin-bottom: 22px; border-bottom: 1px solid var(--line); }
+.balance-adjust-current dt { color: var(--muted); font-size: 13px; }
+.balance-adjust-current dd { font-variant-numeric: tabular-nums; font-weight: 600; overflow-wrap: anywhere; }
+.balance-adjust-note { color: var(--muted); font-size: 13px; line-height: 1.7; margin: 18px 0 24px; }
+.balance-adjust-difference { font-variant-numeric: tabular-nums; }
+@media (max-width:760px) { .clarte-account-entry .balance-adjust-trigger { margin-left: 48px; } }
