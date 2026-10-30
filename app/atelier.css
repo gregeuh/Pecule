@@ -717,3 +717,4 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 .review-rows button > span { min-width: 0; flex: 1; }
 .review-rows button > svg { flex-shrink: 0; color: var(--muted); }
 .review-rows button:hover { background: var(--blue-soft); }
+.reminder-settings .field-hint > a { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 4px; }

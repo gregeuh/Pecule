@@ -1,3 +1,4 @@
+import {revealMerchantOptions} from './ui-helpers.mjs';
 import { revealHomeDetails } from './ui-helpers.mjs';
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
@@ -19,7 +20,7 @@ try{
   if(!reduced&&width===390){await page.emulateMedia({reducedMotion:'reduce'});await page.waitForFunction(()=>document.querySelector('[role=dialog]')?.getAttribute('data-motion')==='idle');await page.emulateMedia({reducedMotion:'no-preference'});}
   await page.locator('input[name=label]').fill('QA transition sans enregistrement');await page.locator('input[name=amount]').fill('12.34');
   await page.waitForFunction(()=>document.querySelector('[role=dialog]')?.getAttribute('data-motion')==='idle');
-  assert.equal(await page.locator('input[name=label]').inputValue(),'QA transition sans enregistrement');
+  assert.equal(await page.locator('input[name=label]').inputValue(),'QA transition sans enregistrement');await revealMerchantOptions(page);
   const details=page.locator('.brand-picker');await details.locator(':scope > summary').click();await page.waitForFunction(()=>document.querySelector('.brand-picker')?.open);await details.locator(':scope > summary').dispatchEvent('click');await details.locator(':scope > summary').dispatchEvent('click');await details.evaluate(e=>Promise.all(e.getAnimations().map(a=>a.finished.catch(()=>{}))));assert(await details.evaluate(e=>e.open));
   await page.screenshot({path:`${output}/${engine}-${width}-${theme}-${reduced?'reduced':'motion'}.png`});
   await page.getByRole('button',{name:'Fermer',exact:true}).dispatchEvent('click');

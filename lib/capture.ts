@@ -11,7 +11,7 @@ export function reviewSignature(budget:Budget,date:string){
 export function reviewState(b:Budget,date:string){const r=b.settings.capture?.reviews?.find(r=>r.date===date);return !r?'unreviewed':r.signature===reviewSignature(b,date)?'checked':'changed';}
 export function markDailyReview(b:Budget,date:string,kind:DailyReview['kind'],today:string){
  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(Date.parse(date))||new Date(date+'T12:00:00Z').toISOString().slice(0,10)!==date||date>today||date<'2000-01-01')throw new Error('Choisissez une journée passée ou aujourd’hui.');
- const next=structuredClone(b),review={date,kind,signature:reviewSignature(b,date),checkedAt:new Date().toISOString()};next.settings.capture={...next.settings.capture,reviews:[...(next.settings.capture?.reviews??[]).filter(r=>r.date!==date),review].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,90)};return next;
+ const next=structuredClone(b),review={date,kind,signature:reviewSignature(b,date),checkedAt:new Date().toISOString()};next.settings.capture={...next.settings.capture,reviews:[...(next.settings.capture?.reviews??[]).filter(r=>r.date!==date),review].slice(-90)};return next;
 }
 export function lastReview(b:Budget){return [...(b.settings.capture?.reviews??[])].sort((a,b)=>b.date.localeCompare(a.date))[0];}
 export function recentReviewDays(b:Budget,today:string){return Array.from({length:7},(_,i)=>{const date=shiftDate(today,i-6);return {date,state:reviewState(b,date)};});}

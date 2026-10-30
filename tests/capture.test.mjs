@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {emptyBudget,demoBudget} from '../lib/budget.ts';
+import {emptyBudget,demoBudget,shiftDate} from '../lib/budget.ts';
 import {captureAccount,reviewSignature,reviewState,markDailyReview,recentReviewDays,favoriteFromTransaction} from '../lib/capture.ts';
 import {parisClock,reminderHours,safePushEndpoint,walkReminderDevices} from '../lib/reminders.ts';
 import {budgetSchema} from '../lib/validation.ts';
@@ -14,3 +14,5 @@ test('push endpoints are restricted to known public providers, never arbitrary d
 
 test('reminder pagination visits device 101+ even when earlier devices are skipped, with bounded concurrency',async()=>{const rows=Array.from({length:235},(_,i)=>({id:String(i).padStart(4,'0')}));let active=0,max=0;const visited=[],eligible=[];await walkReminderDevices(async after=>rows.filter(r=>r.id>after).slice(0,100),async row=>{active++;max=Math.max(max,active);await Promise.resolve();visited.push(row.id);if(Number(row.id)>100)eligible.push(row.id);active--;});assert.equal(visited.length,235);assert.equal(new Set(visited).size,235);assert.equal(eligible.length,134);assert(max<=10);});
 test('reminder runtime guard is checked again before every sending batch',async()=>{const visited=[];let batches=0;await assert.rejects(()=>walkReminderDevices(async after=>after?[]:Array.from({length:30},(_,i)=>({id:String(i).padStart(3,'0')})),async row=>{visited.push(row.id);},()=>{if(++batches===2)throw new Error('deadline');}),/deadline/);assert.equal(visited.length,10);});
+
+test('a newly reviewed older day is retained even when ninety newer dates exist',()=>{let b=demoBudget(date);for(let i=0;i<95;i++)b=markDailyReview(b,shiftDate(date,-i),'checked',date);assert.equal(b.settings.capture.reviews.length,90);assert(b.settings.capture.reviews.some(r=>r.date===shiftDate(date,-94)));assert.equal(reviewState(b,shiftDate(date,-94)),'checked');});
