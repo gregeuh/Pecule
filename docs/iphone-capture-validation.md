@@ -36,3 +36,5 @@ Les choix Dépense/Revenu des créations sont maintenant des radios natifs ; les
 ## Contrôles Vercel
 
 Les identifiants de déploiement, vérification de l’alias et rapports distants sont conservés dans `outputs/iphone-capture`, ignoré par Git. Le contrôle connecté emploie exclusivement les comptes QA dédiés et ne prouve pas le clavier système d’un iPhone. Aucun budget personnel n’est utilisé.
+
+Le contrôle connecté de prévisualisation est réussi : opérations, compte repris, favoris et revue sont retrouvés après rechargement par les comptes QA dédiés. Le formulaire ouvert, ses détails et l’erreur de montant nul ont également passé le contrôle d’accessibilité automatique à 390/1440 px, dans les deux thèmes. Les surfaces des choix de type sont explicites pour garder le contraste indépendamment du voile du dialogue.
