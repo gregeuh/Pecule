@@ -718,3 +718,7 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 .review-rows button > svg { flex-shrink: 0; color: var(--muted); }
 .review-rows button:hover { background: var(--blue-soft); }
 .reminder-settings .field-hint > a { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 4px; }
+
+/* Monochrome merchant marks retain their official dark ink in both themes. */
+:root { --brand-light-tile: #ffffff; }
+.merchant-icon-light, :root[data-theme="dark"] .merchant-icon.merchant-icon-light { background: var(--brand-light-tile); }
