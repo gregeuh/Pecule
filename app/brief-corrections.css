@@ -1,0 +1,16 @@
+/* P1 — shared mobile surfaces, independent from financial calculations. */
+:root { --brand-mark-edge: #454545; }
+.merchant-icon, .merchant-icon.merchant-icon-dark,
+:root[data-theme="dark"] .merchant-icon:not(.merchant-icon-dark),
+:root[data-theme="dark"] .merchant-icon.merchant-icon-light { background: var(--brand-light-tile); }
+.merchant-icon img { filter: drop-shadow(0 0 .55px var(--brand-mark-edge)); }
+.modal .field input[type="date"] { width: 100%; max-width: 100%; min-width: 0; inline-size: 100%; min-inline-size: 0; box-sizing: border-box; }
+.modal .field input[type="date"]::-webkit-date-and-time-value { min-inline-size: 0; }
+@media (max-width:760px) {
+ .app-shell #main-content { padding-bottom: calc(128px + env(safe-area-inset-bottom)); }
+ .mobile-dock { isolation: isolate; }
+ .mobile-dock::before { content: ""; position: fixed; left: 0; right: 0; bottom: 0; height: calc(88px + env(safe-area-inset-bottom)); background: var(--bg); z-index: -1; pointer-events: none; }
+ .clarte-mobile-primary .clarte-next { padding-inline: 0; }
+ .clarte-mobile-primary .clarte-next .clarte-upcoming { width: 100%; padding: 22px; border-radius: 20px; }
+ .clarte-next .clarte-upcoming .text-button { color: var(--blue); }
+}
