@@ -41,11 +41,11 @@ export default function SignIn() {
         return;
       }
       window.location.assign(new URL("/",window.location.origin).href);
-    } catch { fail("Impossible de joindre PECULE. Vérifiez votre connexion puis réessayez."); }
+    } catch { fail("Impossible de joindre Pécule. Vérifiez votre connexion puis réessayez."); }
     finally { setBusy(false); }
   }
   return <main className="auth-shell"><section className="card auth-card" aria-labelledby="auth-title">
-    <Link className="brand" href="/" aria-label="PECULE, accueil"><Image unoptimized width={32} height={32} src="/favicon.svg" alt="" /><span>pecule<span className="brand-dot">.</span></span></Link>
+    <Link className="brand" href="/" aria-label="Pécule, accueil"><Image unoptimized width={32} height={32} src="/favicon.svg" alt="" /><span>pecule<span className="brand-dot">.</span></span></Link>
     <h1 id="auth-title">{signup ? "Votre budget commence ici." : "Retrouvez votre espace."}</h1>
     <p>{signup ? "Créez votre compte pour retrouver votre budget sur tous vos appareils." : "Connectez-vous avec votre adresse e-mail."}</p>
     {google&&<button type="button" className="secondary full-width auth-google" disabled={busy} onClick={async()=>{setBusy(true);setError("");try{const result=await authClient.signIn.social({provider:"google",callbackURL:"/",errorCallbackURL:"/sign-in"});if(result.error){fail("La connexion Google a échoué. Réessayez ou utilisez votre adresse e-mail.");setBusy(false);}}catch{fail("Impossible de joindre Google. Réessayez.");setBusy(false);}}}><Image unoptimized src="/brands/catalogue/google.svg" width={20} height={20} alt=""/>Continuer avec Google</button>}

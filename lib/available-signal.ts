@@ -1,3 +1,4 @@
+import {money} from "./budget.ts";
 export const DAILY_COMFORT_CENTS = 1000;
 export type AvailableTone = "negative" | "attention" | "comfort";
 
@@ -24,6 +25,6 @@ export function getAvailableSignal(availableCents: number, remainingDays: number
   const threshold=Number.isSafeInteger(dailyComfortCents)&&dailyComfortCents>0?dailyComfortCents:DAILY_COMFORT_CENTS;
   const minimumForComfort = threshold * Math.max(1, remainingDays);
   const tone: AvailableTone = availableCents < 0 ? "negative" : availableCents < minimumForComfort ? "attention" : "comfort";
-  const amount=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:2}).format(threshold/100);
+  const amount=money(threshold);
   return tone==="negative"?signals[tone]:{...signals[tone],description:tone==="attention"?`Moins de ${amount} disponibles par jour sur cette période.`:`Au moins ${amount} disponibles par jour sur cette période.`};
 }

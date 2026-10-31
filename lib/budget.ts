@@ -8,7 +8,8 @@ export type Goal = { id: string; name: string; target: number; saved: number; mo
 export type Budget = { version: 1; name: string; accounts: Account[]; transactions: Transaction[]; rules: Rule[]; goals: Goal[]; settings: { capture?:CapturePreferences; categoryRules?:CategoryRule[]; dailyComfortCents?:number; categoryLimits?:Record<string,number>; horizon: "salary" | "month"; reserve: number; holidayCalendar: "FR" | "none"; spendingPlan?: { monthlyIncome: number | null; groups: Record<string, "needs" | "wants" | "savings" | "unassigned"> } } };
 export const categories = ["Alimentation", "Restaurants", "Transport", "Logement", "Abonnements", "Télécommunications", "Énergie", "Assurances", "Impôts", "Éducation", "Épargne", "Dettes", "Shopping", "Loisirs", "Santé", "Salaire", "Autres revenus", "Autres", "Virement"];
 export const colors = ["#335cff", "#a48bdb", "#edac69", "#5b9b86", "#d77992", "#5b99c1"];
-export const money = (cents: number, decimals = true) => new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: decimals ? 2 : 0, maximumFractionDigits: decimals ? 2 : 0 }).format(cents / 100);
+/** Presentation only: cent amounts and all financial arithmetic remain unchanged. */
+export const money = (cents:number,decimals=true,signed=false) => new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",minimumFractionDigits:decimals?2:0,maximumFractionDigits:decimals?2:0,signDisplay:signed?"exceptZero":"auto"}).formatToParts(cents===0?0:cents/100).map(part=>part.type==="minusSign"?"−":part.type==="group"?"\u202f":part.value).join("");
 export const dateISO = (d: Date) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 export const todayISO = () => new Intl.DateTimeFormat("en-CA", {timeZone:"Europe/Paris",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
 export const parseDate = (s: string) => new Date(s+"T12:00:00");

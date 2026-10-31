@@ -14,3 +14,23 @@
  .clarte-mobile-primary .clarte-next .clarte-upcoming { width: 100%; padding: 22px; border-radius: 20px; }
  .clarte-next .clarte-upcoming .text-button { color: var(--blue); }
 }
+
+/* P2 — one visual vocabulary for ledger dates, labels and checkboxes. */
+.date-group > strong, .month-control > strong, .clarte-mobile-title > p { text-transform: none; }
+.transaction-row .transaction-title > strong, .transaction-row:hover .transaction-title > strong { color: var(--ink); }
+.app-shell input[type="checkbox"], .modal input[type="checkbox"] { appearance: none; -webkit-appearance: none; position: relative; border: 1.5px solid var(--muted); border-radius: 5px; background: var(--surface-inset); width: 20px; height: 20px; flex: 0 0 20px; padding: 0; cursor: pointer; }
+.app-shell input[type="checkbox"]:checked, .modal input[type="checkbox"]:checked,
+.app-shell input[type="checkbox"]:indeterminate, .modal input[type="checkbox"]:indeterminate { background: var(--action-bg); border-color: var(--action-bg); }
+.app-shell input[type="checkbox"]:checked::after, .modal input[type="checkbox"]:checked::after { content: ""; position: absolute; width: 6px; height: 10px; left: 5px; top: 2px; border: solid var(--on-action); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.app-shell input[type="checkbox"]:indeterminate::after, .modal input[type="checkbox"]:indeterminate::after { content: ""; position: absolute; width: 10px; height: 2px; left: 3px; top: 7px; background: var(--on-action); }
+input[type="checkbox"]:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+input[type="checkbox"]:disabled { opacity: .55; cursor: default; }
+@media (max-width:760px) {
+ .transactions-card { --ledger-gutter: 16px; }
+ .transactions-card .toolbar { padding-inline: var(--ledger-gutter); }
+ .transactions-card > .ledger-tools { margin-inline: 0; padding-inline: var(--ledger-gutter); }
+ .transactions-card > .ledger-tools > summary { padding-inline: 0; }
+ .transactions-card > .transaction-groups { padding-inline: var(--ledger-gutter); }
+ .transactions-card .transaction-select-content { min-width: 0; }
+ .bank-import-confirm, .bank-tools-check { min-height: 44px; }
+}
