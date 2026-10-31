@@ -71,8 +71,8 @@ export function useModalMotion<T>() {
     const media = matchMedia("(prefers-reduced-motion: reduce)");
     const reduce = () => { if (media.matches) { cancel(); if(dialogRef.current)dialogRef.current.dataset.motion="idle"; } };
     const resize=()=>{cancel();if(dialogRef.current)dialogRef.current.dataset.motion="idle";};
-    media.addEventListener("change",reduce);window.addEventListener("resize",resize);
-    return () => { dispose(); media.removeEventListener("change",reduce);window.removeEventListener("resize",resize); };
+    media.addEventListener("change",reduce);window.addEventListener("resize",resize);window.visualViewport?.addEventListener("resize",resize);
+    return () => { dispose(); media.removeEventListener("change",reduce);window.removeEventListener("resize",resize);window.visualViewport?.removeEventListener("resize",resize); };
   }, [cancel,dispose]);
   return {modal,setModal,dialogRef,backdropRef,shadeRef,closingRef};
 }

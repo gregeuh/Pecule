@@ -161,7 +161,8 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
 .month-control, .date-chip, .quiet-pill, .quick-action,
 .bank-import-preview, .import-row.disabled { background: var(--card); }
 .progress-track { background: var(--line); }
-.positive, .transaction-amount.positive strong { color: var(--green); }
+/* Historical reference rules mark positive text !important; the canonical token must win. */
+.positive, .transaction-amount.positive strong, .transaction-amount > strong.positive, .clarte-transaction > b.positive { color: var(--green) !important; }
 .category-icon, .quick-action-icon {
   color: color-mix(in srgb, var(--category-color) 65%, var(--ink));
   background: var(--category-background);
