@@ -34,3 +34,24 @@ input[type="checkbox"]:disabled { opacity: .55; cursor: default; }
  .transactions-card .transaction-select-content { min-width: 0; }
  .bank-import-confirm, .bank-tools-check { min-height: 44px; }
 }
+
+/* P3 — compact disclosures and explanatory details, never a new budget calculation. */
+.spending-insights:not([open]) { padding-block: 0; }
+.spending-insights:not([open]) > summary { min-height: 56px; display: flex; align-items: center; padding-block: 10px; }
+.selection-toolbar[data-selecting="false"] { padding-block: 4px; min-height: 44px; margin-block: 0; }
+.selection-toolbar[data-selecting="false"] > button { min-height: 44px; }
+.table-count { color: var(--muted); font-size: 12px; padding-block: 14px; }
+.reserve-breakdown, .signal-explanation { padding-block: 16px; border-top: 1px solid var(--line); }
+.reserve-breakdown h3, .signal-explanation h3 { font-size: 14px; margin-bottom: 12px; }
+.reserve-breakdown dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-block: 6px; }
+.reserve-breakdown dt { color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.reserve-breakdown dd { font-size: 14px; margin: 0; font-variant-numeric: tabular-nums; }
+.signal-explanation p { font-size: 13px; line-height: 1.7; margin-bottom: 8px; }
+.clarte-calendar > button > strong > small { font-size: 11px; font-weight: 500; }
+.projection-table { border-top: 1px solid var(--line); margin-top: 16px; }
+.projection-table > summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 48px; color: var(--blue); cursor: pointer; font-size: 13px; }
+.projection-table table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.projection-table caption { text-align: left; color: var(--muted); font-size: 12px; padding-block: 12px; }
+.projection-table th, .projection-table td { border-bottom: 1px solid var(--line); padding: 10px 4px; font-size: 12px; overflow-wrap: anywhere; }
+.projection-table th { text-align: left; font-weight: 500; }
+.projection-table td { text-align: right; font-variant-numeric: tabular-nums; }
