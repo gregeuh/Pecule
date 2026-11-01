@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import { motionSettings } from "./ui-motion";
+
 /** One persistent surface for entry, menu-to-form continuity and dismissals. */
 export function useModalMotion<T>() {
   const [modal, commit] = useState<T | null>(null);
@@ -29,7 +31,8 @@ export function useModalMotion<T>() {
     cancel(); closingRef.current = true; dialog.dataset.motion = "closing";
     const mobile=matchMedia("(max-width: 760px), (hover: none) and (pointer: coarse)").matches;
     const distance=Math.max(24,innerHeight-rect.top+8);
-    const options:KeyframeAnimationOptions = {duration:mobile?200:170,easing:"cubic-bezier(.4,0,1,1)",fill:"forwards"};
+    const timing = motionSettings(dialog);
+    const options:KeyframeAnimationOptions = {duration:timing.exit,easing:timing.exitEase,fill:"forwards"};
     const panel = dialog.animate([{opacity:1,transform,height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`},{opacity:mobile?1:0,transform:`translateY(${mobile?distance:14}px)`,height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`}],options);
     const shade = backdrop.animate([{opacity:1},{opacity:0}],options);
     animations.current = [panel,shade];
@@ -45,7 +48,7 @@ export function useModalMotion<T>() {
     panel.dataset.motion = before ? "switching" : "opening";
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) { panel.dataset.motion = "idle"; return; }
     const now = panel.getBoundingClientRect(), mobile = matchMedia("(max-width: 760px), (hover: none) and (pointer: coarse)").matches;
-    const ease = "cubic-bezier(.16,1,.3,1)";
+    const timing = motionSettings(panel), ease = timing.ease;
     const request = version.current;
     if (before) {
       const x = mobile ? 0 : before.left+before.width/2-now.left-now.width/2;
@@ -53,15 +56,15 @@ export function useModalMotion<T>() {
       const morph = panel.animate([
         {height:`${before.height}px`,width:`${before.width}px`,maxWidth:`${before.width}px`,transform:`translate(${x}px,${y}px)`},
         {height:`${now.height}px`,width:`${now.width}px`,maxWidth:`${now.width}px`,transform:"none"},
-      ],{duration:300,easing:ease});
+      ],{duration:timing.layout,easing:ease});
       const heading = panel.querySelector(".modal-heading");
-      animations.current = [morph,...(heading ? [heading.animate([{opacity:.5,transform:"translateY(5px)"},{opacity:1,transform:"none"}],{duration:220,easing:ease})] : [])];
+      animations.current = [morph,...(heading ? [heading.animate([{opacity:.5,transform:"translateY(5px)"},{opacity:1,transform:"none"}],{duration:timing.layout * .65,easing:ease})] : [])];
     } else {
       const from = origin.current;
       const x = !mobile && from && panel.classList.contains("actions-modal") ? Math.max(-24,Math.min(24,from.left+from.width/2-now.left-now.width/2)) : 0;
       const distance=Math.max(24,innerHeight-now.top+8);
-      const enter = panel.animate([{opacity:mobile?1:0,transform:`translate(${x}px,${mobile?distance:12}px) scale(${mobile?1:.98})`},{opacity:1,transform:"none"}],{duration:300,easing:ease});
-      const shade = backdrop.animate([{opacity:0},{opacity:1}],{duration:200,easing:"ease-out"});
+      const enter = panel.animate([{opacity:mobile?1:0,transform:`translate(${x}px,${mobile?distance:12}px) scale(${mobile?1:.98})`},{opacity:1,transform:"none"}],{duration:timing.enter,easing:ease});
+      const shade = backdrop.animate([{opacity:0},{opacity:1}],{duration:timing.exit,easing:"ease-out"});
       animations.current = [enter,shade];
     }
     void Promise.allSettled(animations.current.map(animation=>animation.finished)).then(()=>{if(request===version.current&&!closingRef.current)panel.dataset.motion="idle";});

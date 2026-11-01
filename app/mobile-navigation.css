@@ -8,14 +8,17 @@
 @media (max-width: 760px) {
   html { scroll-padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
   .mobile-dock {
-    --dock-height: 64px;
-    --dock-button-height: 52px;
-    --dock-button-gap: 4px;
-    --dock-label-height: 16px;
-    --dock-label-opacity: 1;
-    --dock-padding: 5px;
-    --dock-add-size: 52px;
-    --dock-width: 520px;
+    --dock-layout-collapse: var(--dock-collapse, 0);
+    --dock-height: calc(64px - 12px * var(--dock-layout-collapse));
+    --dock-button-height: calc(52px - 8px * var(--dock-layout-collapse));
+    --dock-button-gap: calc(4px * (1 - var(--dock-layout-collapse)));
+    --dock-label-height: calc(16px * (1 - var(--dock-layout-collapse)));
+    --dock-label-opacity: clamp(0, calc(1 - 2 * var(--dock-layout-collapse)), 1);
+    --dock-padding: calc(5px - 2px * var(--dock-layout-collapse));
+    --dock-add-size: calc(52px - 4px * var(--dock-layout-collapse));
+    --dock-expanded-width: min(520px, calc(100vw - 32px));
+    --dock-compact-width: min(320px, calc(100vw - 56px));
+    --dock-width: calc(var(--dock-expanded-width) * (1 - var(--dock-layout-collapse)) + var(--dock-compact-width) * var(--dock-layout-collapse));
     position: fixed;
     z-index: 45;
     left: 16px;
@@ -26,18 +29,10 @@
     gap: 10px;
     max-width: var(--dock-width);
     margin-inline: auto;
-    transition: max-width 220ms ease;
+
   }
-  .mobile-dock[data-compact="true"]:not(:has(:focus-visible)) {
-    --dock-height: 52px;
-    --dock-button-height: 44px;
-    --dock-button-gap: 0px;
-    --dock-label-height: 0px;
-    --dock-label-opacity: 0;
-    --dock-padding: 3px;
-    --dock-add-size: 48px;
-    --dock-width: min(320px, calc(100vw - 56px));
-  }
+  /* Keyboard navigation always exposes the full labels and targets. */
+  .mobile-dock:has(:focus-visible) { --dock-layout-collapse: 0; }
   .mobile-dock .mobile-nav.floating-nav {
     position: static;
     display: grid;
@@ -50,7 +45,7 @@
     border: 1px solid var(--line);
     border-radius: 24px;
     transform: none;
-    transition: height 220ms ease, padding 220ms ease;
+
   }
   .mobile-dock .mobile-nav.floating-nav > button {
     min-height: var(--dock-button-height);
@@ -59,13 +54,13 @@
     border-radius: 18px;
     gap: var(--dock-button-gap);
     font-size: 10px;
-    transition: min-height 220ms ease, gap 220ms ease, background 160ms ease, color 160ms ease;
+    transition: background-color var(--motion-feedback) ease, color var(--motion-feedback) ease;
   }
   .mobile-dock .mobile-nav.floating-nav > button > span {
     max-height: var(--dock-label-height);
     opacity: var(--dock-label-opacity);
     overflow: hidden;
-    transition: max-height 220ms ease, opacity 160ms ease;
+
   }
   .mobile-add {
     display: grid;
@@ -77,7 +72,7 @@
     background: var(--action-bg);
     color: var(--on-action);
     box-shadow: var(--dock-shadow);
-    transition: width 220ms ease, height 220ms ease, flex-basis 220ms ease, background 160ms ease;
+    transition: background-color var(--motion-feedback) ease;
   }
   .mobile-add:hover { background: var(--action-hover); }
   main { padding-bottom: calc(108px + env(safe-area-inset-bottom)); }

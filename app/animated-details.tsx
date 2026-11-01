@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, type ComponentProps, type MouseEvent } from "react";
 
+import { motionSettings } from "./ui-motion";
+
 /** Native disclosure semantics, with reversible height motion and no extra DOM wrapper. */
 export default function AnimatedDetails({children,className,onClick,...props}:ComponentProps<"details">) {
   const element = useRef<HTMLDetailsElement>(null), animation = useRef<Animation | null>(null);
@@ -36,7 +38,8 @@ export default function AnimatedDetails({children,className,onClick,...props}:Co
     const closed=closedHeight.current??summary.getBoundingClientRect().height+number(style.paddingTop)+number(style.paddingBottom)+number(style.borderTopWidth)+number(style.borderBottomWidth)+number(header.marginTop)+number(header.marginBottom);
     current.open=true;const opened=current.getBoundingClientRect().height;
     current.style.overflow="clip";
-    const motion=current.animate([{height:`${from}px`},{height:`${expanded?opened:closed}px`}],{duration:expanded?260:170,easing:"cubic-bezier(.16,1,.3,1)"});
+    const timing=motionSettings(current);
+    const motion=current.animate([{height:`${from}px`},{height:`${expanded?opened:closed}px`}],{duration:expanded?timing.layout:timing.disclosureExit,easing:expanded?timing.ease:timing.exitEase});
     animation.current=motion;
     void motion.finished.then(()=>{if(request===generation.current)settle();}).catch(()=>{});
   };

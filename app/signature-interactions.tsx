@@ -38,7 +38,8 @@ export function NavigationIndicator({ active }: { active: string }) {
     };
     const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
     update();
-    const observer = new ResizeObserver(schedule); observer.observe(nav);
+    // ResizeObserver runs before paint: track dock geometry without a frame of lag.
+    const observer = new ResizeObserver(update); observer.observe(nav);
     const current = nav.querySelector('button[aria-current="page"]'); if (current) observer.observe(current);
     window.addEventListener("resize", schedule);
     return () => { observer.disconnect(); window.removeEventListener("resize", schedule); cancelAnimationFrame(frame); };

@@ -1,8 +1,14 @@
 /* One motion language: immediate touch feedback, soft arrivals, a single success illustration. */
 :root {
-  --motion-press: 120ms;
+  --motion-press: 110ms;
+  --motion-feedback: 160ms;
+  --motion-panel-in: 380ms;
+  --motion-panel-out: 240ms;
+  --motion-layout: 320ms;
+  --motion-disclosure-out: 220ms;
+  --motion-exit: cubic-bezier(.4, 0, .2, 1);
   --motion-arrival: 260ms;
-  --motion-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-settle: cubic-bezier(.22, 1, .36, 1);
 }
 .confirmation-art {
   color: inherit;
@@ -41,19 +47,28 @@
   from { opacity: 0; transform: translateY(10px) scale(0.99); }
   to { opacity: 1; transform: none; }
 }
+/* Dock geometry is driven by one spring, never independent CSS transitions. */
 @media (max-width: 760px) {
-  .mobile-dock { transition: max-width 280ms var(--motion-settle); }
-  .mobile-dock .mobile-nav.floating-nav { transition: height 280ms var(--motion-settle), padding 280ms var(--motion-settle); }
+  .mobile-dock { transition: none; }
+  .mobile-dock .mobile-nav.floating-nav { transition: none; }
   .mobile-dock .mobile-nav.floating-nav > button {
-    transition: min-height 280ms var(--motion-settle), gap 280ms var(--motion-settle),
-      transform var(--motion-press) ease-out, background-color 160ms ease, color 160ms ease;
+    transition: transform var(--motion-press) ease-out, background-color var(--motion-feedback) ease, color var(--motion-feedback) ease;
   }
-  .mobile-dock .mobile-nav.floating-nav > button > span { transition: max-height 220ms var(--motion-settle), opacity 120ms ease; }
-  .mobile-add {
-    transition: width 280ms var(--motion-settle), height 280ms var(--motion-settle),
-      flex-basis 280ms var(--motion-settle), transform var(--motion-press) ease-out, background-color 160ms ease;
-  }
+  .mobile-dock .mobile-nav.floating-nav > button > span { transition: none; }
+  .mobile-dock[data-moving="true"] .navigation-indicator { transition: none; }
+  .mobile-add { transition: transform var(--motion-press) ease-out, background-color var(--motion-feedback) ease; }
   .modal { animation-name: pecule-sheet-in; }
+}
+/* Keep the toast's horizontal anchor throughout its arrival. */
+.toast { animation-name: pecule-notice-in; }
+@keyframes pecule-notice-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@media (hover: hover) and (pointer: fine) {
+  .transaction-row, .clarte-account, .recurring-item, .favorite-use {
+    transition: background-color var(--motion-feedback) ease;
+  }
 }
 @keyframes pecule-sheet-in {
   from { opacity: 0; transform: translateY(24px); }

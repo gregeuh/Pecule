@@ -32,7 +32,8 @@
     "test:e2e:audit-fixes": "node tests/e2e/audit-fixes.mjs",
     "test": "node --test tests/*.test.mjs",
     "test:budget": "node --test tests/budget.test.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:e2e:smooth": "node tests/e2e/smooth-motion.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

@@ -1,9 +1,54 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 export default function MobileDock({ children, expanded }: { children: ReactNode; expanded: boolean }) {
   const [compact, setCompact] = useState(false);
+  const dock = useRef<HTMLDivElement>(null);
+  const motion = useRef({ position: 0, velocity: 0 });
+
+  useEffect(() => {
+    const element = dock.current;
+    if (!element) return;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    const mobile = matchMedia("(max-width: 760px)");
+    const target = compact && !expanded ? 1 : 0;
+    let frame = 0, previous = performance.now();
+    const paint = () => element.style.setProperty("--dock-collapse", String(motion.current.position));
+    const settle = () => {
+      cancelAnimationFrame(frame); frame = 0;
+      motion.current = { position: target, velocity: 0 };
+      paint(); element.removeAttribute("data-moving");
+    };
+    const tick = (now: number) => {
+      const dt = Math.min((now - previous) / 1000, .05); previous = now;
+      const state = motion.current, offset = state.position - target;
+      // Exact critically damped spring: preserve velocity when scrolling reverses.
+      // One value owns the complete fixed dock; no React renders on animation frames.
+      const frequency = target ? 18 : 20;
+      const impulse = state.velocity + frequency * offset, decay = Math.exp(-frequency * dt);
+      state.position = Math.max(0, Math.min(1, target + (offset + impulse * dt) * decay));
+      state.velocity = (state.velocity - frequency * impulse * dt) * decay;
+      paint();
+      if (Math.abs(state.position - target) < .001 && Math.abs(state.velocity) < .01) { settle(); return; }
+      frame = requestAnimationFrame(tick);
+    };
+    const start = () => {
+      cancelAnimationFrame(frame);
+      if (reduced.matches || !mobile.matches || document.hidden) { settle(); return; }
+      if (motion.current.position === target && motion.current.velocity === 0) { settle(); return; }
+      previous = performance.now(); element.dataset.moving = "true";
+      frame = requestAnimationFrame(tick);
+    };
+    start();
+    reduced.addEventListener("change", start);
+    document.addEventListener("visibilitychange", start);
+    return () => {
+      cancelAnimationFrame(frame); element.removeAttribute("data-moving");
+      reduced.removeEventListener("change", start);
+      document.removeEventListener("visibilitychange", start);
+    };
+  }, [compact, expanded]);
 
   useEffect(() => {
     const mobile = window.matchMedia("(max-width: 760px)");
@@ -34,5 +79,5 @@ export default function MobileDock({ children, expanded }: { children: ReactNode
     };
   }, [expanded]);
 
-  return <div className="mobile-dock" data-compact={compact && !expanded} inert={expanded}>{children}</div>;
+  return <div ref={dock} className="mobile-dock" data-compact={compact && !expanded} inert={expanded}>{children}</div>;
 }
