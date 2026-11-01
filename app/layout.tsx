@@ -11,6 +11,7 @@ import "./menu-motion.css";
 import "./iphone-capture.css";
 import "./brief-corrections.css";
 import "./motion.css";
+import "./interaction-harmony.css";
 import AppearanceProvider from "./theme-provider";
 export const metadata: Metadata = {
   title: "Pécule — Votre argent, l’esprit léger",

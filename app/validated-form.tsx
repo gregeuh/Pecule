@@ -8,7 +8,7 @@ export function revealFormControl(control:HTMLElement){
   control.focus();
 }
 const Errors=createContext<Record<string,string>>({});
-export function ValidatedForm({onSubmit,children,draftKey,...props}:FormHTMLAttributes<HTMLFormElement>&{draftKey?:string}){
+export function ValidatedForm({onSubmit,children,draftKey,actions,busy,className,...props}:FormHTMLAttributes<HTMLFormElement>&{draftKey?:string;actions?:ReactNode;busy?:boolean}){
   const [errors,setErrors]=useState<Record<string,string>>({});
   const store=useFormDraftStore(),form=useRef<HTMLFormElement>(null),edited=useRef(false),revision=useRef(0),baseline=useRef("");
   const [reset,setReset]=useState(0),[restored,setRestored]=useState(()=>!!(draftKey&&store?.get(draftKey)));
@@ -20,13 +20,14 @@ export function ValidatedForm({onSubmit,children,draftKey,...props}:FormHTMLAttr
     return()=>{if(edited.current&&revision.current===store.version(draftKey))store.set(draftKey,snapshotForm(node));};
   },[draftKey,store,reset]);
   const capture=(changed=false)=>{if(!draftKey||!store||!form.current)return;if(!changed&&revision.current!==store.version(draftKey))return;const value=snapshotForm(form.current);if(!changed&&!edited.current)return;if(!edited.current&&!store.get(draftKey)&&JSON.stringify(value)===baseline.current)return;edited.current=true;revision.current=store.version(draftKey);store.set(draftKey,value);};
-  return <form {...props} data-draft-key={draftKey} ref={form} noValidate onChangeCapture={()=>capture(true)} onBlurCapture={()=>capture()} onClickCapture={()=>queueMicrotask(()=>{if(form.current&&edited.current)capture();})} onSubmit={event=>{
+  const body = <>{restored&&snapshot&&<p className="draft-status" role="status">Votre saisie non enregistrée a été reprise.<button type="button" className="text-button" onClick={()=>{if(draftKey)store?.clear(draftKey);edited.current=false;form.current?.reset();setRestored(false);setErrors({});setReset(n=>n+1);}}>Effacer la saisie</button></p>}{children}{Object.keys(errors).length>0&&<ErrorMessage>Vérifiez les champs signalés avant d’enregistrer.</ErrorMessage>}</>;
+  return <form {...props} className={actions?`panel-form ${className??""}`:className} aria-busy={busy||props["aria-busy"]} data-draft-key={draftKey} ref={form} noValidate onChangeCapture={()=>capture(true)} onBlurCapture={()=>capture()} onClickCapture={()=>queueMicrotask(()=>{if(form.current&&edited.current)capture();})} onSubmit={event=>{
     const controls=[...event.currentTarget.querySelectorAll<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>('input,select,textarea')];
     const invalid=controls.filter(c=>c.willValidate&&!c.checkValidity());
     if(invalid.length){event.preventDefault();const next:Record<string,string>={};for(const c of invalid)next[c.name]=c.validity.valueMissing?"Ce champ est obligatoire.":c.validity.typeMismatch?"Vérifiez le format de ce champ.":c.validity.rangeUnderflow||c.validity.rangeOverflow?"Le montant ou la date est hors des limites autorisées.":"Vérifiez la valeur de ce champ.";setErrors(next);
       revealFormControl(invalid[0]);return;}
     setErrors({});void onSubmit?.(event);
-  }} onInput={()=>{capture(true);if(Object.keys(errors).length)setErrors({});}}><FormDraftValues.Provider key={reset} value={snapshot}><Errors.Provider value={errors}>{restored&&snapshot&&<p className="draft-status" role="status">Votre saisie non enregistrée a été reprise.<button type="button" className="text-button" onClick={()=>{if(draftKey)store?.clear(draftKey);edited.current=false;form.current?.reset();setRestored(false);setErrors({});setReset(n=>n+1);}}>Effacer la saisie</button></p>}{children}{Object.keys(errors).length>0&&<ErrorMessage>Vérifiez les champs signalés avant d’enregistrer.</ErrorMessage>}</Errors.Provider></FormDraftValues.Provider></form>;
+  }} onInput={()=>{capture(true);if(Object.keys(errors).length)setErrors({});}}><FormDraftValues.Provider key={reset} value={snapshot}><Errors.Provider value={errors}>{actions?<><div className="panel-form-body">{body}</div><div className="panel-form-actions form-actions">{actions}</div></>:body}</Errors.Provider></FormDraftValues.Provider></form>;
 }
 export function FormField({label,children,hint,error:externalError}:{label:string;children:ReactNode;hint?:string;error?:string}){
   const errors=useContext(Errors),id=useId();let name="";

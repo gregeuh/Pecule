@@ -34,7 +34,8 @@
     "test:budget": "node --test tests/budget.test.mjs",
     "typecheck": "tsc --noEmit",
     "test:e2e:smooth": "node tests/e2e/smooth-motion.mjs",
-    "test:e2e:global-motion": "node tests/e2e/global-motion.mjs"
+    "test:e2e:global-motion": "node tests/e2e/global-motion.mjs",
+    "test:e2e:harmony": "node tests/e2e/interaction-harmony.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

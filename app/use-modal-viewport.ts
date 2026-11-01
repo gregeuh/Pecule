@@ -11,7 +11,7 @@ export function useModalViewport(active:boolean,ref:RefObject<HTMLDivElement|nul
    const field=document.activeElement instanceof HTMLElement?document.activeElement:null;
    const editing=!!field?.matches('input:not([type=radio]):not([type=checkbox]),textarea,[contenteditable=true]');
    surface.dataset.keyboardOpen=String(editing&&(viewport?.scale??1)<1.1&&height<document.documentElement.clientHeight-120);
-   const scroller=field?.closest<HTMLElement>('.capture-body');
+   const scroller=field?.closest<HTMLElement>('.capture-body, .panel-form-body');
    if(scroller){const area=scroller.getBoundingClientRect(),control=field!.getBoundingClientRect();if(control.bottom>area.bottom||control.top<area.top)field!.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});}
   };
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(update);};update();

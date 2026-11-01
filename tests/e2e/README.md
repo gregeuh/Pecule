@@ -152,3 +152,6 @@ Les unités attendues pour cette livraison sont au nombre de 122, avec les règl
 
 ### Mouvement global
 `npm run test:e2e:global-motion` vérifie contrôles partagés, ressort des options avec contenu imbriqué et clics inversés, conservation des champs, sortie manuelle des notifications, filtres et position exacte du repère de projection. Mobile/ordinateur, deux thèmes et réduction des animations ; démonstration uniquement. Les captures et traces vont dans `outputs/global-motion`. Les variables de transport, moteur et URL sont identiques à `test:e2e:smooth`.
+
+### Harmonisation des interactions
+`npm run test:e2e:harmony` contrôle les formulaires partagés, leurs actions et surfaces, le clavier simulé, les brouillons, la validation, la sauvegarde et les sélections, à 320/390/1440 px et dans les deux thèmes. Chromium et WebKit, démonstration uniquement. Sorties dans `outputs/interaction-harmony` ; mêmes variables de transport, URL et moteur que les autres parcours.
