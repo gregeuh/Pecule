@@ -149,3 +149,6 @@ Les unités attendues pour cette livraison sont au nombre de 122, avec les règl
 
 ### Fluidité du dock et des transitions
 `npm run test:e2e:smooth` exécute `smooth-motion.mjs` en démonstration, sans compte personnel ni écriture API. Largeurs 320/390/1440, clair/sombre, défilement inversé au milieu du ressort, cibles 44 px, indicateur, focus clavier, changement dynamique de réduction des animations et navigation rapide. `PECULE_E2E_ENGINE=webkit` sélectionne WebKit ; `PECULE_E2E_OUTPUT` personnalise le dossier des captures et traces. Réutilise `PECULE_E2E_BASE_URL` et `PECULE_E2E_NODE_TRANSPORT=1` pour une vérification distante via le transport Node configuré de l’environnement.
+
+### Mouvement global
+`npm run test:e2e:global-motion` vérifie contrôles partagés, ressort des options avec contenu imbriqué et clics inversés, conservation des champs, sortie manuelle des notifications, filtres et position exacte du repère de projection. Mobile/ordinateur, deux thèmes et réduction des animations ; démonstration uniquement. Les captures et traces vont dans `outputs/global-motion`. Les variables de transport, moteur et URL sont identiques à `test:e2e:smooth`.

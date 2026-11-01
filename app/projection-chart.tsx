@@ -37,8 +37,7 @@ export default function ProjectionChart({budget,today,hidden}:{budget:Budget;tod
         {ticks.map((v,i)=><line key={i} x1="0" x2={width} y1={y(v)} y2={y(v)} stroke="var(--line)" strokeDasharray="3 5"/>)}
         <path d={`${path} L${xy[30].x},${height} L${xy[0].x},${height} Z`} fill={`url(#${fillId})`}/>
         <path className="projection-line" pathLength={1} d={path} fill="none" stroke="var(--blue)" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round"/>
-        <line x1={xy[selected].x} x2={xy[selected].x} y1="8" y2={height-10} stroke="var(--muted)" strokeDasharray="3 4"/>
-        <circle cx={xy[selected].x} cy={xy[selected].y} r="4.5" fill="var(--blue)" stroke="var(--card)" strokeWidth="3"/>
+        <g className="projection-cursor" style={{transform:`translateX(${xy[selected].x}px)`}}><line x1="0" x2="0" y1="8" y2={height-10} stroke="var(--muted)" strokeDasharray="3 4"/><circle className="projection-dot" cx="0" cy="0" style={{transform:`translateY(${xy[selected].y}px)`}} r="4.5" fill="var(--blue)" stroke="var(--card)" strokeWidth="3"/></g>
       </svg>
     </div>
     <div className="chart-dates">{[0,7,14,21,30].map(i=><span key={i}>{i===0?"Aujourd’hui":shortDate(points[i].date)}</span>)}</div>

@@ -6,11 +6,11 @@ import "./bank-tools.css";
 import "./mobile-navigation.css";
 import "./mobile-forms.css";
 import "./atelier.css";
-import "./motion.css";
 import "./signature-interactions.css";
 import "./menu-motion.css";
 import "./iphone-capture.css";
 import "./brief-corrections.css";
+import "./motion.css";
 import AppearanceProvider from "./theme-provider";
 export const metadata: Metadata = {
   title: "Pécule — Votre argent, l’esprit léger",

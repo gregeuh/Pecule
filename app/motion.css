@@ -7,7 +7,11 @@
   --motion-layout: 320ms;
   --motion-disclosure-out: 220ms;
   --motion-exit: cubic-bezier(.4, 0, .2, 1);
-  --motion-arrival: 260ms;
+  --motion-arrival: 300ms;
+  --motion-state: 240ms;
+  --motion-release: 260ms;
+  --motion-illustration: 480ms;
+  --motion-track: 140ms;
   --motion-settle: cubic-bezier(.22, 1, .36, 1);
 }
 .confirmation-art {
@@ -32,16 +36,16 @@
 .toast[data-kind="goal"] .confirmation-art { flex-basis: 88px; width: 88px; height: 88px; }
 .toast[data-kind="goal"] .confirmation-art canvas { width: 88px; height: 88px; }
 .toast button { min-width: 44px; min-height: 44px; flex-shrink: 0; }
-.modal-backdrop { animation: pecule-overlay-in 160ms ease-out; }
+.modal-backdrop { animation: pecule-overlay-in var(--motion-feedback) ease-out; }
 .modal { animation: pecule-dialog-in var(--motion-arrival) var(--motion-settle); }
 .primary, .secondary, .icon-button, .quick-action, .mobile-add,
 .floating-action-trigger, .mobile-dock .mobile-nav.floating-nav > button {
-  transition: transform var(--motion-press) ease-out, background-color 160ms ease, color 160ms ease;
+  transition: transform var(--motion-release) var(--motion-settle), background-color var(--motion-feedback) ease, color var(--motion-feedback) ease;
 }
 .primary:active:not(:disabled), .secondary:active:not(:disabled),
 .icon-button:active:not(:disabled), .quick-action:active:not(:disabled),
 .mobile-add:active, .floating-action-trigger:active { transform: scale(0.97); }
-.mobile-dock .mobile-nav.floating-nav > button:active { transform: scale(0.96); }
+.mobile-dock .mobile-nav.floating-nav > button:active { transform: scale(.985); }
 @keyframes pecule-overlay-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes pecule-dialog-in {
   from { opacity: 0; transform: translateY(10px) scale(0.99); }
@@ -52,11 +56,11 @@
   .mobile-dock { transition: none; }
   .mobile-dock .mobile-nav.floating-nav { transition: none; }
   .mobile-dock .mobile-nav.floating-nav > button {
-    transition: transform var(--motion-press) ease-out, background-color var(--motion-feedback) ease, color var(--motion-feedback) ease;
+    transition: transform var(--motion-release) var(--motion-settle), background-color var(--motion-feedback) ease, color var(--motion-feedback) ease;
   }
   .mobile-dock .mobile-nav.floating-nav > button > span { transition: none; }
   .mobile-dock[data-moving="true"] .navigation-indicator { transition: none; }
-  .mobile-add { transition: transform var(--motion-press) ease-out, background-color var(--motion-feedback) ease; }
+  .mobile-add { transition: transform var(--motion-release) var(--motion-settle), background-color var(--motion-feedback) ease; }
   .modal { animation-name: pecule-sheet-in; }
 }
 /* Keep the toast's horizontal anchor throughout its arrival. */
@@ -94,7 +98,53 @@
 .wallet-art { width: 80px; height: 80px; margin: 0 auto 12px; color: var(--blue); }
 .wallet-art canvas { width: 80px; height: 80px; }
 @media (prefers-reduced-motion: no-preference) {
-  .clarte-chart[open] .projection-line { animation: pecule-projection-in 500ms var(--motion-settle); }
-  .progress-track > span { transition: width 300ms var(--motion-settle); }
+  .clarte-chart[open] .projection-line { animation: pecule-projection-in var(--motion-illustration) var(--motion-settle); }
+  .progress-track > span { transition: width var(--motion-illustration) var(--motion-settle); }
 }
 @keyframes pecule-projection-in { from { stroke-dasharray: 1; stroke-dashoffset: 1; } to { stroke-dasharray: 1; stroke-dashoffset: 0; } }
+
+/* Baseline also covers secondary actions in settings, authentication and onboarding. */
+:is(.app-shell, .auth-shell, .setup-page) :where(button:enabled, a[href]) {
+  transition: background-color var(--motion-state) var(--motion-settle),
+    color var(--motion-feedback) ease, border-color var(--motion-state) ease,
+    box-shadow var(--motion-state) ease;
+}
+/* All shared controls return with the same deceleration, across every screen. */
+:is(.primary, .secondary, .text-button, .destructive-action, .icon-button, .quick-action,
+.floating-action-trigger, .mobile-add):enabled {
+  transition: transform var(--motion-release) var(--motion-settle),
+    background-color var(--motion-state) var(--motion-settle), color var(--motion-feedback) ease,
+    border-color var(--motion-state) ease, box-shadow var(--motion-state) ease;
+}
+:is(.primary, .secondary, .quick-action, .floating-action-trigger, .mobile-add):enabled:active {
+  transform: scale(.985);
+  transition-duration: var(--motion-press);
+}
+:is(.segmented, .recurrence-filters, .capture-type-picker) :is(button, label > span),
+:is(.transaction-row, .clarte-account, .clarte-transaction, .clarte-due, .favorite-use, .nav-item) {
+  transition: background-color var(--motion-state) var(--motion-settle), color var(--motion-feedback) ease,
+    border-color var(--motion-state) ease, box-shadow var(--motion-state) ease;
+}
+.field :is(input, select, textarea), .search-input, .capture-amount .amount-input {
+  transition: border-color var(--motion-state) ease, background-color var(--motion-state) ease,
+    box-shadow var(--motion-state) var(--motion-settle);
+}
+.animated-details > summary > svg:last-child {
+  transition: transform var(--motion-layout) var(--motion-settle);
+}
+.animated-details[data-motion="closing"] > summary > svg:last-child { transform: rotate(0deg); }
+.confirmation-art canvas { transition: opacity var(--motion-feedback) ease; }
+.projection-cursor { transition: transform var(--motion-track) var(--motion-settle); }
+.projection-dot { transition: transform var(--motion-track) var(--motion-settle); }
+/* Form errors remain immediate and readable; only their visual arrival softens. */
+.feedback-error { animation: pecule-feedback-in var(--motion-feedback) ease-out; }
+@keyframes pecule-feedback-in { from { opacity: .65; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  :is(.primary,.secondary,.text-button,.destructive-action,.icon-button,.quick-action,.floating-action-trigger,.mobile-add):enabled,
+  .animated-details > summary > svg:last-child, .projection-cursor, .projection-dot,
+  .confirmation-art canvas { transition: none; }
+  :is(.primary,.secondary,.quick-action,.floating-action-trigger,.mobile-add):enabled:active { transform: none; }
+  .feedback-error { animation: none; }
+}
+
+.toast[data-motion="closing"] { pointer-events: none; }

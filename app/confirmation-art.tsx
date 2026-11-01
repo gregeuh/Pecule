@@ -41,7 +41,7 @@ export default function ConfirmationArt({ variant = "confirmation" }: { variant?
         if (cancelled || current !== generation || preference.matches || contrast.matches || !canvas.current) return;
         DotLottie.setWasmUrl("/animations/dotlottie-player-0.81.0.wasm");
         completed = false;
-        const instance = new DotLottie({ canvas: canvas.current, data: JSON.stringify(animations[variant]), autoplay: !document.hidden, loop: false,
+        const instance = new DotLottie({ canvas: canvas.current, data: JSON.stringify(animations[variant]), autoplay: !document.hidden, loop: false, useFrameInterpolation: true,
           renderConfig: { devicePixelRatio: Math.min(devicePixelRatio || 1, 2), freezeOnOffscreen: true } });
         player = instance;
         const active = () => !cancelled && current === generation && player === instance;
