@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Upload, ArrowLeft, ArrowRight, Check, LoaderCircle } from "lucide-react";
 import { money, type Budget } from "../lib/budget";
 import { budgetSchema } from "../lib/validation";
-import { buildImportedBudget, columnErrors, decodeBankFile, detectColumns, detectHeader, MAX_IMPORT_ROWS, previewBankImport, readBankCSV, type Columns, type ImportPlan } from "../lib/bank-import";
+import { buildImportedBudget, columnErrors, decodeBankFile, detectColumns, detectHeader, MAX_IMPORT_ROWS, previewBankImport, prepareBankCSV, type Columns, type ImportPlan } from "../lib/bank-import";
 import { FormField } from "./validated-form";
 
 export type ImportDraft={source:{text:string;name:string;encoding:string}|null;plan:ImportPlan|null;accountId:string;separator:string;choices:Map<number,boolean>;page:number;review:boolean};
@@ -32,7 +32,7 @@ export default function BankImport({initialDraft,onDraftChange,budget,today,savi
   const account=budget.accounts.find(a=>a.id===accountId),errors=activePlan?columnErrors(activePlan):[];
   const changed=()=>{setChoices(new Map());setPage(0);setReview(false);setConfirmed(false);};
   const update=(patch:Partial<ImportPlan>)=>{if(plan)setPlan({...plan,...patch});changed();};
-  function parse(text:string,sep:string){const parsed=readBankCSV(text,sep||undefined),header=detectHeader(parsed),columns=detectColumns(parsed[header]);if(parsed.length-header-1>MAX_IMPORT_ROWS)throw new Error("Importez au maximum 5 000 opérations par fichier.");setPlan({rows:parsed,header,columns,accountId,today,mode:columns.debit>=0&&columns.credit>=0?"split":"signed",dateOrder:"dmy",balanceMode:"new"});changed();}
+  function parse(text:string,sep:string){const prepared=prepareBankCSV(text,sep||undefined),parsed=prepared.rows,header=detectHeader(parsed),columns=detectColumns(parsed[header]);if(parsed.length-header-1>MAX_IMPORT_ROWS)throw new Error("Importez au maximum 5 000 opérations par fichier.");setPlan({...prepared,rows:parsed,header,columns,accountId,today,mode:columns.debit>=0&&columns.credit>=0?"split":"signed",dateOrder:"dmy",balanceMode:"new"});changed();}
   function fail(message:string){setFileError(message);requestAnimationFrame(()=>feedback.current?.focus());}
   const column=(key:keyof Columns,label:string,optional=false)=><FormField label={label} key={key}><select name={`bank-column-${key}`} value={plan?.columns[key]??-1} disabled={saving||reading} onChange={e=>update({columns:{...plan!.columns,[key]:Number(e.target.value)}})}><option value={-1}>{optional?"Aucune":"Choisir une colonne"}</option>{plan?.rows[plan.header].map((name,i)=><option key={i} value={i}>{i+1} · {name||"Sans titre"}</option>)}</select></FormField>;
   if(!budget.accounts.length)return <EmptyState title="D’abord, un compte" description="Ajoutez le compte qui recevra les opérations de ce relevé." action={<button type="button" className="primary" onClick={onAddAccount}>Ajouter un compte</button>}/>;
@@ -45,9 +45,10 @@ export default function BankImport({initialDraft,onDraftChange,budget,today,savi
     <button type="button" className="text-button csv-template" onClick={downloadTemplate}>Télécharger un modèle CSV</button></>}
     {source&&plan&&!review&&<>
       <p className="field-hint">{source.encoding} · {rows.length} lignes après l’en-tête. Vérifiez la date d’opération, pas seulement la date de valeur.</p>
+      {plan.sourceFormat==="headerless-account"&&<p className="info-callout" role="status">Export sans en-tête reconnu : {plan.rows.length-1} opérations. Les {plan.excludedBalanceRows} lignes de solde sont exclues ; elles ne modifient pas les soldes de vos comptes. Les colonnes sont reconstituées automatiquement.</p>}
       <div className="csv-mapping">
         <FormField label="Séparateur"><select name="bank-separator" value={separator} onChange={e=>{const sep=e.target.value;setSeparator(sep);setFileError("");try{parse(source.text,sep);}catch(error){setPlan(null);fail(error instanceof Error?error.message:"Séparateur invalide.");}}}><option value="">Automatique</option><option value=";">Point-virgule</option><option value=",">Virgule</option><option value={"\t"}>Tabulation</option></select></FormField>
-        <FormField label="Ligne d’en-tête"><select name="bank-header" value={plan.header} onChange={e=>{const header=Number(e.target.value),columns=detectColumns(plan.rows[header]);update({header,columns});}}>{plan.rows.slice(0,30).map((r,i)=><option value={i} key={i}>Ligne {i+1} · {r.join(" / ").slice(0,90)}</option>)}</select></FormField>
+        {!plan.sourceFormat&&<FormField label="Ligne d’en-tête"><select name="bank-header" value={plan.header} onChange={e=>{const header=Number(e.target.value),columns=detectColumns(plan.rows[header]);update({header,columns});}}>{plan.rows.slice(0,30).map((r,i)=><option value={i} key={i}>Ligne {i+1} · {r.join(" / ").slice(0,90)}</option>)}</select></FormField>}
         <FormField label="Colonnes de montant"><select name="bank-amount-mode" value={plan.mode} onChange={e=>update({mode:e.target.value as ImportPlan["mode"]})}><option value="signed">Montant signé (− dépense, + revenu)</option><option value="split">Débit et crédit séparés</option></select></FormField>
         <FormField label="Ordre des dates"><select name="bank-date-order" value={plan.dateOrder} onChange={e=>update({dateOrder:e.target.value as ImportPlan["dateOrder"]})}><option value="dmy">Jour / mois / année (France)</option><option value="mdy">Mois / jour / année (États-Unis)</option></select></FormField>
         {column("date","Date d’opération")}{column("label","Libellé")}

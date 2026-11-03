@@ -5,7 +5,7 @@ import type { Budget, Transaction } from "./budget";
 
 export const MAX_IMPORT_BYTES=2_000_000, MAX_IMPORT_ROWS=5000;
 export type Columns={date:number;label:number;amount:number;debit:number;credit:number;category:number;note:number;reference:number;currency:number};
-export type ImportPlan={rows:string[][];header:number;columns:Columns;mode:"signed"|"split";dateOrder:"dmy"|"mdy";balanceMode:"new"|"history";accountId:string;today:string;keepExtra?:boolean};
+export type ImportPlan={rows:string[][];header:number;columns:Columns;mode:"signed"|"split";dateOrder:"dmy"|"mdy";balanceMode:"new"|"history";accountId:string;today:string;keepExtra?:boolean;sourceFormat?:"headerless-account";excludedBalanceRows?:number};
 export type ImportRow={index:number;transaction:Transaction;errors:string[];warnings:string[];duplicate:boolean;defaultSelected:boolean};
 const normalize=(s:string)=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 
@@ -16,14 +16,34 @@ export function decodeBankFile(bytes:Uint8Array):{text:string;encoding:string} {
   try{return {text:new TextDecoder("utf-8",{fatal:true}).decode(bytes),encoding:"UTF-8"};}
   catch{return {text:new TextDecoder("windows-1252").decode(bytes),encoding:"Windows-1252"};}
 }
-export function readBankCSV(text:string,separator?:string):string[][] {
+export type PreparedBankCSV={rows:string[][];sourceFormat?:"headerless-account";excludedBalanceRows?:number};
+/** A narrow profile for dated balance markers enclosing eight-column bank records. */
+function prepareHeaderlessAccount(rows:string[][]):PreparedBankCSV {
+  const first=rows[0],last=rows.at(-1);
+  if(rows.length<3||first.length!==4||last?.length!==4)return {rows};
+  const reference=first[3].trim();
+  const marker=(row:string[])=>row.length===4&&!!parseCSVDate(row[0])&&parseBankAmount(row[1])!==null&&!row[2].trim()&&row[3].trim()===reference;
+  if(!/^\d{5}\s+[A-Za-z0-9]{5,20}$/.test(reference)||!marker(first)||!marker(last))return {rows};
+  // An explicit header always owns its mapping, even inside account metadata.
+  if(rows.slice(0,30).some(row=>{const c=detectColumns(row);return c.date>=0&&(c.amount>=0||c.debit>=0&&c.credit>=0);}))return {rows};
+  const operations=rows.slice(1,-1);
+  if(operations.some(row=>row.length===4&&!!parseCSVDate(row[0])&&parseBankAmount(row[1])!==null&&!row[2].trim()&&/^\d{5}\s+[A-Za-z0-9]{5,20}$/.test(row[3].trim())))throw new Error("Ce fichier contient plusieurs relevés. Exportez chaque compte séparément pour éviter de mélanger leurs opérations.");
+  // Do not discard malformed middle records: the preview must show their errors.
+  if(!operations.some(row=>row.length===8&&!!parseCSVDate(row[0])&&parseBankAmount(row[1])!==null))return {rows};
+  const header=["Date","Montant","Type d’opération","Information bancaire","Détail bancaire 1","Détail bancaire 2","Champ bancaire 7","Champ bancaire 8","Libellé"];
+  return {rows:[header,...operations.map(row=>[...row,[row[4]?.trim(),row[5]?.trim()].filter(Boolean).join(" · ")])],sourceFormat:"headerless-account",excludedBalanceRows:2};
+}
+export function prepareBankCSV(text:string,separator?:string):PreparedBankCSV {
   if(text.includes("\0")||/^\s*(%PDF|PK\x03\x04|<html|<!doctype)/i.test(text))throw new Error("Choisissez un export CSV de votre banque, pas un PDF ou un fichier Excel.");
   const rows=parseCSV(text,separator);
   if(rows.length<2)throw new Error("Le fichier doit contenir un en-tête et au moins une opération.");
   if(rows.length>MAX_IMPORT_ROWS+31)throw new Error("Importez au maximum 5 000 opérations par fichier.");
   if(rows.some(r=>r.length>100))throw new Error("Le fichier contient trop de colonnes (100 maximum).");
   if(rows.some(r=>r.some(c=>c.length>10000)))throw new Error("Une cellule dépasse la taille autorisée.");
-  return rows;
+  return prepareHeaderlessAccount(rows);
+}
+export function readBankCSV(text:string,separator?:string):string[][] {
+  return prepareBankCSV(text,separator).rows;
 }
 export function detectColumns(header:string[]):Columns {
   const h=header.map(normalize),find=(re:RegExp)=>h.findIndex(s=>re.test(s));

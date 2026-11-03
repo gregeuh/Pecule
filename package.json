@@ -35,7 +35,8 @@
     "typecheck": "tsc --noEmit",
     "test:e2e:smooth": "node tests/e2e/smooth-motion.mjs",
     "test:e2e:global-motion": "node tests/e2e/global-motion.mjs",
-    "test:e2e:harmony": "node tests/e2e/interaction-harmony.mjs"
+    "test:e2e:harmony": "node tests/e2e/interaction-harmony.mjs",
+    "test:e2e:headerless": "node tests/e2e/headerless-import.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

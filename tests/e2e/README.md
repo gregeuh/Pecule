@@ -155,3 +155,6 @@ Les unités attendues pour cette livraison sont au nombre de 122, avec les règl
 
 ### Harmonisation des interactions
 `npm run test:e2e:harmony` contrôle les formulaires partagés, leurs actions et surfaces, le clavier simulé, les brouillons, la validation, la sauvegarde et les sélections, à 320/390/1440 px et dans les deux thèmes. Chromium et WebKit, démonstration uniquement. Sorties dans `outputs/interaction-harmony` ; mêmes variables de transport, URL et moteur que les autres parcours.
+
+### Export bancaire sans en-tête
+`npm run test:e2e:headerless` utilise uniquement la fixture fictive `tests/fixtures/headerless-account.csv` et la démonstration. Vérifie les colonnes automatiques, les informations reprises, le mode historique sans changement du solde, le brouillon et le réimport. Chromium/WebKit, mobile/ordinateur, deux thèmes ; mêmes variables URL, transport et dossier de sortie que les autres parcours. Aucun fichier bancaire personnel dans les captures ou requêtes distantes.
