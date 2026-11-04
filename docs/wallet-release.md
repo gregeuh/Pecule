@@ -17,3 +17,8 @@ Aucune migration, aucun changement de calcul ou de schéma. Les données financi
 ## Preuves
 
 `tests/e2e/wallet.mjs` : Chromium/WebKit, 320/390/1440 px, clair/sombre, réduction des mouvements, geste, Échap/focus, opérations réelles de démonstration, confidentialité, compte source, comptes nombreux/noms longs et axe. Les tests de saisie iPhone, import sans en-tête, virements et panneaux sont adaptés au parcours approuvé et conservent leurs assertions financières. Les essais utilisent uniquement la démonstration ; aucun budget personnel n’est modifié. Le clavier reste simulé, la fluidité matérielle iPhone est à confirmer sur l’appareil.
+
+## Passe de finition
+Correction d’un saut reproduit en reprenant le panneau pendant son retour : ressort partagé, continuité de position et vitesse périmée ignorée après une pause. Rectangles de changement de dialogue fixés pendant le morphing. Fondu limité au contenu des onglets, survol des cartes sans déplacement de leurs cibles et couleurs de défilement harmonisées.
+
+`tests/e2e/wallet-polish.mjs` vérifie la reprise dans un même événement, le déplacement suivant, le lâcher après pause, le changement dynamique de réduction des mouvements, les rectangles de transition et l’opacité de la barre d’onglets, en démonstration sur Chromium/WebKit à 390 et 1440 px. Les suites Wallet et panneaux restent les vérifications de non-régression.

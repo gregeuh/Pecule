@@ -56,11 +56,10 @@ export function useModalMotion<T>() {
     const timing = motionSettings(panel), ease = timing.ease;
     const request = version.current;
     if (before) {
-      const x = mobile ? 0 : before.left+before.width/2-now.left-now.width/2;
-      const y = mobile ? 0 : before.top+before.height/2-now.top-now.height/2;
+      // Pin both rectangles during resizing; flex centering must not move the start.
       const morph = panel.animate([
-        {height:`${before.height}px`,width:`${before.width}px`,maxWidth:`${before.width}px`,transform:`translate(${x}px,${y}px)`},
-        {height:`${now.height}px`,width:`${now.width}px`,maxWidth:`${now.width}px`,transform:"none"},
+        {position:"fixed",top:`${before.top}px`,left:`${before.left}px`,right:"auto",bottom:"auto",margin:"0",height:`${before.height}px`,width:`${before.width}px`,maxWidth:`${before.width}px`,transform:"none"},
+        {position:"fixed",top:`${now.top}px`,left:`${now.left}px`,right:"auto",bottom:"auto",margin:"0",height:`${now.height}px`,width:`${now.width}px`,maxWidth:`${now.width}px`,transform:"none"},
       ],{duration:timing.layout,easing:ease});
       const heading = panel.querySelector(".modal-heading");
       animations.current = [morph,...(heading ? [heading.animate([{opacity:.5,transform:"translateY(5px)"},{opacity:1,transform:"none"}],{duration:timing.layout * .65,easing:ease})] : [])];

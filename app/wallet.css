@@ -5,6 +5,7 @@
  --blue:#245af3;--blue-soft:#e6edff;--action-bg:#245af3;--action-hover:#1745cc;--on-action:#ffffff;--soft-hover:#dce5fb;
  --green:#08734e;--goal-surface:#ede6fb;--lavender-surface:#e5dbfa;--lavender-ink:#45316b;--lavender-muted:#614c84;--lavender-accent:#7141c6;--lavender-track:#d0bfea;
  --overlay:#11182780;--dock-bg:#ffffff;--dock-shadow:0 8px 26px #14294c1c;--toast-bg:#15171d;--toast-ink:#ffffff;
+ --scroll-thumb:#a1a9ba;--scroll-hover:#68758e;
  --wallet-violet:#8248f4;--wallet-gold:#f4ac36;--wallet-cobalt:#245af3;
 }
 :root[data-theme="dark"] {
@@ -12,6 +13,7 @@
  --ink:#f3f5fa;--muted:#a5aec1;--subtle:#a0aabc;--line:#2b303d;
  --blue:#8caaff;--blue-soft:#273756;--action-bg:#245af3;--action-hover:#376afa;--on-action:#ffffff;--soft-hover:#303f5b;
  --green:#72dab2;--goal-surface:#302541;--lavender-surface:#302541;--lavender-ink:#e6d6ff;--lavender-muted:#c6b1e4;--lavender-accent:#b895f4;--lavender-track:#584078;
+ --scroll-thumb:#4f586c;--scroll-hover:#8390aa;
  --overlay:#000000b8;--dock-bg:#171a22;--dock-shadow:0 8px 26px #00000066;--toast-bg:#f3f5fa;--toast-ink:#15171d;
 }
 .wallet-dashboard .clarte-header { margin-bottom:18px; }
@@ -37,8 +39,6 @@
 .wallet-card:not(.wallet-front) .wallet-card-balance,.wallet-card:not(.wallet-front) .wallet-card-bottom,.wallet-card:not(.wallet-front) .wallet-card-mark { visibility:hidden; }
 .wallet-stack .wallet-card:focus-visible { outline:3px solid var(--wallet-ink);outline-offset:-5px; }
 .wallet-stack .wallet-card:active { filter:brightness(.96); }
-.wallet-manage { display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap; }
-.wallet-manage .text-button { display:flex;align-items:center;gap:5px;font-size:11px;min-height:44px; }
 .wallet-quick-actions { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:0 0 12px; }
 .wallet-quick-actions>button { display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;min-width:0;min-height:62px;padding:4px 0;color:var(--ink);background:transparent;font-size:11px;font-weight:600;border-radius:12px; }
 .wallet-quick-actions>button>span { display:grid;place-items:center;width:44px;height:40px;border-radius:13px;background:var(--card);transition:background var(--motion-state) ease,transform var(--motion-release) var(--motion-settle); }
@@ -49,8 +49,8 @@
 .wallet-tabs>button { position:relative;min-height:44px;padding:0 2px;color:var(--muted);background:transparent;font-size:13px;font-weight:650; }
 .wallet-tabs>button[aria-selected="true"] { color:var(--ink); }
 .wallet-tabs>button[aria-selected="true"]:after { content:"";position:absolute;bottom:-1px;height:3px;border-radius:3px;left:0;right:0;background:var(--blue); }
-.wallet-home-content>[role="tabpanel"] { min-width:0; }
-.wallet-home-content>[role="tabpanel"][hidden] { display:none; }
+.wallet-tab-content>[role="tabpanel"] { min-width:0; }
+.wallet-tab-content>[role="tabpanel"][hidden] { display:none; }
 .wallet-month-summary { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:14px;background:var(--card);border-radius:16px; }
 .wallet-month-summary>div { min-width:0; }
 .wallet-month-summary>div+div { padding-left:14px;border-left:1px solid var(--line); }
@@ -148,3 +148,13 @@
 .wallet-tabs>button[aria-selected="true"]:after { display:none; }
 .wallet-tabs>.navigation-indicator { background:transparent;border-radius:0; }
 .wallet-tabs>.navigation-indicator:after { content:"";position:absolute;bottom:-1px;left:0;right:0;height:3px;border-radius:3px;background:var(--blue); }
+
+/* Refine the existing affordances without moving the stacked hit areas. */
+.wallet-stack .wallet-card.clarte-account { transition:filter var(--motion-state) var(--motion-settle),box-shadow var(--motion-release) var(--motion-settle); }
+.wallet-goal-row { border-radius:12px; }
+@media(hover:hover) and (pointer:fine) {
+ .wallet-stack .wallet-card.clarte-account:hover { filter:brightness(1.045);box-shadow:0 10px 22px #111a2e30; }
+ .wallet-goal-row:hover { background:var(--blue-soft); }
+ .wallet-manage-title:hover { color:var(--blue); }
+}
+@media(prefers-reduced-motion:reduce) { .wallet-stack .wallet-card.clarte-account { transition:none; } }
