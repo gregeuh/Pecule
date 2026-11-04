@@ -1,3 +1,4 @@
+import {revealCaptureRoutine} from './ui-helpers.mjs';
 import assert from 'node:assert/strict';
 import {chromium,webkit} from 'playwright';
 import {mkdir,writeFile} from 'node:fs/promises';
@@ -24,6 +25,6 @@ try{for(const width of [390,1440])for(const theme of ['light','dark']){
  await to.selectOption(toId);await page.screenshot({path:`${output}/${engine}-${width}-${theme}.png`});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await dialog.getByRole('button',{name:'Enregistrer le virement',exact:true}).click();await dialog.waitFor({state:'hidden'});
  const after=(await balances()).map(cents);assert.equal(after[ids.indexOf(fromId)],before[ids.indexOf(fromId)]-1234);assert.equal(after[ids.indexOf(toId)],before[ids.indexOf(toId)]+1234);assert.equal(after.reduce((a,b)=>a+b),before.reduce((a,b)=>a+b));
- await nav.getByRole('button',{name:width<760?'Accueil':'Vue d’ensemble',exact:true}).click();await page.getByRole('button',{name:'Noter une opération',exact:true}).click();await page.locator('input[name=label]').fill('Brouillon conservé');await dialog.getByRole('button',{name:'Virement entre comptes',exact:true}).click();await dialog.getByRole('button',{name:'Annuler',exact:true}).click();await dialog.waitFor({state:'hidden'});await page.getByRole('button',{name:'Noter une opération',exact:true}).click();assert.equal(await page.locator('input[name=label]').inputValue(),'Brouillon conservé');
+ await nav.getByRole('button',{name:width<760?'Accueil':'Vue d’ensemble',exact:true}).click();await revealCaptureRoutine(page);await page.getByRole('button',{name:'Noter une opération',exact:true}).click();await page.locator('input[name=label]').fill('Brouillon conservé');await dialog.getByRole('button',{name:'Virement entre comptes',exact:true}).click();await dialog.getByRole('button',{name:'Annuler',exact:true}).click();await dialog.waitFor({state:'hidden'});await revealCaptureRoutine(page);await page.getByRole('button',{name:'Noter une opération',exact:true}).click();assert.equal(await page.locator('input[name=label]').inputValue(),'Brouillon conservé');
  assert.deepEqual(errors,[]);assert.deepEqual(writes,[]);checks.push({width,theme,status:'passed',personalBudgets:false});console.log(`PASS ${engine} ${width} ${theme}`);await context.close();
 }}finally{await writeFile(`${output}/${engine}-report.json`,JSON.stringify(checks,null,2));await browser.close();}

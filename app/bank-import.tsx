@@ -12,11 +12,11 @@ import { buildImportedBudget, columnErrors, decodeBankFile, detectColumns, detec
 import { FormField } from "./validated-form";
 
 export type ImportDraft={source:{text:string;name:string;encoding:string}|null;plan:ImportPlan|null;accountId:string;separator:string;choices:Map<number,boolean>;page:number;review:boolean};
-type Props={initialDraft:ImportDraft|null;onDraftChange:(draft:ImportDraft|null)=>void;budget:Budget;today:string;saving:boolean;save:(budget:Budget,message:string)=>Promise<boolean>;onDone:()=>void;onAddAccount:()=>void;downloadTemplate:()=>void;serverError:string};
+type Props={initialDraft:ImportDraft|null;initialAccountId?:string;onDraftChange:(draft:ImportDraft|null)=>void;budget:Budget;today:string;saving:boolean;save:(budget:Budget,message:string)=>Promise<boolean>;onDone:()=>void;onAddAccount:()=>void;downloadTemplate:()=>void;serverError:string};
 const pageSize=40;
-export default function BankImport({initialDraft,onDraftChange,budget,today,saving,save,onDone,onAddAccount,downloadTemplate,serverError}:Props){
+export default function BankImport({initialDraft,initialAccountId,onDraftChange,budget,today,saving,save,onDone,onAddAccount,downloadTemplate,serverError}:Props){
   const [source,setSource]=useState<{text:string;name:string;encoding:string}|null>(initialDraft?.source??null);
-  const [plan,setPlan]=useState<ImportPlan|null>(initialDraft?.plan??null),[accountId,setAccountId]=useState(initialDraft?.accountId??budget.accounts[0]?.id??"");
+  const [plan,setPlan]=useState<ImportPlan|null>(initialDraft?.plan??null),[accountId,setAccountId]=useState(initialDraft?.accountId??initialAccountId??budget.accounts[0]?.id??"");
   const [separator,setSeparator]=useState(initialDraft?.separator??""),[fileError,setFileError]=useState(""),[reading,setReading]=useState(false);
   const [choices,setChoices]=useState<Map<number,boolean>>(initialDraft?.choices??new Map()),[page,setPage]=useState(initialDraft?.page??0),[review,setReview]=useState(initialDraft?.review??false),[confirmed,setConfirmed]=useState(false);
   const [readProgress,setReadProgress]=useState<number|null>(null),[analyzing,setAnalyzing]=useState(false);

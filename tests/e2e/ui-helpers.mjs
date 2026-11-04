@@ -1,5 +1,6 @@
 /** Follow the same disclosures and filter confirmation as a real visitor. */
 export async function revealHomeDetails(page) {
+ const wallet=page.getByRole('tab',{name:'Prévisions',exact:true});if(await wallet.count()){await wallet.click();return;}
  const panel=page.locator('.clarte-more');
  if((page.viewportSize()?.width??1440)<=760)await panel.waitFor();
  if(await panel.count()&&!await panel.evaluate(n=>n.open))await panel.locator(':scope > summary').click();
@@ -32,3 +33,5 @@ export async function shiftOperationMonth(page,name) {
 export async function revealMerchantOptions(page){const panel=page.locator('.merchant-options');if(await panel.count()&&!await panel.evaluate(n=>n.open))await panel.locator(':scope > summary').click();}
 export async function acknowledgeBalanceCorrection(page){const panel=page.locator('.balance-correction');if(await panel.count()){if(!await panel.evaluate(n=>n.open))await panel.locator(':scope > summary').click();await panel.getByRole('checkbox',{name:/J’ai vérifié les opérations/}).check();}}
 export async function setOperationDirection(page,value){const native=page.locator('select[name="direction"]');if(await native.count())await native.selectOption(value);else await page.locator(`input[type="radio"][name="direction"][value="${value}"]`).check();}
+
+export async function revealCaptureRoutine(page){const panel=page.locator('.wallet-capture');if(await panel.count()&&!await panel.evaluate(e=>e.open))await panel.locator(':scope > summary').click();}

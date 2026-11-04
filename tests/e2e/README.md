@@ -158,3 +158,6 @@ Les unités attendues pour cette livraison sont au nombre de 122, avec les règl
 
 ### Export bancaire sans en-tête
 `npm run test:e2e:headerless` utilise uniquement la fixture fictive `tests/fixtures/headerless-account.csv` et la démonstration. Vérifie les colonnes automatiques, les informations reprises, le mode historique sans changement du solde, le brouillon et le réimport. Chromium/WebKit, mobile/ordinateur, deux thèmes ; mêmes variables URL, transport et dossier de sortie que les autres parcours. Aucun fichier bancaire personnel dans les captures ou requêtes distantes.
+
+### Accueil Wallet
+`npm run test:e2e:wallet` contrôle la pile, les bandes tactiles, le détail et son geste de retour, le registre réel, la saisie, la confidentialité, le compte source de virement/import, les onglets au clavier, plusieurs comptes avec noms longs et axe. 320/390/1440 px, clair/sombre et réduction des mouvements ; démonstration seulement. Sorties dans outputs/wallet ; moteurs et variables de transport habituels.

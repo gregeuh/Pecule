@@ -21,7 +21,7 @@ export function PrivacyShutter({ hidden }: { hidden: boolean }) {
 }
 
 /** The same indicator follows the current destination in desktop and mobile navigation. */
-export function NavigationIndicator({ active }: { active: string }) {
+export function NavigationIndicator({ active, selector = 'button[aria-current="page"]' }: { active: string; selector?: string }) {
   const marker = useRef<HTMLSpanElement>(null);
   useLayoutEffect(() => {
     const element = marker.current, nav = element?.parentElement;
@@ -29,7 +29,7 @@ export function NavigationIndicator({ active }: { active: string }) {
     let frame = 0;
     const update = () => {
       frame = 0;
-      const current = nav.querySelector<HTMLElement>('button[aria-current="page"]');
+      const current = nav.querySelector<HTMLElement>(selector);
       if (!current || !current.getBoundingClientRect().width) { element.removeAttribute("data-ready"); return; }
       const box = current.getBoundingClientRect(), parent = nav.getBoundingClientRect();
       element.style.width = `${box.width}px`; element.style.height = `${box.height}px`;
@@ -40,10 +40,10 @@ export function NavigationIndicator({ active }: { active: string }) {
     update();
     // ResizeObserver runs before paint: track dock geometry without a frame of lag.
     const observer = new ResizeObserver(update); observer.observe(nav);
-    const current = nav.querySelector('button[aria-current="page"]'); if (current) observer.observe(current);
+    const current = nav.querySelector(selector); if (current) observer.observe(current);
     window.addEventListener("resize", schedule);
     return () => { observer.disconnect(); window.removeEventListener("resize", schedule); cancelAnimationFrame(frame); };
-  }, [active]);
+  }, [active,selector]);
   return <span ref={marker} className="navigation-indicator" aria-hidden="true"/>;
 }
 

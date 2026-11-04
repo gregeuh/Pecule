@@ -12,6 +12,7 @@ import "./iphone-capture.css";
 import "./brief-corrections.css";
 import "./motion.css";
 import "./interaction-harmony.css";
+import "./wallet.css";
 import AppearanceProvider from "./theme-provider";
 export const metadata: Metadata = {
   title: "Pécule — Votre argent, l’esprit léger",
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, statusBarStyle: "default", title: "Pécule" },
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg", apple: "/icons/apple-touch-icon.png" },
 };
-export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f7f5f1" }, { media: "(prefers-color-scheme: dark)", color: "#0d0e0e" }] };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f2f3f7" }, { media: "(prefers-color-scheme: dark)", color: "#090b10" }] };
 export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
   return <html lang="fr" suppressHydrationWarning><body><AppearanceProvider>{children}</AppearanceProvider></body></html>;
 }

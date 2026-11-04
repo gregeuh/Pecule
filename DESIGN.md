@@ -1,11 +1,11 @@
 ---
 version: alpha
 colors:
-  background: "#f7f5f1"
+  background: "#f2f3f7"
   surface: "#ffffff"
-  ink: "#252c2b"
-  muted: "#626965"
-  primary: "#235746"
+  ink: "#15171d"
+  muted: "#626b7b"
+  primary: "#245af3"
   apricot: "#f5c39e"
   lavender: "#e2d6f5"
   budget-negative: "#aa394e"
@@ -286,3 +286,13 @@ Les parcours à étapes, le rapprochement et la correction de référence garden
 
 ## Diagnostic d’import sans en-tête — 3 novembre 2026
 Le profil reconnu réutilise le parcours BankImport et son information neutre `.info-callout` avec `role=status`. Il explique les colonnes reconstituées et l’exclusion des lignes de solde ; le choix artificiel de ligne d’en-tête est retiré pour ce seul profil. Les contrôles d’association et d’impact restent les mêmes. Aucune nouvelle palette ni animation ; les thèmes et le repli des textes suivent les composants existants.
+
+
+## Direction Wallet — validation complète du 4 novembre 2026
+Source visuelle approuvée : maquette `outputs/design-proposals/pecule-wallet.html` et captures clair/sombre. Le brief remplace la palette Atelier et l’accueil espacé par des cartes de compte empilées, une lecture dense et une transition du compte vers son détail. `app/wallet.css`, chargé en dernier, possède les tokens actifs : fond clair #f2f3f7, surface #ffffff, texte #15171d, accent #245af3 ; sombre #090b10, surface #171a22, texte #f3f5fa, accent de texte #8caaff. Les actions restent cobalt avec texte blanc ; aucun bleu marine de fond. Les signaux négatif/attention/confort restent possédés par budget-signal.css.
+
+`WalletAccounts` montre jusqu’à trois comptes réels avec au moins 44 px de bande exposée. Le compte courant mène la pile ; tous les autres comptes sont accessibles depuis le titre et son nombre explicite. Zéro compte propose la création, un seul garde sa carte entière, et les noms longs restent consultables dans le détail. Aucune carte fictive n’est injectée. `lib/wallet-presentation.ts` traduit les anciens préréglages de couleur vers cobalt, or, violet et accents francs, sans réécriture des comptes ou objectifs ; les couleurs personnalisées sont conservées. Les choix de couleur et tuiles utilisent la même traduction. Le texte noir/blanc est choisi pour un contraste d’au moins 4,5:1.
+
+Le détail du compte utilise le dialogue canonique de BudgetApp et useModalMotion. Son entrée et sa sortie relient la carte déclenchante aux dimensions du panneau, sans transparence du corps. Un geste sur l’en-tête permet le retour ; Fermer et Échap restent équivalents et le focus revient à la carte. Le détail réutilise AccountActivity, déplié par défaut dans cette variante, et les formulaires existants. Ajouter, virement et import neuf reprennent le compte sélectionné ; un brouillon d’import existant reste prioritaire.
+
+L’accueil conserve les comptes au premier plan, quatre raccourcis, les onglets Aperçu/Opérations/Prévisions, les dépenses réelles du mois (virements exclus), les charges de l’horizon canonique, deux opérations récentes et un objectif réel. Les autres opérations, le disponible, la répartition, le calendrier et la projection restent accessibles. Le rituel de saisie et les favoris sont conservés dans une divulgation. Les nombres ne sont pas interpolés. Le masquage couvre soldes, libellés accessibles, totaux, pourcentage et progression d’objectif ; les animations se règlent immédiatement avec la réduction des mouvements. Sur ordinateur, la pile occupe une colonne et les repères une seconde. Le document garde son défilement naturel.

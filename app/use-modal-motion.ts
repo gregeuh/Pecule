@@ -10,13 +10,14 @@ export function useModalMotion<T>() {
   const current = useRef<T | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null), backdropRef = useRef<HTMLDivElement>(null), shadeRef=useRef<HTMLDivElement>(null);
   const closingRef = useRef(false), version = useRef(0), animations = useRef<Animation[]>([]);
-  const previous = useRef<DOMRect | null>(null), origin = useRef<DOMRect | null>(null);
+  const previous = useRef<DOMRect | null>(null), origin = useRef<DOMRect | null>(null), trigger = useRef<HTMLElement | null>(null);
   const cancel = useCallback(() => { for (const animation of animations.current) animation.cancel(); animations.current = []; }, []);
   const setModal = useCallback((next: T | null) => {
     if (next !== null) {
       version.current++; closingRef.current = false;
       previous.current = current.current ? dialogRef.current?.getBoundingClientRect() ?? null : null;
-      origin.current = document.activeElement?.getBoundingClientRect() ?? null;
+      trigger.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      origin.current = trigger.current?.getBoundingClientRect() ?? null;
       cancel(); current.current = next; commit(next); return;
     }
     if (!current.current || closingRef.current) return;
@@ -33,7 +34,12 @@ export function useModalMotion<T>() {
     const distance=Math.max(24,innerHeight-rect.top+8);
     const timing = motionSettings(dialog);
     const options:KeyframeAnimationOptions = {duration:timing.exit,easing:timing.exitEase,fill:"forwards"};
-    const panel = dialog.animate([{opacity:1,transform,height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`},{opacity:mobile?1:0,transform:`translateY(${mobile?distance:14}px)`,height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`}],options);
+    const source=dialog.classList.contains("wallet-account-modal")&&trigger.current?.matches("[data-wallet-account]")&&trigger.current.isConnected?trigger.current.getBoundingClientRect():null;
+    const matrix=new DOMMatrix(transform);
+    const panel = source ? dialog.animate([
+      {opacity:1,transform,height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`},
+      {opacity:1,transform:`translate(${source.left+source.width/2-rect.left-rect.width/2+matrix.m41}px,${source.top-rect.top+matrix.m42}px)`,height:`${source.height}px`,width:`${source.width}px`,maxWidth:`${source.width}px`,borderRadius:"19px"}
+    ],{...options,duration:320,easing:timing.ease}) : dialog.animate([{opacity:1,transform,height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`},{opacity:mobile?1:0,transform:`translateY(${mobile?distance:14}px)`,height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`}],options);
     const shade = backdrop.animate([{opacity:1},{opacity:0}],options);
     animations.current = [panel,shade];
     void Promise.allSettled([panel.finished,shade.finished]).then(finish);
@@ -63,7 +69,11 @@ export function useModalMotion<T>() {
       const from = origin.current;
       const x = !mobile && from && panel.classList.contains("actions-modal") ? Math.max(-24,Math.min(24,from.left+from.width/2-now.left-now.width/2)) : 0;
       const distance=Math.max(24,innerHeight-now.top+8);
-      const enter = panel.animate([{opacity:mobile?1:0,transform:`translate(${x}px,${mobile?distance:12}px) scale(${mobile?1:.98})`},{opacity:1,transform:"none"}],{duration:timing.enter,easing:ease});
+      const wallet=panel.classList.contains("wallet-account-modal")&&trigger.current?.matches("[data-wallet-account]")&&from;
+      const enter = wallet ? panel.animate([
+        {opacity:1,height:`${from.height}px`,width:`${from.width}px`,maxWidth:`${from.width}px`,transform:`translate(${from.left+from.width/2-now.left-now.width/2}px,${from.top-now.top}px)`,borderRadius:"19px"},
+        {opacity:1,height:`${now.height}px`,width:`${now.width}px`,maxWidth:`${now.width}px`,transform:"none"}
+      ],{duration:520,easing:ease}) : panel.animate([{opacity:mobile?1:0,transform:`translate(${x}px,${mobile?distance:12}px) scale(${mobile?1:.98})`},{opacity:1,transform:"none"}],{duration:timing.enter,easing:ease});
       const shade = backdrop.animate([{opacity:0},{opacity:1}],{duration:timing.exit,easing:"ease-out"});
       animations.current = [enter,shade];
     }
