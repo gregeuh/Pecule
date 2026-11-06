@@ -35,10 +35,11 @@ export function useModalMotion<T>() {
     const timing = motionSettings(dialog);
     const options:KeyframeAnimationOptions = {duration:timing.exit,easing:timing.exitEase,fill:"forwards"};
     const source=dialog.classList.contains("wallet-account-modal")&&trigger.current?.matches("[data-wallet-account]")&&trigger.current.isConnected?trigger.current.getBoundingClientRect():null;
+    const contextual=dialog.classList.contains("context-preview-modal");
     const panel = source ? dialog.animate([
       {position:"fixed",top:`${rect.top}px`,left:`${rect.left}px`,right:"auto",bottom:"auto",margin:"0",opacity:1,transform:"none",height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`},
       {position:"fixed",top:`${source.top}px`,left:`${source.left}px`,right:"auto",bottom:"auto",margin:"0",opacity:1,transform:"none",height:`${source.height}px`,width:`${source.width}px`,maxWidth:`${source.width}px`,borderRadius:"19px"}
-    ],{...options,duration:320,easing:timing.ease}) : dialog.animate([{opacity:1,transform,height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`},{opacity:mobile?1:0,transform:`translateY(${mobile?distance:14}px)`,height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`}],options);
+    ],{...options,duration:320,easing:timing.ease}) : dialog.animate([{opacity:1,transform,height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`},{opacity:contextual?0:mobile?1:0,transform:contextual?"translateY(10px) scale(.97)":`translateY(${mobile?distance:14}px)`,height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`}],options);
     const shade = backdrop.animate([{opacity:1},{opacity:0}],options);
     animations.current = [panel,shade];
     void Promise.allSettled([panel.finished,shade.finished]).then(finish);
@@ -68,10 +69,11 @@ export function useModalMotion<T>() {
       const x = !mobile && from && panel.classList.contains("actions-modal") ? Math.max(-24,Math.min(24,from.left+from.width/2-now.left-now.width/2)) : 0;
       const distance=Math.max(24,innerHeight-now.top+8);
       const wallet=panel.classList.contains("wallet-account-modal")&&trigger.current?.matches("[data-wallet-account]")&&from;
+      const contextual=panel.classList.contains("context-preview-modal");
       const enter = wallet ? panel.animate([
         {position:"fixed",top:`${from.top}px`,left:`${from.left}px`,right:"auto",bottom:"auto",margin:"0",opacity:1,height:`${from.height}px`,width:`${from.width}px`,maxWidth:`${from.width}px`,transform:"none",borderRadius:"19px"},
         {position:"fixed",top:`${now.top}px`,left:`${now.left}px`,right:"auto",bottom:"auto",margin:"0",opacity:1,height:`${now.height}px`,width:`${now.width}px`,maxWidth:`${now.width}px`,transform:"none"}
-      ],{duration:520,easing:ease}) : panel.animate([{opacity:mobile?1:0,transform:`translate(${x}px,${mobile?distance:12}px) scale(${mobile?1:.98})`},{opacity:1,transform:"none"}],{duration:timing.enter,easing:ease});
+      ],{duration:520,easing:ease}) : panel.animate([{opacity:contextual?.7:mobile?1:0,transform:contextual?"translateY(14px) scale(.96)":`translate(${x}px,${mobile?distance:12}px) scale(${mobile?1:.98})`},{opacity:1,transform:"none"}],{duration:timing.enter,easing:ease});
       const shade = backdrop.animate([{opacity:0},{opacity:1}],{duration:timing.exit,easing:"ease-out"});
       animations.current = [enter,shade];
     }

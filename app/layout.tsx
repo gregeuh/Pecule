@@ -14,6 +14,7 @@ import "./motion.css";
 import "./interaction-harmony.css";
 import "./wallet.css";
 import "./gestures.css";
+import "./wallet-depth.css";
 import AppearanceProvider from "./theme-provider";
 export const metadata: Metadata = {
   title: "Pécule — Votre argent, l’esprit léger",
