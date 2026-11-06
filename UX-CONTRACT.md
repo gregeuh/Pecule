@@ -270,3 +270,8 @@ Les comptes aperçus reprennent le compte pour dépense/virement/ajustement/impo
 
 ### Profondeur des aperçus
 Le relief change la présentation des aperçus, sans changer leur propriétaire de présence, focus, inert, Échap, sauvegarde ou confirmation. Passer d’un aperçu à un éditeur remet le fond à son plan normal. Fermer restitue le focus à son déclencheur selon le contrat existant. Une préférence de mouvement modifiée pendant un appui annule le maintien et son clic différé, pour ne pas ouvrir une action après cette annulation. Les comptes gardent un rectangle de référence stable au repos et les bandes tactiles existantes. Les gestes verticaux et les brouillons gardent leurs règles précédentes.
+
+### Référence finale et confidentialité des objectifs
+La référence visuelle courante et ses propriétaires sont dans `docs/design-system.md`. Les captures figées n’utilisent que la démonstration. Masquer les montants retire aussi le pourcentage, la largeur de progression et la valeur accessible des objectifs, sans transition différée ; réafficher ne change aucune donnée. Les couleurs personnalisées restent sauvegardées telles quelles : leur matière et leur contraste ne sont que des choix de présentation.
+
+Le relâchement d’un appui long est consommé même si Safari redirige son clic vers le nouvel aperçu. La protection survit au démontage du déclencheur ; un nouvel appui primaire ou une activation clavier permet de choisir l’action. Le simple fait d’afficher un aperçu ne doit jamais ouvrir, confirmer ou supprimer une opération par relâchement.

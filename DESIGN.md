@@ -1,51 +1,49 @@
 ---
-version: alpha
+version: "1.0"
 colors:
   background: "#f2f3f7"
   surface: "#ffffff"
   ink: "#15171d"
   muted: "#626b7b"
   primary: "#245af3"
-  apricot: "#f5c39e"
-  lavender: "#e2d6f5"
-  budget-negative: "#aa394e"
-  budget-attention: "#984b00"
-  budget-comfort: "#21634e"
+  text-accent: "#1d4dd5"
 typography:
   body:
     fontFamily: '"DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
 rounded:
-  card: "20px"
+  card: "16px"
 omitted:
   - section: spacing
-    reason: Existing CSS remains the canonical implementation.
+    reason: app/wallet.css owns the runtime spacing tokens.
   - section: components
-    reason: Existing app/globals.css owns component styles.
+    reason: Canonical owners are mapped in docs/design-system.md and UX-CONTRACT.md.
 ---
 
 ## Overview
-Pécule est un outil personnel de budget en français. La demande du 26 octobre impose de retrouver l’interface visible sur pecule-budget.vercel.app à partir du code Git disponible. La référence est le tableau de bord bleu « clarté », la navigation à six vues, la répartition 50/30/20 et les thèmes clair/sombre.
+Pécule est un budget personnel en français, principalement utilisé dans la PWA iPhone. La direction Wallet approuvée conserve des couleurs franches, une information dense et une profondeur réservée aux comptes et aperçus. La référence courante est [docs/design-system.md](docs/design-system.md). Les décisions datées plus bas constituent l’historique ; une ancienne palette n’a pas priorité sur cette référence.
 
 ## Colors
-La palette canonique est désormais possédée par `app/atelier.css`, chargé après `app/reference.css` et les styles de fonctionnalité : --bg, --card, --ink, --muted et --blue. `app/reference.css` conserve la géométrie et les polices de référence. Les pages de compte utilisent ces variables et les classes .field, .primary, .card et .form-error.
+`app/wallet.css` possède la palette courante et les surfaces ; `app/wallet-depth.css` leur matière. Fond clair #f2f3f7, surface blanche, texte #15171d. Fond sombre #090b10, surface #171a22, texte #f3f5fa. Action cobalt #245af3, texte blanc ; accent textuel clair #1d4dd5 pour le contraste, sombre #8caaff. Or et violet identifient les autres comptes. Les signaux financiers restent possédés par `budget-signal.css`. Les couleurs personnalisées et leur matière utilisent `lib/wallet-presentation.ts`, sans réécriture des comptes.
 
 ## Typography
-DM Sans pour le texte et Manrope pour les titres, auto-hébergées dans public/fonts, comme le site de référence. Les champs de connexion utilisent 16px pour éviter le zoom automatique sur iPhone.
+DM Sans pour le texte et Manrope pour les titres et montants, auto-hébergées. Titres de page 26 px, titres de cartes 18 px, chiffres tabulaires et champs de 16 px minimum sur téléphone. Libellés longs repliables, aucun montant important tronqué.
 
 ## Layout
-Connexion dans une carte centrée, largeur maximum 440px, marge de 20px sur téléphone. Tableau de bord en deux colonnes sur ordinateur ; navigation basse et cartes empilées sur mobile. Six vues, dont la répartition 50/30/20.
+Sept pages : accueil, opérations, récurrences, comptes, épargne, équilibre et réglages. Accueil en deux colonnes sur ordinateur, pile Wallet sur téléphone ; dock sous 760 px. Le document défile naturellement. Formulaires et import gardent leurs propriétaires canoniques de panneau, de validation et de scroll.
 
 ## Elevation & Depth
-Conserver les ombres discrètes de la classe .card existante.
+Trois plans : fond ; lecture sans ombre décorative ; interactions élevées. Seuls comptes Wallet, maintien, menus et aperçus utilisent les ombres `--depth-*`. Les aperçus reculent légèrement le fond inerte. Les animations réduites retirent le mouvement et le flou ; le masquage est immédiat.
 
 ## Shapes
-Les rayons et densités suivent la feuille de styles de référence. Les ajouts de formulaires réutilisent .field, .primary et .card.
+Surface de lecture 16 px, contrôles 12 px, Wallet 19 px, panneaux 24 px. `--surface-padding` : 22 px ordinateur, 20 px téléphone. Boutons principaux 48 px, cibles compactes 44 px. Les autres variantes sont documentées dans la référence courante.
 
 ## Components
-Formulaires de compte : labels natifs, mot de passe masqué avec bouton d’affichage, erreurs en français, focus sur l’erreur, envoi désactivé pendant la requête. Aucun cache de pages personnelles ou de réponses API.
+Réutiliser les propriétaires de `docs/design-system.md` et les parcours de `UX-CONTRACT.md`. Logo/catégorie 36 px, image 26 px sans déformation ; repli sur une catégorie en cas d’erreur. Contrôles natifs de date et de sélection, erreurs liées aux champs, boutons stables pendant la sauvegarde et confirmation des suppressions existante.
 
 ## Do's and Don'ts
-Réutiliser les classes existantes. Ne pas introduire de connexion basée sur les en-têtes ChatGPT sur Vercel. Ne pas présenter les anciens comptes et budgets comme migrés.
+Préserver gestes, données et calculs. Ne pas ajouter de nouvelles palettes, d’ombres à toutes les lignes, de bibliothèque de mouvement ou de moteur de dialogue équivalent. Ne jamais retarder le masquage des montants ou progressions par une animation. Les captures de référence et la procédure iPhone sont dans `docs/design-reference/` et `docs/design-final-review.md`.
+
+# Historique des décisions
 
 ## Réconciliation de la référence
 

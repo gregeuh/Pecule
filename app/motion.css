@@ -3,6 +3,8 @@
   --motion-press: 110ms;
   --motion-feedback: 160ms;
   --motion-panel-in: 380ms;
+  --motion-wallet-in: 520ms;
+  --motion-wallet-out: 320ms;
   --motion-panel-out: 240ms;
   --motion-layout: 320ms;
   --motion-disclosure-out: 220ms;

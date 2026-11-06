@@ -3,6 +3,9 @@ export function motionSettings(element: Element) {
   const style = getComputedStyle(element);
   const duration = (name: string, fallback: number) => parseFloat(style.getPropertyValue(name)) || fallback;
   return {
+    release: duration("--motion-release", 260),
+    walletEnter: duration("--motion-wallet-in", 520),
+    walletExit: duration("--motion-wallet-out", 320),
     state: duration("--motion-state", 240),
     feedback: duration("--motion-feedback", 160),
     enter: duration("--motion-panel-in", 380),

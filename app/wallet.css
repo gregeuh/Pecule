@@ -2,10 +2,11 @@
 :root {
  --bg:#f2f3f7;--card:#ffffff;--surface-raised:#ffffff;--surface-inset:#eceef4;
  --ink:#15171d;--muted:#626b7b;--subtle:#656e7d;--line:#e1e5ee;
- --blue:#245af3;--blue-soft:#e6edff;--action-bg:#245af3;--action-hover:#1745cc;--on-action:#ffffff;--soft-hover:#dce5fb;
+ --blue:#1d4dd5;--blue-soft:#e6edff;--action-bg:#245af3;--action-hover:#1745cc;--on-action:#ffffff;--soft-hover:#dce5fb;
  --green:#08734e;--goal-surface:#ede6fb;--lavender-surface:#e5dbfa;--lavender-ink:#45316b;--lavender-muted:#614c84;--lavender-accent:#7141c6;--lavender-track:#d0bfea;
  --overlay:#11182780;--dock-bg:#ffffff;--dock-shadow:0 8px 26px #14294c1c;--toast-bg:#15171d;--toast-ink:#ffffff;
  --scroll-thumb:#a1a9ba;--scroll-hover:#68758e;
+ --surface-radius:16px;--surface-padding:22px;--section-gap:24px;
  --wallet-violet:#8248f4;--wallet-gold:#f4ac36;--wallet-cobalt:#245af3;
 }
 :root[data-theme="dark"] {
@@ -38,7 +39,7 @@
 .wallet-card-mark { position:absolute;bottom:16px;right:18px;opacity:.16;font-family:var(--font-display);font-size:42px;font-weight:800;pointer-events:none; }
 .wallet-card:not(.wallet-front) .wallet-card-balance,.wallet-card:not(.wallet-front) .wallet-card-bottom,.wallet-card:not(.wallet-front) .wallet-card-mark { visibility:hidden; }
 .wallet-stack .wallet-card:focus-visible { outline:3px solid var(--wallet-ink);outline-offset:-5px; }
-.wallet-stack .wallet-card:active { filter:brightness(.96); }
+.wallet-stack .wallet-card:active { filter:var(--wallet-press-filter,brightness(.96)); }
 .wallet-quick-actions { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:0 0 12px; }
 .wallet-quick-actions>button { display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;min-width:0;min-height:62px;padding:4px 0;color:var(--ink);background:transparent;font-size:11px;font-weight:600;border-radius:12px; }
 .wallet-quick-actions>button>span { display:grid;place-items:center;width:44px;height:40px;border-radius:13px;background:var(--card);transition:background var(--motion-state) ease,transform var(--motion-release) var(--motion-settle); }
@@ -153,8 +154,40 @@
 .wallet-stack .wallet-card.clarte-account { transition:filter var(--motion-state) var(--motion-settle),box-shadow var(--motion-release) var(--motion-settle); }
 .wallet-goal-row { border-radius:12px; }
 @media(hover:hover) and (pointer:fine) {
- .wallet-stack .wallet-card.clarte-account:hover { filter:brightness(1.045);box-shadow:0 10px 22px #111a2e30; }
+ .wallet-stack .wallet-card.clarte-account:hover { filter:var(--wallet-hover-filter,brightness(.97));box-shadow:0 10px 22px #111a2e30; }
  .wallet-goal-row:hover { background:var(--blue-soft); }
  .wallet-manage-title:hover { color:var(--blue); }
 }
 @media(prefers-reduced-motion:reduce) { .wallet-stack .wallet-card.clarte-account { transition:none; } }
+
+/* The final Wallet reference applies across the existing secondary screens. */
+:is(.account-card,.goal-card,.settings-card,.settings-panel) { padding:var(--surface-padding);border-radius:var(--surface-radius);box-shadow:none; }
+:is(.account-grid,.goal-grid) { gap:20px; }
+:is(.account-card,.goal-card) h3,:is(.settings-card,.settings-panel) :is(h2,h3) { font-size:18px;line-height:1.45;letter-spacing:-.025em; }
+.page-heading h1 { font-size:26px;line-height:1.25;letter-spacing:-.03em; }
+.page-heading { margin-bottom:20px;gap:16px; }
+.settings-workspace { gap:32px; }
+.settings-group>header { margin-bottom:16px; }
+.goal-intro { padding:22px;margin-bottom:24px;border-radius:var(--surface-radius); }
+.goal-card>.goal-remaining { color:var(--lavender-muted); }
+.capture-type-picker input:not(:checked)+span { background:var(--surface-inset);color:var(--muted); }
+.capture-amount .amount-input { margin:4px 0; }
+:is(.merchant-icon,.category-icon) { width:36px;height:36px;min-width:36px;flex:0 0 36px;border-radius:11px; }
+.merchant-icon img { width:26px;height:26px;object-fit:contain; }
+.transaction-title>strong { line-height:1.4; }
+.transaction-title>small { line-height:1.5; }
+.account-balance,.goal-amount>strong { font-size:30px; }
+@media(max-width:760px) {
+ :root { --surface-padding:20px;--section-gap:20px; }
+ .page-heading { gap:16px;margin-block:12px 20px; }
+ .page-heading h1 { font-size:26px; }
+ .settings-workspace { gap:24px; }
+ .settings-group>.settings-grid { gap:20px; }
+ .account-balance,.goal-amount>strong { font-size:28px; }
+ .transaction-row.full .transaction-title>strong { font-size:13px; }
+ .transaction-row.full .transaction-title>small { font-size:10px; }
+ .transaction-row.full .transaction-mobile-category { display:inline; }
+}
+/* Privacy is immediate, including diagrams and accessible progress values. */
+.app-shell[data-private="true"] .progress-track>span,
+.app-shell[data-private="true"] .goal-illustration * { transition:none;animation:none; }

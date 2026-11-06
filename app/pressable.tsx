@@ -1,6 +1,17 @@
 "use client";
 import {useEffect,useRef,type ButtonHTMLAttributes,type PointerEvent} from 'react';
 
+// Safari can retarget the held pointer's release click into the new overlay.
+// This guard survives the source unmount; a fresh primary press is intentional.
+let releaseCleanup:(()=>void)|undefined;
+function suppressHoldRelease(){
+ releaseCleanup?.();
+ const cleanup=()=>{clearTimeout(timer);document.removeEventListener('click',click,true);document.removeEventListener('pointerdown',fresh,true);document.removeEventListener('visibilitychange',cleanup);if(releaseCleanup===cleanup)releaseCleanup=undefined;};
+ const click=(e:MouseEvent)=>{if(e.detail===0){cleanup();return;}e.preventDefault();e.stopImmediatePropagation();};
+ const fresh=(e:globalThis.PointerEvent)=>{if(e.isPrimary)cleanup();};
+ releaseCleanup=cleanup;document.addEventListener('click',click,true);document.addEventListener('pointerdown',fresh,true);document.addEventListener('visibilitychange',cleanup);const timer=setTimeout(cleanup,60000);
+}
+
 /** Native click stays primary. Motion describes the hold, never a financial action. */
 export default function Pressable({onHold,onSwipeLeft,onClick,depth=false,...props}:ButtonHTMLAttributes<HTMLButtonElement>&{onHold?:()=>void;onSwipeLeft?:()=>void;depth?:boolean}){
  const active=useRef<{id:number;x:number;y:number;edge:boolean;target:HTMLButtonElement;rect:DOMRect;reduced:boolean}|null>(null),timer=useRef<ReturnType<typeof setTimeout>|null>(null),lift=useRef<ReturnType<typeof setTimeout>|null>(null),blocked=useRef(false);
@@ -17,7 +28,7 @@ export default function Pressable({onHold,onSwipeLeft,onClick,depth=false,...pro
   if(!e.isPrimary||e.button!==0||props.disabled)return;e.stopPropagation();cancel();blocked.current=false;
   const target=e.currentTarget,a={id:e.pointerId,x:e.clientX,y:e.clientY,edge:e.clientX<24||e.clientX>innerWidth-24,target,rect:target.getBoundingClientRect(),reduced:matchMedia('(prefers-reduced-motion:reduce)').matches};active.current=a;
   target.setPointerCapture(e.pointerId);target.dataset.pressing='true';paint(a,e.clientX,e.clientY);
-  if(onHold){lift.current=setTimeout(()=>{if(active.current===a){delete target.dataset.pressing;target.dataset.holding='true';}},120);timer.current=setTimeout(()=>{clear();blocked.current=true;target.focus({preventScroll:true});onHold();},480);}
+  if(onHold){lift.current=setTimeout(()=>{if(active.current===a){delete target.dataset.pressing;target.dataset.holding='true';}},120);timer.current=setTimeout(()=>{clear();blocked.current=true;suppressHoldRelease();target.focus({preventScroll:true});onHold();},480);}
  };
  const move=(e:PointerEvent<HTMLButtonElement>)=>{const a=active.current;if(!a||a.id!==e.pointerId)return;if(Math.hypot(e.clientX-a.x,e.clientY-a.y)>8){clear();blocked.current=true;}else if(a.target.dataset.holding||a.target.dataset.pressing)paint(a,e.clientX,e.clientY);};
  const up=(e:PointerEvent<HTMLButtonElement>)=>{const a=active.current;if(!a||a.id!==e.pointerId)return;const dx=e.clientX-a.x,dy=e.clientY-a.y;clear();active.current=null;if(!a.edge&&onSwipeLeft&&matchMedia('(max-width:760px)').matches&&dx< -55&&Math.abs(dx)>Math.abs(dy)*1.5){blocked.current=true;onSwipeLeft();}};

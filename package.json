@@ -37,7 +37,9 @@
     "test:e2e:global-motion": "node tests/e2e/global-motion.mjs",
     "test:e2e:harmony": "node tests/e2e/interaction-harmony.mjs",
     "test:e2e:headerless": "node tests/e2e/headerless-import.mjs",
-    "test:e2e:wallet": "node tests/e2e/wallet.mjs"
+    "test:e2e:wallet": "node tests/e2e/wallet.mjs",
+    "test:e2e:design": "node tests/e2e/design-finish.mjs",
+    "design:references": "node scripts/design-references.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
