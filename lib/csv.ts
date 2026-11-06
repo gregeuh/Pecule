@@ -1,13 +1,20 @@
 import type { Transaction } from "./budget";
-export function parseCSV(text: string): string[][] {
-  const first=text.replace(/^\uFEFF/,"").split(/\r?\n/)[0] ?? "";
-  const delimiter=[";",",","\t"].sort((a,b)=>first.split(b).length-first.split(a).length)[0];
-  const rows:string[][]=[];let row:string[]=[],cell="",quoted=false;
-  const input=text.replace(/^\uFEFF/,"");
-  for(let i=0;i<input.length;i++) {const ch=input[i];if(ch==='"') {if(quoted && input[i+1]==='"'){cell+='"';i++;}else quoted=!quoted;} else if(ch===delimiter && !quoted){row.push(cell);cell="";}else if((ch==='\n'||ch==='\r')&&!quoted){if(ch==='\r'&&input[i+1]==='\n')i++;row.push(cell);if(row.some(c=>c.trim()))rows.push(row);row=[];cell="";}else cell+=ch;}
+export function parseCSV(text: string, separator?: string): string[][] {
+  let input=text.replace(/^\uFEFF/,"");
+  const directive=input.match(/^sep=([;,\t])\s*(?:\r\n|\r|\n)/i);
+  if(directive)input=input.slice(directive[0].length);
+  const delimiter=separator??directive?.[1]??detectDelimiter(input);
+  const rows:string[][]=[];let row:string[]=[],cell="",quoted=false,closed=false;
+  for(let i=0;i<input.length;i++) {const ch=input[i];if(ch==='"') {if(quoted && input[i+1]==='"'){cell+='"';i++;}else if(quoted){quoted=false;closed=true;}else if(cell===""&&!closed)quoted=true;else throw new Error("Guillemet inattendu dans le CSV. Exportez à nouveau le fichier depuis votre banque.");} else if(ch===delimiter && !quoted){row.push(cell);cell="";closed=false;}else if((ch==='\n'||ch==='\r')&&!quoted){if(ch==='\r'&&input[i+1]==='\n')i++;row.push(cell);if(row.some(c=>c.trim()))rows.push(row);row=[];cell="";closed=false;}else if(closed){if(!/[ \t]/.test(ch))throw new Error("Texte inattendu après une cellule entre guillemets.");}else cell+=ch;}
   if(quoted) throw new Error("Une cellule CSV contient des guillemets non fermés.");
   row.push(cell);if(row.some(c=>c.trim()))rows.push(row);
   return rows;
+}
+function detectDelimiter(input:string):string {
+  // Count separators outside quoted cells, including metadata before the header.
+  const counts=new Map([[';',0],[',',0],['\t',0]]);let quoted=false,lines=0;
+  for(let i=0;i<input.length&&lines<30;i++){const c=input[i];if(c==='"'){if(quoted&&input[i+1]==='"')i++;else quoted=!quoted;}else if(!quoted){if(c==='\n')lines++;if(counts.has(c))counts.set(c,counts.get(c)!+1);}}
+  return [...counts].sort((a,b)=>b[1]-a[1])[0][0];
 }
 export function parseAmount(value:string):number|null {
   let s=value.trim().replace(/[\s€\u00a0\u202f]/g,"");

@@ -43,3 +43,7 @@ yarn-error.log*
 
 # OS metadata
 .DS_Store
+.vercel
+
+# Environment-specific legacy Sites bindings are not part of the Vercel source.
+/.openai/hosting.json

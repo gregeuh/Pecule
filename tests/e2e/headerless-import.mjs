@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { chromium, webkit } from 'playwright';
+const origin=new URL(process.env.PECULE_E2E_BASE_URL||'http://127.0.0.1:3001').origin;
+const engine=process.env.PECULE_E2E_ENGINE==='webkit'?'webkit':'chromium';
+const output=process.env.PECULE_E2E_OUTPUT||'outputs/headerless-import';await mkdir(output,{recursive:true});
+const browser=await(engine==='webkit'?webkit.launch():chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']}));
+const report={origin,engine,checks:[],personalAccounts:false,uploadedPrivateFileUsed:false};
+try{for(const width of [390,1440])for(const theme of ['light','dark']){
+ const context=await browser.newContext({viewport:{width,height:900},isMobile:width===390,hasTouch:width===390,reducedMotion:'reduce'});
+ await context.addInitScript(t=>localStorage.setItem('pecule-theme',t),theme);
+ if(process.env.PECULE_E2E_NODE_TRANSPORT==='1')await context.route(`${origin}/**`,async route=>{const q=route.request(),r=await fetch(q.url(),{method:q.method(),headers:q.headers(),body:q.postDataBuffer()||undefined,redirect:'manual'}),headers=Object.fromEntries(r.headers);for(const k of ['content-encoding','content-length','transfer-encoding'])delete headers[k];const cookies=r.headers.getSetCookie();if(cookies.length)headers['set-cookie']=cookies.join('\n');await route.fulfill({status:r.status,headers,body:Buffer.from(await r.arrayBuffer())});});
+ const page=await context.newPage(),errors=[],writes=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(r.method()==='PUT')writes.push(r.url());});await page.goto(origin);await page.locator('.clarte-dashboard').waitFor();
+ const balance=()=>page.locator('.wallet-front .wallet-card-balance').innerText(),before=await balance();
+ const add=page.locator(width===390?'.mobile-add':'.floating-action-trigger');
+ async function openImport(){await add.click();await page.getByRole('dialog').getByRole('button',{name:/^Un import CSV/}).click();await page.locator('input[type=file]').setInputFiles('tests/fixtures/headerless-account.csv');await page.getByText(/Export sans en-tête reconnu/).waitFor();await page.locator('select[name=bank-balance-mode]').selectOption('history');}
+ await openImport();assert.equal(await page.locator('select[name=bank-header]').count(),0);assert.equal(await page.locator('select[name=bank-column-date]').inputValue(),'0');assert.equal(await page.locator('select[name=bank-column-amount]').inputValue(),'1');assert.equal(await page.locator('select[name=bank-column-label]').inputValue(),'8');assert.equal(await page.locator('.import-row').count(),4);assert.equal(await page.locator('.import-row input:checked').count(),4);
+ await page.locator('.bank-import-source').first().locator(':scope > summary').click();assert.match(await page.locator('.bank-import-source').first().innerText(),/Champ bancaire 8 : Divers/);await page.screenshot({path:`${output}/${engine}-${width}-${theme}-preview.png`});
+ // Closing keeps the normalized mapping and the chosen balance policy in memory.
+ await page.getByRole('button',{name:'Fermer',exact:true}).click();await page.getByRole('dialog').waitFor({state:'hidden'});await add.click();await page.getByRole('dialog').getByRole('button',{name:/^Un import CSV/}).click();await page.getByText(/Export sans en-tête reconnu/).waitFor();assert.equal(await page.locator('select[name=bank-balance-mode]').inputValue(),'history');
+ await page.getByRole('button',{name:/Vérifier 4 opérations/}).click();const submit=page.getByRole('button',{name:/Importer 4 opérations/});assert(await submit.isDisabled());assert.match(await page.locator('.bank-import-review').innerText(),/aucun changement de solde/);await page.getByRole('checkbox',{name:/Je confirme le compte/}).check();await submit.click();await page.getByRole('dialog').waitFor({state:'hidden'});
+ const nav=page.getByRole('navigation',{name:width===390?'Navigation mobile':'Navigation principale'});await nav.getByRole('button',{name:width===390?'Accueil':'Vue d’ensemble',exact:true}).click();assert.equal(await balance(),before,'History import must preserve the existing account balance');
+ await openImport();assert.equal(await page.locator('.import-row input:checked').count(),0);assert.equal(await page.locator('.import-row input:disabled').count(),4);await page.screenshot({path:`${output}/${engine}-${width}-${theme}-reimport.png`});
+ assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.deepEqual(errors,[]);assert.deepEqual(writes,[]);report.checks.push({width,theme,status:'passed',mapping:'automatic',historyBalance:'unchanged',draft:'preserved',reimport:'excluded',serverWrites:0});await context.close();console.log(`PASS ${engine} ${width} ${theme}: headerless mapping, source data, history, draft and reimport`);
+}report.status='passed';}catch(error){report.status='failed';report.error=error.message;throw error;}finally{await writeFile(`${output}/${engine}-report.json`,JSON.stringify(report,null,2));await browser.close();}
