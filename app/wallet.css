@@ -224,3 +224,54 @@
  /* The resumed-draft notice returns when the keyboard closes, like favorites. */
  .modal-backdrop[data-keyboard-open="true"] .capture-modal:has(.operation-balance-preview) .draft-status { display:none; }
 }
+.account-verification { margin-block:16px; padding-block:14px; border-block:1px solid var(--line); min-width:0; }
+.verification-summary { display:flex; align-items:flex-start; gap:9px; min-width:0; }
+.verification-summary > svg { margin-top:2px; color:var(--muted); }
+.verification-summary > div { min-width:0; }
+.verification-summary strong { display:block; font-size:13px; line-height:1.5; overflow-wrap:anywhere; }
+.verification-summary p { margin-top:5px; color:var(--muted); font-size:12px; line-height:1.6; overflow-wrap:anywhere; }
+.account-verification > button { margin-top:6px; min-height:44px; padding-inline:0; text-align:left; white-space:normal; }
+.account-verification[data-verification=current] .verification-summary > svg { color:var(--budget-comfort-ink); }
+.account-verification[data-verification=changed] .verification-summary > svg { color:var(--budget-attention-ink); }
+.account-verification.verification-compact { margin:12px 0 0; padding:0; border:0; }
+.verification-compact .verification-summary strong { font-size:12px; font-weight:500; color:var(--muted); }
+.operation-suggestions { margin-block:16px; min-width:0; }
+.operation-suggestions[hidden] { display:none; }
+.suggestion-heading { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:4px 12px; margin-bottom:8px; }
+.suggestion-heading h3 { font-size:13px; font-weight:600; }
+.suggestion-heading > span { font-size:11px; color:var(--muted); }
+.suggestion-list { display:grid; gap:0; }
+.suggestion-list > button { display:grid; grid-template-columns:32px minmax(0,1fr) auto; align-items:center; gap:10px; padding:10px 0; min-height:56px; text-align:left; border-bottom:1px solid var(--line); }
+.suggestion-list > button:last-child { border-bottom:0; }
+.suggestion-list > button > span { min-width:0; }
+.suggestion-list strong,.suggestion-list small { display:block; overflow-wrap:anywhere; }
+.suggestion-list strong { font-size:13px; line-height:1.5; }
+.suggestion-list small { font-size:11px; line-height:1.5; color:var(--muted); }
+.suggestion-list b { font-size:13px; max-width:100px; overflow-wrap:anywhere; font-variant-numeric:tabular-nums; }
+.suggestion-list > button:hover { background:var(--surface-inset); }
+.quick-phrase { margin-block:12px 18px; border-bottom:1px solid var(--line); }
+.quick-phrase > summary { min-height:44px; display:flex; align-items:center; color:var(--blue); font-size:13px; cursor:pointer; }
+.quick-phrase > summary > svg { margin-left:auto; transition:transform var(--motion-state) var(--motion-settle); }
+.quick-phrase[open] > summary > svg { transform:rotate(180deg); }
+@media(prefers-reduced-motion:reduce) { .quick-phrase > summary > svg { transition:none; } }
+.quick-phrase > div { padding-block:10px 16px; }
+.quick-phrase .phrase-preview { overflow-wrap:anywhere; margin-block:8px 12px; font-size:13px; }
+.quick-phrase .field-hint { margin-top:8px; }
+/* Zoom remains a native iPhone gesture; app swipes never own a pinch. */
+.swipe-tabs { touch-action:pan-y pinch-zoom; }
+.wallet-account-hero,.modal-heading[data-panel-gesture] { touch-action:pinch-zoom; }
+@media(max-width:760px) {
+ .modal-backdrop[data-keyboard-open=true] .quick-phrase:not(:focus-within) { display:none; }
+ .capture-footer button { overflow-wrap:anywhere; white-space:normal; }
+ .capture-type-picker > button,.capture-type-picker label > span { height:auto; }
+ .wallet-detail-balance { overflow-wrap:anywhere; }
+}
+@media(max-width:360px) {
+ .suggestion-list > button { grid-template-columns:28px minmax(0,1fr); }
+ .suggestion-list b { grid-column:2; max-width:none; }
+}
+@media(max-height:560px) and (orientation:landscape) {
+ .modal.capture-modal { height:calc(var(--modal-viewport-height,100dvh) - 12px); }
+ .capture-modal > .modal-heading { padding-bottom:8px; }
+ .modal.capture-modal .capture-footer.form-actions { padding-block:6px; }
+}

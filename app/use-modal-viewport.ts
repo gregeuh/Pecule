@@ -5,14 +5,14 @@ export function useModalViewport(active:boolean,ref:RefObject<HTMLDivElement|nul
  useLayoutEffect(()=>{
   if(!active||!ref.current)return;
   const surface=ref.current,viewport=window.visualViewport;let frame=0;
-  const update=()=>{frame=0;const height=viewport?.height??window.innerHeight,top=viewport?.offsetTop??0;
+  const update=()=>{frame=0;const zoomed=(viewport?.scale??1)>1.05,height=zoomed?window.innerHeight:viewport?.height??window.innerHeight,top=zoomed?0:viewport?.offsetTop??0;
    surface.style.setProperty('--modal-viewport-height',`${Math.max(1,height)}px`);
    surface.style.setProperty('--modal-viewport-top',`${Math.max(0,top)}px`);
    const field=document.activeElement instanceof HTMLElement?document.activeElement:null;
    const editing=!!field?.matches('input:not([type=radio]):not([type=checkbox]),textarea,[contenteditable=true]');
    surface.dataset.keyboardOpen=String(editing&&(viewport?.scale??1)<1.1&&height<document.documentElement.clientHeight-120);
    const scroller=field?.closest<HTMLElement>('.capture-body, .panel-form-body');
-   if(scroller){const area=scroller.getBoundingClientRect(),control=field!.getBoundingClientRect();if(control.bottom>area.bottom||control.top<area.top)field!.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});}
+   if(scroller&&!zoomed){const area=scroller.getBoundingClientRect(),control=field!.getBoundingClientRect();if(control.bottom>area.bottom||control.top<area.top)field!.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});}
    // The quick-capture preview shares the amount's focus viewport when both fit.
    // Scroll its body, never the document or a different form variant.
    if(surface.dataset.keyboardOpen==='true'&&field?.getAttribute('name')==='amount'&&scroller?.matches('.capture-body')){

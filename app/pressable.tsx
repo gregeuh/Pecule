@@ -19,13 +19,15 @@ export default function Pressable({onHold,onSwipeLeft,onClick,depth=false,...pro
  const cancel=()=>{if(active.current)blocked.current=true;clear();active.current=null;};
  useEffect(()=>{
   const stop=()=>{if(active.current)blocked.current=true;if(timer.current)clearTimeout(timer.current);if(lift.current)clearTimeout(lift.current);timer.current=lift.current=null;const target=active.current?.target;if(target){delete target.dataset.pressing;delete target.dataset.holding;for(const v of ['--depth-pitch','--depth-yaw','--depth-light'])target.style.removeProperty(v);}active.current=null;};
+  const additional=(event:globalThis.PointerEvent)=>{if(!event.isPrimary)stop();};
+  document.addEventListener('pointerdown',additional,true);
   const media=matchMedia('(prefers-reduced-motion:reduce)');
   window.addEventListener('scroll',stop,true);window.addEventListener('resize',stop);document.addEventListener('visibilitychange',stop);media.addEventListener('change',stop);
-  return()=>{stop();window.removeEventListener('scroll',stop,true);window.removeEventListener('resize',stop);document.removeEventListener('visibilitychange',stop);media.removeEventListener('change',stop);};
+  return()=>{stop();document.removeEventListener('pointerdown',additional,true);window.removeEventListener('scroll',stop,true);window.removeEventListener('resize',stop);document.removeEventListener('visibilitychange',stop);media.removeEventListener('change',stop);};
  },[]);
  const paint=(a:NonNullable<typeof active.current>,x:number,y:number)=>{if(!depth||a.reduced)return;const px=Math.max(-.5,Math.min(.5,(x-a.rect.left)/a.rect.width-.5)),py=Math.max(-.5,Math.min(.5,(y-a.rect.top)/a.rect.height-.5));a.target.style.setProperty('--depth-pitch',`${-py*6}deg`);a.target.style.setProperty('--depth-yaw',`${px*7}deg`);a.target.style.setProperty('--depth-light',`${120+px*24}deg`);};
  const down=(e:PointerEvent<HTMLButtonElement>)=>{
-  if(!e.isPrimary||e.button!==0||props.disabled)return;e.stopPropagation();cancel();blocked.current=false;
+  if(!e.isPrimary){cancel();return;}if(e.button!==0||props.disabled)return;if((window.visualViewport?.scale??1)>1.05){cancel();blocked.current=false;return;}e.stopPropagation();cancel();blocked.current=false;
   const target=e.currentTarget,a={id:e.pointerId,x:e.clientX,y:e.clientY,edge:e.clientX<24||e.clientX>innerWidth-24,target,rect:target.getBoundingClientRect(),reduced:matchMedia('(prefers-reduced-motion:reduce)').matches};active.current=a;
   target.setPointerCapture(e.pointerId);target.dataset.pressing='true';paint(a,e.clientX,e.clientY);
   if(onHold){lift.current=setTimeout(()=>{if(active.current===a){delete target.dataset.pressing;target.dataset.holding='true';}},120);timer.current=setTimeout(()=>{clear();blocked.current=true;suppressHoldRelease();target.focus({preventScroll:true});onHold();},480);}

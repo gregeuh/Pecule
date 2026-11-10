@@ -4,6 +4,14 @@
   "data": "anonymous fictional demo only",
   "engine": "chromium",
   "sources": [
+    "app/account-verification.tsx",
+    "app/operation-suggestions.tsx",
+    "app/quick-phrase.tsx",
+    "app/wallet-accounts.tsx",
+    "app/wallet-account-detail.tsx",
+    "app/capture-routine.tsx",
+    "lib/account-verification.ts",
+    "lib/capture-suggestions.ts",
     "app/wallet.css",
     "app/wallet-depth.css",
     "app/motion.css",
@@ -37,7 +45,7 @@
     "lib/operation-balance-preview.ts",
     "lib/wallet-presentation.ts"
   ],
-  "sourceDigest": "c5f71f6d389b94d486ff0c81442eb6a80e5aabcd3a7b3fe37d923dbcb2add41a",
+  "sourceDigest": "dfd6bcffc18b4028cfd8c9789f205c905e41c4edde9f2367ddad76d4ddc01108",
   "authOptions": "depend on the environment; no auth submitted",
   "captures": [
     {
@@ -45,7 +53,7 @@
       "theme": "light",
       "page": "home",
       "file": "screenshots/chromium-390-light-home.png",
-      "sha256": "354e9ec97757a3cb880376e94a6e9fb6a4e19b958a8505fcba85bdfdb7571f8e"
+      "sha256": "11b6345e012f453ab285061f468ecc34ec707badf87fd5129c0397a5b8bddb00"
     },
     {
       "width": 390,
@@ -59,7 +67,7 @@
       "theme": "light",
       "page": "accounts",
       "file": "screenshots/chromium-390-light-accounts.png",
-      "sha256": "43350c45c20d2e003beb4af96dd6b0095e6cccca6f3b76f6d7182863bade5ded"
+      "sha256": "9ae1def9c0afd6b47614d2380bd141e569b0d250b6937179537e8bd632bae718"
     },
     {
       "width": 390,
@@ -101,7 +109,7 @@
       "theme": "light",
       "page": "capture",
       "file": "screenshots/chromium-390-light-capture.png",
-      "sha256": "50d3684285cf74b67085631754016e34cdaf844c3974f6eff558a203a1edda60"
+      "sha256": "4e3be88573c32a2d929ae2d6d9ca345cc6694ec1d3de08fee671a2fddbbb1dec"
     },
     {
       "width": 390,
@@ -129,7 +137,7 @@
       "theme": "dark",
       "page": "home",
       "file": "screenshots/chromium-390-dark-home.png",
-      "sha256": "a9853c0f5fae7217c0a800daaec9a8ac0180854b01d097dd2858526f94187144"
+      "sha256": "1b3f9bcf70f0e28bdf304f13446092b93b2e22f690429018e5f94065f394cad7"
     },
     {
       "width": 390,
@@ -143,7 +151,7 @@
       "theme": "dark",
       "page": "accounts",
       "file": "screenshots/chromium-390-dark-accounts.png",
-      "sha256": "092bbe2dcd125efefa3fd4fe004a3234e50257596efed52df2d5297c1da306ce"
+      "sha256": "15958d8b99905d31f58e8a2b6250d7f10d61cdc39f1ebee304d761490ee2d166"
     },
     {
       "width": 390,
@@ -185,7 +193,7 @@
       "theme": "dark",
       "page": "capture",
       "file": "screenshots/chromium-390-dark-capture.png",
-      "sha256": "51b7b4ad6b3883806920df5e2c2204730d32c56b73cc697c926b6507649d73e6"
+      "sha256": "f8e12fd9ee2f56f7cef953f141189833c0792aa42e9737177a992c7d2e946056"
     },
     {
       "width": 390,
@@ -213,7 +221,7 @@
       "theme": "light",
       "page": "home",
       "file": "screenshots/chromium-1440-light-home.png",
-      "sha256": "6429b5030cc5790e8db97d165e47624c0454ec91e93025ea1aae503e4c69e6f6"
+      "sha256": "6ccdb91d93cac376099e892e8a74f8c4cc39f15c9f9ac681e8ae6fedd654ac4b"
     },
     {
       "width": 1440,
@@ -227,7 +235,7 @@
       "theme": "light",
       "page": "accounts",
       "file": "screenshots/chromium-1440-light-accounts.png",
-      "sha256": "8f4220bb5d8eb01b1fc0d50b2733a3aa2cccaf037eb6c4fd08b275659bae536d"
+      "sha256": "cd246c400d80e88a2c495278961bf9ac0b8466a78d983842a23039b774687d32"
     },
     {
       "width": 1440,
@@ -269,14 +277,14 @@
       "theme": "light",
       "page": "capture",
       "file": "screenshots/chromium-1440-light-capture.png",
-      "sha256": "03ad0ea764c5ff112735ead834d4e8eec5cfbe88e7d3101ab3fa83cb3f085f27"
+      "sha256": "adbe41ebedb817022f34d03c205e79a6ce49fb04d86c47b0ffd07c845592b9b2"
     },
     {
       "width": 1440,
       "theme": "light",
       "page": "import",
       "file": "screenshots/chromium-1440-light-import.png",
-      "sha256": "30f80b666f65ca6bdd2016442af788d9350063707014ebfb98856bb9f1811688"
+      "sha256": "9b575ce1280257e6584ccdb7008ccb2d8941ab915256dc7e9947bf2551cd0608"
     },
     {
       "width": 1440,
@@ -297,7 +305,7 @@
       "theme": "dark",
       "page": "home",
       "file": "screenshots/chromium-1440-dark-home.png",
-      "sha256": "5431f0c851819fab264e366da4261528fa74bfe63e5b1023a1ffcb591929eef3"
+      "sha256": "c4958aa88c89f17ada7053526043a951176712e3856229354313cd86612091ef"
     },
     {
       "width": 1440,
@@ -311,7 +319,7 @@
       "theme": "dark",
       "page": "accounts",
       "file": "screenshots/chromium-1440-dark-accounts.png",
-      "sha256": "c8bb6572ad401cdabd921fb19995bddffa55f0f255bb6989d59717ca1ad72450"
+      "sha256": "c3ed8f4133a994ab42807bddb0d9204d9fbeb28f08a9cfa5fa96f88d49470a88"
     },
     {
       "width": 1440,
@@ -353,14 +361,14 @@
       "theme": "dark",
       "page": "capture",
       "file": "screenshots/chromium-1440-dark-capture.png",
-      "sha256": "c0dd70790194426bd08331b20875ac690d80acae48c8309951ca1a5025c1e208"
+      "sha256": "105441cdda47ca9161bfa521c844b0ee871cd4e351a0e50e8576af4357ddc2ac"
     },
     {
       "width": 1440,
       "theme": "dark",
       "page": "import",
       "file": "screenshots/chromium-1440-dark-import.png",
-      "sha256": "c7a46a96e4b5511ee18af647e993e2af443eb1aece1b43d5eaf976f25b0c97a0"
+      "sha256": "11606c5e26cc089d461a03fc338872cd720ab97a905167e3ee0f8741d3ca7e4f"
     },
     {
       "width": 1440,
