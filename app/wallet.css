@@ -191,3 +191,36 @@
 /* Privacy is immediate, including diagrams and accessible progress values. */
 .app-shell[data-private="true"] .progress-track>span,
 .app-shell[data-private="true"] .goal-illustration * { transition:none;animation:none; }
+
+/* Approved balance preview: read-only, immediately below the quick-capture amount. */
+.operation-balance-preview { padding:12px 14px;margin:0 0 18px;border-radius:var(--surface-radius);background:var(--card);color:var(--ink); }
+.balance-preview-account { display:flex;align-items:center;gap:7px;margin-bottom:10px;min-width:0;font-size:11px;line-height:1.5; }
+.balance-preview-account>svg { color:var(--blue);flex-shrink:0; }
+.balance-preview-account>strong { font-weight:600;overflow-wrap:anywhere; }
+.balance-preview-values { display:grid;grid-template-columns:minmax(0,1fr) 18px minmax(0,1fr);gap:9px;align-items:center; }
+.balance-preview-values>div { min-width:0; }
+.balance-preview-values>div:last-child { text-align:right; }
+.balance-preview-values>svg { color:var(--muted); }
+.balance-preview-values>div>span { display:block;font-size:10px;color:var(--muted);line-height:1.5;margin-bottom:4px; }
+.balance-preview-values strong { display:block;font:650 clamp(17px,5vw,20px)/1.4 var(--font-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere; }
+.balance-preview-values>div:last-child>strong { color:var(--blue); }
+.balance-preview-values strong[data-empty="true"] { font-size:14px; }
+.balance-preview-values strong[data-long="true"] { font-size:16px; }
+.balance-preview-hint { margin:10px 0 0;font-size:11px;line-height:1.6;color:var(--muted); }
+.balance-preview-warning { display:flex;align-items:flex-start;gap:6px;margin:10px 0 0;font-size:11px;line-height:1.6; }
+.balance-preview-warning>svg { flex-shrink:0;margin-top:2px; }
+.operation-balance-preview[data-negative="true"] { background:var(--error-bg); }
+.operation-balance-preview[data-negative="true"] .balance-preview-values>div:last-child>strong,
+.operation-balance-preview[data-negative="true"] .balance-preview-warning { color:var(--error-ink); }
+@media(forced-colors:active) { .operation-balance-preview,.operation-balance-preview[data-negative="true"] { background:Canvas;color:CanvasText;border:1px solid CanvasText; }.balance-preview-values>div:last-child>strong { color:CanvasText; } }
+
+@media(max-width:760px) {
+ .modal-backdrop[data-keyboard-open="true"] .operation-balance-preview { padding:8px 10px;margin-bottom:12px; }
+ .modal-backdrop[data-keyboard-open="true"] .balance-preview-account { margin-bottom:6px;font-size:10px; }
+ .modal-backdrop[data-keyboard-open="true"] .balance-preview-values strong { font-size:17px; }
+}
+
+@media(max-width:760px) {
+ /* The resumed-draft notice returns when the keyboard closes, like favorites. */
+ .modal-backdrop[data-keyboard-open="true"] .capture-modal:has(.operation-balance-preview) .draft-status { display:none; }
+}

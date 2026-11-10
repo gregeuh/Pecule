@@ -31,9 +31,13 @@
     "app/clarte-dashboard.tsx",
     "app/recurring-item.tsx",
     "app/merchant-fields.tsx",
+    "app/quick-operation-form.tsx",
+    "app/operation-balance-preview.tsx",
+    "app/use-modal-viewport.ts",
+    "lib/operation-balance-preview.ts",
     "lib/wallet-presentation.ts"
   ],
-  "sourceDigest": "4a24574e4368f62a918a6589aeb88c8c52e8cc5abf81a98fbff4ff0db9277299",
+  "sourceDigest": "c5f71f6d389b94d486ff0c81442eb6a80e5aabcd3a7b3fe37d923dbcb2add41a",
   "authOptions": "depend on the environment; no auth submitted",
   "captures": [
     {
@@ -97,7 +101,7 @@
       "theme": "light",
       "page": "capture",
       "file": "screenshots/chromium-390-light-capture.png",
-      "sha256": "0f47a9e041a96dfdaadff225c34fa69b675d042b3ebe6c3b2255f46f98d11bc6"
+      "sha256": "50d3684285cf74b67085631754016e34cdaf844c3974f6eff558a203a1edda60"
     },
     {
       "width": 390,
@@ -181,7 +185,7 @@
       "theme": "dark",
       "page": "capture",
       "file": "screenshots/chromium-390-dark-capture.png",
-      "sha256": "767d6593cac4e501ecb816a666d1951d068ab75b4e15e3d3963252c041cda85d"
+      "sha256": "51b7b4ad6b3883806920df5e2c2204730d32c56b73cc697c926b6507649d73e6"
     },
     {
       "width": 390,
@@ -265,7 +269,7 @@
       "theme": "light",
       "page": "capture",
       "file": "screenshots/chromium-1440-light-capture.png",
-      "sha256": "e44ffd4df3ebb58cc3656a17e49c8bc49dd4768eb380f5284892602e09b70afc"
+      "sha256": "03ad0ea764c5ff112735ead834d4e8eec5cfbe88e7d3101ab3fa83cb3f085f27"
     },
     {
       "width": 1440,
@@ -349,7 +353,7 @@
       "theme": "dark",
       "page": "capture",
       "file": "screenshots/chromium-1440-dark-capture.png",
-      "sha256": "16c510f41b9f0a777bb9987ff9ca5837b303151660766ca9aa077bf0a41338ca"
+      "sha256": "c0dd70790194426bd08331b20875ac690d80acae48c8309951ca1a5025c1e208"
     },
     {
       "width": 1440,

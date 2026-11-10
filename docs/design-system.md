@@ -13,6 +13,7 @@ Direction validée : Revolut et Apple Wallet, couleurs franches, lecture dense, 
 | Présence, ouverture et sortie des dialogues | `app/use-modal-motion.ts` |
 | Gestes et appui | `Pressable`, `SwipeTabs`, `useWalletGesture` |
 | Dock et indicateur | `MobileDock`, `NavigationIndicator` |
+| Aperçu en ajout d’opération | `OperationBalancePreview`, `lib/operation-balance-preview.ts` (lecture seule) |
 | Formulaires, validation, attente | `ValidatedForm`, `FormField`, `SubmitButton` |
 | États vides, erreurs, confirmations | `EmptyState`, `interface-feedback`, `BudgetNotice` |
 | Contrats de parcours et règles métier | `UX-CONTRACT.md` et bibliothèques métier qu’il référence |
@@ -74,3 +75,5 @@ Tout contrôle garde son libellé, son focus, son état désactivé et son atten
 Breakpoint de navigation : 760 px. Défilement vertical natif, bords réservés à iOS, alternatives par boutons aux gestes, safe areas et zoom conservés. Les date/select restent natifs : leur popup et leur rendu relèvent du système, pas d’un calendrier inventé. Le clavier virtuel est simulé dans les tests ; la matrice sur iPhone réel est dans `docs/design-final-review.md`.
 
 Les références anonymes sont conservées dans `docs/design-reference/` avec leur manifeste, date fictive et empreintes. Elles couvrent sept pages, vide, saisie, import, connexion et récupération. Les mises à jour passent par une capture puis une revue ; elles ne sont jamais réécrites automatiquement par les tests. Voir le guide dans ce dossier pour reproduire la capture sur un autre PC.
+
+L’ajout d’opération montre sous le montant le solde actuel du compte et l’effet isolé de la saisie. Ce bloc utilise une surface de lecture, sans ombre ni comptage animé. Il n’est pas le disponible budgétaire et n’est pas une projection globale à la date future. Voir `docs/operation-balance-preview.md`.
