@@ -24,3 +24,20 @@ Le parcours pagine tous les appareils et avance même quand la journée est déj
 Revue indépendante Impeccable : défaut de pagination corrigé, garde de durée par lot ajoutée, verdict final sans blocage. Documentation et comportements relus séparément. Captures/rapports hors Git dans outputs/daily-capture et outputs/capture-connected.
 
 Sources vérifiées : https://vercel.com/docs/cron-jobs/usage-and-pricing ; https://vercel.com/docs/functions/limitations.
+
+## Rappel après saisie — 10 novembre 2026
+
+Le rappel automatique est ignoré après une nouvelle opération enregistrée avec succès pendant la journée civile Europe/Paris, même si sa date bancaire est passée ou future. Les virements et les imports ajoutant des opérations comptent aussi. La matérialisation de récurrences, les réglages, les modifications/suppressions seules, une saisie non enregistrée et une sauvegarde refusée pour conflit ne créent pas cette activité. La validation du bilan quotidien continue également de couper le rappel.
+
+Une colonne serveur nullable `budgets.last_operation_at` est ajoutée de manière idempotente. Le timestamp est enregistré dans la même requête SQL que le budget accepté, en comparant les identifiants explicites aux opérations précédentes. Il ne provient pas du navigateur et ne modifie ni le payload exporté ni les calculs. Une suppression ultérieure conserve le signal d’activité. Les budgets antérieurs sans timestamp utilisent leurs opérations explicites datées du jour (hors historique inclus et récurrences), faute de disposer de leur heure de création passée.
+
+Tous les appareils consultent ce signal commun. La réservation de l’envoi recontrôle le timestamp et la révision inspectée pour éviter une décision périmée par une sauvegarde concurrente. Le lendemain, le signal de la veille ne coupe plus le rappel. Les notifications de test demandées explicitement restent disponibles. Une notification déjà envoyée au service push avant l’enregistrement ne peut pas être annulée par cette condition.
+
+Tests : `npm test` couvre la condition, le bilan, les anciens budgets et les frontières minuit Paris/horaire d’été. Les requêtes réelles de sauvegarde et de réservation sont vérifiées dans PostgreSQL embarqué, sans identifiants ni connexion à une base personnelle :
+
+```sh
+npm_config_cache=/workspace/.npm-cache npm install --prefix /tmp/pecule-reminder-sql --no-package-lock --ignore-scripts @electric-sql/pglite
+PECULE_PGLITE_MODULE=/tmp/pecule-reminder-sql/node_modules/@electric-sql/pglite/dist/index.js node tests/e2e/reminder-activity-storage.mjs
+```
+
+Ce test couvre migration répétée, première sauvegarde, réglages, occurrences automatiques, saisie rétrodatée, imports, conflits/rejeu, suppression, isolation entre utilisateurs, appareils multiples, lendemain, déduplication et révision périmée. Aucun envoi push réel n’est déclenché.

@@ -1,6 +1,7 @@
 import { getChatGPTUser } from "../../chatgpt-auth";
 import { ensureDatabase } from "../../../lib/auth";
 import { getPool, tablePrefix } from "../../../lib/postgres";
+import { budgetSaveStatement } from "../../../lib/budget-storage";
 import { saveSchema } from "../../../lib/validation";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -32,9 +33,8 @@ export async function PUT(request: Request) {
     const updatedAt = new Date().toISOString();
     await ensureDatabase();
     const pool = getPool();
-    const saved = revision === 0
-      ? await pool.query(`INSERT INTO ${tablePrefix}budgets (user_id, payload, revision, updated_at) VALUES ($1,$2,1,$3) ON CONFLICT (user_id) DO NOTHING RETURNING revision`, [user.userId, JSON.stringify(budget), updatedAt])
-      : await pool.query(`UPDATE ${tablePrefix}budgets SET payload=$2, revision=revision+1, updated_at=$3 WHERE user_id=$1 AND revision=$4 RETURNING revision`, [user.userId, JSON.stringify(budget), updatedAt, revision]);
+    const saved = await pool.query(budgetSaveStatement(`${tablePrefix}budgets`, revision === 0),
+      revision === 0 ? [user.userId, JSON.stringify(budget), updatedAt] : [user.userId, JSON.stringify(budget), updatedAt, revision]);
     if (!saved.rowCount) return response({ error: "Votre budget a été modifié sur un autre appareil. Rechargez les données avant de réessayer." }, 409);
     return response({ revision: revision + 1, updatedAt });
   } catch { return response({ error: "L’enregistrement a échoué. Réessayez dans un instant." }, 503); }

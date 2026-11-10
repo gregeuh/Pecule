@@ -44,6 +44,7 @@ async function initialize() {
       user_id text PRIMARY KEY, payload text NOT NULL,
       revision integer NOT NULL, updated_at text NOT NULL
     )`);
+    await client.query(`ALTER TABLE ${tablePrefix}budgets ADD COLUMN IF NOT EXISTS last_operation_at timestamptz`);
     await client.query("COMMIT");
   } catch (error) {
     await client.query("ROLLBACK"); throw error;
