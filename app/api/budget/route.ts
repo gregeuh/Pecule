@@ -13,7 +13,7 @@ export async function GET() {
     await ensureDatabase();
     const { rows } = await getPool().query(`SELECT payload, revision, updated_at FROM ${tablePrefix}budgets WHERE user_id = $1`, [user.userId]);
     const row = rows[0];
-    return response({ budget: row ? JSON.parse(row.payload) : null, revision: row?.revision ?? 0, updatedAt: row?.updated_at ?? null });
+    return response({userId:user.userId, budget: row ? JSON.parse(row.payload) : null, revision: row?.revision ?? 0, updatedAt: row?.updated_at ?? null });
   } catch { return response({ error: "Votre budget est temporairement indisponible. Réessayez dans un instant." }, 503); }
 }
 export async function PUT(request: Request) {
@@ -22,6 +22,7 @@ export async function PUT(request: Request) {
   try {
     const user = await getChatGPTUser();
     if (!user) return response({ error: "Votre session a expiré. Reconnectez-vous." }, 401);
+    const expectedOwner=request.headers.get("x-pecule-owner");if(expectedOwner&&expectedOwner!==user.userId)return response({error:"La session active a changé. Reconnectez-vous au compte de ces saisies."},401);
     if (Number(request.headers.get("content-length")) > 4000000) return response({ error: "Le budget est trop volumineux." }, 413);
     const raw = await request.text();
     if (new TextEncoder().encode(raw).byteLength > 4000000) return response({ error: "Le budget est trop volumineux." }, 413);

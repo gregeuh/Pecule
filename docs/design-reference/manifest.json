@@ -4,6 +4,15 @@
   "data": "anonymous fictional demo only",
   "engine": "chromium",
   "sources": [
+    "app/subscription-overview.tsx",
+    "app/pending-operations.tsx",
+    "app/use-offline-queue.ts",
+    "lib/subscriptions.ts",
+    "lib/offline-store.ts",
+    "lib/offline-reconcile.ts",
+    "lib/offline-page.ts",
+    "public/offline.html",
+    "public/offline.css",
     "app/forecast-outlook.tsx",
     "app/monthly-brief.tsx",
     "app/bank-link-details.tsx",
@@ -56,7 +65,7 @@
     "lib/operation-balance-preview.ts",
     "lib/wallet-presentation.ts"
   ],
-  "sourceDigest": "2a4e677e3e85de1df3ccabffb138357fdd1b5d7dcf12ea07b27259df3020d263",
+  "sourceDigest": "df352e44d735cd2310a5fa05345539f00b4bf8bd8b1be32f3a66622a21ea7c3f",
   "authOptions": "depend on the environment; no auth submitted",
   "captures": [
     {
@@ -85,7 +94,7 @@
       "theme": "light",
       "page": "recurring",
       "file": "screenshots/chromium-390-light-recurring.png",
-      "sha256": "27e98395ab607631e92447e8665de7583a514870c5b7573406e552d89eed4727"
+      "sha256": "4a3a5de5db96a8b6a6e9404c7a0ff2942ba2770cb9646eb5aba2789146176ef6"
     },
     {
       "width": 390,
@@ -106,7 +115,7 @@
       "theme": "light",
       "page": "settings",
       "file": "screenshots/chromium-390-light-settings.png",
-      "sha256": "65edc278ba9674698325746e414bdc52cf214737366e815e9358c4656a908e20"
+      "sha256": "f70071ee831cb1060c8133a40547b5222d5d5533273d9198aa67762e8a3127d6"
     },
     {
       "width": 390,
@@ -169,7 +178,7 @@
       "theme": "dark",
       "page": "recurring",
       "file": "screenshots/chromium-390-dark-recurring.png",
-      "sha256": "e63bfd1f8968585e213b5de3463fdc6582095b7f0751e3ed774c2a9e1455e8d3"
+      "sha256": "3cda9b6ff60e9aa8aa3ae64abd783cf924ef75bb930bcfba6fe5819abb3489ef"
     },
     {
       "width": 390,
@@ -190,7 +199,7 @@
       "theme": "dark",
       "page": "settings",
       "file": "screenshots/chromium-390-dark-settings.png",
-      "sha256": "ea77844ba58e63534aa4f8ff9b5c8415376cda42dee98f4db85b2eaba9952116"
+      "sha256": "497b37616c136cfbf45e8567f6326a4c2d802e878c7d9cf6e60edac2f30db221"
     },
     {
       "width": 390,
@@ -253,7 +262,7 @@
       "theme": "light",
       "page": "recurring",
       "file": "screenshots/chromium-1440-light-recurring.png",
-      "sha256": "ca496c62a5c90e2266b83bd68cc6eab02d200997e931fe9ecc5e07d78498981e"
+      "sha256": "70d0713dfab75b5e982b190edc2106d1ed3123d9f59cfc9cb350861ee1869500"
     },
     {
       "width": 1440,
@@ -274,7 +283,7 @@
       "theme": "light",
       "page": "settings",
       "file": "screenshots/chromium-1440-light-settings.png",
-      "sha256": "92d24ddd0fa5cb57e50b2a349d72efcb33bbb4a16a2db6e45cb80e87f4551f57"
+      "sha256": "10f1fc08ec1c415c9afca22c95219ce4e942d3688f8a363429227925e1861f75"
     },
     {
       "width": 1440,
@@ -337,7 +346,7 @@
       "theme": "dark",
       "page": "recurring",
       "file": "screenshots/chromium-1440-dark-recurring.png",
-      "sha256": "995b02168c83220fdddea532dfb6d02686423f00ac844bddfc3cc90b7554740f"
+      "sha256": "b9410f2600c520b59d91ccca262c1afdb663184ad2e9c8dfaf09cf6d9f056bef"
     },
     {
       "width": 1440,
@@ -358,7 +367,7 @@
       "theme": "dark",
       "page": "settings",
       "file": "screenshots/chromium-1440-dark-settings.png",
-      "sha256": "7fd8834dc5241e5687e66b02b724f895e6e198f4e0b17eb27b7f6fbfc6e9fe7d"
+      "sha256": "36d320e370eb0ba568445ac528abd0ef402e0a3f9e30242a568dd5986ce26c91"
     },
     {
       "width": 1440,

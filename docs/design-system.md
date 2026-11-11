@@ -83,3 +83,6 @@ Propriétaires additionnels : `AccountVerification` pour la preuve de rapprochem
 # Anticipation, bilan et import
 
 `ForecastOutlook` réutilise `ProjectionChart` et les `FormField` natifs ; `MonthlyBrief` prolonge `SpendingInsights`. Les propositions d’association restent dans le flux des lignes de l’import, sans popover supplémentaire. `BankLinkDetails` réutilise le disclosure animé canonique pour les données sources. Les styles associés appartiennent à `wallet.css` et `bank-import.css`, avec la palette sémantique existante. Les références et limites fonctionnelles sont dans `docs/outlook-import-brief.md`.
+
+### Abonnements et saisie hors connexion
+`SubscriptionOverview` réutilise `.card`, les listes Wallet et l’éditeur de récurrence de BudgetApp. `PendingOperations` réutilise AnimatedDetails, ValidatedForm et la confirmation canonique pour le retrait local. `public/offline.html` est une variante statique limitée, utilisant les contrôles natifs, les fontes et les thèmes Wallet ; elle ne monte aucun second système de dialogue. Propriété des calculs : `lib/subscriptions.ts` et budget.ts. Propriété de la reprise : `useOfflineQueue`, `offline-reconcile.ts`, `offline-store.ts`, BudgetSync et API revisionnée. Vérifications : tests unitaires et `tests/e2e/subscriptions-offline.mjs`.

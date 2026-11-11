@@ -47,3 +47,6 @@ yarn-error.log*
 
 # Environment-specific legacy Sites bindings are not part of the Vercel source.
 /.openai/hosting.json
+
+/public/offline-capture.js
+/public/offline-version.js

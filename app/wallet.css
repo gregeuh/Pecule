@@ -296,3 +296,26 @@
 @media(max-width:480px) { .forecast-controls { grid-template-columns:minmax(0,1fr);gap:0; } }
 
 @media(max-width:480px) { .forecast-outlook .chart-dates { gap:8px; } .forecast-outlook .chart-dates > span { white-space:nowrap; } .forecast-outlook .chart-dates [data-compact-skip=true] { display:none; } }
+.subscriptions,.pending-operations { padding:var(--surface-padding); border-radius:var(--surface-radius); }
+.subscriptions { margin-bottom:24px; }
+.subscriptions > h2 { font-size:20px; margin-bottom:10px; }
+.subscription-totals { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; margin-block:20px; }
+.subscription-totals dt { color:var(--muted); font-size:12px; line-height:1.6; }
+.subscription-totals dd { margin:8px 0 0; font-size:22px; font-weight:650; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+.subscription-list,.pending-operations ul { list-style:none; padding:0; margin:12px 0; }
+.subscription-list > li { display:flex; align-items:flex-start; gap:12px; padding-block:16px; border-bottom:1px solid var(--line); }
+.subscription-list > li > div { flex:1; min-width:0; }
+.subscription-list strong,.pending-operations strong { display:block; overflow-wrap:anywhere; font-size:14px; }
+.subscription-list small,.pending-operations small { display:block; color:var(--muted); font-size:12px; line-height:1.6; }
+.subscription-list p { font-size:13px; line-height:1.6; margin-top:5px; overflow-wrap:anywhere; }
+.subscription-list button { min-height:44px; }
+.subscription-increase { color:var(--budget-attention-ink); }
+.pending-operations { margin-bottom:20px; }
+.pending-operations > summary { min-height:44px; cursor:pointer; font-weight:600; }
+.pending-operations > p { font-size:13px; line-height:1.65; margin-block:12px; }
+.pending-operations li { border-bottom:1px solid var(--line); padding-block:16px; }
+.pending-operations li > div:first-child { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px 12px; }
+.pending-operations li small { grid-column:1; }
+.pending-operations li b { grid-column:2; grid-row:1; overflow-wrap:anywhere; max-width:140px; font-variant-numeric:tabular-nums; }
+.pending-operations li button { min-height:44px; }
+@media(max-width:480px){.subscription-totals{grid-template-columns:minmax(0,1fr);gap:12px}.subscription-list{font-size:13px}.subscription-list > li{flex-wrap:wrap}.subscription-list > li > div{min-width:150px}}

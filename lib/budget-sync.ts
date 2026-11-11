@@ -15,8 +15,9 @@ export class BudgetSync {
   private writing = false;
   private request: typeof fetch;
   private readonly timeoutMs:number;
-  constructor(request: typeof fetch = (...args) => fetch(...args), timeoutMs = 20_000) {
-    this.timeoutMs=timeoutMs;
+  private readonly ownerId?:string;
+  constructor(request: typeof fetch = (...args) => fetch(...args), timeoutMs = 20_000, ownerId?:string) {
+    this.timeoutMs=timeoutMs;this.ownerId=ownerId;
     // Never invoke Window.fetch as a method of this class (illegal receiver).
     this.request = (...args) => request(...args);
   }
@@ -38,6 +39,7 @@ export class BudgetSync {
       const {response,result} = await this.exchange({ cache: "no-store" });
       if (!current()) return null;
       if (!response.ok) throw new BudgetRequestError(result.error || "Impossible de charger votre budget.", response.status);
+      if(this.ownerId&&result.userId!==this.ownerId)throw new BudgetRequestError("La session active a changé. Reconnectez-vous au compte de ces saisies.",401);
       this.revision = result.revision;
       this.baseline = result.budget ? structuredClone(result.budget) : null;
       return { budget: result.budget };
@@ -53,7 +55,7 @@ export class BudgetSync {
     this.generation++;
     try {
       const {response,result} = await this.exchange({
-        method: "PUT", headers: { "Content-Type": "application/json", "X-Pecule-Import-Metadata": "1" },
+        method: "PUT", headers: { "Content-Type": "application/json", "X-Pecule-Import-Metadata": "1", ...(this.ownerId?{"X-Pecule-Owner":this.ownerId}:{}) },
         body: JSON.stringify({ budget, revision: this.revision }),
       });
       if (!response.ok) throw new BudgetRequestError(result.error || "Impossible d’enregistrer votre budget.", response.status);

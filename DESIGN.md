@@ -322,3 +322,6 @@ La réduction des animations retire inclinaison, recul et flou ; couleur, texte,
 
 ## Aperçu de solde à la saisie — 10 novembre 2026
 Le premier placement de la maquette est approuvé : compte identifié et comparaison du solde courant avec l’effet isolé de la saisie, immédiatement sous le montant. `OperationBalancePreview` réutilise `ValidatedForm` et les tokens Wallet, sans nouvelle ombre ni animation de nombre. Les états incomplet, futur, négatif et privé sont explicités. La variante clavier reste compacte ; le propriétaire du viewport du panneau conserve la priorité au champ actif. Voir `docs/operation-balance-preview.md`.
+
+## Abonnements et attente hors connexion — 11 novembre 2026
+La section Abonnements réutilise les cartes, listes et tokens Wallet : deux totaux, puis paiements/récurrences, action explicite Gérer ou Prévoir la suite. Les hausses sont des signaux à vérifier, masqués avec les montants. L’attente locale utilise AnimatedDetails et les formulaires canoniques, sans nouvelle palette ni mouvement. Le formulaire statique hors connexion reprend les fontes, surfaces, cibles de 44 px et thèmes Wallet, avec des champs natifs de 16 px minimum. Il ne présente aucun solde fictif. Voir `docs/subscriptions-offline.md` pour préparation, limites et synchronisation.
