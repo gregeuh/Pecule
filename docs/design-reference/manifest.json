@@ -65,7 +65,7 @@
     "lib/operation-balance-preview.ts",
     "lib/wallet-presentation.ts"
   ],
-  "sourceDigest": "df352e44d735cd2310a5fa05345539f00b4bf8bd8b1be32f3a66622a21ea7c3f",
+  "sourceDigest": "bced9012f562f6856bff5e6f8ef5083a4ff14be214ae594bb0920e7fdb877e24",
   "authOptions": "depend on the environment; no auth submitted",
   "captures": [
     {
