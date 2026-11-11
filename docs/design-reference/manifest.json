@@ -4,6 +4,17 @@
   "data": "anonymous fictional demo only",
   "engine": "chromium",
   "sources": [
+    "app/forecast-outlook.tsx",
+    "app/monthly-brief.tsx",
+    "app/bank-link-details.tsx",
+    "app/projection-chart.tsx",
+    "app/spending-insights.tsx",
+    "app/bank-import.tsx",
+    "app/bank-import.css",
+    "lib/balance-outlook.ts",
+    "lib/monthly-brief.ts",
+    "lib/import-profile.ts",
+    "lib/import-matching.ts",
     "app/account-verification.tsx",
     "app/operation-suggestions.tsx",
     "app/quick-phrase.tsx",
@@ -45,7 +56,7 @@
     "lib/operation-balance-preview.ts",
     "lib/wallet-presentation.ts"
   ],
-  "sourceDigest": "dfd6bcffc18b4028cfd8c9789f205c905e41c4edde9f2367ddad76d4ddc01108",
+  "sourceDigest": "2a4e677e3e85de1df3ccabffb138357fdd1b5d7dcf12ea07b27259df3020d263",
   "authOptions": "depend on the environment; no auth submitted",
   "captures": [
     {
@@ -116,7 +127,7 @@
       "theme": "light",
       "page": "import",
       "file": "screenshots/chromium-390-light-import.png",
-      "sha256": "3228dec86ef3b2858661e2e6f898ba919c1925c545ef58733d04ef161bc48d47"
+      "sha256": "cf8c023d4c7220da2b441f2d24b903d926f3fa5207210c2f865ef988689f45ce"
     },
     {
       "width": 390,
@@ -200,7 +211,7 @@
       "theme": "dark",
       "page": "import",
       "file": "screenshots/chromium-390-dark-import.png",
-      "sha256": "6edc5a7f34c8f1a28404bb7250b8914f050b899a1bf63b86dfd59241efb0ad55"
+      "sha256": "89d366c0cf552fce52cbbb450adbcf50598a5670f1e9d78ac83d773be2b79892"
     },
     {
       "width": 390,
@@ -284,7 +295,7 @@
       "theme": "light",
       "page": "import",
       "file": "screenshots/chromium-1440-light-import.png",
-      "sha256": "9b575ce1280257e6584ccdb7008ccb2d8941ab915256dc7e9947bf2551cd0608"
+      "sha256": "84ceb83b6adc43cbe64e73b95942878f0a5617eed1d4ce68bd5dba1696322b4b"
     },
     {
       "width": 1440,
@@ -368,7 +379,7 @@
       "theme": "dark",
       "page": "import",
       "file": "screenshots/chromium-1440-dark-import.png",
-      "sha256": "11606c5e26cc089d461a03fc338872cd720ab97a905167e3ee0f8741d3ca7e4f"
+      "sha256": "9455ea2423420ebdf152e559282720172591fcb504f422930a7fe28eabd3efc5"
     },
     {
       "width": 1440,

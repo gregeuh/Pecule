@@ -6,6 +6,10 @@ import { emptyBudget } from '../lib/budget.ts';
 
 const json=(body,status=200)=>Response.json(body,{status});
 const deferred=()=>{let resolve;const promise=new Promise(r=>{resolve=r;});return {promise,resolve};};
+test('writes declare import metadata support and retain the actionable cached-client error',async()=>{
+ const sync=new BudgetSync(async(_url,options)=>{assert.equal(new Headers(options.headers).get('x-pecule-import-metadata'),'1');return json({error:'Copiez votre saisie, puis rechargez la page.'},426);});
+ await assert.rejects(()=>sync.save(emptyBudget()),error=>error instanceof BudgetRequestError&&error.status===426&&error.message.includes('Copiez votre saisie'));
+});
 test('the transport does not bind an injected fetch to its own instance',async()=>{
   const sync=new BudgetSync(function(){assert.equal(this,undefined);return Promise.resolve(json({budget:null,revision:0}));});
   assert.deepEqual(await sync.load(),{budget:null});

@@ -80,3 +80,6 @@ L’ajout d’opération montre sous le montant le solde actuel du compte et l�
 # Suivi et saisie iPhone
 
 Propriétaires additionnels : `AccountVerification` pour la preuve de rapprochement, `OperationSuggestions` pour les habitudes et la recherche dans l’historique, `QuickPhrase` pour le préremplissage en une phrase. Ils utilisent les surfaces, espacements, typographies et couleurs sémantiques Wallet existants. Les montants proposés et les aperçus sont masqués immédiatement en mode privé. La liste de suggestions est dans le flux, avec des boutons natifs et sans popup flottante. Le clavier peut masquer la phrase repliée, jamais le champ en cours d’édition. Le détail est documenté dans `docs/account-capture-confidence.md`.
+# Anticipation, bilan et import
+
+`ForecastOutlook` réutilise `ProjectionChart` et les `FormField` natifs ; `MonthlyBrief` prolonge `SpendingInsights`. Les propositions d’association restent dans le flux des lignes de l’import, sans popover supplémentaire. `BankLinkDetails` réutilise le disclosure animé canonique pour les données sources. Les styles associés appartiennent à `wallet.css` et `bank-import.css`, avec la palette sémantique existante. Les références et limites fonctionnelles sont dans `docs/outlook-import-brief.md`.

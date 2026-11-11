@@ -1,5 +1,5 @@
 /** The table identifier is supplied only by the server's fixed environment prefix. */
-export function budgetSaveStatement(table:string,initial:boolean){
+export function budgetSaveStatement(table:string,initial:boolean,metadataAware=true){
  // Compare explicit IDs in the same successful write: stale revisions and retries
  // cannot register activity. Materialized rule occurrences are not a manual capture.
  const newOperation=initial
@@ -14,7 +14,9 @@ export function budgetSaveStatement(table:string,initial:boolean){
      ON CONFLICT (user_id) DO NOTHING RETURNING revision`
   : `UPDATE ${table} SET payload=$2,revision=revision+1,updated_at=$3,
      last_operation_at=CASE WHEN ${newOperation} THEN $3::text::timestamptz ELSE last_operation_at END
-     WHERE user_id=$1 AND revision=$4 RETURNING revision`;
+     WHERE user_id=$1 AND revision=$4 ${metadataAware?'':`AND jsonb_array_length(COALESCE(payload::jsonb#>'{settings,importProfiles}','[]'::jsonb))=0
+     AND NOT EXISTS (SELECT 1 FROM jsonb_array_elements(payload::jsonb->'transactions') AS t(value)
+       WHERE jsonb_array_length(COALESCE(t.value->'bankLinks','[]'::jsonb))>0)`} RETURNING revision`;
 }
 
 /** Recheck activity and the inspected budget revision immediately before sending. */

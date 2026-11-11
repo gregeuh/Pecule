@@ -91,7 +91,7 @@ export function columnErrors(plan:ImportPlan):string[] {
 export function previewBankImport(budget:Budget,plan:ImportPlan):ImportRow[] {
   const mappingErrors=columnErrors(plan),account=budget.accounts.find(a=>a.id===plan.accountId);
   const existing=budget.transactions.filter(t=>t.accountId===plan.accountId),keys=new Map<string,number>(),references=new Set<string>(),similar=new Set<string>();
-  for(const t of existing){const key=transactionKey(t);keys.set(key,(keys.get(key)??0)+1);if(t.importRef)references.add(t.importRef);similar.add(`${t.date}|${t.amount}`);}
+  for(const t of existing){for(const key of new Set([transactionKey(t),...(t.bankLinks??[]).map(l=>l.key)]))keys.set(key,(keys.get(key)??0)+1);if(t.importRef)references.add(t.importRef);for(const link of t.bankLinks??[])if(link.reference)references.add(link.reference);similar.add(`${t.date}|${t.amount}`);}
   const seen=new Map<string,number>(),seenRefs=new Set<string>();
   return plan.rows.slice(plan.header+1).map((row,index)=>{
     const c=plan.columns,get=(i:number)=>i>=0?(row[i]??"").trim():"",errors=[...mappingErrors],warnings:string[]=[];

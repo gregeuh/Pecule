@@ -24,6 +24,8 @@ Pécule est un budget personnel en français, principalement utilisé dans la PW
 
 La passe « suivi et saisie iPhone » du 10 novembre conserve cette direction. L’état de rapprochement utilise une ligne sobre avec icône et texte, jamais une promesse de synchronisation bancaire. Les habitudes occupent une liste compacte sous le libellé ; la saisie en phrase reste repliée. Les actions préremplissent le formulaire canonique et demandent toujours son enregistrement. Le zoom et les gestes à plusieurs doigts restent prioritaires sur les gestes applicatifs.
 
+Les prévisions par compte, le bilan et les associations d’import prolongent les écrans existants : champs natifs, listes séparées par des lignes, montants tabulaires et aucune nouvelle palette. Le bilan reste dans l’analyse des dépenses ; les prévisions précèdent les autres détails de l’onglet Prévisions. L’import distingue une nouvelle écriture d’une association, avec confirmation et soldes avant/après.
+
 ## Colors
 `app/wallet.css` possède la palette courante et les surfaces ; `app/wallet-depth.css` leur matière. Fond clair #f2f3f7, surface blanche, texte #15171d. Fond sombre #090b10, surface #171a22, texte #f3f5fa. Action cobalt #245af3, texte blanc ; accent textuel clair #1d4dd5 pour le contraste, sombre #8caaff. Or et violet identifient les autres comptes. Les signaux financiers restent possédés par `budget-signal.css`. Les couleurs personnalisées et leur matière utilisent `lib/wallet-presentation.ts`, sans réécriture des comptes.
 

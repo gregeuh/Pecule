@@ -33,8 +33,10 @@ export async function PUT(request: Request) {
     const updatedAt = new Date().toISOString();
     await ensureDatabase();
     const pool = getPool();
-    const saved = await pool.query(budgetSaveStatement(`${tablePrefix}budgets`, revision === 0),
+    const metadataAware=request.headers.get("x-pecule-import-metadata")==="1";
+    const saved = await pool.query(budgetSaveStatement(`${tablePrefix}budgets`, revision === 0,metadataAware),
       revision === 0 ? [user.userId, JSON.stringify(budget), updatedAt] : [user.userId, JSON.stringify(budget), updatedAt, revision]);
+    if(!saved.rowCount&&!metadataAware&&revision>0){const current=await pool.query(`SELECT revision FROM ${tablePrefix}budgets WHERE user_id=$1`,[user.userId]);if(current.rows[0]?.revision===revision)return response({error:"Une nouvelle version de Pécule est nécessaire pour conserver vos données d’import. Copiez votre saisie, puis rechargez la page avant d’enregistrer."},426);}
     if (!saved.rowCount) return response({ error: "Votre budget a été modifié sur un autre appareil. Rechargez les données avant de réessayer." }, 409);
     return response({ revision: revision + 1, updatedAt });
   } catch { return response({ error: "L’enregistrement a échoué. Réessayez dans un instant." }, 503); }

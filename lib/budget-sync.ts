@@ -53,7 +53,7 @@ export class BudgetSync {
     this.generation++;
     try {
       const {response,result} = await this.exchange({
-        method: "PUT", headers: { "Content-Type": "application/json" },
+        method: "PUT", headers: { "Content-Type": "application/json", "X-Pecule-Import-Metadata": "1" },
         body: JSON.stringify({ budget, revision: this.revision }),
       });
       if (!response.ok) throw new BudgetRequestError(result.error || "Impossible d’enregistrer votre budget.", response.status);

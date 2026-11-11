@@ -38,12 +38,12 @@ try{
   assert.match(await page.getByRole('dialog').innerText(),/1 opérations/);
   await page.getByRole('button',{name:'Annuler cet import',exact:true}).click();
   await page.getByRole('button',{name:'Annuler',exact:true}).click();
-  assert.equal(await page.getByRole('button',{name:/QA brouillon conservé/}).count(),1);
+  assert.equal(await page.locator('.transactions-card .transaction-row').filter({hasText:'QA brouillon conservé'}).count(),1);
   await revealLedgerTools(page);await page.getByRole('button',{name:'Mes imports',exact:true}).click();
   await page.getByRole('button',{name:'Annuler cet import',exact:true}).click();
   await page.getByRole('button',{name:'Confirmer',exact:true}).click();
   await page.getByRole('dialog').waitFor({state:'hidden'});
-  assert.equal(await page.getByRole('button',{name:/QA brouillon conservé/}).count(),0);
+  assert.equal(await page.locator('.transactions-card .transaction-row').filter({hasText:'QA brouillon conservé'}).count(),0);
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   await page.screenshot({path:`${output}/${mobile?'mobile':'desktop'}.png`});
   assert.deepEqual(writes,[]);assert.deepEqual(errors,[]);

@@ -44,5 +44,13 @@ try{
  await query(true,'large',large,morning);large.name='Large settings change';
  await query(false,'large',large,noon,1);assert.equal(await stamp('large'),morning);
  assert.deepEqual(JSON.parse((await stored('large')).payload),large);
+ // Older cached clients cannot strip metadata they do not understand.
+ const guarded=emptyBudget();guarded.settings.importProfiles=[{accountId:'qa',header:['Date']}];
+ await query(true,'metadata',guarded,morning);
+ const rejected=await db.query(budgetSaveStatement('budgets',false,false),['metadata',JSON.stringify(emptyBudget()),noon,1]);
+ assert.equal(rejected.rows.length,0);assert.equal((await stored('metadata')).revision,1);
+ assert.equal((await query(false,'metadata',emptyBudget(),noon,1)).rows.length,1);
+ const linked=emptyBudget();linked.transactions=[{...row('linked'),bankLinks:[{key:'qa',batchId:'qa'}]}];await query(true,'linked',linked,morning);
+ assert.equal((await db.query(budgetSaveStatement('budgets',false,false),['linked',JSON.stringify(emptyBudget()),noon,1])).rows.length,0);
  console.log('PASS embedded PostgreSQL: additive migration, accepted saves, rules, imports, conflicts, deletes, isolation, all devices, next day, deduplication and stale selection.');
 }finally{await db.close();}
