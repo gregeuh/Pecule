@@ -89,3 +89,6 @@ Propriétaires additionnels : `AccountVerification` pour la preuve de rapprochem
 
 ### Lecture iPhone
 L’échelle et les adaptations mobiles sont possédées par le dernier bloc mobile de `app/wallet.css` : corps/actions16, métadonnées14, labels15 px, navigation12/11 px. `--control-border` sépare les limites de saisie des simples lignes de liste. `public/offline.css` adapte ces couleurs pour son document autonome. La taille d’un bouton ne doit pas réduire un titre de compte ni les valeurs financières. Vérification : `tests/e2e/mobile-readability.mjs` à320/390/430 px, clair/sombre, Chromium/WebKit ; référence ordinateur en parallèle.
+
+### Ouverture Pécule
+`LaunchScreen`/`launch.css` adaptent la marque et les couleurs Wallet au streaming, au boot personnel et aux PNG iOS. Le composant est public, sans données financières. `LaunchTransition` possède uniquement la sortie décorative ; BudgetApp conserve la propriété de sa disponibilité et de ses erreurs. `lib/launch-bootstrap.ts` détermine le démarrage autonome et la restauration sans stockage local supplémentaire. Les images suivent le thème système d’iOS ; le document respecte ensuite le choix du thème Pécule. Vérification : `tests/launch-assets.test.mjs`, `tests/e2e/launch.mjs` et références Wallet.

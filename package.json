@@ -40,7 +40,8 @@
     "test:e2e:wallet": "node tests/e2e/wallet.mjs",
     "test:e2e:design": "node tests/e2e/design-finish.mjs",
     "design:references": "node scripts/design-references.mjs",
-    "design:serve-fixture": "node --import ./scripts/reference-clock.mjs node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3002"
+    "design:serve-fixture": "node --import ./scripts/reference-clock.mjs node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3002",
+    "assets:launch": "node scripts/generate-launch-assets.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

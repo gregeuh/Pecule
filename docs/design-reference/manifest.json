@@ -4,6 +4,13 @@
   "data": "anonymous fictional demo only",
   "engine": "chromium",
   "sources": [
+    "lib/launch-bootstrap.ts",
+    "app/launch-screen.tsx",
+    "app/launch-transition.tsx",
+    "app/launch.css",
+    "app/loading.tsx",
+    "lib/launch-images.ts",
+    "public/launch/manifest.json",
     "app/subscription-overview.tsx",
     "app/pending-operations.tsx",
     "app/use-offline-queue.ts",
@@ -65,7 +72,7 @@
     "lib/operation-balance-preview.ts",
     "lib/wallet-presentation.ts"
   ],
-  "sourceDigest": "686c8d0f3ec7f67ac35a0a10aebf69546a0e0646cb7d7a8833a831989291bc6e",
+  "sourceDigest": "6af0a34352c497f3e14304be3bed7d5261a834ab77221e33c11323c0a0912463",
   "authOptions": "depend on the environment; no auth submitted",
   "captures": [
     {

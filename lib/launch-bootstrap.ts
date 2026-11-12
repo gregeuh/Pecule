@@ -1,0 +1,2 @@
+/** Runs before the app paints; no storage, credentials or personal data. */
+export const launchBootstrap=`try{if((matchMedia('(display-mode: standalone)').matches||navigator.standalone===true)&&performance.getEntriesByType('navigation')[0]?.type!=='back_forward')document.documentElement.dataset.peculeLaunch='cold';addEventListener('pageshow',function(e){if(e.persisted)delete document.documentElement.dataset.peculeLaunch;});}catch{}`;

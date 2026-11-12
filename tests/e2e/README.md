@@ -170,3 +170,6 @@ Les unités attendues pour cette livraison sont au nombre de 122, avec les règl
 
 ### Clavier et ajout d’opération
 `node tests/e2e/capture-clarity.mjs` simule le viewport visuel natif (320/440 px), son offset et la zone sûre, sur320/390/430 px et dans les deux thèmes. Vérifie chaque champ actif, la zone d’actions, l’absence de déplacement du document, les erreurs et la notification après Enregistrer et continuer. `PECULE_E2E_ENGINE=webkit` et `PECULE_E2E_OUTPUT` s’appliquent. Démonstration uniquement, aucun PUT personnel. La simulation ne vaut pas un test matériel PWA.
+
+### Ouverture et images iPhone
+`node tests/e2e/launch.mjs` nécessite le serveur Next local3001 pour ses CSS/sa métadonnée. Les vrais composants démarrent avec un serveur QA isolé et une lecture du budget volontairement suspendue : prêt, erreur, mode réduit et absence de rejeu. `PECULE_E2E_ENGINE=webkit` et `PECULE_E2E_OUTPUT` s’appliquent. Aucun compte réel ni PUT. `npm run assets:launch` régénère les56 PNG publics ; `npm test` en vérifie les dimensions et l’empreinte de source.
