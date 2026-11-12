@@ -319,3 +319,100 @@
 .pending-operations li b { grid-column:2; grid-row:1; overflow-wrap:anywhere; max-width:140px; font-variant-numeric:tabular-nums; }
 .pending-operations li button { min-height:44px; }
 @media(max-width:480px){.subscription-totals{grid-template-columns:minmax(0,1fr);gap:12px}.subscription-list{font-size:13px}.subscription-list > li{flex-wrap:wrap}.subscription-list > li > div{min-width:150px}}
+
+/* iPhone reading scale: names, dates and decisions stay legible without zoom. */
+@media(max-width:760px) {
+ :root { --mobile-body:16px;--mobile-meta:14px;--mobile-navigation:12px;--control-border:#858fa1; }
+ :root[data-theme="dark"] { --control-border:#748097; }
+ .app-shell { font-size:var(--mobile-body);line-height:1.5; }
+ #main-content :is(p,small,dt,.field-hint,.metric-note,.table-footer,.table-count,.clarte-footer) { font-size:var(--mobile-meta);line-height:1.6; }
+ #main-content :is(button,a.text-button,.restore-backup),.modal :is(button,a.text-button) { font-size:var(--mobile-body); }
+ #main-content :is(.page-heading p,.settings-group>header p,.settings-card>p,.settings-panel>p,.account-card>p,.goal-card>p) { font-size:var(--mobile-body); }
+ .app-shell .demo-banner { gap:10px;padding:12px 16px; }
+ .app-shell .demo-banner :is(span,button) { font-size:var(--mobile-meta);line-height:1.5; }
+ .app-shell .field>span:first-child,.modal .field>span:first-child { font-size:15px;line-height:1.5; }
+ .app-shell .field :is(small,.field-hint),.modal :is(.field-hint,.field small,.form-error,.field-error,.draft-status) { font-size:var(--mobile-meta);line-height:1.6; }
+ .app-shell :is(input:not([type=checkbox]):not([type=radio]),select,textarea),.auth-shell :is(input,select,textarea) { border-color:var(--control-border); }
+ .modal :is(p,small,summary,dt,dd,.bank-import-confirm,.bank-import-source,.bank-import-pages,.import-steps,.capture-shortcuts>div:first-child>span) { font-size:var(--mobile-meta);line-height:1.6; }
+ .modal .capture-context-grid { grid-template-columns:minmax(0,1fr);gap:0; }
+ .modal .capture-type-picker :is(label>span,button),.modal.capture-modal .capture-footer :is(.secondary,.operation-cancel),.modal .capture-shortcuts .text-button { font-size:var(--mobile-meta); }
+ .modal :is(.balance-preview-account,.balance-preview-values>div>span,.balance-preview-hint,.balance-preview-warning) { font-size:var(--mobile-meta); }
+ .modal-backdrop[data-keyboard-open=true] .balance-preview-account { font-size:var(--mobile-meta); }
+ .modal .balance-preview-values { grid-template-columns:minmax(0,1fr);gap:8px; }
+ .modal .balance-preview-values>div { display:flex;justify-content:space-between;align-items:baseline;gap:12px;text-align:left; }
+ .modal .balance-preview-values>div>span { margin:0; }
+ .modal .balance-preview-values>svg { display:none; }
+ .modal .balance-preview-values strong { font-size:20px;min-width:0; }
+ .modal .balance-preview-values strong[data-long=true] { font-size:17px; }
+ .wallet-accounts-heading>div>span { font-size:var(--mobile-meta); }
+ .wallet-accounts-heading>div>strong { font-size:var(--mobile-body); }
+ .wallet-card .wallet-card-top>:is(strong,b) { font-size:var(--mobile-meta);line-height:20px; }
+ .wallet-card .wallet-card-bottom { font-size:var(--mobile-meta);line-height:1.5; }
+ #main-content .wallet-quick-actions>button { font-size:var(--mobile-meta);min-height:76px;gap:8px; }
+ #main-content .wallet-tabs>button { font-size:15px; }
+ .wallet-tabs { gap:20px; }
+ .wallet-month-summary :is(span,small) { font-size:var(--mobile-meta);line-height:1.5; }
+ .wallet-month-summary { gap:12px;padding:16px; }
+ .wallet-month-summary>div+div { padding-left:12px; }
+ .wallet-dashboard .clarte-section-title h2 { font-size:20px; }
+ #main-content .wallet-dashboard .clarte-section-title .text-button { font-size:var(--mobile-meta); }
+ .wallet-dashboard .clarte-transaction { min-height:76px;padding:14px 10px; }
+ .wallet-dashboard .clarte-transaction :is(strong,b),.wallet-goal-row :is(strong,b) { font-size:var(--mobile-body); }
+ .wallet-dashboard .clarte-transaction small,.wallet-goal-row small { font-size:var(--mobile-meta); }
+ .wallet-dashboard .clarte-transaction strong { white-space:normal;overflow-wrap:anywhere; }
+ .wallet-goal-row { flex-wrap:wrap; }
+ .wallet-goal-row>b { margin-left:auto; }
+ #main-content .wallet-capture>summary,.verification-compact .verification-summary strong { font-size:var(--mobile-meta); }
+ .wallet-account-modal :is(.wallet-account-hero>span:not(.wallet-pull-handle),.wallet-account-facts) { font-size:var(--mobile-meta); }
+ .wallet-account-facts { flex-wrap:wrap; }
+ #main-content .transaction-row.full .transaction-title>strong,.account-activity-row strong { font-size:var(--mobile-body); }
+ #main-content .transaction-row.full .transaction-title>small,#main-content .transaction-mobile-category { font-size:var(--mobile-meta); }
+ .transaction-title>small { white-space:normal;overflow-wrap:anywhere; }
+ .transaction-title>strong { white-space:normal;overflow-wrap:anywhere; }
+ .transaction-row.full { padding-block:16px; }
+ .transaction-row .transaction-amount,.account-activity-row>b { font-size:var(--mobile-body); }
+ #main-content .date-group>strong { font-size:var(--mobile-meta); }
+ #main-content .day-summary b { font-size:var(--mobile-body); }
+ .date-group { gap:12px; }
+ #main-content :is(.account-kind,.account-type,.account-activity h4,.rule-identity p,.rule-amount small,.rule-bottom small,.goal-amount>span,.goal-progress-label,.goal-progress-label strong,.plan-usage>span,.month-control>strong,.plan-envelope dl,.plan-envelope dd,.plan-explanation,.plan-explanation a,.section-heading>span,.settings-index a) { font-size:var(--mobile-meta); }
+ #main-content :is(.account-activity>summary,.ledger-tools>summary,.plan-settings>summary,.recurrence-help>summary,.goal-card .goal-remaining strong,.add-tile>strong) { font-size:var(--mobile-body); }
+ .goal-progress-label,.rule-bottom { flex-wrap:wrap;gap:8px 12px; }
+ .rule-card .rule-identity { min-width:0; }
+ .rule-card .rule-identity h3 { overflow-wrap:anywhere; }
+ .rule-card .status-pill { font-size:var(--mobile-meta); }
+ .app-shell .suggestion-list :is(strong,b),.modal .suggestion-list :is(strong,b) { font-size:var(--mobile-body); }
+ .app-shell .suggestion-list small,.modal .suggestion-list small,.modal .suggestion-heading>span { font-size:var(--mobile-meta); }
+ .modal .suggestion-heading h3 { font-size:var(--mobile-body); }
+ .modal .gesture-preview p,.app-shell .operation-swipe-actions>button { font-size:var(--mobile-meta); }
+ .page-transactions .page-heading>button.primary,.page-transactions .page-heading>div>p { display:none; }
+ .page-transactions .page-heading { margin-block:8px 16px; }
+ .page-transactions .metric-strip { padding:16px;gap:12px;margin-bottom:20px; }
+ .page-transactions .metric-strip>div { padding:0; }
+ .page-transactions .metric-strip>div>span { font-size:var(--mobile-meta);line-height:1.5; }
+ .page-transactions .metric-strip strong { font-size:22px;margin-top:6px; }
+ .page-transactions .metric-strip>div:last-child { padding-top:12px; }
+ .page-transactions .metric-note { margin-top:20px; }
+ .app-shell .mobile-dock .mobile-nav.floating-nav>button { font-size:var(--mobile-navigation); }
+ .app-shell .settings-brand :is(span,small) { font-size:var(--mobile-meta); }
+}
+@media(max-width:760px) {
+ .transaction-row .transaction-amount strong { font-size:var(--mobile-body); }
+ .app-shell .mobile-dock .mobile-nav.floating-nav>button { line-height:1.25; }
+ .auth-shell :is(p,.field-hint,.field small) { font-size:var(--mobile-meta,14px);line-height:1.6; }
+ .auth-shell .field>span:first-child { font-size:15px; }
+}
+@media(max-width:359px) {
+ .app-shell .mobile-dock { --dock-expanded-width:calc(100vw - 16px);left:8px;right:8px;gap:8px; }
+ .app-shell .mobile-dock .mobile-nav.floating-nav>button { font-size:11px; }
+}
+@media(max-width:760px) {
+ .app-shell :is(.chart-axis,.chart-dates,.chart-summary>span,.projection-control>span,.projection-table) { font-size:var(--mobile-meta);line-height:1.5; }
+}
+@media(max-width:760px) {
+ #main-content button.wallet-manage-title { font-size:24px; }
+}
+@media(max-width:760px) {
+ .modal .file-drop strong { font-size:var(--mobile-body); }
+ .modal .file-drop span { font-size:var(--mobile-meta);line-height:1.6; }
+ .modal .import-journey-copy :is(strong,ol) { font-size:var(--mobile-meta);line-height:1.6; }
+}

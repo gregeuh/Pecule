@@ -86,3 +86,6 @@ Propriétaires additionnels : `AccountVerification` pour la preuve de rapprochem
 
 ### Abonnements et saisie hors connexion
 `SubscriptionOverview` réutilise `.card`, les listes Wallet et l’éditeur de récurrence de BudgetApp. `PendingOperations` réutilise AnimatedDetails, ValidatedForm et la confirmation canonique pour le retrait local. `public/offline.html` est une variante statique limitée, utilisant les contrôles natifs, les fontes et les thèmes Wallet ; elle ne monte aucun second système de dialogue. Propriété des calculs : `lib/subscriptions.ts` et budget.ts. Propriété de la reprise : `useOfflineQueue`, `offline-reconcile.ts`, `offline-store.ts`, BudgetSync et API revisionnée. Vérifications : tests unitaires et `tests/e2e/subscriptions-offline.mjs`.
+
+### Lecture iPhone
+L’échelle et les adaptations mobiles sont possédées par le dernier bloc mobile de `app/wallet.css` : corps/actions16, métadonnées14, labels15 px, navigation12/11 px. `--control-border` sépare les limites de saisie des simples lignes de liste. `public/offline.css` adapte ces couleurs pour son document autonome. La taille d’un bouton ne doit pas réduire un titre de compte ni les valeurs financières. Vérification : `tests/e2e/mobile-readability.mjs` à320/390/430 px, clair/sombre, Chromium/WebKit ; référence ordinateur en parallèle.

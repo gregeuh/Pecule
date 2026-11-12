@@ -65,7 +65,7 @@
     "lib/operation-balance-preview.ts",
     "lib/wallet-presentation.ts"
   ],
-  "sourceDigest": "bced9012f562f6856bff5e6f8ef5083a4ff14be214ae594bb0920e7fdb877e24",
+  "sourceDigest": "ad49a54a122050189a42ce9e86831f1567126981df5df9e5175605403441d374",
   "authOptions": "depend on the environment; no auth submitted",
   "captures": [
     {
@@ -73,168 +73,168 @@
       "theme": "light",
       "page": "home",
       "file": "screenshots/chromium-390-light-home.png",
-      "sha256": "11b6345e012f453ab285061f468ecc34ec707badf87fd5129c0397a5b8bddb00"
+      "sha256": "277dc4d5dc87996c64e5ed61b2e55805e2671f7e34198a21c7007ec8463ccb84"
     },
     {
       "width": 390,
       "theme": "light",
       "page": "operations",
       "file": "screenshots/chromium-390-light-operations.png",
-      "sha256": "a78b840028794e843966ebdf918571122c060811ee06cda477adecd5d26bf8fb"
+      "sha256": "73c178eaf29e61fdc55f56066df283ebe236c971c214aa38f2f0d1d61184e38d"
     },
     {
       "width": 390,
       "theme": "light",
       "page": "accounts",
       "file": "screenshots/chromium-390-light-accounts.png",
-      "sha256": "9ae1def9c0afd6b47614d2380bd141e569b0d250b6937179537e8bd632bae718"
+      "sha256": "e7c4ef51c42c2a63854208f32bf70e3f8ecb085d09b8b33c8196d28ccd7ed4f0"
     },
     {
       "width": 390,
       "theme": "light",
       "page": "recurring",
       "file": "screenshots/chromium-390-light-recurring.png",
-      "sha256": "4a3a5de5db96a8b6a6e9404c7a0ff2942ba2770cb9646eb5aba2789146176ef6"
+      "sha256": "babec8d8bbdbbe11a1f829708e544b5c97163e1ac3ab2ae1d49caa4e2d04c3d3"
     },
     {
       "width": 390,
       "theme": "light",
       "page": "goals",
       "file": "screenshots/chromium-390-light-goals.png",
-      "sha256": "43e44ef70214569982a414c2cd8ba0d448ef28e1bc2b06f9e120a9464930b2a3"
+      "sha256": "13c921444770d86ca39253aeba76837664064fb07bc24ee8abd96ddef58a7197"
     },
     {
       "width": 390,
       "theme": "light",
       "page": "plan",
       "file": "screenshots/chromium-390-light-plan.png",
-      "sha256": "019fab93b7dfaa526917a6095f05fb18c78bfd8b7e66ea827f7c0928e0fb3e5d"
+      "sha256": "ad0fb3211348395134b44ba3321603b0da6311cb474cbe44773db6a3f7dd3880"
     },
     {
       "width": 390,
       "theme": "light",
       "page": "settings",
       "file": "screenshots/chromium-390-light-settings.png",
-      "sha256": "f70071ee831cb1060c8133a40547b5222d5d5533273d9198aa67762e8a3127d6"
+      "sha256": "f5cd4df177fa10adf820283b4edfc95c0237e45bdf7c55112423d642e019b9f6"
     },
     {
       "width": 390,
       "theme": "light",
       "page": "empty",
       "file": "screenshots/chromium-390-light-empty.png",
-      "sha256": "9b0384ebb021fc1db8b941e0b72fefef0fbca2f1b7dd81678859631788579d07"
+      "sha256": "da3f8f239fcd1cf65b75cad9c5e50112bdcf270c4e2f089f5010c93e1ca03048"
     },
     {
       "width": 390,
       "theme": "light",
       "page": "capture",
       "file": "screenshots/chromium-390-light-capture.png",
-      "sha256": "4e3be88573c32a2d929ae2d6d9ca345cc6694ec1d3de08fee671a2fddbbb1dec"
+      "sha256": "cc7d1e1a77b8262a7fa15f3c053cb8d760002c989ecfc229e28a3a2e3ff8d268"
     },
     {
       "width": 390,
       "theme": "light",
       "page": "import",
       "file": "screenshots/chromium-390-light-import.png",
-      "sha256": "cf8c023d4c7220da2b441f2d24b903d926f3fa5207210c2f865ef988689f45ce"
+      "sha256": "cfe452e0e3557a2af823ae4dedc6da007565b2fbc526a351d32b9ae3ea2a49d2"
     },
     {
       "width": 390,
       "theme": "light",
       "page": "sign-in",
       "file": "screenshots/chromium-390-light-sign-in.png",
-      "sha256": "59f62b4ec2a762f6dfdb7b9e6c24cabc396aa1cb1bc7ce48556a5682374cb673"
+      "sha256": "e9b995f4cf2451fa8df6a05d8873f47e0770b3e15faa18d4a275e7cb1531fe87"
     },
     {
       "width": 390,
       "theme": "light",
       "page": "forgot-password",
       "file": "screenshots/chromium-390-light-forgot-password.png",
-      "sha256": "02af91ceff4e6a0ee52fa963fc19ffe9d44abb56e4cb30a686ab53a75e6acd25"
+      "sha256": "b180916bd0bdcaef8e5f637f62705b2c0bdae5fd2ebd77f44963fe94f4962e54"
     },
     {
       "width": 390,
       "theme": "dark",
       "page": "home",
       "file": "screenshots/chromium-390-dark-home.png",
-      "sha256": "1b3f9bcf70f0e28bdf304f13446092b93b2e22f690429018e5f94065f394cad7"
+      "sha256": "c36d2da95853a44dece11d188a8c003da55e9a88bae4fe40d5e97247adba3a4c"
     },
     {
       "width": 390,
       "theme": "dark",
       "page": "operations",
       "file": "screenshots/chromium-390-dark-operations.png",
-      "sha256": "430488cd7ff29f3690bd1c370d711aa7cb53d3e009912e6e53daf75cef17114d"
+      "sha256": "df149908971f1250f5d1839bcf4247777935ce55154d0694251e169570faee79"
     },
     {
       "width": 390,
       "theme": "dark",
       "page": "accounts",
       "file": "screenshots/chromium-390-dark-accounts.png",
-      "sha256": "15958d8b99905d31f58e8a2b6250d7f10d61cdc39f1ebee304d761490ee2d166"
+      "sha256": "2ee422845b9b9ed798fa98e5c2049b4690f587570897b3a6aab66ad2ae7dfb0d"
     },
     {
       "width": 390,
       "theme": "dark",
       "page": "recurring",
       "file": "screenshots/chromium-390-dark-recurring.png",
-      "sha256": "3cda9b6ff60e9aa8aa3ae64abd783cf924ef75bb930bcfba6fe5819abb3489ef"
+      "sha256": "66de2f27f092018f4f830dfd10e8de0114cfd464fe959cba10b3012d0ad6ba4d"
     },
     {
       "width": 390,
       "theme": "dark",
       "page": "goals",
       "file": "screenshots/chromium-390-dark-goals.png",
-      "sha256": "72b97280365655147acfd9f300a974d584c8e316d859b34f208eae02473892bc"
+      "sha256": "3776f441779aaa084eb064cd3c37db0947308b7cba4dbeab354d7c873acc6c47"
     },
     {
       "width": 390,
       "theme": "dark",
       "page": "plan",
       "file": "screenshots/chromium-390-dark-plan.png",
-      "sha256": "dd5f37546a8c22958fdff4d06e927e924d3f11c213aea56fc6010377794fcaad"
+      "sha256": "a79e992fca59efb3ec66d6658437b08e2771bcf1aef394c5e45ca687f1bd993d"
     },
     {
       "width": 390,
       "theme": "dark",
       "page": "settings",
       "file": "screenshots/chromium-390-dark-settings.png",
-      "sha256": "497b37616c136cfbf45e8567f6326a4c2d802e878c7d9cf6e60edac2f30db221"
+      "sha256": "fb219b957ebf410f39c8d4c9727f1eab96d7528adb53e6c2ecd4eb6c5a4c6aad"
     },
     {
       "width": 390,
       "theme": "dark",
       "page": "empty",
       "file": "screenshots/chromium-390-dark-empty.png",
-      "sha256": "3682607ef3cdc8a4d984d8209134fc51087c3560852338f8ffd4df06db111bdd"
+      "sha256": "64f0a99305bc4983606c3e1e7e83a826b308af285f6ee75f8320ce8d2c57d74a"
     },
     {
       "width": 390,
       "theme": "dark",
       "page": "capture",
       "file": "screenshots/chromium-390-dark-capture.png",
-      "sha256": "f8e12fd9ee2f56f7cef953f141189833c0792aa42e9737177a992c7d2e946056"
+      "sha256": "aa5bc8eeb46117902d1760f89df8f7c94a86b7482e1c6dfc4e67cc20e551e706"
     },
     {
       "width": 390,
       "theme": "dark",
       "page": "import",
       "file": "screenshots/chromium-390-dark-import.png",
-      "sha256": "89d366c0cf552fce52cbbb450adbcf50598a5670f1e9d78ac83d773be2b79892"
+      "sha256": "9ecbed0b4d8c4a075af40e9d3922ff5b659c385f402450c5f01840d1b17014c6"
     },
     {
       "width": 390,
       "theme": "dark",
       "page": "sign-in",
       "file": "screenshots/chromium-390-dark-sign-in.png",
-      "sha256": "fc65b22b7b9f566668af58cd8fdf59d6fbb72b44dfde00473b6e9d32d40c1b3f"
+      "sha256": "6b21fba057fc29fee3aa1d54242cb70bedaf1a9e28796b601787a1fd07b8666a"
     },
     {
       "width": 390,
       "theme": "dark",
       "page": "forgot-password",
       "file": "screenshots/chromium-390-dark-forgot-password.png",
-      "sha256": "93f3c98aad4bd649d254c9cb7722f960c0aed7c41bb3abc6a388a8ab6a24c462"
+      "sha256": "02ef1ca72711eba9699bf8a6e0323247366e3acc1d70609b6a43176b4f1cf4f6"
     },
     {
       "width": 1440,
@@ -248,7 +248,7 @@
       "theme": "light",
       "page": "operations",
       "file": "screenshots/chromium-1440-light-operations.png",
-      "sha256": "bd6a9c6b3d192623d8e1a506ea50eb19e6cfc4335a15d851e9547f6197a47dc2"
+      "sha256": "649a6be19335291ad3073eba5edd3c377e6f445b6a7d5f912c2388141afdca7d"
     },
     {
       "width": 1440,
@@ -290,14 +290,14 @@
       "theme": "light",
       "page": "empty",
       "file": "screenshots/chromium-1440-light-empty.png",
-      "sha256": "940804d51a152df93eda2821bcceb21c5f42e50b6ee84b6fff019e25f7163970"
+      "sha256": "4a4f5c2ab0fa0e5ea873983bcc352142122e3a98a144b22a76b6e7cb118633de"
     },
     {
       "width": 1440,
       "theme": "light",
       "page": "capture",
       "file": "screenshots/chromium-1440-light-capture.png",
-      "sha256": "adbe41ebedb817022f34d03c205e79a6ce49fb04d86c47b0ffd07c845592b9b2"
+      "sha256": "7158430fbf839405c12884faa25bd2fe3de71dd609689f67bce76fcda326170f"
     },
     {
       "width": 1440,
@@ -332,7 +332,7 @@
       "theme": "dark",
       "page": "operations",
       "file": "screenshots/chromium-1440-dark-operations.png",
-      "sha256": "b98edbb9f819b36593a63e3f38a54e5ef3b975c516e0bfa321406b803161d212"
+      "sha256": "c5e2c0b3317ec53e200e8af2249990f08db4d61f03280cd3eeddf843ce5020d5"
     },
     {
       "width": 1440,
@@ -374,14 +374,14 @@
       "theme": "dark",
       "page": "empty",
       "file": "screenshots/chromium-1440-dark-empty.png",
-      "sha256": "548d67937188b0d97966214ef54d2013a19e866b4e0c3245f032eb8d505c6790"
+      "sha256": "213855ed55df4912691fa3a646f26325f73d0610cbe7945bcc3f8ffd9487043d"
     },
     {
       "width": 1440,
       "theme": "dark",
       "page": "capture",
       "file": "screenshots/chromium-1440-dark-capture.png",
-      "sha256": "105441cdda47ca9161bfa521c844b0ee871cd4e351a0e50e8576af4357ddc2ac"
+      "sha256": "b7f65f2b5e0f4d224bf97353fcb27cabd1c5d5e85413da3d7c7115ec47ad4def"
     },
     {
       "width": 1440,

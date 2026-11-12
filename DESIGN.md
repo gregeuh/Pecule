@@ -325,3 +325,10 @@ Le premier placement de la maquette est approuvé : compte identifié et compara
 
 ## Abonnements et attente hors connexion — 11 novembre 2026
 La section Abonnements réutilise les cartes, listes et tokens Wallet : deux totaux, puis paiements/récurrences, action explicite Gérer ou Prévoir la suite. Les hausses sont des signaux à vérifier, masqués avec les montants. L’attente locale utilise AnimatedDetails et les formulaires canoniques, sans nouvelle palette ni mouvement. Le formulaire statique hors connexion reprend les fontes, surfaces, cibles de 44 px et thèmes Wallet, avec des champs natifs de 16 px minimum. Il ne présente aucun solde fictif. Voir `docs/subscriptions-offline.md` pour préparation, limites et synchronisation.
+
+## Lisibilité iPhone — 12 novembre 2026
+Retour utilisateur : textes et contrôles difficiles à lire sur téléphone. `wallet.css` possède désormais l’échelle mobile : corps/actions 16 px, métadonnées 14 px et labels de formulaire 15 px. Les libellés du dock restent à 12 px (11 px sous 360 px) avec une ligne de hauteur explicite et la largeur adaptée ; ses gestes et noms accessibles sont conservés. La pile Wallet, ses montants et sa palette restent identiques. Les graphes utilisent le même plancher de métadonnées.
+
+La bordure des contrôles utilise `--control-border` (#858fa1 clair, #748097 sombre), distincte de `--line` réservée aux séparateurs. Le formulaire statique hors connexion est l’adaptateur autonome de ces deux valeurs. Les paragraphes d’aide restent à 14 px ; descriptions principales et décisions à 16 px. Les définitions financières gardent leurs grands montants.
+
+Le journal précède l’analyse des dépenses et son explication détaillée. L’introduction mobile est compacte, l’ajout reste accessible par le + global. En saisie rapide, compte et date précèdent les aides et occupent chacun une ligne sur téléphone ; les deux soldes de l’aperçu deviennent deux lignes lisibles. Aucun calcul, formulaire natif, brouillon, mutation ou propriétaire de défilement n’est remplacé. Preuves : `tests/e2e/mobile-readability.mjs`, références Wallet et suite d’aperçu de solde.

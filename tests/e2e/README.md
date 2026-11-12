@@ -164,3 +164,6 @@ Les unités attendues pour cette livraison sont au nombre de 122, avec les règl
 
 ### Abonnements et saisie hors connexion
 `node tests/e2e/subscriptions-offline.mjs` nécessite une compilation et un serveur Next local sur 3001 pour ses CSS. Le scénario embarque les vrais composants de l’application dans un serveur QA isolé, sans compte réel ni données personnelles. Il teste IndexedDB/service worker, rechargement hors réseau, reprise sans doublon, réponse perdue avec et sans détection du réseau, préférences, correction concurrente, référence changée, session différente et quota. `PECULE_E2E_ENGINE=webkit` sélectionne WebKit ; `PECULE_E2E_OUTPUT` personnalise les artefacts. Voir `docs/subscriptions-offline.md`.
+
+### Lisibilité iPhone
+`node tests/e2e/mobile-readability.mjs` utilise la démonstration locale sur3001 : sept pages et panneaux, 320/390/430 px, clair/sombre, plancher typographique, compte/date, bordure des champs et limites réelles. `PECULE_E2E_ENGINE=webkit` et `PECULE_E2E_OUTPUT` sélectionnent moteur et artefacts. Aucun compte personnel ni PUT. Les références figées continuent d’utiliser3002 avec leur horloge de référence ; ce scénario utilise l’horloge réelle.
