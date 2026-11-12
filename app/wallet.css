@@ -416,3 +416,28 @@
  .modal .file-drop span { font-size:var(--mobile-meta);line-height:1.6; }
  .modal .import-journey-copy :is(strong,ol) { font-size:var(--mobile-meta);line-height:1.6; }
 }
+
+/* Native keyboard owns the lower screen; preserve a real reading area above it. */
+.capture-keyboard-dismiss { display:none; }
+@media(max-width:760px) {
+ .modal-backdrop[data-keyboard-open=true].modal-motion:has(.capture-modal) {
+  padding-top:max(8px,calc(var(--capture-safe-top,env(safe-area-inset-top)) - var(--modal-viewport-top,0px)));
+ }
+ .modal-backdrop[data-keyboard-open=true] .modal.capture-modal {
+  height:calc(var(--modal-viewport-height,100dvh) - max(8px,calc(var(--capture-safe-top,env(safe-area-inset-top)) - var(--modal-viewport-top,0px))));
+  max-height:calc(var(--modal-viewport-height,100dvh) - max(8px,calc(var(--capture-safe-top,env(safe-area-inset-top)) - var(--modal-viewport-top,0px))));
+  padding-top:0;
+ }
+ .modal-backdrop[data-keyboard-open=true] .modal.capture-modal>.modal-heading[data-panel-gesture] {
+  padding:4px 0;gap:6px;min-height:52px;align-items:center;
+ }
+ .modal-backdrop[data-keyboard-open=true] .capture-modal>.modal-heading:before { display:none; }
+ .modal-backdrop[data-keyboard-open=true] .capture-modal>.modal-heading>div { flex:1;min-width:0; }
+ .modal-backdrop[data-keyboard-open=true] .capture-modal .modal-heading h2 { font-size:18px;line-height:1.35;overflow-wrap:anywhere; }
+ .modal-backdrop[data-keyboard-open=true] .capture-keyboard-dismiss { display:inline-flex;align-items:center;justify-content:center;gap:0;flex:0 0 44px;min-height:44px; }
+ .modal-backdrop[data-keyboard-open=true] .capture-modal .capture-body { padding-top:8px; }
+ .modal-backdrop[data-keyboard-open=true] .modal.capture-modal .capture-footer.form-actions { grid-template-columns:minmax(0,1fr);padding-block:8px;gap:0; }
+ .modal-backdrop[data-keyboard-open=true] .capture-modal .capture-footer>:is(.secondary,.operation-cancel) { display:none; }
+ .capture-body .capture-notice { max-height:none;overflow:visible;margin-bottom:12px; }
+ .capture-body .capture-notice .toast { margin-top:0; }
+}

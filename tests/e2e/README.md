@@ -167,3 +167,6 @@ Les unités attendues pour cette livraison sont au nombre de 122, avec les règl
 
 ### Lisibilité iPhone
 `node tests/e2e/mobile-readability.mjs` utilise la démonstration locale sur3001 : sept pages et panneaux, 320/390/430 px, clair/sombre, plancher typographique, compte/date, bordure des champs et limites réelles. `PECULE_E2E_ENGINE=webkit` et `PECULE_E2E_OUTPUT` sélectionnent moteur et artefacts. Aucun compte personnel ni PUT. Les références figées continuent d’utiliser3002 avec leur horloge de référence ; ce scénario utilise l’horloge réelle.
+
+### Clavier et ajout d’opération
+`node tests/e2e/capture-clarity.mjs` simule le viewport visuel natif (320/440 px), son offset et la zone sûre, sur320/390/430 px et dans les deux thèmes. Vérifie chaque champ actif, la zone d’actions, l’absence de déplacement du document, les erreurs et la notification après Enregistrer et continuer. `PECULE_E2E_ENGINE=webkit` et `PECULE_E2E_OUTPUT` s’appliquent. Démonstration uniquement, aucun PUT personnel. La simulation ne vaut pas un test matériel PWA.
