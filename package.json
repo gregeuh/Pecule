@@ -41,7 +41,8 @@
     "test:e2e:design": "node tests/e2e/design-finish.mjs",
     "design:references": "node scripts/design-references.mjs",
     "design:serve-fixture": "node --import ./scripts/reference-clock.mjs node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3002",
-    "assets:launch": "node scripts/generate-launch-assets.mjs"
+    "assets:launch": "node scripts/generate-launch-assets.mjs",
+    "test:e2e:continuity": "node tests/e2e/save-continuity.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
