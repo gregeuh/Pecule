@@ -34,7 +34,7 @@ Direction validée : Revolut et Apple Wallet, couleurs franches, lecture dense, 
 
 L’accent textuel clair est un peu plus foncé que l’action pour garder un contraste suffisant sur les fonds de survol. Rouge/orange/vert conservent leur sens négatif/attention/confort ; `budget-signal.css` possède ces signaux. Le violet identifie l’épargne, sans devenir une alerte. Les logos gardent leur couleur de marque sur la tuile lisible existante. Les illustrations de confirmation conservent leur palette d’illustration : elle ne définit pas celle des contrôles.
 
-DM Sans pour le texte ; Manrope pour titres et grands montants, auto-hébergées. Titres de page 26 px, titres de cartes 18 px, corps 13–14 px ; les champs gardent au moins 16 px sur téléphone. Montants avec chiffres tabulaires. Ne pas tronquer un montant ; laisser les noms importants se replier ou donner accès à leur détail.
+DM Sans pour le texte ; Inter pour les titres et grands montants, auto-hébergées. Manrope reste la police de la marque. Les tokens `--type-*-weight` dans `wallet.css` définissent les graisses : titres/actions 500, montants/libellés 450, corps/secondaire 400. Titres de page 26 px, titres de cartes 18 px, corps 13–14 px ; les champs gardent au moins 16 px sur téléphone. Montants avec chiffres tabulaires. Ne pas tronquer un montant ; laisser les noms importants se replier ou donner accès à leur détail.
 
 ## Surfaces, rythme et profondeur
 
@@ -92,3 +92,6 @@ L’échelle et les adaptations mobiles sont possédées par le dernier bloc mob
 
 ### Ouverture Pécule
 `LaunchScreen`/`launch.css` adaptent la marque et les couleurs Wallet au streaming, au boot personnel et aux PNG iOS. Le composant est public, sans données financières. `LaunchTransition` possède uniquement la sortie décorative ; BudgetApp conserve la propriété de sa disponibilité et de ses erreurs. `lib/launch-bootstrap.ts` détermine le démarrage autonome et la restauration sans stockage local supplémentaire. Les images suivent le thème système d’iOS ; le document respecte ensuite le choix du thème Pécule. Vérification : `tests/launch-assets.test.mjs`, `tests/e2e/launch.mjs` et références Wallet.
+
+## Passe typographique — 14 novembre 2026
+Source : variante Inter de `outputs/typography/pecule-typographie.html`, validée pour la production. Les graisses sont affinées sans changer les couleurs, les tailles de lecture ni la géométrie des écrans. Le logo et les images de lancement conservent Manrope. Inter est préchargée localement ; sa licence SIL OFL accompagne le fichier. La saisie hors ligne utilise la même police et son cache inclut le fichier Inter. Vérification : `npm run test:e2e:typography`, test de dimensions mobiles et tests unitaires.

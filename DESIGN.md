@@ -30,7 +30,7 @@ Les prévisions par compte, le bilan et les associations d’import prolongent l
 `app/wallet.css` possède la palette courante et les surfaces ; `app/wallet-depth.css` leur matière. Fond clair #f2f3f7, surface blanche, texte #15171d. Fond sombre #090b10, surface #171a22, texte #f3f5fa. Action cobalt #245af3, texte blanc ; accent textuel clair #1d4dd5 pour le contraste, sombre #8caaff. Or et violet identifient les autres comptes. Les signaux financiers restent possédés par `budget-signal.css`. Les couleurs personnalisées et leur matière utilisent `lib/wallet-presentation.ts`, sans réécriture des comptes.
 
 ## Typography
-DM Sans pour le texte et Manrope pour les titres et montants, auto-hébergées. Titres de page 26 px, titres de cartes 18 px, chiffres tabulaires et champs de 16 px minimum sur téléphone. Libellés longs repliables, aucun montant important tronqué.
+DM Sans pour le texte et Inter pour les titres et montants, auto-hébergées. Manrope reste réservé à la marque et au lancement. Titres 500, montants et libellés 450, actions 500, textes secondaires 400 ; les rôles sont définis dans `wallet.css`. Titres de page 26 px, titres de cartes 18 px, chiffres tabulaires et champs de 16 px minimum sur téléphone. Libellés longs repliables, aucun montant important tronqué.
 
 ## Layout
 Sept pages : accueil, opérations, récurrences, comptes, épargne, équilibre et réglages. Accueil en deux colonnes sur ordinateur, pile Wallet sur téléphone ; dock sous 760 px. Le document défile naturellement. Formulaires et import gardent leurs propriétaires canoniques de panneau, de validation et de scroll.
@@ -350,3 +350,6 @@ La saisie confirmée conserve son identité jusqu’à une ligne déjà visible 
 
 ## Gestes Wallet — 14 novembre 2026
 Les six maquettes prolongent les propriétaires canoniques : `useModalMotion` garde le déploiement des comptes et l’entrée des aperçus ; `Pressable`/`OperationGesture` révèlent les actions derrière une ligne ; `SwipeTabs` expose temporairement un voisin inerte pendant le déplacement. `SaveOutcome` remplace le formulaire après import ou ajustement confirmé, sans notification flottante concurrente. Les tokens restent possédés par `motion.css`, `wallet.css` et `wallet-depth.css`. Détails et vérification : `docs/save-continuity.md`.
+
+## Typographie Inter — 14 novembre 2026
+La variante Inter de la maquette typographique est validée pour publication : Inter pour les titres et montants, DM Sans pour le corps, Manrope pour la marque. Les poids par rôle sont possédés par `wallet.css`, sans changement de palette ni réduction des champs mobiles. La saisie hors ligne suit les mêmes rôles. Source visuelle : `outputs/typography/pecule-typographie.html` ; vérification : `tests/e2e/typography.mjs`.

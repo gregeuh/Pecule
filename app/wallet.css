@@ -1,5 +1,8 @@
 /* Wallet direction approved on 4 November: dense structure, saturated account identities. */
+@font-face{font-family:Inter;font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/inter-variable.woff2) format("woff2")}
 :root {
+ --font-display:Inter,var(--font-body);--font-heading:var(--font-display);--font-brand:Manrope,var(--font-body);
+ --type-title-weight:500;--type-number-weight:450;--type-label-weight:450;--type-action-weight:500;--type-body-weight:400;
  --bg:#f2f3f7;--card:#ffffff;--surface-raised:#ffffff;--surface-inset:#eceef4;
  --ink:#15171d;--muted:#626b7b;--subtle:#656e7d;--line:#e1e5ee;
  --blue:#1d4dd5;--blue-soft:#e6edff;--action-bg:#245af3;--action-hover:#1745cc;--on-action:#ffffff;--soft-hover:#dce5fb;
@@ -441,3 +444,20 @@
  .capture-body .capture-notice { max-height:none;overflow:visible;margin-bottom:12px; }
  .capture-body .capture-notice .toast { margin-top:0; }
 }
+
+/* Approved type refinement: retain size and contrast, reduce weight by role. */
+:root body{font-family:var(--font-body);font-weight:var(--type-body-weight)}
+:root :is(.app-shell,.auth-shell) :is(h1,h2,h3),:root .modal :is(h2,h3),:root .modal .save-outcome h3{font-family:var(--font-display);font-weight:var(--type-title-weight);letter-spacing:-.025em;font-optical-sizing:auto}
+:root :is(.brand,.clarte-mobile-logo,.settings-brand),:root .launch-word{font-family:var(--font-brand)}
+:root .app-shell :is(.wallet-card-balance,.wallet-detail-balance,.account-balance,.goal-amount>strong,.rule-amount,.wallet-month-summary strong,.metric-strip strong,.transaction-amount strong,.clarte-transaction>b,.account-activity-row>b,.clarte-available>strong,.clarte-daily>strong,.clarte-amount,.clarte-daily-desktop>strong,.projection-outlook dd,.subscription-totals dd),:root .modal :is(.gesture-operation-preview>strong,.gesture-account-preview>strong,.balance-preview-values strong,.transfer-account>b,.save-outcome dd,.balance-adjust-current dd){font-family:var(--font-display);font-weight:var(--type-number-weight);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+:root .app-shell :is(.transaction-title>strong,.clarte-transaction>span>strong,.account-activity-row>span>strong,.wallet-card-top>strong,.wallet-card-top>b,.wallet-accounts-heading>div>strong){font-weight:var(--type-label-weight)}
+:root :is(.app-shell,.auth-shell) :is(button.primary,button.secondary,.text-button,.wallet-quick-actions>button,.wallet-tabs>button,.sidebar nav button),:root .modal :is(button.primary,button.secondary,.text-button){font-weight:var(--type-action-weight)}
+:root .modal :is(.field>span,.field>label,.balance-preview-account>strong){font-weight:var(--type-label-weight)}
+:root .modal :is(input,select,textarea){font-weight:var(--type-body-weight)}
+:root .modal.capture-modal .capture-amount .amount-input input{font-size:36px;line-height:1.2;font-family:var(--font-display);font-weight:var(--type-number-weight);letter-spacing:-.02em}
+@media(max-width:760px){
+ :root .modal :is(input:not([type=checkbox]):not([type=radio]),select,textarea){font-size:16px}
+ :root .app-shell :is(.transaction-row .transaction-title>strong,.clarte-transaction>span>strong,.account-activity-row>span>strong){font-weight:var(--type-label-weight)}
+}
+
+:root .modal .capture-type-picker :is(label>span,button){font-weight:var(--type-action-weight)}
