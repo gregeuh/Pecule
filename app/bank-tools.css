@@ -1,0 +1,32 @@
+.bank-tools { display: grid; gap: 20px; min-width: 0; }
+.bank-tools > p { line-height: 1.65; }
+.bank-tools form { display: grid; gap: 18px; min-width: 0; }
+.bank-tools-summary { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; margin: 0; padding: 18px; background: var(--bg); border-radius: 12px; }
+.bank-tools-summary dt { color: var(--muted); font-size: 12px; line-height: 1.5; }
+.bank-tools-summary dd { margin: 6px 0 0; font-size: 18px; font-weight: 600; overflow-wrap: anywhere; }
+.bank-tools-list { list-style: none; margin: 0; padding: 0; min-width: 0; }
+.bank-tools-list > li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.bank-tools-list > li > span,.bank-tools-list .bank-tools-check { min-width: 0; }
+.bank-tools-list strong,.bank-tools-list small { display: block; overflow-wrap: anywhere; }
+.bank-tools-list small { color: var(--muted); margin-top: 5px; font-size: 12px; line-height: 1.5; }
+.bank-tools .bank-tools-check,.selection-toolbar .bank-tools-check { display: flex; align-items: flex-start; gap: 10px; line-height: 1.6; cursor: pointer; }
+.bank-tools .bank-tools-check > input,.selection-toolbar .bank-tools-check > input,.transaction-select-row > input { width: 20px; height: 20px; min-height: 20px; margin: 2px 0 0; flex: 0 0 20px; accent-color: var(--blue); cursor: pointer; }
+.bank-tools-actions,.bank-tools-pages,.selection-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.bank-tools-pages { justify-content: space-between; font-size: 12px; color: var(--muted); padding: 16px 0; }
+.bank-tools-candidates { border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: grid; gap: 18px; min-width: 0; }
+.selection-toolbar { padding: 16px 20px; border-bottom: 1px solid var(--line); }
+.selection-toolbar > p { font-weight: 600; }
+.selection-toolbar > .field-hint { flex-basis: 100%; font-weight: 400; }
+.transaction-select-row { display: flex; align-items: center; gap: 8px; padding-left: 16px; }
+.transaction-select-content { min-width: 0; flex: 1; }
+.transaction-select-toggle { display: grid; place-items: center; flex: 0 0 32px; min-height: 44px; cursor: pointer; }
+.transaction-select-toggle > input { width: 20px; height: 20px; min-height: 20px; margin: 0; padding: 0; accent-color: var(--blue); cursor: pointer; }
+.transaction-select-content > .transaction-row { width: 100%; }
+.bank-tools details > summary { cursor: pointer; font-weight: 600; }
+.bank-tools details > summary:hover { color: var(--blue); }
+.bank-tools details > summary:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
+@media(max-width:760px) { .bank-tools-list > li { align-items: flex-start; } .bank-tools-list > li > button { flex-shrink: 0; } .bank-tools .form-actions { flex-wrap: wrap; } .bank-tools-pages { gap: 8px; } .bank-tools-summary { grid-template-columns: 1fr; } .transaction-select-row { padding-left: 8px; gap: 4px; } .selection-toolbar { padding: 14px; } }
+.bank-tools-fields { display: grid; gap: 20px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.transactions-card .toolbar-actions { flex-wrap: wrap; }
+.transaction-select-row > input { width: 24px; height: 24px; min-height: 24px; flex-basis: 24px; }
+@media(max-width:760px) { .bank-tools .form-grid { grid-template-columns: 1fr; } }

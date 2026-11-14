@@ -1,0 +1,16 @@
+/* WAAPI owns dialog motion: one backdrop stays mounted when a menu becomes a form. */
+.modal-backdrop.modal-motion, .modal-backdrop.modal-motion > .modal { animation: none; }
+.modal-motion .modal { transform-origin: center center; }
+.modal-motion .modal[data-motion="switching"] { overflow-x: clip; }
+.animated-details { box-sizing: border-box; }
+@media (prefers-reduced-motion: reduce) {
+  .modal-motion *, .animated-details { scroll-behavior: auto; }
+}
+.modal-motion .modal[data-motion="closing"] { pointer-events: none; }
+
+/* Keep the sheet separate from its scrim: parent opacity exposed the page through it on iOS. */
+.modal-backdrop.modal-motion { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; isolation: isolate; }
+.modal-shade { position: absolute; inset: 0; z-index: -1; background: var(--overlay); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); pointer-events: none; }
+@media (max-width: 760px), (hover: none) and (pointer: coarse) {
+  .modal-shade { backdrop-filter: none; -webkit-backdrop-filter: none; }
+}

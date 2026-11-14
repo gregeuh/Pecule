@@ -1,0 +1,415 @@
+{
+  "referenceDate": "2026-11-06",
+  "demoClock": "2026-11-06T12:00:00Z",
+  "data": "anonymous fictional demo only",
+  "engine": "chromium",
+  "sources": [
+    "lib/launch-bootstrap.ts",
+    "app/launch-screen.tsx",
+    "app/launch-transition.tsx",
+    "app/launch.css",
+    "app/loading.tsx",
+    "lib/launch-images.ts",
+    "public/launch/manifest.json",
+    "app/subscription-overview.tsx",
+    "app/pending-operations.tsx",
+    "app/use-offline-queue.ts",
+    "lib/subscriptions.ts",
+    "lib/offline-store.ts",
+    "lib/offline-reconcile.ts",
+    "lib/offline-page.ts",
+    "public/offline.html",
+    "public/offline.css",
+    "app/forecast-outlook.tsx",
+    "app/monthly-brief.tsx",
+    "app/bank-link-details.tsx",
+    "app/projection-chart.tsx",
+    "app/spending-insights.tsx",
+    "app/bank-import.tsx",
+    "app/bank-import.css",
+    "lib/balance-outlook.ts",
+    "lib/monthly-brief.ts",
+    "lib/import-profile.ts",
+    "lib/import-matching.ts",
+    "app/account-verification.tsx",
+    "app/operation-suggestions.tsx",
+    "app/quick-phrase.tsx",
+    "app/wallet-accounts.tsx",
+    "app/wallet-account-detail.tsx",
+    "app/capture-routine.tsx",
+    "lib/account-verification.ts",
+    "lib/capture-suggestions.ts",
+    "app/wallet.css",
+    "app/wallet-depth.css",
+    "app/motion.css",
+    "app/interaction-harmony.css",
+    "app/gestures.css",
+    "app/atelier.css",
+    "app/reference.css",
+    "app/mobile-forms.css",
+    "app/iphone-capture.css",
+    "app/brief-corrections.css",
+    "app/signature-interactions.css",
+    "app/ui-motion.ts",
+    "app/pressable.tsx",
+    "app/swipe-tabs.tsx",
+    "app/mobile-dock.tsx",
+    "app/use-modal-motion.ts",
+    "app/category-icon.tsx",
+    "app/empty-state.tsx",
+    "app/sign-in/page.tsx",
+    "app/forgot-password/page.tsx",
+    "public/fonts/dm-sans-latin.woff2",
+    "public/fonts/manrope-latin.woff2",
+    "app/layout.tsx",
+    "app/budget-app.tsx",
+    "app/clarte-dashboard.tsx",
+    "app/recurring-item.tsx",
+    "app/merchant-fields.tsx",
+    "app/quick-operation-form.tsx",
+    "app/operation-balance-preview.tsx",
+    "app/use-modal-viewport.ts",
+    "lib/operation-balance-preview.ts",
+    "lib/wallet-presentation.ts"
+  ],
+  "sourceDigest": "6af0a34352c497f3e14304be3bed7d5261a834ab77221e33c11323c0a0912463",
+  "authOptions": "depend on the environment; no auth submitted",
+  "captures": [
+    {
+      "width": 390,
+      "theme": "light",
+      "page": "home",
+      "file": "screenshots/chromium-390-light-home.png",
+      "sha256": "277dc4d5dc87996c64e5ed61b2e55805e2671f7e34198a21c7007ec8463ccb84"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "page": "operations",
+      "file": "screenshots/chromium-390-light-operations.png",
+      "sha256": "73c178eaf29e61fdc55f56066df283ebe236c971c214aa38f2f0d1d61184e38d"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "page": "accounts",
+      "file": "screenshots/chromium-390-light-accounts.png",
+      "sha256": "e7c4ef51c42c2a63854208f32bf70e3f8ecb085d09b8b33c8196d28ccd7ed4f0"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "page": "recurring",
+      "file": "screenshots/chromium-390-light-recurring.png",
+      "sha256": "babec8d8bbdbbe11a1f829708e544b5c97163e1ac3ab2ae1d49caa4e2d04c3d3"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "page": "goals",
+      "file": "screenshots/chromium-390-light-goals.png",
+      "sha256": "13c921444770d86ca39253aeba76837664064fb07bc24ee8abd96ddef58a7197"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "page": "plan",
+      "file": "screenshots/chromium-390-light-plan.png",
+      "sha256": "ad0fb3211348395134b44ba3321603b0da6311cb474cbe44773db6a3f7dd3880"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "page": "settings",
+      "file": "screenshots/chromium-390-light-settings.png",
+      "sha256": "f5cd4df177fa10adf820283b4edfc95c0237e45bdf7c55112423d642e019b9f6"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "page": "empty",
+      "file": "screenshots/chromium-390-light-empty.png",
+      "sha256": "da3f8f239fcd1cf65b75cad9c5e50112bdcf270c4e2f089f5010c93e1ca03048"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "page": "capture",
+      "file": "screenshots/chromium-390-light-capture.png",
+      "sha256": "cc7d1e1a77b8262a7fa15f3c053cb8d760002c989ecfc229e28a3a2e3ff8d268"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "page": "import",
+      "file": "screenshots/chromium-390-light-import.png",
+      "sha256": "cfe452e0e3557a2af823ae4dedc6da007565b2fbc526a351d32b9ae3ea2a49d2"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "page": "sign-in",
+      "file": "screenshots/chromium-390-light-sign-in.png",
+      "sha256": "e9b995f4cf2451fa8df6a05d8873f47e0770b3e15faa18d4a275e7cb1531fe87"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "page": "forgot-password",
+      "file": "screenshots/chromium-390-light-forgot-password.png",
+      "sha256": "b180916bd0bdcaef8e5f637f62705b2c0bdae5fd2ebd77f44963fe94f4962e54"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "page": "home",
+      "file": "screenshots/chromium-390-dark-home.png",
+      "sha256": "c36d2da95853a44dece11d188a8c003da55e9a88bae4fe40d5e97247adba3a4c"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "page": "operations",
+      "file": "screenshots/chromium-390-dark-operations.png",
+      "sha256": "df149908971f1250f5d1839bcf4247777935ce55154d0694251e169570faee79"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "page": "accounts",
+      "file": "screenshots/chromium-390-dark-accounts.png",
+      "sha256": "2ee422845b9b9ed798fa98e5c2049b4690f587570897b3a6aab66ad2ae7dfb0d"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "page": "recurring",
+      "file": "screenshots/chromium-390-dark-recurring.png",
+      "sha256": "66de2f27f092018f4f830dfd10e8de0114cfd464fe959cba10b3012d0ad6ba4d"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "page": "goals",
+      "file": "screenshots/chromium-390-dark-goals.png",
+      "sha256": "3776f441779aaa084eb064cd3c37db0947308b7cba4dbeab354d7c873acc6c47"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "page": "plan",
+      "file": "screenshots/chromium-390-dark-plan.png",
+      "sha256": "a79e992fca59efb3ec66d6658437b08e2771bcf1aef394c5e45ca687f1bd993d"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "page": "settings",
+      "file": "screenshots/chromium-390-dark-settings.png",
+      "sha256": "fb219b957ebf410f39c8d4c9727f1eab96d7528adb53e6c2ecd4eb6c5a4c6aad"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "page": "empty",
+      "file": "screenshots/chromium-390-dark-empty.png",
+      "sha256": "64f0a99305bc4983606c3e1e7e83a826b308af285f6ee75f8320ce8d2c57d74a"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "page": "capture",
+      "file": "screenshots/chromium-390-dark-capture.png",
+      "sha256": "aa5bc8eeb46117902d1760f89df8f7c94a86b7482e1c6dfc4e67cc20e551e706"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "page": "import",
+      "file": "screenshots/chromium-390-dark-import.png",
+      "sha256": "9ecbed0b4d8c4a075af40e9d3922ff5b659c385f402450c5f01840d1b17014c6"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "page": "sign-in",
+      "file": "screenshots/chromium-390-dark-sign-in.png",
+      "sha256": "6b21fba057fc29fee3aa1d54242cb70bedaf1a9e28796b601787a1fd07b8666a"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "page": "forgot-password",
+      "file": "screenshots/chromium-390-dark-forgot-password.png",
+      "sha256": "02ef1ca72711eba9699bf8a6e0323247366e3acc1d70609b6a43176b4f1cf4f6"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "page": "home",
+      "file": "screenshots/chromium-1440-light-home.png",
+      "sha256": "6ccdb91d93cac376099e892e8a74f8c4cc39f15c9f9ac681e8ae6fedd654ac4b"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "page": "operations",
+      "file": "screenshots/chromium-1440-light-operations.png",
+      "sha256": "649a6be19335291ad3073eba5edd3c377e6f445b6a7d5f912c2388141afdca7d"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "page": "accounts",
+      "file": "screenshots/chromium-1440-light-accounts.png",
+      "sha256": "cd246c400d80e88a2c495278961bf9ac0b8466a78d983842a23039b774687d32"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "page": "recurring",
+      "file": "screenshots/chromium-1440-light-recurring.png",
+      "sha256": "70d0713dfab75b5e982b190edc2106d1ed3123d9f59cfc9cb350861ee1869500"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "page": "goals",
+      "file": "screenshots/chromium-1440-light-goals.png",
+      "sha256": "5821775a0243d48fea89ca33bacbb13a2ea3eea24954346d3c110e6d5f85618b"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "page": "plan",
+      "file": "screenshots/chromium-1440-light-plan.png",
+      "sha256": "f0c2e001dc38d3b0d9ee9811d881be8e9cb4f6b59250c3a9ad033263e93834a8"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "page": "settings",
+      "file": "screenshots/chromium-1440-light-settings.png",
+      "sha256": "10f1fc08ec1c415c9afca22c95219ce4e942d3688f8a363429227925e1861f75"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "page": "empty",
+      "file": "screenshots/chromium-1440-light-empty.png",
+      "sha256": "4a4f5c2ab0fa0e5ea873983bcc352142122e3a98a144b22a76b6e7cb118633de"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "page": "capture",
+      "file": "screenshots/chromium-1440-light-capture.png",
+      "sha256": "7158430fbf839405c12884faa25bd2fe3de71dd609689f67bce76fcda326170f"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "page": "import",
+      "file": "screenshots/chromium-1440-light-import.png",
+      "sha256": "84ceb83b6adc43cbe64e73b95942878f0a5617eed1d4ce68bd5dba1696322b4b"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "page": "sign-in",
+      "file": "screenshots/chromium-1440-light-sign-in.png",
+      "sha256": "39216804136ef7b9bb48fe71476a4bca04c7dc169446182a71f57c0f217a7911"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "page": "forgot-password",
+      "file": "screenshots/chromium-1440-light-forgot-password.png",
+      "sha256": "77590f1fe5c51497c9bd439d70a0852f0e65b6e4555e6d5aaf5baa9e00984bb0"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "page": "home",
+      "file": "screenshots/chromium-1440-dark-home.png",
+      "sha256": "c4958aa88c89f17ada7053526043a951176712e3856229354313cd86612091ef"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "page": "operations",
+      "file": "screenshots/chromium-1440-dark-operations.png",
+      "sha256": "c5e2c0b3317ec53e200e8af2249990f08db4d61f03280cd3eeddf843ce5020d5"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "page": "accounts",
+      "file": "screenshots/chromium-1440-dark-accounts.png",
+      "sha256": "c3ed8f4133a994ab42807bddb0d9204d9fbeb28f08a9cfa5fa96f88d49470a88"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "page": "recurring",
+      "file": "screenshots/chromium-1440-dark-recurring.png",
+      "sha256": "b9410f2600c520b59d91ccca262c1afdb663184ad2e9c8dfaf09cf6d9f056bef"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "page": "goals",
+      "file": "screenshots/chromium-1440-dark-goals.png",
+      "sha256": "ff949b18d7e183ebdeb18604c7f6c51519e32c111c531d0bf2ccf9196278437f"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "page": "plan",
+      "file": "screenshots/chromium-1440-dark-plan.png",
+      "sha256": "48a722bb026a69daeab14dc8d014968b77c801b770f32b9477de96945f1b019c"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "page": "settings",
+      "file": "screenshots/chromium-1440-dark-settings.png",
+      "sha256": "36d320e370eb0ba568445ac528abd0ef402e0a3f9e30242a568dd5986ce26c91"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "page": "empty",
+      "file": "screenshots/chromium-1440-dark-empty.png",
+      "sha256": "213855ed55df4912691fa3a646f26325f73d0610cbe7945bcc3f8ffd9487043d"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "page": "capture",
+      "file": "screenshots/chromium-1440-dark-capture.png",
+      "sha256": "b7f65f2b5e0f4d224bf97353fcb27cabd1c5d5e85413da3d7c7115ec47ad4def"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "page": "import",
+      "file": "screenshots/chromium-1440-dark-import.png",
+      "sha256": "9455ea2423420ebdf152e559282720172591fcb504f422930a7fe28eabd3efc5"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "page": "sign-in",
+      "file": "screenshots/chromium-1440-dark-sign-in.png",
+      "sha256": "2004432b90431d34adba2affcc02036b5299f7795b4c3bfa2b2338411afd7382"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "page": "forgot-password",
+      "file": "screenshots/chromium-1440-dark-forgot-password.png",
+      "sha256": "c9665d8501dc350d2c2b10e27bce4b7d2c93bcd72e0560f4b0c1ce68d4e88bef"
+    }
+  ]
+}

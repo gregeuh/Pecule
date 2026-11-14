@@ -1,0 +1,28 @@
+name: Quality
+on:
+  push:
+    branches: [vercel-compatibility, 'corrections/**']
+  pull_request:
+    branches: [vercel-compatibility]
+permissions:
+  contents: read
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Generate Next.js route types
+        run: npx next typegen
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
