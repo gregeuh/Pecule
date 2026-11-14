@@ -137,6 +137,7 @@ try {
   const imported = first.page.waitForResponse(response => new URL(response.url()).pathname === '/api/budget' && response.request().method() === 'PUT');
   await first.page.getByRole('button', { name: 'Importer 2 opérations', exact: true }).click();
   assert.equal((await imported).status(), 200);
+  await first.page.getByRole('button',{name:'Fermer le bilan',exact:true}).click();
   await first.page.getByRole('dialog').waitFor({ state: 'hidden' });
   const stored = await api(first.page, '/api/budget');
   assert.equal(stored.status, 200);

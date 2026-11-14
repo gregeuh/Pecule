@@ -43,3 +43,21 @@ button[data-holding="true"] { position:relative;z-index:2;transform:perspective(
 @media(max-width:760px) { .operation-gesture { grid-template-columns:minmax(0,1fr) 44px; }.operation-gesture .operation-more { width:44px; }.modal:not(.wallet-account-modal)>.modal-heading[data-panel-gesture] { position:relative;padding-top:24px; }.modal:not(.wallet-account-modal)>.modal-heading[data-panel-gesture]:before { content:"";position:absolute;top:8px;left:calc(50% - 17px);width:34px;height:4px;border-radius:4px;background:var(--muted);opacity:.45; } }
 @media(prefers-reduced-motion:reduce) { .operation-gesture>button,.wallet-stack .wallet-card.clarte-account { transition:none; }button[data-holding="true"],.wallet-stack .wallet-card[data-holding="true"] { transform:none; }.operation-swipe-actions,.quick-add-palette { animation:none; } }
 @media(forced-colors:active) { .gesture-account-preview { background:Canvas;color:CanvasText;border:1px solid CanvasText; }.operation-swipe-actions>button,.gesture-context-actions>button,.quick-add-palette>button { border:1px solid ButtonText; } }
+
+/* A reveal stays behind its row; no extra line or layout jump. */
+.operation-gesture{overflow:clip;isolation:isolate}
+.operation-gesture>:is(.transaction-row,.clarte-transaction,.account-activity-row){position:relative;z-index:1;background:var(--card)!important;transform:translateX(var(--operation-drag,0px));transition:background-color var(--motion-state) ease,box-shadow var(--motion-release) var(--motion-settle)}
+.operation-gesture .operation-more{position:relative;z-index:2;background:var(--card)}
+.operation-gesture>.operation-swipe-actions{position:absolute;inset:0 44px 0 auto;width:144px;display:flex;gap:0;padding:0;background:var(--surface-inset);animation:none;z-index:0;visibility:hidden}
+.operation-gesture[data-settling=true]>.operation-swipe-actions,.operation-gesture[data-dragging=true]>.operation-swipe-actions,.operation-gesture[data-revealed=true]>.operation-swipe-actions{visibility:visible}
+.operation-gesture>.operation-swipe-actions>button{width:72px;min-width:0;min-height:44px;padding:8px 3px;border-radius:0;display:flex;flex-direction:column;gap:5px;font-size:11px;background:var(--blue-soft);color:var(--blue)}
+.operation-gesture>.operation-swipe-actions>button:first-child{background:var(--action-bg);color:var(--on-action)}
+.operation-gesture[data-dragging=true]>button{transition:none!important}
+@media(min-width:761px){.operation-gesture>.operation-swipe-actions{display:none}}
+@media(prefers-reduced-motion:reduce){.operation-gesture[data-dragging=true]>button:first-child{transform:none!important}.operation-gesture[data-dragging=true]>.operation-swipe-actions{visibility:hidden}}
+.swipe-tabs{position:relative;overflow:clip}
+.wallet-tab-content{position:relative;min-width:0}
+.swipe-tabs[data-swiping=true]{overflow:clip}
+.wallet-tabs{--tab-drag-x:0px}
+.wallet-tabs>.navigation-indicator{translate:var(--tab-drag-x) 0}
+@media(prefers-reduced-motion:reduce){.wallet-tabs>.navigation-indicator{translate:none}}

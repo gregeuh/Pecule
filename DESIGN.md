@@ -347,3 +347,6 @@ Les56 PNG natifs couvrent14 formats d’iPhone, deux orientations et deux thème
 
 ## Continuité des enregistrements — 13 novembre 2026
 La saisie confirmée conserve son identité jusqu’à une ligne déjà visible du journal, sans déplacer la page. Un virement présente les comptes Wallet sélectionnés et relie leurs cartes au moment de la confirmation. `app/save-continuity.ts` et `app/transfer-preview.tsx` portent cette variante, avec les tokens existants ; le panneau et les calculs conservent leurs propriétaires. La réduction des animations retire les déplacements. Voir `docs/save-continuity.md`.
+
+## Gestes Wallet — 14 novembre 2026
+Les six maquettes prolongent les propriétaires canoniques : `useModalMotion` garde le déploiement des comptes et l’entrée des aperçus ; `Pressable`/`OperationGesture` révèlent les actions derrière une ligne ; `SwipeTabs` expose temporairement un voisin inerte pendant le déplacement. `SaveOutcome` remplace le formulaire après import ou ajustement confirmé, sans notification flottante concurrente. Les tokens restent possédés par `motion.css`, `wallet.css` et `wallet-depth.css`. Détails et vérification : `docs/save-continuity.md`.

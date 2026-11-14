@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useRef,type ButtonHTMLAttributes,type PointerEvent} from 'react';
+import {useEffect,useLayoutEffect,useRef,type ButtonHTMLAttributes,type PointerEvent} from 'react';
 
 // Safari can retarget the held pointer's release click into the new overlay.
 // This guard survives the source unmount; a fresh primary press is intentional.
@@ -13,12 +13,13 @@ function suppressHoldRelease(){
 }
 
 /** Native click stays primary. Motion describes the hold, never a financial action. */
-export default function Pressable({onHold,onSwipeLeft,onClick,depth=false,...props}:ButtonHTMLAttributes<HTMLButtonElement>&{onHold?:()=>void;onSwipeLeft?:()=>void;depth?:boolean}){
- const active=useRef<{id:number;x:number;y:number;edge:boolean;target:HTMLButtonElement;rect:DOMRect;reduced:boolean}|null>(null),timer=useRef<ReturnType<typeof setTimeout>|null>(null),lift=useRef<ReturnType<typeof setTimeout>|null>(null),blocked=useRef(false);
+export default function Pressable({onHold,onSwipeLeft,onSwipeProgress,onSwipeEnd,swipeOpen=false,onClick,depth=false,...props}:ButtonHTMLAttributes<HTMLButtonElement>&{onHold?:()=>void;onSwipeLeft?:()=>void;onSwipeProgress?:(dx:number)=>void;onSwipeEnd?:(dx:number,cancelled:boolean)=>void;swipeOpen?:boolean;depth?:boolean}){
+ const active=useRef<{id:number;x:number;y:number;edge:boolean;target:HTMLButtonElement;rect:DOMRect;reduced:boolean;swiping?:boolean;swipeDx?:number}|null>(null),timer=useRef<ReturnType<typeof setTimeout>|null>(null),lift=useRef<ReturnType<typeof setTimeout>|null>(null),blocked=useRef(false);
+ const swipeEnd=useRef(onSwipeEnd);useLayoutEffect(()=>{swipeEnd.current=onSwipeEnd;},[onSwipeEnd]);
  const clear=()=>{if(timer.current)clearTimeout(timer.current);if(lift.current)clearTimeout(lift.current);timer.current=lift.current=null;const target=active.current?.target;if(target){delete target.dataset.pressing;delete target.dataset.holding;for(const v of ['--depth-pitch','--depth-yaw','--depth-light'])target.style.removeProperty(v);}};
- const cancel=()=>{if(active.current)blocked.current=true;clear();active.current=null;};
+ const cancel=()=>{if(active.current){blocked.current=true;if(active.current.swiping)swipeEnd.current?.(active.current.swipeDx??0,true);}clear();active.current=null;};
  useEffect(()=>{
-  const stop=()=>{if(active.current)blocked.current=true;if(timer.current)clearTimeout(timer.current);if(lift.current)clearTimeout(lift.current);timer.current=lift.current=null;const target=active.current?.target;if(target){delete target.dataset.pressing;delete target.dataset.holding;for(const v of ['--depth-pitch','--depth-yaw','--depth-light'])target.style.removeProperty(v);}active.current=null;};
+  const stop=()=>{if(active.current){blocked.current=true;if(active.current.swiping)swipeEnd.current?.(active.current.swipeDx??0,true);}if(timer.current)clearTimeout(timer.current);if(lift.current)clearTimeout(lift.current);timer.current=lift.current=null;const target=active.current?.target;if(target){delete target.dataset.pressing;delete target.dataset.holding;for(const v of ['--depth-pitch','--depth-yaw','--depth-light'])target.style.removeProperty(v);}active.current=null;};
   const additional=(event:globalThis.PointerEvent)=>{if(!event.isPrimary)stop();};
   document.addEventListener('pointerdown',additional,true);
   const media=matchMedia('(prefers-reduced-motion:reduce)');
@@ -32,7 +33,7 @@ export default function Pressable({onHold,onSwipeLeft,onClick,depth=false,...pro
   target.setPointerCapture(e.pointerId);target.dataset.pressing='true';paint(a,e.clientX,e.clientY);
   if(onHold){lift.current=setTimeout(()=>{if(active.current===a){delete target.dataset.pressing;target.dataset.holding='true';}},120);timer.current=setTimeout(()=>{clear();blocked.current=true;suppressHoldRelease();target.focus({preventScroll:true});onHold();},480);}
  };
- const move=(e:PointerEvent<HTMLButtonElement>)=>{const a=active.current;if(!a||a.id!==e.pointerId)return;if(Math.hypot(e.clientX-a.x,e.clientY-a.y)>8){clear();blocked.current=true;}else if(a.target.dataset.holding||a.target.dataset.pressing)paint(a,e.clientX,e.clientY);};
- const up=(e:PointerEvent<HTMLButtonElement>)=>{const a=active.current;if(!a||a.id!==e.pointerId)return;const dx=e.clientX-a.x,dy=e.clientY-a.y;clear();active.current=null;if(!a.edge&&onSwipeLeft&&matchMedia('(max-width:760px)').matches&&dx< -55&&Math.abs(dx)>Math.abs(dy)*1.5){blocked.current=true;onSwipeLeft();}};
+ const move=(e:PointerEvent<HTMLButtonElement>)=>{const a=active.current;if(!a||a.id!==e.pointerId)return;const dx=e.clientX-a.x,dy=e.clientY-a.y;if(onSwipeProgress&&!a.edge&&matchMedia('(max-width:760px)').matches&&(a.swiping||(dx<0||swipeOpen)&&Math.abs(dx)>12&&Math.abs(dx)>Math.abs(dy)*1.5)){clear();a.swiping=true;a.swipeDx=dx;blocked.current=true;onSwipeProgress(dx);return;}if(Math.hypot(dx,dy)>8){clear();blocked.current=true;}else if(a.target.dataset.holding||a.target.dataset.pressing)paint(a,e.clientX,e.clientY);};
+ const up=(e:PointerEvent<HTMLButtonElement>)=>{const a=active.current;if(!a||a.id!==e.pointerId)return;const dx=e.clientX-a.x,dy=e.clientY-a.y;clear();active.current=null;if(a.swiping){blocked.current=true;onSwipeEnd?.(dx,false);return;}if(!a.edge&&onSwipeLeft&&matchMedia('(max-width:760px)').matches&&dx< -55&&Math.abs(dx)>Math.abs(dy)*1.5){blocked.current=true;onSwipeLeft();}};
  return <button aria-haspopup={onHold?"dialog":undefined} {...props} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={cancel} onLostPointerCapture={cancel} onContextMenu={e=>{if(onHold){e.preventDefault();cancel();blocked.current=true;e.currentTarget.focus({preventScroll:true});onHold();}}} onClick={e=>{if(e.detail!==0&&blocked.current){blocked.current=false;e.preventDefault();e.stopPropagation();return;}onClick?.(e);}}/>;
 }

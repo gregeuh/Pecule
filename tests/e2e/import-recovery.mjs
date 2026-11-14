@@ -30,10 +30,11 @@ try{
   assert.equal(await page.locator('.bank-import-confirm input').isChecked(),false);
   await page.locator('.bank-import-confirm input').check();
   await page.getByRole('button',{name:'Importer 1 opérations',exact:true}).click();
+  await page.getByRole('heading',{name:'Import enregistré',exact:true}).waitFor();
+  assert.match(await page.locator('.save-outcome-counts').innerText(),/Opérations ajoutées\s*1/);
+  await page.screenshot({path:`${output}/${mobile?'mobile':'desktop'}-summary.png`});
+  await page.getByRole('button',{name:'Fermer le bilan',exact:true}).click();
   await page.getByRole('dialog').waitFor({state:'hidden'});
-  const notice=page.locator('.toast[data-kind=import]');await notice.waitFor();
-  await notice.locator('.confirmation-art[data-complete=true]').waitFor();
-  await page.screenshot({path:`${output}/${mobile?'mobile':'desktop'}-signature.png`});
   await revealLedgerTools(page);await page.getByRole('button',{name:'Mes imports',exact:true}).click();
   assert.match(await page.getByRole('dialog').innerText(),/1 opérations/);
   await page.getByRole('button',{name:'Annuler cet import',exact:true}).click();
