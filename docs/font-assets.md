@@ -1,0 +1,16 @@
+# Fontes locales
+
+Les familles approuvées restent DM Sans (texte), Inter (titres et montants) et Manrope (marque). Le navigateur ne contacte aucun fournisseur de polices. `app/theme.css` possède les trois déclarations et les rôles ; `public/offline.css` est l’équivalent autonome pour la page hors ligne.
+
+Inter est passé de 352 240 à 200 856 octets : sous-ensemble latin variable avec français précomposé, accents combinés, devises, ponctuation et signes utilisés par les montants. Les poids variables et fonctionnalités OpenType sont conservés. Les autres écritures disposent de la pile de repli système. La licence OFL est conservée dans `public/fonts/Inter-OFL.txt` ; la source est le projet Inter : https://github.com/rsms/inter.
+
+Reproduction depuis le fichier complet déjà présent dans l’historique du dépôt :
+
+```sh
+git show 2d0282abcdb7b7f25515f617b11099a970e9ebc6:public/fonts/inter-variable.woff2 > /tmp/pecule-inter-original.woff2
+# Dans un environnement Python dédié : pip install 'fonttools[woff]'
+python scripts/subset-inter.py /tmp/pecule-inter-original.woff2 public/fonts/inter-latin.woff2
+npm run build
+```
+
+Le fichier porte un nouveau nom pour ne pas réutiliser une ancienne réponse en cache. Préchargement, CSS normal, CSS hors ligne et service worker pointent vers le même nom. `scripts/build-offline.mjs` inclut les octets des trois fontes dans la version du cache. Après une modification de fonte : contrôler accents français, centimes, chiffres tabulaires, graisses 400/450/500, rendu des titres, page de connexion et hors-ligne, puis exécuter `test:e2e:typography`.

@@ -1,0 +1,574 @@
+{
+  "sourceFiles": [
+    "app/launch-screen.tsx",
+    "app/launch.css",
+    "lib/launch-images.ts",
+    "scripts/generate-launch-assets.mjs",
+    "public/fonts/dm-sans-latin.woff2",
+    "public/fonts/manrope-latin.woff2"
+  ],
+  "sourceDigest": "2ba6bea05d04ef917e49f0af246ff3373c7a6d90bbef76fc2a151c93f3d02713",
+  "identity": "Pécule public launch identity; no personal data",
+  "images": [
+    {
+      "url": "/launch/iphone-320x568-2x-portrait-light.png",
+      "media": "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 640,
+      "height": 1136,
+      "cssWidth": 320,
+      "cssHeight": 568,
+      "scale": 2,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-320x568-2x-portrait-dark.png",
+      "media": "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 640,
+      "height": 1136,
+      "cssWidth": 320,
+      "cssHeight": 568,
+      "scale": 2,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-320x568-2x-landscape-light.png",
+      "media": "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 1136,
+      "height": 640,
+      "cssWidth": 568,
+      "cssHeight": 320,
+      "scale": 2,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-320x568-2x-landscape-dark.png",
+      "media": "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 1136,
+      "height": 640,
+      "cssWidth": 568,
+      "cssHeight": 320,
+      "scale": 2,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-375x667-2x-portrait-light.png",
+      "media": "(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 750,
+      "height": 1334,
+      "cssWidth": 375,
+      "cssHeight": 667,
+      "scale": 2,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-375x667-2x-portrait-dark.png",
+      "media": "(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 750,
+      "height": 1334,
+      "cssWidth": 375,
+      "cssHeight": 667,
+      "scale": 2,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-375x667-2x-landscape-light.png",
+      "media": "(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 1334,
+      "height": 750,
+      "cssWidth": 667,
+      "cssHeight": 375,
+      "scale": 2,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-375x667-2x-landscape-dark.png",
+      "media": "(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 1334,
+      "height": 750,
+      "cssWidth": 667,
+      "cssHeight": 375,
+      "scale": 2,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-414x736-3x-portrait-light.png",
+      "media": "(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 1242,
+      "height": 2208,
+      "cssWidth": 414,
+      "cssHeight": 736,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-414x736-3x-portrait-dark.png",
+      "media": "(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 1242,
+      "height": 2208,
+      "cssWidth": 414,
+      "cssHeight": 736,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-414x736-3x-landscape-light.png",
+      "media": "(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 2208,
+      "height": 1242,
+      "cssWidth": 736,
+      "cssHeight": 414,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-414x736-3x-landscape-dark.png",
+      "media": "(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 2208,
+      "height": 1242,
+      "cssWidth": 736,
+      "cssHeight": 414,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-360x780-3x-portrait-light.png",
+      "media": "(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 1080,
+      "height": 2340,
+      "cssWidth": 360,
+      "cssHeight": 780,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-360x780-3x-portrait-dark.png",
+      "media": "(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 1080,
+      "height": 2340,
+      "cssWidth": 360,
+      "cssHeight": 780,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-360x780-3x-landscape-light.png",
+      "media": "(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 2340,
+      "height": 1080,
+      "cssWidth": 780,
+      "cssHeight": 360,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-360x780-3x-landscape-dark.png",
+      "media": "(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 2340,
+      "height": 1080,
+      "cssWidth": 780,
+      "cssHeight": 360,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-375x812-3x-portrait-light.png",
+      "media": "(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 1125,
+      "height": 2436,
+      "cssWidth": 375,
+      "cssHeight": 812,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-375x812-3x-portrait-dark.png",
+      "media": "(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 1125,
+      "height": 2436,
+      "cssWidth": 375,
+      "cssHeight": 812,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-375x812-3x-landscape-light.png",
+      "media": "(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 2436,
+      "height": 1125,
+      "cssWidth": 812,
+      "cssHeight": 375,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-375x812-3x-landscape-dark.png",
+      "media": "(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 2436,
+      "height": 1125,
+      "cssWidth": 812,
+      "cssHeight": 375,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-390x844-3x-portrait-light.png",
+      "media": "(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 1170,
+      "height": 2532,
+      "cssWidth": 390,
+      "cssHeight": 844,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-390x844-3x-portrait-dark.png",
+      "media": "(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 1170,
+      "height": 2532,
+      "cssWidth": 390,
+      "cssHeight": 844,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-390x844-3x-landscape-light.png",
+      "media": "(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 2532,
+      "height": 1170,
+      "cssWidth": 844,
+      "cssHeight": 390,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-390x844-3x-landscape-dark.png",
+      "media": "(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 2532,
+      "height": 1170,
+      "cssWidth": 844,
+      "cssHeight": 390,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-393x852-3x-portrait-light.png",
+      "media": "(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 1179,
+      "height": 2556,
+      "cssWidth": 393,
+      "cssHeight": 852,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-393x852-3x-portrait-dark.png",
+      "media": "(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 1179,
+      "height": 2556,
+      "cssWidth": 393,
+      "cssHeight": 852,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-393x852-3x-landscape-light.png",
+      "media": "(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 2556,
+      "height": 1179,
+      "cssWidth": 852,
+      "cssHeight": 393,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-393x852-3x-landscape-dark.png",
+      "media": "(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 2556,
+      "height": 1179,
+      "cssWidth": 852,
+      "cssHeight": 393,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-402x874-3x-portrait-light.png",
+      "media": "(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 1206,
+      "height": 2622,
+      "cssWidth": 402,
+      "cssHeight": 874,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-402x874-3x-portrait-dark.png",
+      "media": "(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 1206,
+      "height": 2622,
+      "cssWidth": 402,
+      "cssHeight": 874,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-402x874-3x-landscape-light.png",
+      "media": "(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 2622,
+      "height": 1206,
+      "cssWidth": 874,
+      "cssHeight": 402,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-402x874-3x-landscape-dark.png",
+      "media": "(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 2622,
+      "height": 1206,
+      "cssWidth": 874,
+      "cssHeight": 402,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-414x896-2x-portrait-light.png",
+      "media": "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 828,
+      "height": 1792,
+      "cssWidth": 414,
+      "cssHeight": 896,
+      "scale": 2,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-414x896-2x-portrait-dark.png",
+      "media": "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 828,
+      "height": 1792,
+      "cssWidth": 414,
+      "cssHeight": 896,
+      "scale": 2,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-414x896-2x-landscape-light.png",
+      "media": "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 1792,
+      "height": 828,
+      "cssWidth": 896,
+      "cssHeight": 414,
+      "scale": 2,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-414x896-2x-landscape-dark.png",
+      "media": "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 1792,
+      "height": 828,
+      "cssWidth": 896,
+      "cssHeight": 414,
+      "scale": 2,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-414x896-3x-portrait-light.png",
+      "media": "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 1242,
+      "height": 2688,
+      "cssWidth": 414,
+      "cssHeight": 896,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-414x896-3x-portrait-dark.png",
+      "media": "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 1242,
+      "height": 2688,
+      "cssWidth": 414,
+      "cssHeight": 896,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-414x896-3x-landscape-light.png",
+      "media": "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 2688,
+      "height": 1242,
+      "cssWidth": 896,
+      "cssHeight": 414,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-414x896-3x-landscape-dark.png",
+      "media": "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 2688,
+      "height": 1242,
+      "cssWidth": 896,
+      "cssHeight": 414,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-420x912-3x-portrait-light.png",
+      "media": "(device-width: 420px) and (device-height: 912px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 1260,
+      "height": 2736,
+      "cssWidth": 420,
+      "cssHeight": 912,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-420x912-3x-portrait-dark.png",
+      "media": "(device-width: 420px) and (device-height: 912px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 1260,
+      "height": 2736,
+      "cssWidth": 420,
+      "cssHeight": 912,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-420x912-3x-landscape-light.png",
+      "media": "(device-width: 420px) and (device-height: 912px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 2736,
+      "height": 1260,
+      "cssWidth": 912,
+      "cssHeight": 420,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-420x912-3x-landscape-dark.png",
+      "media": "(device-width: 420px) and (device-height: 912px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 2736,
+      "height": 1260,
+      "cssWidth": 912,
+      "cssHeight": 420,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-428x926-3x-portrait-light.png",
+      "media": "(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 1284,
+      "height": 2778,
+      "cssWidth": 428,
+      "cssHeight": 926,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-428x926-3x-portrait-dark.png",
+      "media": "(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 1284,
+      "height": 2778,
+      "cssWidth": 428,
+      "cssHeight": 926,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-428x926-3x-landscape-light.png",
+      "media": "(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 2778,
+      "height": 1284,
+      "cssWidth": 926,
+      "cssHeight": 428,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-428x926-3x-landscape-dark.png",
+      "media": "(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 2778,
+      "height": 1284,
+      "cssWidth": 926,
+      "cssHeight": 428,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-430x932-3x-portrait-light.png",
+      "media": "(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 1290,
+      "height": 2796,
+      "cssWidth": 430,
+      "cssHeight": 932,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-430x932-3x-portrait-dark.png",
+      "media": "(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 1290,
+      "height": 2796,
+      "cssWidth": 430,
+      "cssHeight": 932,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-430x932-3x-landscape-light.png",
+      "media": "(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 2796,
+      "height": 1290,
+      "cssWidth": 932,
+      "cssHeight": 430,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-430x932-3x-landscape-dark.png",
+      "media": "(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 2796,
+      "height": 1290,
+      "cssWidth": 932,
+      "cssHeight": 430,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-440x956-3x-portrait-light.png",
+      "media": "(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)",
+      "width": 1320,
+      "height": 2868,
+      "cssWidth": 440,
+      "cssHeight": 956,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-440x956-3x-portrait-dark.png",
+      "media": "(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: dark)",
+      "width": 1320,
+      "height": 2868,
+      "cssWidth": 440,
+      "cssHeight": 956,
+      "scale": 3,
+      "theme": "dark"
+    },
+    {
+      "url": "/launch/iphone-440x956-3x-landscape-light.png",
+      "media": "(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: light)",
+      "width": 2868,
+      "height": 1320,
+      "cssWidth": 956,
+      "cssHeight": 440,
+      "scale": 3,
+      "theme": "light"
+    },
+    {
+      "url": "/launch/iphone-440x956-3x-landscape-dark.png",
+      "media": "(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape) and (prefers-color-scheme: dark)",
+      "width": 2868,
+      "height": 1320,
+      "cssWidth": 956,
+      "cssHeight": 440,
+      "scale": 3,
+      "theme": "dark"
+    }
+  ]
+}

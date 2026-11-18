@@ -1,0 +1,57 @@
+/* P1 — shared mobile surfaces, independent from financial calculations. */
+:root { --brand-mark-edge: #454545; }
+.merchant-icon, .merchant-icon.merchant-icon-dark,
+:root[data-theme="dark"] .merchant-icon:not(.merchant-icon-dark),
+:root[data-theme="dark"] .merchant-icon.merchant-icon-light { background: var(--brand-light-tile); }
+.merchant-icon img { filter: drop-shadow(0 0 .55px var(--brand-mark-edge)); }
+.modal .field input[type="date"] { width: 100%; max-width: 100%; min-width: 0; inline-size: 100%; min-inline-size: 0; box-sizing: border-box; }
+.modal .field input[type="date"]::-webkit-date-and-time-value { min-inline-size: 0; }
+@media (max-width:760px) {
+ .app-shell #main-content { padding-bottom: calc(128px + env(safe-area-inset-bottom)); }
+ .mobile-dock { isolation: isolate; }
+ .mobile-dock::before { content: ""; position: fixed; left: 0; right: 0; bottom: 0; height: calc(88px + env(safe-area-inset-bottom)); background: var(--bg); z-index: -1; pointer-events: none; }
+ .clarte-mobile-primary .clarte-next { padding-inline: 0; }
+ .clarte-mobile-primary .clarte-next .clarte-upcoming { width: 100%; padding: 22px; border-radius: 20px; }
+ .clarte-next .clarte-upcoming .text-button { color: var(--blue); }
+}
+
+/* P2 — one visual vocabulary for ledger dates, labels and checkboxes. */
+.date-group > strong, .month-control > strong, .clarte-mobile-title > p { text-transform: none; }
+.transaction-row .transaction-title > strong, .transaction-row:hover .transaction-title > strong { color: var(--ink); }
+.app-shell input[type="checkbox"], .modal input[type="checkbox"] { appearance: none; -webkit-appearance: none; position: relative; border: 1.5px solid var(--muted); border-radius: 5px; background: var(--surface-inset); width: 20px; height: 20px; flex: 0 0 20px; padding: 0; cursor: pointer; }
+.app-shell input[type="checkbox"]:checked, .modal input[type="checkbox"]:checked,
+.app-shell input[type="checkbox"]:indeterminate, .modal input[type="checkbox"]:indeterminate { background: var(--action-bg); border-color: var(--action-bg); }
+.app-shell input[type="checkbox"]:checked::after, .modal input[type="checkbox"]:checked::after { content: ""; position: absolute; width: 6px; height: 10px; left: 5px; top: 2px; border: solid var(--on-action); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.app-shell input[type="checkbox"]:indeterminate::after, .modal input[type="checkbox"]:indeterminate::after { content: ""; position: absolute; width: 10px; height: 2px; left: 3px; top: 7px; background: var(--on-action); }
+input[type="checkbox"]:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+input[type="checkbox"]:disabled { opacity: .55; cursor: default; }
+@media (max-width:760px) {
+ .transactions-card { --ledger-gutter: 16px; }
+ .transactions-card .toolbar { padding-inline: var(--ledger-gutter); }
+ .transactions-card > .ledger-tools { margin-inline: 0; padding-inline: var(--ledger-gutter); }
+ .transactions-card > .ledger-tools > summary { padding-inline: 0; }
+ .transactions-card > .transaction-groups { padding-inline: var(--ledger-gutter); }
+ .transactions-card .transaction-select-content { min-width: 0; }
+ .bank-import-confirm, .bank-tools-check { min-height: 44px; }
+}
+
+/* P3 — compact disclosures and explanatory details, never a new budget calculation. */
+.spending-insights:not([open]) { padding-block: 0; }
+.spending-insights:not([open]) > summary { min-height: 56px; display: flex; align-items: center; padding-block: 10px; }
+.selection-toolbar[data-selecting="false"] { padding-block: 4px; min-height: 44px; margin-block: 0; }
+.selection-toolbar[data-selecting="false"] > button { min-height: 44px; }
+.table-count { color: var(--muted); font-size: 12px; padding-block: 14px; }
+.reserve-breakdown, .signal-explanation { padding-block: 16px; border-top: 1px solid var(--line); }
+.reserve-breakdown h3, .signal-explanation h3 { font-size: 14px; margin-bottom: 12px; }
+.reserve-breakdown dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-block: 6px; }
+.reserve-breakdown dt { color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.reserve-breakdown dd { font-size: 14px; margin: 0; font-variant-numeric: tabular-nums; }
+.signal-explanation p { font-size: 13px; line-height: 1.7; margin-bottom: 8px; }
+.clarte-calendar > button > strong > small { font-size: 11px; font-weight: 500; }
+.projection-table { border-top: 1px solid var(--line); margin-top: 16px; }
+.projection-table > summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 48px; color: var(--blue); cursor: pointer; font-size: 13px; }
+.projection-table table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.projection-table caption { text-align: left; color: var(--muted); font-size: 12px; padding-block: 12px; }
+.projection-table th, .projection-table td { border-bottom: 1px solid var(--line); padding: 10px 4px; font-size: 12px; overflow-wrap: anywhere; }
+.projection-table th { text-align: left; font-weight: 500; }
+.projection-table td { text-align: right; font-variant-numeric: tabular-nums; }

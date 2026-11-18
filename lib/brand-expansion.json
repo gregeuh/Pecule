@@ -1,0 +1,1953 @@
+[
+  {
+    "id": "disneyplus",
+    "name": "Disney+",
+    "domain": "disneyplus.com",
+    "category": "Abonnements",
+    "aliases": [
+      "disney plus",
+      "disneyplus",
+      "disney +"
+    ],
+    "file": "france/disneyplus.png"
+  },
+  {
+    "id": "canalplus",
+    "name": "CANAL+",
+    "domain": "canalplus.com",
+    "category": "Abonnements",
+    "aliases": [
+      "canal plus",
+      "canalplus",
+      "canal +"
+    ],
+    "logoDomain": "canalplus.com",
+    "file": "france/canalplus.png"
+  },
+  {
+    "id": "aldi",
+    "name": "ALDI",
+    "domain": "aldi.fr",
+    "category": "Alimentation",
+    "aliases": [
+      "aldi"
+    ],
+    "file": "france/aldi.png"
+  },
+  {
+    "id": "superu",
+    "name": "Coopérative U",
+    "domain": "magasins-u.com",
+    "category": "Alimentation",
+    "aliases": [
+      "super u",
+      "hyper u",
+      "u express",
+      "superu",
+      "cooperative u"
+    ],
+    "file": "france/superu.png"
+  },
+  {
+    "id": "casino",
+    "name": "Casino",
+    "domain": "casino.fr",
+    "category": "Alimentation",
+    "aliases": [
+      "casino supermarche",
+      "casino hyper",
+      "geant casino",
+      "casino shop"
+    ],
+    "logoDomain": "casino.fr",
+    "file": "france/casino.png"
+  },
+  {
+    "id": "picard",
+    "name": "Picard",
+    "domain": "picard.fr",
+    "category": "Alimentation",
+    "aliases": [
+      "picard",
+      "picard surgeles"
+    ],
+    "file": "france/picard.png"
+  },
+  {
+    "id": "biocoop",
+    "name": "Biocoop",
+    "domain": "biocoop.fr",
+    "category": "Alimentation",
+    "aliases": [
+      "biocoop"
+    ],
+    "logoDomain": "biocoop.fr",
+    "file": "france/biocoop.png"
+  },
+  {
+    "id": "naturalia",
+    "name": "Naturalia",
+    "domain": "naturalia.fr",
+    "category": "Alimentation",
+    "aliases": [
+      "naturalia"
+    ],
+    "file": "france/naturalia.png"
+  },
+  {
+    "id": "subway",
+    "name": "Subway",
+    "domain": "subway.com",
+    "category": "Restaurants",
+    "aliases": [
+      "subway"
+    ],
+    "logoDomain": "subway.com",
+    "file": "france/subway.png"
+  },
+  {
+    "id": "ratp",
+    "name": "RATP / Navigo",
+    "domain": "ratp.fr",
+    "category": "Transport",
+    "aliases": [
+      "ratp",
+      "navigo",
+      "ile de france mobilites",
+      "idfm"
+    ],
+    "file": "france/ratp.png"
+  },
+  {
+    "id": "bolt",
+    "name": "Bolt",
+    "domain": "bolt.eu",
+    "category": "Transport",
+    "aliases": [
+      "bolt"
+    ],
+    "file": "france/bolt.png"
+  },
+  {
+    "id": "blablacar",
+    "name": "BlaBlaCar",
+    "domain": "blablacar.fr",
+    "category": "Transport",
+    "aliases": [
+      "blablacar",
+      "bla bla car"
+    ],
+    "file": "france/blablacar.png"
+  },
+  {
+    "id": "flixbus",
+    "name": "FlixBus",
+    "domain": "flixbus.fr",
+    "category": "Transport",
+    "aliases": [
+      "flixbus",
+      "flix bus"
+    ],
+    "file": "france/flixbus.png"
+  },
+  {
+    "id": "totalenergies",
+    "name": "TotalEnergies",
+    "domain": "totalenergies.fr",
+    "category": "Transport",
+    "aliases": [
+      "totalenergies",
+      "total energies",
+      "total access",
+      "totalenergies electricite",
+      "total direct energie"
+    ],
+    "logoDomain": "totalenergies.fr",
+    "file": "france/totalenergies.png"
+  },
+  {
+    "id": "esso",
+    "name": "Esso",
+    "domain": "esso.fr",
+    "category": "Transport",
+    "aliases": [
+      "esso"
+    ],
+    "file": "france/esso.png"
+  },
+  {
+    "id": "sosh",
+    "name": "Sosh",
+    "domain": "sosh.fr",
+    "category": "Télécommunications",
+    "aliases": [
+      "sosh"
+    ],
+    "file": "france/sosh.png"
+  },
+  {
+    "id": "free",
+    "name": "Free",
+    "domain": "free.fr",
+    "category": "Télécommunications",
+    "aliases": [
+      "free mobile",
+      "free telecom",
+      "freebox",
+      "free haut debit"
+    ],
+    "file": "france/free.png"
+  },
+  {
+    "id": "edf",
+    "name": "EDF",
+    "domain": "edf.fr",
+    "category": "Énergie",
+    "aliases": [
+      "edf"
+    ],
+    "logoDomain": "www.edf.fr",
+    "file": "france/edf.png"
+  },
+  {
+    "id": "engie",
+    "name": "ENGIE",
+    "domain": "engie.fr",
+    "category": "Énergie",
+    "aliases": [
+      "engie",
+      "gdf suez"
+    ],
+    "file": "france/engie.png"
+  },
+  {
+    "id": "cdiscount",
+    "name": "Cdiscount",
+    "domain": "cdiscount.com",
+    "category": "Shopping",
+    "aliases": [
+      "cdiscount",
+      "c discount"
+    ],
+    "file": "france/cdiscount.png"
+  },
+  {
+    "id": "leboncoin",
+    "name": "Leboncoin",
+    "domain": "leboncoin.fr",
+    "category": "Shopping",
+    "aliases": [
+      "leboncoin",
+      "le bon coin"
+    ],
+    "file": "france/leboncoin.png"
+  },
+  {
+    "id": "sephora",
+    "name": "Sephora",
+    "domain": "sephora.fr",
+    "category": "Shopping",
+    "aliases": [
+      "sephora"
+    ],
+    "logoDomain": "sephora.fr",
+    "file": "france/sephora.png",
+    "lightTile": true
+  },
+  {
+    "id": "hennesandmauritz",
+    "name": "H&M",
+    "domain": "hm.com",
+    "category": "Shopping",
+    "aliases": [
+      "h m",
+      "hennes mauritz",
+      "hennes and mauritz"
+    ],
+    "file": "france/hennesandmauritz.png"
+  },
+  {
+    "id": "shein",
+    "name": "SHEIN",
+    "domain": "shein.com",
+    "category": "Shopping",
+    "aliases": [
+      "shein"
+    ],
+    "file": "france/shein.png"
+  },
+  {
+    "id": "temu",
+    "name": "Temu",
+    "domain": "temu.com",
+    "category": "Shopping",
+    "aliases": [
+      "temu"
+    ],
+    "file": "france/temu.png"
+  },
+  {
+    "id": "ugc",
+    "name": "UGC",
+    "domain": "ugc.fr",
+    "category": "Loisirs",
+    "aliases": [
+      "ugc"
+    ],
+    "file": "france/ugc.png",
+    "lightTile": true
+  },
+  {
+    "id": "pathe",
+    "name": "Pathé",
+    "domain": "pathe.fr",
+    "category": "Loisirs",
+    "aliases": [
+      "pathe",
+      "gaumont"
+    ],
+    "file": "france/pathe.png"
+  },
+  {
+    "id": "nintendo",
+    "name": "Nintendo",
+    "domain": "nintendo.com",
+    "category": "Loisirs",
+    "aliases": [
+      "nintendo"
+    ],
+    "file": "france/nintendo.png"
+  },
+  {
+    "id": "xbox",
+    "name": "Xbox",
+    "domain": "xbox.com",
+    "category": "Loisirs",
+    "aliases": [
+      "xbox",
+      "microsoft xbox"
+    ],
+    "file": "france/xbox.png"
+  },
+  {
+    "id": "basicfit",
+    "name": "Basic-Fit",
+    "domain": "basic-fit.com",
+    "category": "Loisirs",
+    "aliases": [
+      "basic fit",
+      "basicfit"
+    ],
+    "file": "france/basicfit.png"
+  },
+  {
+    "id": "fitnesspark",
+    "name": "Fitness Park",
+    "domain": "fitnesspark.fr",
+    "category": "Loisirs",
+    "aliases": [
+      "fitness park"
+    ],
+    "file": "france/fitnesspark.png"
+  },
+  {
+    "id": "doctolib",
+    "name": "Doctolib",
+    "domain": "doctolib.fr",
+    "category": "Santé",
+    "aliases": [
+      "doctolib"
+    ],
+    "file": "france/doctolib.png"
+  },
+  {
+    "id": "axa",
+    "name": "AXA",
+    "domain": "axa.fr",
+    "category": "Assurances",
+    "aliases": [
+      "axa"
+    ],
+    "file": "france/axa.png"
+  },
+  {
+    "id": "allianz",
+    "name": "Allianz",
+    "domain": "allianz.fr",
+    "category": "Assurances",
+    "aliases": [
+      "allianz"
+    ],
+    "file": "france/allianz.png"
+  },
+  {
+    "id": "maif",
+    "name": "MAIF",
+    "domain": "maif.fr",
+    "category": "Assurances",
+    "aliases": [
+      "maif"
+    ],
+    "file": "france/maif.png"
+  },
+  {
+    "id": "macif",
+    "name": "MACIF",
+    "domain": "macif.fr",
+    "category": "Assurances",
+    "aliases": [
+      "macif"
+    ],
+    "file": "france/macif.png"
+  },
+  {
+    "id": "matmut",
+    "name": "Matmut",
+    "domain": "matmut.fr",
+    "category": "Assurances",
+    "aliases": [
+      "matmut"
+    ],
+    "logoDomain": "matmut.fr",
+    "file": "france/matmut.png"
+  },
+  {
+    "id": "action",
+    "name": "Action",
+    "domain": "action.com",
+    "category": "Shopping",
+    "aliases": [
+      "action france",
+      "action magasin",
+      "action sas",
+      "cb action",
+      "carte action"
+    ],
+    "file": "france/action.png"
+  },
+  {
+    "id": "noz",
+    "name": "NOZ",
+    "domain": "noz.fr",
+    "category": "Shopping",
+    "aliases": [
+      "noz"
+    ],
+    "logoDomain": "noz.fr",
+    "file": "france/noz.png"
+  },
+  {
+    "id": "normal",
+    "name": "NORMAL",
+    "domain": "normal.fr",
+    "category": "Shopping",
+    "aliases": [
+      "normal france",
+      "normal magasin",
+      "cb normal",
+      "carte normal"
+    ],
+    "file": "france/normal.png"
+  },
+  {
+    "id": "primark",
+    "name": "Primark",
+    "domain": "primark.com",
+    "category": "Shopping",
+    "aliases": [
+      "primark"
+    ],
+    "file": "france/primark.png"
+  },
+  {
+    "id": "kiabi",
+    "name": "Kiabi",
+    "domain": "kiabi.com",
+    "category": "Shopping",
+    "aliases": [
+      "kiabi"
+    ],
+    "file": "france/kiabi.png"
+  },
+  {
+    "id": "jules",
+    "name": "Jules",
+    "domain": "jules.com",
+    "category": "Shopping",
+    "aliases": [
+      "jules sas",
+      "jules magasin",
+      "cb jules",
+      "carte jules"
+    ],
+    "file": "france/jules.png",
+    "lightTile": true
+  },
+  {
+    "id": "celio",
+    "name": "Celio",
+    "domain": "celio.com",
+    "category": "Shopping",
+    "aliases": [
+      "celio"
+    ],
+    "file": "france/celio.png",
+    "lightTile": true
+  },
+  {
+    "id": "cachecache",
+    "name": "Cache Cache",
+    "domain": "cache-cache.fr",
+    "category": "Shopping",
+    "aliases": [
+      "cache cache"
+    ],
+    "file": "france/cachecache.png"
+  },
+  {
+    "id": "promod",
+    "name": "Promod",
+    "domain": "promod.fr",
+    "category": "Shopping",
+    "aliases": [
+      "promod"
+    ],
+    "file": "france/promod.png"
+  },
+  {
+    "id": "etam",
+    "name": "Etam",
+    "domain": "etam.com",
+    "category": "Shopping",
+    "aliases": [
+      "etam"
+    ],
+    "file": "france/etam.png"
+  },
+  {
+    "id": "lacoste",
+    "name": "Lacoste",
+    "domain": "lacoste.com",
+    "category": "Shopping",
+    "aliases": [
+      "lacoste"
+    ],
+    "file": "france/lacoste.png",
+    "lightTile": true
+  },
+  {
+    "id": "courir",
+    "name": "Courir",
+    "domain": "courir.com",
+    "category": "Shopping",
+    "aliases": [
+      "courir france",
+      "courir magasin",
+      "cb courir",
+      "carte courir"
+    ],
+    "file": "france/courir.png"
+  },
+  {
+    "id": "jdsports",
+    "name": "JD Sports",
+    "domain": "jdsports.fr",
+    "category": "Shopping",
+    "aliases": [
+      "jd sports",
+      "jdsports"
+    ],
+    "file": "france/jdsports.png",
+    "lightTile": true
+  },
+  {
+    "id": "intersport",
+    "name": "Intersport",
+    "domain": "intersport.fr",
+    "category": "Shopping",
+    "aliases": [
+      "intersport"
+    ],
+    "file": "france/intersport.png"
+  },
+  {
+    "id": "chaussea",
+    "name": "Chaussea",
+    "domain": "chaussea.com",
+    "category": "Shopping",
+    "aliases": [
+      "chaussea"
+    ],
+    "file": "france/chaussea.png"
+  },
+  {
+    "id": "gemo",
+    "name": "Gémo",
+    "domain": "gemo.fr",
+    "category": "Shopping",
+    "aliases": [
+      "gemo"
+    ],
+    "file": "france/gemo.png"
+  },
+  {
+    "id": "maisonsdumonde",
+    "name": "Maisons du Monde",
+    "domain": "maisonsdumonde.com",
+    "category": "Shopping",
+    "aliases": [
+      "maisons du monde",
+      "maison du monde"
+    ],
+    "file": "france/maisonsdumonde.png"
+  },
+  {
+    "id": "conforama",
+    "name": "Conforama",
+    "domain": "conforama.fr",
+    "category": "Shopping",
+    "aliases": [
+      "conforama"
+    ],
+    "file": "france/conforama.png"
+  },
+  {
+    "id": "but",
+    "name": "BUT",
+    "domain": "but.fr",
+    "category": "Shopping",
+    "aliases": [
+      "but international",
+      "but magasin",
+      "but fr",
+      "cb but",
+      "carte but"
+    ],
+    "logoDomain": "but.fr",
+    "file": "france/but.png"
+  },
+  {
+    "id": "bricodepot",
+    "name": "Brico Dépôt",
+    "domain": "bricodepot.fr",
+    "category": "Shopping",
+    "aliases": [
+      "brico depot",
+      "bricodepot"
+    ],
+    "file": "france/bricodepot.png"
+  },
+  {
+    "id": "bricomarche",
+    "name": "Bricomarché",
+    "domain": "bricomarche.com",
+    "category": "Shopping",
+    "aliases": [
+      "bricomarche"
+    ],
+    "file": "france/bricomarche.png",
+    "lightTile": true
+  },
+  {
+    "id": "mrbricolage",
+    "name": "Mr.Bricolage",
+    "domain": "mr-bricolage.fr",
+    "category": "Shopping",
+    "aliases": [
+      "mr bricolage",
+      "monsieur bricolage"
+    ],
+    "file": "france/mrbricolage.png"
+  },
+  {
+    "id": "centrakor",
+    "name": "Centrakor",
+    "domain": "centrakor.com",
+    "category": "Shopping",
+    "aliases": [
+      "centrakor"
+    ],
+    "file": "france/centrakor.png"
+  },
+  {
+    "id": "gifi",
+    "name": "GiFi",
+    "domain": "gifi.fr",
+    "category": "Shopping",
+    "aliases": [
+      "gifi"
+    ],
+    "file": "france/gifi.png"
+  },
+  {
+    "id": "hema",
+    "name": "HEMA",
+    "domain": "hema.com",
+    "category": "Shopping",
+    "aliases": [
+      "hema"
+    ],
+    "file": "france/hema.png"
+  },
+  {
+    "id": "sostrenegrene",
+    "name": "Søstrene Grene",
+    "domain": "sostrenegrene.com",
+    "category": "Shopping",
+    "aliases": [
+      "sostrene grene",
+      "sostrenegrene"
+    ],
+    "file": "france/sostrenegrene.png"
+  },
+  {
+    "id": "cultura",
+    "name": "Cultura",
+    "domain": "cultura.com",
+    "category": "Shopping",
+    "aliases": [
+      "cultura"
+    ],
+    "file": "catalogue/cultura.svg"
+  },
+  {
+    "id": "furet",
+    "name": "Furet du Nord",
+    "domain": "furet.com",
+    "category": "Shopping",
+    "aliases": [
+      "furet du nord"
+    ],
+    "file": "france/furet.png"
+  },
+  {
+    "id": "backmarket",
+    "name": "Back Market",
+    "domain": "backmarket.fr",
+    "category": "Shopping",
+    "aliases": [
+      "back market",
+      "backmarket"
+    ],
+    "file": "france/backmarket.png"
+  },
+  {
+    "id": "veepee",
+    "name": "Veepee",
+    "domain": "veepee.fr",
+    "category": "Shopping",
+    "aliases": [
+      "veepee",
+      "vente privee"
+    ],
+    "file": "catalogue/veepee.svg"
+  },
+  {
+    "id": "showroomprive",
+    "name": "Showroomprivé",
+    "domain": "showroomprive.com",
+    "category": "Shopping",
+    "aliases": [
+      "showroomprive",
+      "showroom prive"
+    ],
+    "file": "france/showroomprive.png"
+  },
+  {
+    "id": "manomano",
+    "name": "ManoMano",
+    "domain": "manomano.fr",
+    "category": "Shopping",
+    "aliases": [
+      "manomano",
+      "mano mano"
+    ],
+    "file": "france/manomano.png"
+  },
+  {
+    "id": "amazonmusic",
+    "name": "Amazon Music",
+    "domain": "music.amazon.fr",
+    "category": "Abonnements",
+    "aliases": [
+      "amazon music",
+      "amzn music"
+    ],
+    "file": "france/amazonmusic.png"
+  },
+  {
+    "id": "amazonwebservices",
+    "name": "Amazon Web Services",
+    "domain": "aws.amazon.com",
+    "category": "Abonnements",
+    "aliases": [
+      "amazon web services",
+      "aws emea"
+    ],
+    "file": "france/amazonwebservices.png"
+  },
+  {
+    "id": "chatgpt",
+    "name": "ChatGPT / OpenAI",
+    "domain": "openai.com",
+    "category": "Abonnements",
+    "aliases": [
+      "chatgpt",
+      "chat gpt",
+      "openai"
+    ],
+    "file": "france/chatgpt.png"
+  },
+  {
+    "id": "claude",
+    "name": "Claude / Anthropic",
+    "domain": "claude.ai",
+    "category": "Abonnements",
+    "aliases": [
+      "anthropic",
+      "claude ai"
+    ],
+    "file": "catalogue/claude.svg"
+  },
+  {
+    "id": "perplexity",
+    "name": "Perplexity",
+    "domain": "perplexity.ai",
+    "category": "Abonnements",
+    "aliases": [
+      "perplexity"
+    ],
+    "file": "catalogue/perplexity.svg"
+  },
+  {
+    "id": "icloud",
+    "name": "iCloud",
+    "domain": "icloud.com",
+    "category": "Abonnements",
+    "aliases": [
+      "icloud",
+      "icloud plus"
+    ],
+    "file": "catalogue/icloud.svg"
+  },
+  {
+    "id": "microsoft365",
+    "name": "Microsoft 365",
+    "domain": "microsoft.com",
+    "category": "Abonnements",
+    "aliases": [
+      "microsoft 365",
+      "msft 365",
+      "office 365"
+    ],
+    "file": "france/microsoft365.png"
+  },
+  {
+    "id": "playstationplus",
+    "name": "PlayStation Plus",
+    "domain": "playstation.com",
+    "category": "Loisirs",
+    "aliases": [
+      "playstation plus",
+      "ps plus",
+      "psn plus"
+    ],
+    "logoDomain": "playstation.com",
+    "file": "france/playstationplus.png"
+  },
+  {
+    "id": "crunchyroll",
+    "name": "Crunchyroll",
+    "domain": "crunchyroll.com",
+    "category": "Abonnements",
+    "aliases": [
+      "crunchyroll"
+    ],
+    "file": "catalogue/crunchyroll.svg"
+  },
+  {
+    "id": "paramountplus",
+    "name": "Paramount+",
+    "domain": "paramountplus.com",
+    "category": "Abonnements",
+    "aliases": [
+      "paramount plus",
+      "paramountplus"
+    ],
+    "file": "catalogue/paramountplus.svg"
+  },
+  {
+    "id": "molotov",
+    "name": "Molotov",
+    "domain": "molotov.tv",
+    "category": "Abonnements",
+    "aliases": [
+      "molotov"
+    ],
+    "file": "france/molotov.png"
+  },
+  {
+    "id": "qobuz",
+    "name": "Qobuz",
+    "domain": "qobuz.com",
+    "category": "Abonnements",
+    "aliases": [
+      "qobuz"
+    ],
+    "file": "france/qobuz.png"
+  },
+  {
+    "id": "audible",
+    "name": "Audible",
+    "domain": "audible.fr",
+    "category": "Abonnements",
+    "aliases": [
+      "audible"
+    ],
+    "file": "catalogue/audible.svg"
+  },
+  {
+    "id": "mediapart",
+    "name": "Mediapart",
+    "domain": "mediapart.fr",
+    "category": "Abonnements",
+    "aliases": [
+      "mediapart"
+    ],
+    "file": "france/mediapart.png"
+  },
+  {
+    "id": "lemonde",
+    "name": "Le Monde",
+    "domain": "lemonde.fr",
+    "category": "Abonnements",
+    "aliases": [
+      "le monde abonnement",
+      "lemonde"
+    ],
+    "file": "france/lemonde.png"
+  },
+  {
+    "id": "lequipe",
+    "name": "L’Équipe",
+    "domain": "lequipe.fr",
+    "category": "Abonnements",
+    "aliases": [
+      "lequipe",
+      "l equipe abonnement"
+    ],
+    "file": "catalogue/lequipe.svg"
+  },
+  {
+    "id": "ouigo",
+    "name": "OUIGO",
+    "domain": "ouigo.com",
+    "category": "Transport",
+    "aliases": [
+      "ouigo"
+    ],
+    "file": "france/ouigo.png"
+  },
+  {
+    "id": "trenitalia",
+    "name": "Trenitalia",
+    "domain": "trenitalia.com",
+    "category": "Transport",
+    "aliases": [
+      "trenitalia"
+    ],
+    "logoDomain": "trenitalia.com",
+    "file": "france/trenitalia.png"
+  },
+  {
+    "id": "eurostar",
+    "name": "Eurostar",
+    "domain": "eurostar.com",
+    "category": "Transport",
+    "aliases": [
+      "eurostar",
+      "thalys"
+    ],
+    "file": "france/eurostar.png"
+  },
+  {
+    "id": "transavia",
+    "name": "Transavia",
+    "domain": "transavia.com",
+    "category": "Transport",
+    "aliases": [
+      "transavia"
+    ],
+    "file": "france/transavia.png"
+  },
+  {
+    "id": "volotea",
+    "name": "Volotea",
+    "domain": "volotea.com",
+    "category": "Transport",
+    "aliases": [
+      "volotea"
+    ],
+    "file": "france/volotea.png"
+  },
+  {
+    "id": "vueling",
+    "name": "Vueling",
+    "domain": "vueling.com",
+    "category": "Transport",
+    "aliases": [
+      "vueling"
+    ],
+    "logoDomain": "vueling.com",
+    "file": "france/vueling.png"
+  },
+  {
+    "id": "vinci",
+    "name": "VINCI Autoroutes",
+    "domain": "vinci-autoroutes.com",
+    "category": "Transport",
+    "aliases": [
+      "vinci autoroutes",
+      "cofiroute",
+      "escota",
+      "autoroutes du sud",
+      "asf peage"
+    ],
+    "file": "france/vinci.png"
+  },
+  {
+    "id": "sanef",
+    "name": "Sanef",
+    "domain": "sanef.com",
+    "category": "Transport",
+    "aliases": [
+      "sanef",
+      "sapn"
+    ],
+    "logoDomain": "sanef.com",
+    "file": "france/sanef.png"
+  },
+  {
+    "id": "ulys",
+    "name": "Ulys",
+    "domain": "ulys.com",
+    "category": "Transport",
+    "aliases": [
+      "ulys"
+    ],
+    "file": "france/ulys.png"
+  },
+  {
+    "id": "indigo",
+    "name": "Indigo Parking",
+    "domain": "indigoneo.fr",
+    "category": "Transport",
+    "aliases": [
+      "indigo parking",
+      "indigo park",
+      "indigoneo"
+    ],
+    "file": "catalogue/indigo.svg"
+  },
+  {
+    "id": "flowbird",
+    "name": "Flowbird",
+    "domain": "flowbird.fr",
+    "category": "Transport",
+    "aliases": [
+      "flowbird"
+    ],
+    "file": "france/flowbird.png"
+  },
+  {
+    "id": "qpark",
+    "name": "Q-Park",
+    "domain": "q-park.fr",
+    "category": "Transport",
+    "aliases": [
+      "q park",
+      "qpark"
+    ],
+    "file": "france/qpark.png"
+  },
+  {
+    "id": "easypark",
+    "name": "EasyPark",
+    "domain": "easypark.com",
+    "category": "Transport",
+    "aliases": [
+      "easypark",
+      "easy park"
+    ],
+    "file": "france/easypark.png"
+  },
+  {
+    "id": "bipandgo",
+    "name": "Bip&Go",
+    "domain": "bipandgo.com",
+    "category": "Transport",
+    "aliases": [
+      "bip go",
+      "bip and go",
+      "bipandgo"
+    ],
+    "file": "france/bipandgo.png"
+  },
+  {
+    "id": "getaround",
+    "name": "Getaround",
+    "domain": "getaround.com",
+    "category": "Transport",
+    "aliases": [
+      "getaround",
+      "drivy"
+    ],
+    "file": "france/getaround.png"
+  },
+  {
+    "id": "rentacar",
+    "name": "Rent A Car",
+    "domain": "rentacar.fr",
+    "category": "Transport",
+    "aliases": [
+      "rent a car",
+      "rentacar"
+    ],
+    "file": "france/rentacar.png"
+  },
+  {
+    "id": "sixt",
+    "name": "SIXT",
+    "domain": "sixt.fr",
+    "category": "Transport",
+    "aliases": [
+      "sixt"
+    ],
+    "file": "france/sixt.png"
+  },
+  {
+    "id": "hertz",
+    "name": "Hertz",
+    "domain": "hertz.fr",
+    "category": "Transport",
+    "aliases": [
+      "hertz"
+    ],
+    "file": "france/hertz.png"
+  },
+  {
+    "id": "europcar",
+    "name": "Europcar",
+    "domain": "europcar.fr",
+    "category": "Transport",
+    "aliases": [
+      "europcar"
+    ],
+    "file": "france/europcar.png"
+  },
+  {
+    "id": "veolia",
+    "name": "Veolia Eau",
+    "domain": "eau.veolia.fr",
+    "category": "Énergie",
+    "aliases": [
+      "veolia",
+      "veolia eau"
+    ],
+    "file": "france/veolia.png"
+  },
+  {
+    "id": "suez",
+    "name": "Suez Eau",
+    "domain": "tout-sur-mon-eau.fr",
+    "category": "Énergie",
+    "aliases": [
+      "suez eau",
+      "lyonnaise des eaux"
+    ],
+    "logoDomain": "www.tout-sur-mon-eau.fr",
+    "file": "france/suez.png"
+  },
+  {
+    "id": "ilek",
+    "name": "ilek",
+    "domain": "ilek.fr",
+    "category": "Énergie",
+    "aliases": [
+      "ilek"
+    ],
+    "file": "france/ilek.png"
+  },
+  {
+    "id": "ohmenergie",
+    "name": "OHM Énergie",
+    "domain": "ohm-energie.com",
+    "category": "Énergie",
+    "aliases": [
+      "ohm energie"
+    ],
+    "file": "france/ohmenergie.png"
+  },
+  {
+    "id": "mintenergie",
+    "name": "Mint Énergie",
+    "domain": "mint-energie.com",
+    "category": "Énergie",
+    "aliases": [
+      "mint energie"
+    ],
+    "file": "france/mintenergie.png"
+  },
+  {
+    "id": "enedis",
+    "name": "Enedis",
+    "domain": "enedis.fr",
+    "category": "Énergie",
+    "aliases": [
+      "enedis"
+    ],
+    "file": "france/enedis.png"
+  },
+  {
+    "id": "ekwateur",
+    "name": "Ekwateur",
+    "domain": "ekwateur.fr",
+    "category": "Énergie",
+    "aliases": [
+      "ekwateur"
+    ],
+    "file": "france/ekwateur.png"
+  },
+  {
+    "id": "elecocite",
+    "name": "Élecocité",
+    "domain": "elecocite.fr",
+    "category": "Énergie",
+    "aliases": [
+      "elecocite"
+    ],
+    "file": "france/elecocite.png"
+  },
+  {
+    "id": "nrjmobile",
+    "name": "NRJ Mobile",
+    "domain": "nrjmobile.fr",
+    "category": "Télécommunications",
+    "aliases": [
+      "nrj mobile"
+    ],
+    "file": "france/nrjmobile.png",
+    "lightTile": true
+  },
+  {
+    "id": "lapostemobile",
+    "name": "La Poste Mobile",
+    "domain": "lapostemobile.fr",
+    "category": "Télécommunications",
+    "aliases": [
+      "la poste mobile",
+      "laposte mobile"
+    ],
+    "file": "france/lapostemobile.png"
+  },
+  {
+    "id": "prixtel",
+    "name": "Prixtel",
+    "domain": "prixtel.com",
+    "category": "Télécommunications",
+    "aliases": [
+      "prixtel"
+    ],
+    "file": "france/prixtel.png"
+  },
+  {
+    "id": "reglomobile",
+    "name": "Réglo Mobile",
+    "domain": "reglomobile.fr",
+    "category": "Télécommunications",
+    "aliases": [
+      "reglo mobile"
+    ],
+    "file": "france/reglomobile.png"
+  },
+  {
+    "id": "coriolis",
+    "name": "Coriolis",
+    "domain": "coriolis.com",
+    "category": "Télécommunications",
+    "aliases": [
+      "coriolis"
+    ],
+    "file": "france/coriolis.png"
+  },
+  {
+    "id": "bforbank",
+    "name": "BforBank",
+    "domain": "bforbank.com",
+    "category": "Autres",
+    "aliases": [
+      "bforbank"
+    ],
+    "file": "france/bforbank.png"
+  },
+  {
+    "id": "boursobank",
+    "name": "BoursoBank",
+    "domain": "boursobank.com",
+    "category": "Autres",
+    "aliases": [
+      "boursobank",
+      "boursorama banque"
+    ],
+    "file": "france/boursobank.png"
+  },
+  {
+    "id": "fortuneo",
+    "name": "Fortuneo",
+    "domain": "fortuneo.fr",
+    "category": "Autres",
+    "aliases": [
+      "fortuneo"
+    ],
+    "file": "france/fortuneo.png"
+  },
+  {
+    "id": "hellobank",
+    "name": "Hello bank!",
+    "domain": "hellobank.fr",
+    "category": "Autres",
+    "aliases": [
+      "hello bank",
+      "hellobank"
+    ],
+    "file": "france/hellobank.png"
+  },
+  {
+    "id": "creditagricole",
+    "name": "Crédit Agricole",
+    "domain": "credit-agricole.fr",
+    "category": "Autres",
+    "aliases": [
+      "credit agricole"
+    ],
+    "file": "france/creditagricole.png"
+  },
+  {
+    "id": "creditmutuel",
+    "name": "Crédit Mutuel",
+    "domain": "creditmutuel.fr",
+    "category": "Autres",
+    "aliases": [
+      "credit mutuel"
+    ],
+    "file": "france/creditmutuel.png"
+  },
+  {
+    "id": "caisseepargne",
+    "name": "Caisse d’Épargne",
+    "domain": "caisse-epargne.fr",
+    "category": "Autres",
+    "aliases": [
+      "caisse epargne",
+      "caisse d epargne"
+    ],
+    "logoDomain": "www.caisse-epargne.fr",
+    "file": "france/caisseepargne.png"
+  },
+  {
+    "id": "banquepopulaire",
+    "name": "Banque Populaire",
+    "domain": "banquepopulaire.fr",
+    "category": "Autres",
+    "aliases": [
+      "banque populaire"
+    ],
+    "file": "france/banquepopulaire.png"
+  },
+  {
+    "id": "labanquepostale",
+    "name": "La Banque Postale",
+    "domain": "labanquepostale.fr",
+    "category": "Autres",
+    "aliases": [
+      "la banque postale",
+      "banque postale"
+    ],
+    "file": "france/labanquepostale.png"
+  },
+  {
+    "id": "bnp",
+    "name": "BNP Paribas",
+    "domain": "mabanque.bnpparibas",
+    "category": "Autres",
+    "aliases": [
+      "bnp paribas"
+    ],
+    "logoDomain": "mabanque.bnpparibas",
+    "file": "france/bnp.png"
+  },
+  {
+    "id": "societegenerale",
+    "name": "Société Générale",
+    "domain": "particuliers.sg.fr",
+    "category": "Autres",
+    "aliases": [
+      "societe generale"
+    ],
+    "file": "france/societegenerale.png"
+  },
+  {
+    "id": "lcl",
+    "name": "LCL",
+    "domain": "lcl.fr",
+    "category": "Autres",
+    "aliases": [
+      "lcl"
+    ],
+    "file": "france/lcl.png"
+  },
+  {
+    "id": "creditcooperatif",
+    "name": "Crédit Coopératif",
+    "domain": "credit-cooperatif.coop",
+    "category": "Autres",
+    "aliases": [
+      "credit cooperatif"
+    ],
+    "logoDomain": "www.credit-cooperatif.coop",
+    "file": "france/creditcooperatif.png",
+    "lightTile": true
+  },
+  {
+    "id": "boursedirect",
+    "name": "Bourse Direct",
+    "domain": "boursedirect.fr",
+    "category": "Épargne",
+    "aliases": [
+      "bourse direct"
+    ],
+    "logoDomain": "www.boursedirect.fr",
+    "file": "france/boursedirect.png"
+  },
+  {
+    "id": "traderepublic",
+    "name": "Trade Republic",
+    "domain": "traderepublic.com",
+    "category": "Épargne",
+    "aliases": [
+      "trade republic"
+    ],
+    "file": "france/traderepublic.png"
+  },
+  {
+    "id": "linxea",
+    "name": "Linxea",
+    "domain": "linxea.com",
+    "category": "Épargne",
+    "aliases": [
+      "linxea"
+    ],
+    "file": "france/linxea.png"
+  },
+  {
+    "id": "harmoniemutuelle",
+    "name": "Harmonie Mutuelle",
+    "domain": "harmonie-mutuelle.fr",
+    "category": "Santé",
+    "aliases": [
+      "harmonie mutuelle"
+    ],
+    "file": "france/harmoniemutuelle.png"
+  },
+  {
+    "id": "alan",
+    "name": "Alan",
+    "domain": "alan.com",
+    "category": "Santé",
+    "aliases": [
+      "alan assurance",
+      "alan mutuelle"
+    ],
+    "file": "france/alan.png"
+  },
+  {
+    "id": "malakoff",
+    "name": "Malakoff Humanis",
+    "domain": "malakoffhumanis.com",
+    "category": "Santé",
+    "aliases": [
+      "malakoff humanis"
+    ],
+    "file": "france/malakoff.png"
+  },
+  {
+    "id": "mgen",
+    "name": "MGEN",
+    "domain": "mgen.fr",
+    "category": "Santé",
+    "aliases": [
+      "mgen"
+    ],
+    "file": "france/mgen.png"
+  },
+  {
+    "id": "groupama",
+    "name": "Groupama",
+    "domain": "groupama.fr",
+    "category": "Assurances",
+    "aliases": [
+      "groupama"
+    ],
+    "file": "france/groupama.png"
+  },
+  {
+    "id": "gmf",
+    "name": "GMF",
+    "domain": "gmf.fr",
+    "category": "Assurances",
+    "aliases": [
+      "gmf"
+    ],
+    "file": "france/gmf.png"
+  },
+  {
+    "id": "generali",
+    "name": "Generali",
+    "domain": "generali.fr",
+    "category": "Assurances",
+    "aliases": [
+      "generali"
+    ],
+    "file": "france/generali.png"
+  },
+  {
+    "id": "maaf",
+    "name": "MAAF",
+    "domain": "maaf.fr",
+    "category": "Assurances",
+    "aliases": [
+      "maaf"
+    ],
+    "file": "france/maaf.png"
+  },
+  {
+    "id": "directassurance",
+    "name": "Direct Assurance",
+    "domain": "direct-assurance.fr",
+    "category": "Assurances",
+    "aliases": [
+      "direct assurance"
+    ],
+    "file": "france/directassurance.png"
+  },
+  {
+    "id": "leocare",
+    "name": "Leocare",
+    "domain": "leocare.eu",
+    "category": "Assurances",
+    "aliases": [
+      "leocare"
+    ],
+    "file": "france/leocare.png"
+  },
+  {
+    "id": "luko",
+    "name": "Luko",
+    "domain": "luko.eu",
+    "category": "Assurances",
+    "aliases": [
+      "luko"
+    ],
+    "file": "france/luko.png"
+  },
+  {
+    "id": "aesio",
+    "name": "Aésio Mutuelle",
+    "domain": "aesio.fr",
+    "category": "Santé",
+    "aliases": [
+      "aesio"
+    ],
+    "logoDomain": "aesio.fr",
+    "file": "france/aesio.png"
+  },
+  {
+    "id": "cgr",
+    "name": "CGR Cinémas",
+    "domain": "cgrcinemas.fr",
+    "category": "Loisirs",
+    "aliases": [
+      "cgr cinemas",
+      "cgr cinema"
+    ],
+    "file": "france/cgr.png"
+  },
+  {
+    "id": "kinepolis",
+    "name": "Kinepolis",
+    "domain": "kinepolis.fr",
+    "category": "Loisirs",
+    "aliases": [
+      "kinepolis"
+    ],
+    "file": "france/kinepolis.png"
+  },
+  {
+    "id": "keepcool",
+    "name": "Keepcool",
+    "domain": "keepcool.fr",
+    "category": "Loisirs",
+    "aliases": [
+      "keepcool",
+      "keep cool"
+    ],
+    "file": "france/keepcool.png"
+  },
+  {
+    "id": "onairfitness",
+    "name": "ON AIR Fitness",
+    "domain": "onair-fitness.fr",
+    "category": "Loisirs",
+    "aliases": [
+      "on air fitness",
+      "onair fitness"
+    ],
+    "file": "france/onairfitness.png"
+  },
+  {
+    "id": "cerclesdelaforme",
+    "name": "Cercles de la Forme",
+    "domain": "cerclesdelaforme.com",
+    "category": "Loisirs",
+    "aliases": [
+      "cercles de la forme"
+    ],
+    "logoDomain": "www.cerclesdelaforme.com",
+    "file": "france/cerclesdelaforme.png"
+  },
+  {
+    "id": "disneylandparis",
+    "name": "Disneyland Paris",
+    "domain": "disneylandparis.com",
+    "category": "Loisirs",
+    "aliases": [
+      "disneyland paris",
+      "eurodisney"
+    ],
+    "file": "france/disneylandparis.png",
+    "lightTile": true
+  },
+  {
+    "id": "parcasterix",
+    "name": "Parc Astérix",
+    "domain": "parcasterix.fr",
+    "category": "Loisirs",
+    "aliases": [
+      "parc asterix"
+    ],
+    "file": "france/parcasterix.png"
+  },
+  {
+    "id": "futuroscope",
+    "name": "Futuroscope",
+    "domain": "futuroscope.com",
+    "category": "Loisirs",
+    "aliases": [
+      "futuroscope"
+    ],
+    "logoDomain": "futuroscope.com",
+    "file": "france/futuroscope.png"
+  },
+  {
+    "id": "laposte",
+    "name": "La Poste",
+    "domain": "laposte.fr",
+    "category": "Autres",
+    "aliases": [
+      "la poste",
+      "laposte"
+    ],
+    "file": "france/laposte.png"
+  },
+  {
+    "id": "mondialrelay",
+    "name": "Mondial Relay",
+    "domain": "mondialrelay.fr",
+    "category": "Autres",
+    "aliases": [
+      "mondial relay"
+    ],
+    "file": "france/mondialrelay.png"
+  },
+  {
+    "id": "chronopost",
+    "name": "Chronopost",
+    "domain": "chronopost.fr",
+    "category": "Autres",
+    "aliases": [
+      "chronopost"
+    ],
+    "file": "france/chronopost.png"
+  },
+  {
+    "id": "colissimo",
+    "name": "Colissimo",
+    "domain": "colissimo.fr",
+    "category": "Autres",
+    "aliases": [
+      "colissimo"
+    ],
+    "file": "france/colissimo.png"
+  },
+  {
+    "id": "paylib",
+    "name": "Paylib",
+    "domain": "paylib.fr",
+    "category": "Autres",
+    "aliases": [
+      "paylib"
+    ],
+    "file": "france/paylib.png",
+    "lightTile": true
+  },
+  {
+    "id": "wero",
+    "name": "Wero",
+    "domain": "wero-wallet.eu",
+    "category": "Autres",
+    "aliases": [
+      "wero"
+    ],
+    "file": "france/wero.png"
+  },
+  {
+    "id": "sumup",
+    "name": "SumUp",
+    "domain": "sumup.com",
+    "category": "Autres",
+    "aliases": [
+      "sumup"
+    ],
+    "file": "catalogue/sumup.svg"
+  },
+  {
+    "id": "square",
+    "name": "Square",
+    "domain": "squareup.com",
+    "category": "Autres",
+    "aliases": [
+      "squareup",
+      "square inc"
+    ],
+    "file": "catalogue/square.svg"
+  },
+  {
+    "id": "stripe",
+    "name": "Stripe",
+    "domain": "stripe.com",
+    "category": "Autres",
+    "aliases": [
+      "stripe"
+    ],
+    "file": "catalogue/stripe.svg"
+  },
+  {
+    "id": "quick",
+    "name": "Quick",
+    "domain": "quick.fr",
+    "category": "Restaurants",
+    "aliases": [
+      "quick restaurant",
+      "quick france",
+      "quick sas",
+      "cb quick",
+      "carte quick"
+    ],
+    "file": "france/quick.png"
+  },
+  {
+    "id": "flunch",
+    "name": "Flunch",
+    "domain": "flunch.fr",
+    "category": "Restaurants",
+    "aliases": [
+      "flunch"
+    ],
+    "file": "france/flunch.png"
+  },
+  {
+    "id": "buffalo",
+    "name": "Buffalo Grill",
+    "domain": "buffalo-grill.fr",
+    "category": "Restaurants",
+    "aliases": [
+      "buffalo grill"
+    ],
+    "logoDomain": "buffalo-grill.fr",
+    "file": "france/buffalo.png"
+  },
+  {
+    "id": "courtepaille",
+    "name": "Courtepaille",
+    "domain": "courtepaille.com",
+    "category": "Restaurants",
+    "aliases": [
+      "courtepaille"
+    ],
+    "file": "france/courtepaille.png"
+  },
+  {
+    "id": "pizzahut",
+    "name": "Pizza Hut",
+    "domain": "pizzahut.fr",
+    "category": "Restaurants",
+    "aliases": [
+      "pizza hut"
+    ],
+    "file": "france/pizzahut.png"
+  },
+  {
+    "id": "dominos",
+    "name": "Domino’s Pizza",
+    "domain": "dominos.fr",
+    "category": "Restaurants",
+    "aliases": [
+      "domino s pizza",
+      "dominos pizza",
+      "dominos"
+    ],
+    "logoDomain": "dominos.fr",
+    "file": "france/dominos.png"
+  },
+  {
+    "id": "pitaya",
+    "name": "Pitaya",
+    "domain": "pitaya.fr",
+    "category": "Restaurants",
+    "aliases": [
+      "pitaya"
+    ],
+    "file": "france/pitaya.png",
+    "lightTile": true
+  },
+  {
+    "id": "pommedepain",
+    "name": "Pomme de Pain",
+    "domain": "pommedepain.fr",
+    "category": "Restaurants",
+    "aliases": [
+      "pomme de pain"
+    ],
+    "file": "france/pommedepain.png"
+  },
+  {
+    "id": "paul",
+    "name": "PAUL",
+    "domain": "paul.fr",
+    "category": "Restaurants",
+    "aliases": [
+      "boulangerie paul",
+      "paul boulangerie",
+      "cb paul",
+      "carte paul"
+    ],
+    "logoDomain": "paul.fr",
+    "file": "france/paul.png"
+  },
+  {
+    "id": "briochedoree",
+    "name": "Brioche Dorée",
+    "domain": "briochedoree.fr",
+    "category": "Restaurants",
+    "aliases": [
+      "brioche doree"
+    ],
+    "logoDomain": "briochedoree.fr",
+    "file": "france/briochedoree.png"
+  },
+  {
+    "id": "ange",
+    "name": "Boulangerie Ange",
+    "domain": "boulangerie-ange.fr",
+    "category": "Alimentation",
+    "aliases": [
+      "boulangerie ange"
+    ],
+    "file": "france/ange.png"
+  },
+  {
+    "id": "marieblachere",
+    "name": "Marie Blachère",
+    "domain": "marieblachere.com",
+    "category": "Alimentation",
+    "aliases": [
+      "marie blachere"
+    ],
+    "file": "france/marieblachere.png",
+    "lightTile": true
+  },
+  {
+    "id": "feuillette",
+    "name": "Feuillette",
+    "domain": "feuillette.fr",
+    "category": "Alimentation",
+    "aliases": [
+      "feuillette"
+    ],
+    "file": "france/feuillette.png"
+  },
+  {
+    "id": "fresh",
+    "name": "fresh.",
+    "domain": "fresh.fr",
+    "category": "Alimentation",
+    "aliases": [
+      "fresh magasin",
+      "fresh alimentation"
+    ],
+    "file": "catalogue/fresh.svg"
+  },
+  {
+    "id": "thiriet",
+    "name": "Thiriet",
+    "domain": "thiriet.com",
+    "category": "Alimentation",
+    "aliases": [
+      "thiriet"
+    ],
+    "file": "france/thiriet.png"
+  },
+  {
+    "id": "bofrost",
+    "name": "bofrost*",
+    "domain": "bofrost.fr",
+    "category": "Alimentation",
+    "aliases": [
+      "bofrost"
+    ],
+    "logoDomain": "bofrost.fr",
+    "file": "france/bofrost.png"
+  },
+  {
+    "id": "lamiecaline",
+    "name": "La Mie Câline",
+    "domain": "lamiecaline.com",
+    "category": "Restaurants",
+    "aliases": [
+      "la mie caline"
+    ],
+    "file": "france/lamiecaline.png",
+    "lightTile": true
+  },
+  {
+    "id": "otacos",
+    "name": "O’Tacos",
+    "domain": "o-tacos.com",
+    "category": "Restaurants",
+    "aliases": [
+      "o tacos",
+      "otacos"
+    ],
+    "file": "france/otacos.png"
+  }
+]

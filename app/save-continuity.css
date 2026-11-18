@@ -1,0 +1,10 @@
+/* Wallet continuity: native form and journal remain the interactive owners. */
+.transfer-preview{display:grid;grid-template-columns:minmax(0,1fr);gap:0;margin-bottom:20px}
+.transfer-account{display:grid;gap:6px;padding:14px 16px;border-radius:16px;background:var(--wallet-color);color:var(--wallet-ink);min-width:0}
+.transfer-account>span{display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.transfer-account>strong{font-size:16px;overflow-wrap:anywhere}
+.transfer-account>b{font-size:23px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.transfer-connection{display:grid;place-items:center;height:34px;position:relative;color:var(--muted)}
+.transfer-token{position:absolute;padding:4px 10px;border-radius:12px;background:var(--action-bg);color:var(--on-action);font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;opacity:0;white-space:nowrap}
+.operation-flight{position:fixed!important;z-index:95!important;pointer-events:none!important;margin:0!important;background:var(--card)!important;border-radius:12px;box-shadow:0 8px 24px #0002;overflow:hidden;contain:layout paint}
+@media(prefers-reduced-motion:reduce){.operation-flight{display:none}.transfer-token{display:none}}

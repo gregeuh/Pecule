@@ -1,0 +1,4 @@
+/** Same public identity in the streamed fallback, personal-budget boot and iOS images. */
+export default function LaunchScreen({decorative=false}:{decorative?:boolean}){
+ return <div className="launch-screen" role={decorative?undefined:'status'} aria-label={decorative?undefined:'Ouverture de Pécule'} aria-live={decorative?undefined:'polite'}><div className="launch-identity"><div className="launch-mark"><svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="27" fill="#3159ed"/><path d="M30 76V27h24c25 0 25 34 0 34H43v15Z" fill="white"/><path d="M43 39v10h10c9 0 9-10 0-10Z" fill="#3159ed"/><circle cx="72" cy="73" r="7" fill="#b7c6ff"/></svg><span className="launch-reflection" aria-hidden="true"/></div><p className="launch-word">pécule.</p><p className="launch-tagline">Votre argent, l’esprit léger.</p></div><p className="launch-wait">Ouverture de Pécule</p></div>;
+}

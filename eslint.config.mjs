@@ -7,6 +7,8 @@ const eslintConfig = defineConfig([
   ...nextTs,
   globalIgnores([
     "dist/**",
+    "public/offline-capture.js",
+    "public/offline-version.js",
     ".vinext/**",
     ".wrangler/**",
     ".sites-runtime/**",

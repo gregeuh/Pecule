@@ -1,0 +1,63 @@
+/* Gestures enhance native controls; the document keeps its vertical scrolling. */
+.swipe-tabs { min-width:0;touch-action:pan-y pinch-zoom; }
+.operation-gesture { position:relative;display:grid;grid-template-columns:minmax(0,1fr) 40px;align-items:stretch;min-width:0;background:var(--card);border-bottom:1px solid var(--line); }
+.operation-gesture > :is(.transaction-row,.clarte-transaction,.account-activity-row) { min-width:0;width:100%;border:0;border-radius:0!important;touch-action:pan-y pinch-zoom;-webkit-touch-callout:none;user-select:none;transition:transform var(--motion-release) var(--motion-settle),box-shadow var(--motion-release) var(--motion-settle),background-color var(--motion-state) ease; }
+.operation-gesture .operation-more { align-self:center;min-width:40px;width:40px;min-height:44px;color:var(--muted);background:transparent; }
+.operation-gesture .row-chevron { display:none; }
+.operation-gesture > .operation-swipe-actions { grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;padding:8px;background:var(--surface-inset);animation:gesture-actions-in var(--motion-state) var(--motion-settle); }
+.operation-swipe-actions > button { display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:8px 14px;background:var(--blue-soft);color:var(--blue);border-radius:10px;font-size:12px;font-weight:650; }
+.operation-swipe-actions > button:first-child { background:var(--action-bg);color:var(--on-action); }
+.wallet-dashboard .clarte-recent > .operation-gesture:nth-child(2) { border-radius:16px 16px 0 0; }
+.wallet-dashboard .clarte-recent > .operation-gesture:last-child { border-radius:0 0 16px 16px;border-bottom:0; }
+.wallet-dashboard .clarte-recent > .operation-gesture:nth-child(2):last-child { border-radius:16px; }
+.wallet-dashboard .operation-gesture .clarte-transaction { background:transparent; }
+.account-activity .operation-gesture { background:transparent; }
+button[data-holding="true"] { position:relative;z-index:2;transform:perspective(700px) translateZ(5px) scale(1.015);box-shadow:0 12px 28px #11182730; }
+.wallet-stack .wallet-card[data-holding="true"] { transform:perspective(700px) translateZ(8px) scale(1.015);filter:brightness(1.03);transition:transform var(--motion-release) var(--motion-settle),box-shadow var(--motion-release) var(--motion-settle); }
+.wallet-stack .wallet-card.clarte-account { transition:transform var(--motion-release) var(--motion-settle),filter var(--motion-state) var(--motion-settle),box-shadow var(--motion-release) var(--motion-settle);touch-action:pan-y pinch-zoom;-webkit-touch-callout:none;user-select:none; }
+.gesture-preview { padding:2px 2px 8px; }
+.gesture-operation-preview { display:flex;flex-direction:column;align-items:center;padding:16px;text-align:center; }
+.gesture-operation-preview > .merchant-icon { margin:0 auto 12px; }
+.gesture-operation-preview h3,.gesture-account-preview h3 { font-size:17px;overflow-wrap:anywhere; }
+.gesture-operation-preview > strong,.gesture-account-preview > strong { display:block;font-size:32px;font-weight:650;letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin:10px 0;overflow-wrap:anywhere; }
+.gesture-operation-preview p { color:var(--muted);font-size:12px;line-height:1.6; }
+.gesture-account-preview { background:var(--wallet-color);color:var(--wallet-ink);padding:20px;border-radius:16px;margin-bottom:12px; }
+.gesture-account-preview > svg { margin-bottom:12px; }
+.gesture-account-preview p { font-size:12px; }
+.gesture-context-actions { display:grid;gap:2px;padding:4px;background:var(--card);border-radius:14px;margin:8px 0 12px; }
+.gesture-context-actions > button { display:flex;align-items:center;gap:12px;min-height:48px;padding:12px;text-align:left;border-radius:10px;background:transparent;color:var(--ink);font-size:14px; }
+.gesture-context-actions > button:enabled:hover { background:var(--blue-soft); }
+.gesture-context-actions > .destructive-action { color:var(--danger);border-top:1px solid var(--line);margin-top:6px; }
+.gesture-context-actions > button:disabled { opacity:.5; }
+.modal-heading[data-panel-gesture] { touch-action:none;user-select:none; }
+.gesture-help { padding:16px; }
+.gesture-help summary { display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;font-weight:650;cursor:pointer;list-style:none; }
+.gesture-help ul { padding-left:20px;margin:12px 0;font-size:13px;line-height:1.6; }
+.gesture-help li+li { margin-top:10px; }
+.quick-add-gesture { position:relative;flex:0 0 var(--dock-add-size);height:var(--dock-add-size); }
+.quick-add-gesture .mobile-add { touch-action:none; }
+.quick-add-palette { position:absolute;right:0;bottom:calc(100% + 18px);display:grid;gap:4px;width:190px;padding:6px;background:var(--card);border-radius:16px;box-shadow:0 12px 32px #00000030;animation:gesture-actions-in var(--motion-release) var(--motion-settle); }
+.quick-add-palette > button { display:flex;align-items:center;gap:10px;min-height:48px;padding:12px;border-radius:11px;background:transparent;color:var(--ink);text-align:left;font-size:14px; }
+.quick-add-palette > button:hover,.quick-add-palette > button[data-selected="true"] { background:var(--blue-soft);color:var(--blue); }
+@keyframes gesture-actions-in { from { opacity:.6;transform:translateY(6px) scale(.985); } to { opacity:1;transform:none; } }
+@media(max-width:760px) { .operation-gesture { grid-template-columns:minmax(0,1fr) 44px; }.operation-gesture .operation-more { width:44px; }.modal:not(.wallet-account-modal)>.modal-heading[data-panel-gesture] { position:relative;padding-top:24px; }.modal:not(.wallet-account-modal)>.modal-heading[data-panel-gesture]:before { content:"";position:absolute;top:8px;left:calc(50% - 17px);width:34px;height:4px;border-radius:4px;background:var(--muted);opacity:.45; } }
+@media(prefers-reduced-motion:reduce) { .operation-gesture>button,.wallet-stack .wallet-card.clarte-account { transition:none; }button[data-holding="true"],.wallet-stack .wallet-card[data-holding="true"] { transform:none; }.operation-swipe-actions,.quick-add-palette { animation:none; } }
+@media(forced-colors:active) { .gesture-account-preview { background:Canvas;color:CanvasText;border:1px solid CanvasText; }.operation-swipe-actions>button,.gesture-context-actions>button,.quick-add-palette>button { border:1px solid ButtonText; } }
+
+/* A reveal stays behind its row; no extra line or layout jump. */
+.operation-gesture{overflow:clip;isolation:isolate}
+.operation-gesture>:is(.transaction-row,.clarte-transaction,.account-activity-row){position:relative;z-index:1;background:var(--card)!important;transform:translateX(var(--operation-drag,0px));transition:background-color var(--motion-state) ease,box-shadow var(--motion-release) var(--motion-settle)}
+.operation-gesture .operation-more{position:relative;z-index:2;background:var(--card)}
+.operation-gesture>.operation-swipe-actions{position:absolute;inset:0 44px 0 auto;width:144px;display:flex;gap:0;padding:0;background:var(--surface-inset);animation:none;z-index:0;visibility:hidden}
+.operation-gesture[data-settling=true]>.operation-swipe-actions,.operation-gesture[data-dragging=true]>.operation-swipe-actions,.operation-gesture[data-revealed=true]>.operation-swipe-actions{visibility:visible}
+.operation-gesture>.operation-swipe-actions>button{width:72px;min-width:0;min-height:44px;padding:8px 3px;border-radius:0;display:flex;flex-direction:column;gap:5px;font-size:11px;background:var(--blue-soft);color:var(--blue)}
+.operation-gesture>.operation-swipe-actions>button:first-child{background:var(--action-bg);color:var(--on-action)}
+.operation-gesture[data-dragging=true]>button{transition:none!important}
+@media(min-width:761px){.operation-gesture>.operation-swipe-actions{display:none}}
+@media(prefers-reduced-motion:reduce){.operation-gesture[data-dragging=true]>button:first-child{transform:none!important}.operation-gesture[data-dragging=true]>.operation-swipe-actions{visibility:hidden}}
+.swipe-tabs{position:relative;overflow:clip}
+.wallet-tab-content{position:relative;min-width:0}
+.swipe-tabs[data-swiping=true]{overflow:clip}
+.wallet-tabs{--tab-drag-x:0px}
+.wallet-tabs>.navigation-indicator{translate:var(--tab-drag-x) 0}
+@media(prefers-reduced-motion:reduce){.wallet-tabs>.navigation-indicator{translate:none}}
