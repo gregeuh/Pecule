@@ -1,0 +1,87 @@
+/* Canonical shared palette and type roles. Layout and motion keep their own owners. */
+@font-face{font-family:DM Sans;font-style:normal;font-weight:100 1000;font-display:swap;src:url(/fonts/dm-sans-latin.woff2)format("woff2")}
+@font-face{font-family:Manrope;font-style:normal;font-weight:200 800;font-display:swap;src:url(/fonts/manrope-latin.woff2)format("woff2")}
+@font-face{font-family:Inter;font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/inter-latin.woff2) format("woff2")}
+:root {
+ --bg:#f2f3f7;
+ --card:#ffffff;
+ --ink:#15171d;
+ --muted:#626b7b;
+ --subtle:#656e7d;
+ --line:#e1e5ee;
+ --blue:#1d4dd5;
+ --blue-soft:#e6edff;
+ --green:#08734e;
+ --font-display:Inter,var(--font-body);
+ --scroll-thumb:#a1a9ba;
+ --scroll-hover:#68758e;
+ --action-bg:#245af3;
+ --action-hover:#1745cc;
+ --soft-hover:#dce5fb;
+ --on-action:#ffffff;
+ --overlay:#11182780;
+ --toast-bg:#15171d;
+ --toast-ink:#ffffff;
+ --surface-raised:#ffffff;
+ --surface-inset:#eceef4;
+ --goal-surface:#ede6fb;
+ --lavender-surface:#e5dbfa;
+ --lavender-ink:#45316b;
+ --lavender-muted:#614c84;
+ --lavender-accent:#7141c6;
+ --lavender-track:#d0bfea;
+ --dock-bg:#ffffff;
+ --dock-shadow:0 8px 26px #14294c1c;
+ --font-heading:var(--font-display);
+ --font-brand:Manrope,var(--font-body);
+ --type-title-weight:500;
+ --type-number-weight:450;
+ --type-label-weight:450;
+ --type-action-weight:500;
+ --type-body-weight:400;
+ --wallet-violet:#8248f4;
+ --wallet-gold:#f4ac36;
+ --wallet-cobalt:#245af3;
+  --surface-shadow: 0 8px 26px #253c3009;
+  --forecast-surface: #fcf0e5;
+  --apricot-surface: #f5c39e;
+  --apricot-ink: #57341f;
+  --apricot-muted: #70492e;
+  --apricot-hover: #edb78e;--font-body:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:light;--danger:#aa394e;--error-ink:#8e263b;--error-bg:#fff0f2;--caution-ink:#714818;--caution-bg:#fff0dc;
+}
+:root[data-theme="dark"] {
+ --bg:#090909;
+ --card:#171717;
+ --ink:#f5f5f5;
+ --muted:#afb0b7;
+ --subtle:#a7a8af;
+ --line:#303033;
+ --blue:#8caaff;
+ --blue-soft:#273756;
+ --action-bg:#245af3;
+ --action-hover:#376afa;
+ --soft-hover:#2c303b;
+ --green:#72dab2;
+ --scroll-thumb:#59595f;
+ --scroll-hover:#85858c;
+ --overlay:#000000b8;
+ --toast-bg:#f3f5fa;
+ --toast-ink:#151515;
+ --surface-raised:#202020;
+ --surface-inset:#121212;
+ --goal-surface:#302541;
+ --on-action:#ffffff;
+ --lavender-surface:#302541;
+ --lavender-ink:#e6d6ff;
+ --lavender-muted:#c6b1e4;
+ --lavender-accent:#b895f4;
+ --lavender-track:#584078;
+ --dock-bg:#171717;
+ --dock-shadow:0 8px 26px #00000066;
+  --surface-shadow: 0 10px 28px #00000029;
+  --forecast-surface: #30251e;
+  --apricot-surface: #3d2b21;
+  --apricot-ink: #ffd7b8;
+  --apricot-muted: #dfb99e;
+  --apricot-hover: #51382a;color-scheme:dark;--danger:#ff9cae;--error-ink:#ffc2ce;--error-bg:#472737;--caution-ink:#ffdcac;--caution-bg:#443622;
+}

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { motionSettings } from "./ui-motion";
+import {morphModalSurface} from "./modal-surface-motion";
 
 /** One persistent surface for entry, menu-to-form continuity and dismissals. */
 export function useModalMotion<T>() {
@@ -37,13 +38,14 @@ export function useModalMotion<T>() {
     const candidate=dialog.classList.contains("wallet-account-modal")&&trigger.current?.matches("[data-wallet-account]")&&trigger.current.isConnected?trigger.current.getBoundingClientRect():null;
     const source=candidate&&candidate.bottom>0&&candidate.top<innerHeight?candidate:null;
     const contextual=dialog.classList.contains("context-preview-modal");
-    const panel = source ? dialog.animate([
-      {position:"fixed",top:`${rect.top}px`,left:`${rect.left}px`,right:"auto",bottom:"auto",margin:"0",opacity:1,transform:"none",height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`},
-      {position:"fixed",top:`${source.top}px`,left:`${source.left}px`,right:"auto",bottom:"auto",margin:"0",opacity:1,transform:"none",height:`${source.height}px`,width:`${source.width}px`,maxWidth:`${source.width}px`,borderRadius:"19px"}
-    ],{...options,duration:timing.walletExit,easing:timing.ease}) : dialog.animate([{opacity:1,transform,height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`},{opacity:contextual?0:mobile?1:0,transform:contextual?"translateY(10px) scale(.97)":`translateY(${mobile?distance:14}px)`,height:`${rect.height}px`,width:`${rect.width}px`,maxWidth:`${rect.width}px`}],options);
+    const surface = source ? morphModalSurface(dialog, rect, source, {...options,duration:timing.walletExit,easing:timing.ease}) : null;
+    const panel = dialog.animate([
+      {opacity:1,transform},
+      {opacity:source||contextual?0:mobile?1:0,transform:source?"none":contextual?"translateY(10px) scale(.97)":`translateY(${mobile?distance:14}px)`}
+    ],{...options,duration:source?timing.feedback:timing.exit});
     const shade = backdrop.animate([{opacity:1},{opacity:0}],options);
     const content=source?dialog.querySelector('.wallet-detail-body'):contextual?dialog.querySelector('.gesture-context-actions'):null;
-    animations.current = [panel,shade,...(content?[content.animate([{opacity:1},{opacity:0}],{duration:timing.feedback,easing:timing.exitEase,fill:"forwards"})]:[])];
+    animations.current = [panel,shade,...(surface?[surface]:[]),...(content?[content.animate([{opacity:1},{opacity:0}],{duration:timing.feedback,easing:timing.exitEase,fill:"forwards"})]:[])];
     void Promise.allSettled(animations.current.map(animation=>animation.finished)).then(finish);
   }, [cancel]);
 
@@ -59,25 +61,25 @@ export function useModalMotion<T>() {
     const timing = motionSettings(panel), ease = timing.ease;
     const request = version.current;
     if (before) {
-      // Pin both rectangles during resizing; flex centering must not move the start.
-      const morph = panel.animate([
-        {position:"fixed",top:`${before.top}px`,left:`${before.left}px`,right:"auto",bottom:"auto",margin:"0",height:`${before.height}px`,width:`${before.width}px`,maxWidth:`${before.width}px`,transform:"none"},
-        {position:"fixed",top:`${now.top}px`,left:`${now.left}px`,right:"auto",bottom:"auto",margin:"0",height:`${now.height}px`,width:`${now.width}px`,maxWidth:`${now.width}px`,transform:"none"},
-      ],{duration:timing.layout,easing:ease});
-      const heading = panel.querySelector(".modal-heading");
-      animations.current = [morph,...(heading ? [heading.animate([{opacity:.5,transform:"translateY(5px)"},{opacity:1,transform:"none"}],{duration:timing.layout * .65,easing:ease})] : [])];
+      const surface = morphModalSurface(panel, before, now, {duration:timing.layout,easing:ease});
+      const enter = panel.animate([
+        {opacity:0,transform:"translateY(8px)"},
+        {opacity:1,transform:"none"}
+      ],{duration:timing.layout*.75,delay:timing.layout*.15,easing:ease,fill:"backwards"});
+      animations.current = [enter,...(surface?[surface]:[])];
     } else {
       const from = origin.current;
       const x = !mobile && from && panel.classList.contains("actions-modal") ? Math.max(-24,Math.min(24,from.left+from.width/2-now.left-now.width/2)) : 0;
       const distance=Math.max(24,innerHeight-now.top+8);
       const wallet=panel.classList.contains("wallet-account-modal")&&trigger.current?.matches("[data-wallet-account]")&&from;
       const contextual=panel.classList.contains("context-preview-modal");
-      const enter = wallet ? panel.animate([
-        {position:"fixed",top:`${from.top}px`,left:`${from.left}px`,right:"auto",bottom:"auto",margin:"0",opacity:1,height:`${from.height}px`,width:`${from.width}px`,maxWidth:`${from.width}px`,transform:"none",borderRadius:"19px"},
-        {position:"fixed",top:`${now.top}px`,left:`${now.left}px`,right:"auto",bottom:"auto",margin:"0",opacity:1,height:`${now.height}px`,width:`${now.width}px`,maxWidth:`${now.width}px`,transform:"none"}
-      ],{duration:timing.walletEnter,easing:ease}) : panel.animate([{opacity:contextual?.7:mobile?1:0,transform:contextual?"none":`translate(${x}px,${mobile?distance:12}px) scale(${mobile?1:.98})`},{opacity:1,transform:"none"}],{duration:timing.enter,easing:ease});
+      const surface = wallet ? morphModalSurface(panel, from, now, {duration:timing.walletEnter,easing:ease},trigger.current) : null;
+      const enter = panel.animate([
+        {opacity:wallet?0:contextual?.7:mobile?1:0,transform:wallet||contextual?"none":`translate(${x}px,${mobile?distance:12}px) scale(${mobile?1:.98})`},
+        {opacity:1,transform:"none"}
+      ],{duration:wallet?timing.walletEnter*.75:timing.enter,delay:wallet?timing.walletEnter*.25:0,easing:ease,fill:"backwards"});
       const shade = backdrop.animate([{opacity:0},{opacity:1}],{duration:timing.exit,easing:"ease-out"});
-      animations.current = [enter,shade];
+      animations.current = [enter,shade,...(surface?[surface]:[])];
       const body=wallet?panel.querySelector('.wallet-detail-body'):null;
       if(body)animations.current.push(body.animate([{opacity:0,transform:"translateY(16px)"},{opacity:1,transform:"none"}],{duration:timing.layout,delay:timing.walletEnter*.25,easing:ease,fill:"backwards"}));
       if(contextual){

@@ -25,4 +25,42 @@ jobs:
         run: npx next typegen
       - run: npm run typecheck
       - run: npm run lint
+      - run: node scripts/check-theme.mjs
       - run: npm test
+  interface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Check mobile and financial workflows
+        shell: bash
+        run: |
+          npm start -- --hostname 127.0.0.1 --port 3001 > "$RUNNER_TEMP/pecule-server.log" 2>&1 &
+          PECULE_SERVER_PID=$!
+          trap 'kill "$PECULE_SERVER_PID" 2>/dev/null || true' EXIT
+          node --input-type=module <<'JS'
+          for (let attempt=0;attempt<40;attempt++) {
+            try { const r=await fetch('http://127.0.0.1:3001'); if(r.ok)process.exit(0); } catch {}
+            await new Promise(resolve=>setTimeout(resolve,500));
+          }
+          throw new Error('Pécule did not start');
+          JS
+          npm run test:e2e:viewport
+          npm run test:e2e:editors
+          PECULE_DESIGN_LIVE=1 PECULE_E2E_QUICK=1 npm run test:e2e:design
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: interface-test-evidence
+          path: |
+            outputs/mobile-viewport/
+            outputs/financial-editors/
+            outputs/design-finish/

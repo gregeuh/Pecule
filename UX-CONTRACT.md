@@ -10,7 +10,7 @@ Source : demande du 26 octobre 2026 de déployer la base GitHub. Nouvelle demand
 | Date | native date input | UX-CONTRACT.md | platform-owned calendar | Date bounds and keyboard |
 | Scrollbar | app/reference.css | DESIGN.md | document / modal | Visible and usable |
 | Toast | app/budget-notice.tsx / BudgetApp | UX-CONTRACT.md | success / information / error | Live region and tests/e2e/motion.mjs |
-| CRUD | BudgetApp save and API revision check | app/api/budget/route.ts | create / edit / delete confirmation | Unit tests and demo browser workflow |
+| CRUD | BudgetApp save, OperationEditor / AccountEditor / TransferEditor presentation, and API revision check | app/api/budget/route.ts | create / edit / delete confirmation | Unit tests and demo browser workflow |
 
 
 La connexion et la création de compte aboutissent à /. La déconnexion nécessite une action explicite. Les erreurs conservent le formulaire. La démo reste accessible sans compte.
@@ -311,3 +311,9 @@ L’écran de lancement ne contient que l’identité publique. Il peut attendre
 Source : validation utilisateur des six maquettes du 14 novembre 2026. L’import et l’ajustement de solde réussis restent dans le dialogue, remplacés par `SaveOutcome` ; les erreurs restent dans le formulaire canonique. « Voir les opérations » ouvre le compte et le mois le plus récent du lot ; « Fermer le bilan » et « Terminer » ferment le panneau et restaurent le focus. Ces deux résultats remplacent la notification flottante. Les autres sauvegardes conservent leur destination et leur notification.
 
 Les gestes ne réalisent aucune mutation financière. Révéler un tiroir, maintenir une ligne ou déplacer un onglet n’enregistre, ne supprime et n’importe rien. Les actions restent disponibles par boutons et au clavier. La vue voisine d’un onglet est inerte pendant le geste ; une annulation restaure ses attributs. La réduction des animations ne retire ni résultat ni accès aux actions. Vérification : `tests/e2e/wallet-gestures.mjs`.
+
+## Consolidation de l’audit — 18 novembre 2026
+
+Les éditeurs extraits conservent les clés de brouillon, champs, erreurs, confirmation de suppression et callbacks existants ; seul BudgetApp appelle la sauvegarde et la résolution de conflits. Le type Modal est partagé dans `app/budget-modal.ts`. Les champs de montants utilisent `AmountInput` pour la même conversion centimes/édition décimale. Les virements conservent deux écritures et un total invariant. Vérification de création de compte, opération, modification et virement : `tests/e2e/financial-editors.mjs`.
+
+Le test de viewport ouvre la palette et le formulaire réellement présents. Les scénarios attendent la fin de l’hydratation avant de compter les éléments. Les tests de projection utilisent les bornes effectives de l’horizon, jamais un nombre de jours fixe. Aucun de ces changements de test n’autorise d’écriture dans un budget personnel.

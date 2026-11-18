@@ -6,11 +6,12 @@ Direction validée : Revolut et Apple Wallet, couleurs franches, lecture dense, 
 
 | Sujet | Source canonique |
 |---|---|
-| Palette, densité des pages, surfaces, textes, logos | `app/wallet.css` |
+| Palette, fontes et rôles typographiques | `app/theme.css` |
+| Densité des pages, surfaces, textes, logos | `app/wallet.css` |
 | Profondeur, matière et aperçu | `app/wallet-depth.css` |
 | Couleurs de compte, contraste et matière personnalisée | `lib/wallet-presentation.ts` |
 | Durées et courbes | `app/motion.css`, consommées par `app/ui-motion.ts` |
-| Présence, ouverture et sortie des dialogues | `app/use-modal-motion.ts` |
+| Présence, ouverture et sortie des dialogues | `app/use-modal-motion.ts`, surface visuelle `app/modal-surface-motion.ts` |
 | Gestes et appui | `Pressable`, `SwipeTabs`, `useWalletGesture` |
 | Dock et indicateur | `MobileDock`, `NavigationIndicator` |
 | Aperçu en ajout d’opération | `OperationBalancePreview`, `lib/operation-balance-preview.ts` (lecture seule) |
@@ -24,17 +25,17 @@ Direction validée : Revolut et Apple Wallet, couleurs franches, lecture dense, 
 
 | Rôle | Clair | Sombre |
 |---|---|---|
-| Fond | #f2f3f7 | #090b10 |
-| Surface de lecture | #ffffff | #171a22 |
-| Texte | #15171d | #f3f5fa |
-| Texte secondaire | #626b7b | #a5aec1 |
+| Fond | #f2f3f7 | #090909 |
+| Surface de lecture | #ffffff | #171717 |
+| Texte | #15171d | #f5f5f5 |
+| Texte secondaire | #626b7b | #afb0b7 |
 | Accent de texte et focus | #1d4dd5 | #8caaff |
 | Action principale | #245af3, texte blanc | #245af3, texte blanc |
 | Comptes | cobalt #245af3, or #f4ac36, violet #8248f4 et couleurs personnalisées | mêmes identités |
 
 L’accent textuel clair est un peu plus foncé que l’action pour garder un contraste suffisant sur les fonds de survol. Rouge/orange/vert conservent leur sens négatif/attention/confort ; `budget-signal.css` possède ces signaux. Le violet identifie l’épargne, sans devenir une alerte. Les logos gardent leur couleur de marque sur la tuile lisible existante. Les illustrations de confirmation conservent leur palette d’illustration : elle ne définit pas celle des contrôles.
 
-DM Sans pour le texte ; Inter pour les titres et grands montants, auto-hébergées. Manrope reste la police de la marque. Les tokens `--type-*-weight` dans `wallet.css` définissent les graisses : titres/actions 500, montants/libellés 450, corps/secondaire 400. Titres de page 26 px, titres de cartes 18 px, corps 13–14 px ; les champs gardent au moins 16 px sur téléphone. Montants avec chiffres tabulaires. Ne pas tronquer un montant ; laisser les noms importants se replier ou donner accès à leur détail.
+DM Sans pour le texte ; Inter pour les titres et grands montants, auto-hébergées. Manrope reste la police de la marque. Les tokens `--type-*-weight` dans `theme.css` définissent les graisses : titres/actions 500, montants/libellés 450, corps/secondaire 400. Titres de page 26 px, titres de cartes 18 px, corps 13–14 px ; les champs gardent au moins 16 px sur téléphone. Montants avec chiffres tabulaires. Ne pas tronquer un montant ; laisser les noms importants se replier ou donner accès à leur détail.
 
 ## Surfaces, rythme et profondeur
 
@@ -95,3 +96,11 @@ L’échelle et les adaptations mobiles sont possédées par le dernier bloc mob
 
 ## Passe typographique — 14 novembre 2026
 Source : variante Inter de `outputs/typography/pecule-typographie.html`, validée pour la production. Les graisses sont affinées sans changer les couleurs, les tailles de lecture ni la géométrie des écrans. Le logo et les images de lancement conservent Manrope. Inter est préchargée localement ; sa licence SIL OFL accompagne le fichier. La saisie hors ligne utilise la même police et son cache inclut le fichier Inter. Vérification : `npm run test:e2e:typography`, test de dimensions mobiles et tests unitaires.
+
+## Propriétaires après consolidation
+
+`layout.tsx` charge `globals.css`, puis `theme.css` et les structures historiques, puis mouvement, Wallet, gestes, profondeur, lancement et continuité de sauvegarde. L’ordre est explicite ; aucune feuille n’est ajoutée comme surcharge de palette. Les `@font-face` partagés vivent uniquement dans `theme.css` ; la page hors ligne possède son CSS autonome avec les mêmes assets.
+
+Les éditeurs `OperationEditor`, `AccountEditor` et `TransferEditor` partagent `BudgetEditorProps`, `AmountInput`, `ValidatedForm`, les sections et les feedbacks existants. Ils ne sauvegardent rien eux-mêmes. BudgetApp reste l’orchestrateur du domaine. Les sous-onglets d’accueil Aperçu / Activité / Prévisions sont distincts du dock Accueil / Opérations / Comptes.
+
+`node scripts/check-theme.mjs` protège la propriété globale des variables de thème et leur correspondance avec les six couleurs normatives de DESIGN.md. Il est exécuté en CI.

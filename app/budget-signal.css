@@ -48,7 +48,6 @@
   line-height: 1.5;
 }
 @media (max-width: 760px) {
-  .clarte-dashboard .clarte-budget { padding: 20px; }
 }
 @media (forced-colors: active) {
   .clarte-dashboard .clarte-budget {

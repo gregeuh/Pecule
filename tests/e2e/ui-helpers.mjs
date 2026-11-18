@@ -1,4 +1,21 @@
+import {existsSync} from "node:fs";
+
+export const chromiumOptions = {executablePath:process.env.PECULE_E2E_CHROMIUM||(existsSync("/usr/bin/chromium")?"/usr/bin/chromium":undefined),args:process.platform==="win32"?[]:["--no-sandbox"]};
+
+/** Wait for the hydrated app, rather than matching transient streamed markup. */
+export async function waitForWallet(page) {
+ await page.waitForFunction(()=>document.querySelectorAll('.wallet-stack').length===1);
+ await page.locator('.wallet-front').waitFor();
+}
+
 /** Follow the same disclosures and filter confirmation as a real visitor. */
+export async function openOperationComposer(page) {
+ const mobile=(page.viewportSize()?.width??1440)<=760;
+ await page.locator(mobile?'.mobile-add':'.floating-action-trigger').click();
+ await page.getByRole('button',{name:/Une dépense/}).click();
+ await page.locator('input[name="amount"]').waitFor();
+}
+
 export async function revealHomeDetails(page) {
  const wallet=page.getByRole('tab',{name:'Prévisions',exact:true});if(await wallet.count()){await wallet.click();return;}
  const panel=page.locator('.clarte-more');

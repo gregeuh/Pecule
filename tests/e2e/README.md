@@ -173,3 +173,9 @@ Les unités attendues pour cette livraison sont au nombre de 122, avec les règl
 
 ### Ouverture et images iPhone
 `node tests/e2e/launch.mjs` nécessite le serveur Next local3001 pour ses CSS/sa métadonnée. Les vrais composants démarrent avec un serveur QA isolé et une lecture du budget volontairement suspendue : prêt, erreur, mode réduit et absence de rejeu. `PECULE_E2E_ENGINE=webkit` et `PECULE_E2E_OUTPUT` s’appliquent. Aucun compte réel ni PUT. `npm run assets:launch` régénère les56 PNG publics ; `npm test` en vérifie les dimensions et l’empreinte de source.
+
+## Consolidation de l’audit du 18 novembre
+
+`npm run test:e2e:editors` crée un compte de démonstration, vérifie la validation, ajoute puis modifie une opération, et confirme qu’un virement conserve le total des comptes. Deux profils : 390 sombre et 1440 clair. Aucun PUT serveur.
+
+`test:e2e:viewport` suit maintenant le + et la palette actuels, avec dix scénarios incluant le mouvement réduit. Les tests de viewport et d’éditeurs acceptent `PECULE_E2E_CHROMIUM` ou utilisent le navigateur Playwright installé si Chromium système est absent. La CI exerce ces deux protections et une matrice axe 390 sombre / 1440 clair sur un build de production, sans identité ni budget personnel.

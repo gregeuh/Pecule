@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "./theme.css";
 import "./reference.css";
 import "./budget-signal.css";
 import "./bank-tools.css";
@@ -29,5 +30,5 @@ export const metadata: Metadata = {
 };
 export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f2f3f7" }, { media: "(prefers-color-scheme: dark)", color: "#090b10" }] };
 export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
-  return <html lang="fr" suppressHydrationWarning><head><link rel="preload" href="/fonts/inter-variable.woff2" as="font" type="font/woff2" crossOrigin="anonymous"/></head><body><script dangerouslySetInnerHTML={{__html:launchBootstrap}}/><AppearanceProvider>{children}</AppearanceProvider></body></html>;
+  return <html lang="fr" suppressHydrationWarning><head><link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous"/></head><body><script dangerouslySetInnerHTML={{__html:launchBootstrap}}/><AppearanceProvider>{children}</AppearanceProvider></body></html>;
 }
