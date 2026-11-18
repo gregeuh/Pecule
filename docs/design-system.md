@@ -104,3 +104,9 @@ Source : variante Inter de `outputs/typography/pecule-typographie.html`, validé
 Les éditeurs `OperationEditor`, `AccountEditor` et `TransferEditor` partagent `BudgetEditorProps`, `AmountInput`, `ValidatedForm`, les sections et les feedbacks existants. Ils ne sauvegardent rien eux-mêmes. BudgetApp reste l’orchestrateur du domaine. Les sous-onglets d’accueil Aperçu / Activité / Prévisions sont distincts du dock Accueil / Opérations / Comptes.
 
 `node scripts/check-theme.mjs` protège la propriété globale des variables de thème et leur correspondance avec les six couleurs normatives de DESIGN.md. Il est exécuté en CI.
+
+## Reflow de l’accueil sur ordinateur
+
+La largeur de fenêtre ne suffit pas : il faut déduire les 224 px de navigation et les marges du contenu. `.wallet-dashboard` déclare le conteneur `wallet-overview`. La grille est d’abord sur une colonne ; à partir de 720 px disponibles, les deux colonnes disposent d’au moins 300 et 340 px. Le mode téléphone conserve son flux et son dock. Ne pas comprimer le journal pour conserver artificiellement deux colonnes.
+
+`npm run test:e2e:reflow` couvre les largeurs CSS de 390 à 1920 px, notamment 761/780/820/900 et les deux côtés du seuil, en clair/sombre ; trois cas de zoom CSS complètent la matrice. Il vérifie les montants sur une ligne, la largeur des libellés, les onglets et l’absence de débordement. Ces cas sont exécutés en CI ; ils complètent les contrôles 390/1440 qui avaient manqué cette régression.

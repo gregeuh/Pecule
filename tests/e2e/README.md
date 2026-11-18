@@ -179,3 +179,7 @@ Les unités attendues pour cette livraison sont au nombre de 122, avec les règl
 `npm run test:e2e:editors` crée un compte de démonstration, vérifie la validation, ajoute puis modifie une opération, et confirme qu’un virement conserve le total des comptes. Deux profils : 390 sombre et 1440 clair. Aucun PUT serveur.
 
 `test:e2e:viewport` suit maintenant le + et la palette actuels, avec dix scénarios incluant le mouvement réduit. Les tests de viewport et d’éditeurs acceptent `PECULE_E2E_CHROMIUM` ou utilisent le navigateur Playwright installé si Chromium système est absent. La CI exerce ces deux protections et une matrice axe 390 sombre / 1440 clair sur un build de production, sans identité ni budget personnel.
+
+### Reflow entre téléphone et grand écran
+
+`npm run test:e2e:reflow` couvre 29 scénarios : treize largeurs de 390 à 1920 px en clair/sombre, plus trois zooms CSS. Il contrôle les montants non coupés, les libellés non comprimés, les onglets et la largeur du document ; `PECULE_E2E_QUICK=1` conserve 780/1024/1440 et les trois zooms. Ce sont des vues CSS effectives et des zooms CSS, pas une certification du zoom natif Safari. Démo uniquement, aucun PUT serveur.

@@ -45,7 +45,8 @@
     "test:e2e:continuity": "node tests/e2e/save-continuity.mjs",
     "test:e2e:wallet-gestures": "node tests/e2e/wallet-gestures.mjs",
     "test:e2e:typography": "node tests/e2e/typography.mjs",
-    "test:e2e:editors": "node tests/e2e/financial-editors.mjs"
+    "test:e2e:editors": "node tests/e2e/financial-editors.mjs",
+    "test:e2e:reflow": "node tests/e2e/desktop-reflow.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

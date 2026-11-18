@@ -33,7 +33,7 @@ Les prévisions par compte, le bilan et les associations d’import prolongent l
 DM Sans pour le texte et Inter pour les titres et montants, auto-hébergées. Manrope reste réservé à la marque et au lancement. Titres 500, montants et libellés 450, actions 500, textes secondaires 400 ; les rôles sont définis dans `theme.css`. Titres de page 26 px, titres de cartes 18 px, chiffres tabulaires et champs de 16 px minimum sur téléphone. Libellés longs repliables, aucun montant important tronqué.
 
 ## Layout
-Sept pages : accueil, opérations, récurrences, comptes, épargne, équilibre et réglages. Accueil en deux colonnes sur ordinateur, pile Wallet sur téléphone ; dock sous 760 px. Le document défile naturellement. Formulaires et import gardent leurs propriétaires canoniques de panneau, de validation et de scroll.
+Sept pages : accueil, opérations, récurrences, comptes, épargne, équilibre et réglages. Accueil en deux colonnes quand son conteneur dispose d’au moins 720 px après la barre latérale et les marges ; sinon comptes et activité se suivent sur une colonne. La pile Wallet et le dock restent propres au mode téléphone sous 760 px. Le document défile naturellement. Formulaires et import gardent leurs propriétaires canoniques de panneau, de validation et de scroll.
 
 ## Elevation & Depth
 Trois plans : fond ; lecture sans ombre décorative ; interactions élevées. Seuls comptes Wallet, maintien, menus et aperçus utilisent les ombres `--depth-*`. Les aperçus reculent légèrement le fond inerte. Les animations réduites retirent le mouvement et le flou ; le masquage est immédiat.
