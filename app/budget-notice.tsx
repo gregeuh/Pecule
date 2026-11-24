@@ -12,7 +12,7 @@ const titles: Record<ConfirmationKind, string> = {
   occurrence: "Occurrence enregistrée", confirmation: "C’est enregistré", operation: "Opération enregistrée", recurrence: "Récurrence enregistrée",
   import: "Relevé importé", savings: "Épargne mise à jour", goal: "Objectif atteint !", settings: "Préférences enregistrées",
 };
-export default function BudgetNotice({ message, success, variant = "confirmation", receipt, onClose }: { message: string; success: boolean; variant?: ConfirmationKind; receipt?: OccurrenceReceipt; onClose: () => void }) {
+export default function BudgetNotice({ message, success, variant = "confirmation", receipt, onUndo, undoDisabled, onClose }: { message: string; success: boolean; variant?: ConfirmationKind; receipt?: OccurrenceReceipt; onUndo?: () => void; undoDisabled?: boolean; onClose: () => void }) {
   const surface = useRef<HTMLDivElement>(null), closing = useRef(false), animation = useRef<Animation | null>(null);
   const finish = useRef(onClose);
   useEffect(() => { finish.current = onClose; }, [onClose]);
@@ -35,6 +35,7 @@ export default function BudgetNotice({ message, success, variant = "confirmation
   return <div ref={surface} className="toast" data-success={success} data-kind={success ? variant : "info"} role="status" aria-live="polite" aria-atomic="true">
     {success ? variant==="occurrence"&&receipt?<CalendarReceipt {...receipt}/>:<ConfirmationArt variant={variant==="occurrence"?"recurrence":variant} /> : <Info size={20} aria-hidden="true" />}
     <div className="notice-copy">{success && <strong>{titles[variant]}</strong>}<span>{message}</span>{success&&receipt&&<small className="calendar-date">Occurrence du {shortDate(receipt.date)}</small>}{success&&receipt&&<small className="calendar-next">{receipt.nextDate?`Prochaine échéance : ${shortDate(receipt.nextDate)}`:"Aucune autre échéance prévue sur les 400 prochains jours."}</small>}</div>
+    {onUndo&&<button type="button" className="toast-undo" disabled={undoDisabled} aria-label="Annuler la dernière opération" onClick={onUndo}>Annuler</button>}
     <button type="button" aria-label="Fermer la notification" onClick={dismiss}><X size={17} /></button>
   </div>;
 }

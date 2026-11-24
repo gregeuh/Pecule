@@ -449,3 +449,24 @@
 }
 
 :root .modal .capture-type-picker :is(label>span,button){font-weight:var(--type-action-weight)}
+
+.wallet-account-forecasts {
+ list-style: none;
+ padding: 0;
+ margin: 8px 0;
+}
+.wallet-account-forecasts button {
+ width: 100%;
+ min-height: 48px;
+ min-width: 0;
+ display: grid;
+ grid-template-columns: minmax(0, 1fr) auto auto;
+ gap: 10px;
+ align-items: center;
+ padding: 7px 0;
+ border-bottom: 1px solid var(--line);
+ text-align: start;
+}
+.wallet-account-forecasts :is(strong, small) { display: block; overflow-wrap: anywhere; }
+.wallet-account-forecasts small { color: var(--muted); }
+.wallet-account-forecasts b { font-variant-numeric: tabular-nums; text-align: end; overflow-wrap: anywhere; }

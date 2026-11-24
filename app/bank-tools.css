@@ -30,3 +30,6 @@
 .transactions-card .toolbar-actions { flex-wrap: wrap; }
 .transaction-select-row > input { width: 24px; height: 24px; min-height: 24px; flex-basis: 24px; }
 @media(max-width:760px) { .bank-tools .form-grid { grid-template-columns: 1fr; } }
+
+.balance-recent > li { padding: 0; }
+.balance-recent .account-activity-row { width: 100%; min-height: 44px; padding-block: 6px; border-bottom: 0; }

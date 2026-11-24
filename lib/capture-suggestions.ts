@@ -2,11 +2,14 @@ import {shiftDate,type Budget} from './budget.ts';
 import {favoriteFromTransaction,type Favorite} from './capture.ts';
 import {normalize,suggestCategory} from './merchants.ts';
 import {parseAmount} from './csv.ts';
-export function captureSuggestions(b:Budget,today:string,{query='',accountId,direction}:{query?:string;accountId?:string;direction?:string}={}){
+export function captureSuggestions(b:Budget,today:string,{query='',accountId,direction,completion=false}:{query?:string;accountId?:string;direction?:string;completion?:boolean}={}){
  const q=normalize(query),start=shiftDate(today,-120),accounts=new Set(b.accounts.map(a=>a.id));
  const groups=new Map<string,{favorite:Favorite;count:number;latest:string}>();
  const rows=b.transactions.map((t,index)=>({...t,index})).filter(t=>accounts.has(t.accountId)&&!t.ruleId&&!t.transferId&&!t.balanceIncluded&&t.amount!==0&&t.date<=today&&t.date>=start&&(!direction||(t.amount>0?'income':'expense')===direction)).sort((a,b)=>b.date.localeCompare(a.date)||b.index-a.index);
- for(const t of rows){if(q&&!normalize(t.label).includes(q))continue;const key=JSON.stringify([normalize(t.label),t.accountId,t.amount>0]);const previous=groups.get(key);if(previous)previous.count++;else groups.set(key,{favorite:favoriteFromTransaction(t,`suggestion-${t.id}`),count:1,latest:t.date});}
+ for(const t of rows){const label=normalize(t.label);if(q&&!label.includes(q))continue;const key=completion?label:JSON.stringify([label,t.accountId,t.amount>0]);const previous=groups.get(key);if(previous)previous.count++;else groups.set(key,{favorite:favoriteFromTransaction(t,`suggestion-${t.id}`),count:1,latest:t.date});}
+ if(completion)return q.length<2?[]:[...groups.values()]
+  .sort((a,b)=>Number(normalize(b.favorite.label).startsWith(q))-Number(normalize(a.favorite.label).startsWith(q))||b.latest.localeCompare(a.latest)||b.count-a.count)
+  .slice(0,2);
  return [...groups.values()].filter(g=>q||g.count>=2).sort((a,b)=>Number(b.favorite.accountId===accountId)-Number(a.favorite.accountId===accountId)||b.count-a.count||b.latest.localeCompare(a.latest)||a.favorite.id.localeCompare(b.favorite.id)).slice(0,3);
 }
 /** Deliberately bounded syntax: amount + label [+ 'sur' + exact account name/bank]. */

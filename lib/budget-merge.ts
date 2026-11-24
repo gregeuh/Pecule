@@ -4,12 +4,12 @@ export type MergeConflict = { key: string; label: string; local: unknown; remote
 export type MergeResult = { budget: Budget; conflicts: MergeConflict[] };
 // Entity-level decisions keep related financial fields together; deletions count as changes.
 const canonical = (value:unknown):unknown => Array.isArray(value)?value.map(canonical):value&&typeof value==="object"?Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b)).map(([key,item])=>[key,canonical(item)])):value;
-const equal = (a: unknown, b: unknown) => JSON.stringify(canonical(a)) === JSON.stringify(canonical(b));
+export const sameBudgetValue = (a: unknown, b: unknown) => JSON.stringify(canonical(a)) === JSON.stringify(canonical(b));
 export function mergeBudgets(base: Budget, local: Budget, remote: Budget, choices: Record<string, "local" | "remote"> = {}): MergeResult {
   const conflicts: MergeConflict[] = [];
   function pick(key: string, label: string, before: unknown, mine: unknown, theirs: unknown): unknown {
-    if (equal(mine, before) || equal(mine, theirs)) return theirs;
-    if (equal(theirs, before)) return mine;
+    if (sameBudgetValue(mine, before) || sameBudgetValue(mine, theirs)) return theirs;
+    if (sameBudgetValue(theirs, before)) return mine;
     if (choices[key]) return choices[key] === "local" ? mine : theirs;
     conflicts.push({ key, label, local: mine, remote: theirs });
     return theirs;

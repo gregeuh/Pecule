@@ -95,3 +95,27 @@
 .capture-notice { flex-shrink: 0; max-height: 88px; overflow-y: auto; }
 .capture-notice .toast { position: static; transform: none; width: 100%; max-width: none; margin: 8px 0 0; padding: 8px 10px; box-shadow: none; animation: none; }
 .capture-notice .toast .confirmation-art { width: 40px; height: 40px; flex-shrink: 0; }
+
+.capture-completions {
+ display: grid;
+ gap: 6px;
+ min-width: 0;
+}
+.capture-completions .compact {
+ justify-content: flex-start;
+ align-items: flex-start;
+ flex-direction: column;
+ gap: 2px;
+ min-width: 0;
+ min-height: 44px;
+ text-align: start;
+ overflow-wrap: anywhere;
+}
+.capture-completions small { color: var(--muted); }
+.toast .toast-undo {
+ width: auto;
+ padding-inline: 10px;
+ border: 1px solid currentColor;
+ border-radius: 10px;
+ font-weight: 650;
+}
