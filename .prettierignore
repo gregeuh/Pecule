@@ -1,0 +1,15 @@
+.next/
+node_modules/
+outputs/
+work/
+public/
+docs/
+package-lock.json
+lib/*.json
+app/animations/
+**/*.css
+**/*.md
+app/launch-screen.tsx
+lib/launch-images.ts
+scripts/generate-launch-assets.mjs
+tests/e2e/

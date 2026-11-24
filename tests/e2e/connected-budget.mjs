@@ -5,6 +5,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { accountBalance } from '../../lib/budget.ts';
+import { budgetSchema } from '../../lib/validation.ts';
 
 // Explicit opt-in: this test creates real accounts and writes only their test budgets.
 assert.equal(process.env.PECULE_E2E_ALLOW_ACCOUNT_CREATION, '1', 'Set PECULE_E2E_ALLOW_ACCOUNT_CREATION=1 to authorize dedicated test accounts.');
@@ -56,7 +57,12 @@ async function newContext(mobile = false) {
 async function api(page, pathname, method = 'GET', body) {
   return page.evaluate(async ({ pathname, method, body }) => {
     const response = await fetch(pathname, { method, headers: body ? { 'Content-Type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' });
-    return { status: response.status, data: await response.json() };
+    return {
+      status: response.status,
+      data: await response.json(),
+      cache: response.headers.get('cache-control'),
+      disposition: response.headers.get('content-disposition'),
+    };
   }, { pathname, method, body });
 }
 async function authenticate(page, account, signup = false) {
@@ -90,7 +96,8 @@ try {
   const first = await newContext();
   await first.page.goto(origin);
   assert.equal((await api(first.page, '/api/budget')).status, 401);
-  await record('Anonymous budget access is denied');
+  assert.equal((await api(first.page, '/api/budget/export')).status, 401);
+  await record('Anonymous budget and export access are denied');
   const primary = credentials.accounts[0];
   const signup = !primary.created;
   await authenticate(first.page, primary, signup);
@@ -147,6 +154,13 @@ try {
   assert.equal(stored.data.budget.transactions[0].importRef, 'QA-P1-001');
   assert.equal(accountBalance(stored.data.budget, initial.accounts[0].id, '2026-10-27'), 115750);
   await record('CSV import persisted by the production API', { operationCount: 2, netCents: 15750, expectedBalanceCents: 115750 });
+  const backup = await api(first.page, '/api/budget/export');
+  assert.equal(backup.status, 200);
+  assert.equal(backup.cache, 'private, no-store');
+  assert.match(backup.disposition, /^attachment; filename="pecule-budget-\d{4}-\d{2}-\d{2}\.json"$/);
+  assert(budgetSchema.safeParse(backup.data).success, 'The downloaded JSON must be accepted by budget restore.');
+  assert.deepEqual(backup.data, stored.data.budget);
+  await record('The JSON backup is private and matches the restorable budget payload');
   await first.page.reload();
   assert.deepEqual((await api(first.page, '/api/budget')).data, stored.data);
   await record('Stored budget survives a complete page reload');
@@ -172,7 +186,8 @@ try {
   assert.equal(isolatedBudget.status, 200);
   assert.equal(isolatedBudget.data.budget, null);
   assert.equal(isolatedBudget.data.revision, 0);
-  await record('A second user cannot see the first user’s budget');
+  assert.equal((await api(isolated.page, '/api/budget/export')).status, 404);
+  await record('A second user cannot see or export the first user’s budget');
   const google = await newContext();
   await google.page.goto(`${origin}/sign-in`);
   const options = await api(google.page, '/api/auth-options');

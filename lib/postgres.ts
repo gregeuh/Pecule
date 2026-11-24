@@ -4,5 +4,11 @@ let pool: Pool | undefined;
 export function getPool() {
   const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
   if (!connectionString) throw new Error("La base de données n’est pas configurée.");
-  return pool ??= new Pool({ connectionString, max: 5, connectionTimeoutMillis: 10000, idleTimeoutMillis: 10000 });
+  if (pool) return pool;
+  pool = new Pool({ connectionString, max: 5, connectionTimeoutMillis: 10000, idleTimeoutMillis: 10000 });
+  // Without a listener, an error on an idle client (Neon closing a connection) is an uncaught exception.
+  pool.on("error", () => {
+    console.error("Idle PostgreSQL client error");
+  });
+  return pool;
 }

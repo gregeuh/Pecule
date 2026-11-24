@@ -1,35 +1,46 @@
-# PECULE
+# Pécule
 
-Base du 23 octobre 2026 reprise le 26 octobre. Voir [REPRISE.md](REPRISE.md) pour la provenance, les vérifications et la distinction entre les hébergements Sites et Vercel.
-
-Application personnelle de gestion de budget en français, pensée pour iPhone et ordinateur.
+Application personnelle de gestion de budget en français, pensée pour iPhone et ordinateur. Cette branche (`vercel-compatibility`) est la version déployée sur Vercel : Next.js, Better Auth et PostgreSQL (Neon). Voir [VERCEL.md](VERCEL.md) pour la livraison et [REPRISE.md](REPRISE.md) pour l'historique de la base Sites/Cloudflare dont elle est issue.
 
 ## Fonctionnement
 
-- Chaque identité ChatGPT possède son propre budget. L’identité est fournie par Sites ; aucune identité client n’est acceptée par l’API.
-- Les données sont conservées en D1, jamais dans le localStorage. La préférence de masquage des montants est locale à l’appareil.
-- La révision du budget protège contre l’écrasement d’une modification provenant d’une autre session. Rechargement en arrière-plan toutes les 30 secondes quand l’onglet est visible et aucun formulaire n’est ouvert.
-- La démonstration est calculée en mémoire. Elle n’est jamais enregistrée dans un nouveau budget.
-- Les montants sont stockés en centimes entiers. Les virements produisent deux écritures liées et ne sont pas comptés comme revenus ou dépenses.
-- Le disponible correspond aux soldes courants et espèces, moins les dépenses planifiées avant la prochaine paie (ou la fin du mois), moins les réserves d’épargne restantes. Les revenus futurs et les soldes d’épargne sont exclus.
-- Le calendrier France inclut les onze jours fériés nationaux ; les spécificités régionales et calendriers employeur ne sont pas inclus. L’utilisateur peut choisir un calendrier sans jours fériés ou une date fixe.
-- Les récurrences sont matérialisées automatiquement à la date prévue, après la date du solde de référence. Les montants doivent être rapprochés du relevé bancaire par l’utilisateur.
-- L’import CSV comporte un aperçu, une association des colonnes, des validations et une détection des doublons exacts. Les banques avec colonnes débit et crédit séparées doivent être converties au modèle fourni.
-- Les virements enregistrés et les objectifs ne déclenchent aucun mouvement bancaire. Pas de connexion bancaire automatique.
+- Connexion par e-mail et mot de passe (12 caractères minimum), ou Google si `GOOGLE_CLIENT_ID` et `GOOGLE_CLIENT_SECRET` sont définis. L'identité vient toujours de la session vérifiée côté serveur ; l'API n'accepte aucune identité envoyée par le client.
+- Chaque compte possède son propre budget, enregistré en PostgreSQL (une ligne JSON par utilisateur, révision incluse). Le stockage local du navigateur ne sert qu'aux préférences de l'appareil et à la file hors ligne.
+- La révision protège contre l'écrasement par une autre session : en cas de conflit l'API répond 409 et le client propose une fusion.
+- Une fois connecté, téléchargez votre sauvegarde JSON depuis Réglages → Données. Le fichier de `/api/budget/export` contient la dernière version enregistrée sur le serveur et peut être restauré dans Pécule.
+- La démonstration est calculée en mémoire et n'est jamais enregistrée.
+- Les montants sont stockés en centimes entiers. Les virements produisent deux écritures liées et ne comptent ni comme revenus ni comme dépenses.
+- Le disponible correspond aux soldes courants et espèces, moins les dépenses planifiées avant la prochaine paie (ou la fin du mois), moins les réserves d'épargne restantes. Les revenus futurs et les soldes d'épargne sont exclus.
+- Le calendrier France inclut les onze jours fériés nationaux ; ni les spécificités régionales ni les calendriers employeur. Un calendrier sans jours fériés ou une date fixe restent possibles.
+- Les récurrences sont matérialisées à la date prévue, après la date du solde de référence ; l'utilisateur rapproche les montants du relevé bancaire.
+- L'import CSV propose aperçu, association des colonnes, validations et détection des doublons exacts. Aucune connexion bancaire automatique.
+- Rappels quotidiens par notification Web Push (cron Vercel, un appel par heure UTC).
 
 ## PWA
 
-Manifest, icônes PNG 192/512, icône Apple 180 et service worker sont fournis. Le service worker ne met jamais en cache les pages personnelles ni les réponses API. Hors connexion, il présente une page de secours ; les opérations nécessitent Internet.
+Manifest, icônes, service worker et page hors connexion sont fournis. Le service worker ne met jamais en cache les pages personnelles ni les réponses API. Hors connexion, les saisies passent par une file locale rejouée au retour du réseau.
 
-Installation iPhone : ouvrir le site publié dans Safari, Partager, Sur l’écran d’accueil, Ouvrir comme app web puis Ajouter. Validation physique sur iPhone à réaliser avec le propriétaire.
+## Variables d'environnement (serveur)
+
+| Variable | Rôle |
+|---|---|
+| `DATABASE_URL` (ou `POSTGRES_URL`) | Base PostgreSQL. Avec Neon, utiliser l'URL « pooled ». |
+| `BETTER_AUTH_SECRET` | Secret de signature des sessions. |
+| `BETTER_AUTH_URL` | URL publique, en production seulement. |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Connexion Google (optionnel). |
+| `RESEND_API_KEY`, `AUTH_EMAIL_FROM` | Réinitialisation de mot de passe par e-mail (optionnel). |
+| `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `CRON_SECRET` | Rappels Web Push et sécurisation des crons. |
+
+Les valeurs restent exclusivement dans les paramètres Vercel ; ne jamais les versionner.
 
 ## Développement et vérification
 
-- `npm run dev -- --hostname 127.0.0.1`
-- `npx tsc --noEmit`
-- `node --test tests/budget.test.mjs`
-- Publication via le guide Sites et `scripts/build-site.mjs` fourni par le plugin.
+- `npm ci` puis `npm run dev`
+- `npx next typegen && npm run typecheck`
+- `npm run lint`
+- `npm test` (tests de domaine, sans base de données)
+- `npm run build`
+- `npm run format:check` : vérifie le formatage Prettier (`npm run format` pour l'appliquer)
+- Tests d'interface : scripts `test:e2e:*` (Playwright), voir `tests/e2e/README.md`.
 
-Les tests couvrent les jours fériés, dates de récurrence, mois courts, années bissextiles, idempotence, calcul du disponible, transferts, réserve d’épargne et CSV. Les essais locaux couvrent création, modification et conservation des données, ajout de compte, salaire au dernier jour ouvré, objectif et versement, import avec doublon et date invalide. L’API a été testée pour les réponses 401, 403, 409, 400 et la persistance. Le simulateur local dispose d’une identité fixe ; un essai avec deux identités réelles reste à faire lors de l’invitation de la deuxième personne.
-
-Les données de test sont uniquement dans la base locale, exclue de la publication. La base de production démarre vide. Le site est privé, l’invitation du deuxième utilisateur est reportée à sa demande.
+La CI (`.github/workflows/quality.yml`) exécute typage, lint, tests unitaires et un sous-ensemble des tests d'interface sur un build de production.
