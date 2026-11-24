@@ -6,5 +6,7 @@ export function normalizeIconUrl(value: string): string | null {
     const url = new URL(input);
     if (url.protocol !== "https:" || url.username || url.password || !url.hostname) return null;
     return url.href.length <= 2048 ? url.href : null;
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }

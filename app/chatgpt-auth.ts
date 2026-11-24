@@ -7,6 +7,12 @@ export async function getChatGPTUser() {
   if (!requestHeaders.get("cookie")?.includes("pecule_")) return null;
   await ensureDatabase();
   const session = await getAuth().api.getSession({ headers: requestHeaders });
-  return session ? { userId: session.user.id, email: session.user.email,
-    fullName: session.user.name, displayName: session.user.name || session.user.email } : null;
+  return session
+    ? {
+        userId: session.user.id,
+        email: session.user.email,
+        fullName: session.user.name,
+        displayName: session.user.name || session.user.email,
+      }
+    : null;
 }

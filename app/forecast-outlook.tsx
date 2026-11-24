@@ -1,13 +1,148 @@
 "use client";
-import {useState} from 'react';
-import {balanceOutlook} from '../lib/balance-outlook';
-import {dateISO,daysBetween,parseDate,money,shortDate,type Budget} from '../lib/budget';
-import {FormField} from './validated-form';
-import ProjectionChart from './projection-chart';
-export default function ForecastOutlook({budget,today,hidden,initialAccountId}:{budget:Budget;today:string;hidden:boolean;initialAccountId?:string}){
- const [account,setAccount]=useState(initialAccountId??'all'),[horizon,setHorizon]=useState(initialAccountId?'30':'month');
- const [limit,setLimit]=useState(8);
- const date=parseDate(today),days=horizon==='month'?daysBetween(today,dateISO(new Date(date.getFullYear(),date.getMonth()+1,0,12))):Number(horizon);
- const id=budget.accounts.some(a=>a.id===account)?account:undefined,o=balanceOutlook(budget,today,days,id),m=(n:number)=>hidden?'•••• €':money(n);
- return <section className="forecast-outlook" aria-label="Anticiper mes soldes"><div className="forecast-controls"><FormField label="Compte à anticiper"><select name="forecast-account" value={id??'all'} onChange={e=>{setAccount(e.target.value);setLimit(8);}}><option value="all">Comptes courants et espèces</option>{budget.accounts.map(a=><option key={a.id} value={a.id}>{a.name}</option>)}</select></FormField><FormField label="Horizon"><select name="forecast-horizon" value={horizon} onChange={e=>{setHorizon(e.target.value);setLimit(8);}}><option value="month">Fin du mois</option><option value={30}>30 jours</option><option value={60}>60 jours</option><option value={90}>90 jours</option></select></FormField></div>{o.firstNegative&&!hidden&&<p className="forecast-warning" role="status">Un solde négatif est prévu à partir du {shortDate(o.firstNegative.date)} d’après les mouvements connus.</p>}{!o.accounts.length&&<p className="field-hint">{budget.accounts.length?"Aucun compte courant ou espèces. Choisissez un compte d’épargne pour voir sa projection.":"Ajoutez un compte et vos échéances pour voir une projection."}</p>}{o.accounts.length>0&&<>{initialAccountId&&<dl className="bank-tools-summary"><div><dt>Solde actuel</dt><dd>{m(o.current)}</dd></div><div><dt>Solde prévu au {shortDate(o.end.date)}</dt><dd>{m(o.end.value)}</dd></div></dl>}<ProjectionChart key={`${id??'all'}:${days}`} budget={budget} today={today} hidden={hidden} accountId={id} days={days}/><h3>Prochains mouvements connus</h3>{o.accounts.some(a=>a.openingDate>today&&a.openingDate<=o.end.date)&&<ul className="outlook-movements">{o.accounts.filter(a=>a.openingDate>today&&a.openingDate<=o.end.date).map(a=><li key={a.id}><span><strong>Solde de référence · {a.name}</strong><small>{shortDate(a.openingDate)}</small></span><b>{m(a.openingBalance)}</b></li>)}</ul>}{!o.movements.length?<p className="field-hint">Aucun mouvement prévu sur cet horizon. Ajoutez vos échéances pour enrichir cette estimation.</p>:<ul className="outlook-movements">{o.movements.slice(0,limit).map(t=><li key={t.id}><span><strong>{t.label}</strong><small>{shortDate(t.date)} · {budget.accounts.find(a=>a.id===t.accountId)?.name}{t.transferId?' · virement interne':''}</small></span><b>{m(t.amount)}</b></li>)}</ul>}{o.movements.length>limit&&<button type="button" className="text-button" onClick={()=>setLimit(limit+20)}>Afficher plus de mouvements ({o.movements.length-limit})</button>}<p className="field-hint">Estimation selon les opérations et récurrences présentes dans Pécule. Les achats non saisis et les montants variables non prévus restent à ajouter.</p></>}</section>;
+import { useState } from "react";
+import { balanceOutlook } from "../lib/balance-outlook";
+import { dateISO, daysBetween, parseDate, money, shortDate, type Budget } from "../lib/budget";
+import { FormField } from "./validated-form";
+import ProjectionChart from "./projection-chart";
+export default function ForecastOutlook({
+  budget,
+  today,
+  hidden,
+  initialAccountId,
+}: {
+  budget: Budget;
+  today: string;
+  hidden: boolean;
+  initialAccountId?: string;
+}) {
+  const [account, setAccount] = useState(initialAccountId ?? "all"),
+    [horizon, setHorizon] = useState(initialAccountId ? "30" : "month");
+  const [limit, setLimit] = useState(8);
+  const date = parseDate(today),
+    days =
+      horizon === "month"
+        ? daysBetween(today, dateISO(new Date(date.getFullYear(), date.getMonth() + 1, 0, 12)))
+        : Number(horizon);
+  const id = budget.accounts.some((a) => a.id === account) ? account : undefined,
+    o = balanceOutlook(budget, today, days, id),
+    m = (n: number) => (hidden ? "•••• €" : money(n));
+  return (
+    <section className="forecast-outlook" aria-label="Anticiper mes soldes">
+      <div className="forecast-controls">
+        <FormField label="Compte à anticiper">
+          <select
+            name="forecast-account"
+            value={id ?? "all"}
+            onChange={(e) => {
+              setAccount(e.target.value);
+              setLimit(8);
+            }}
+          >
+            <option value="all">Comptes courants et espèces</option>
+            {budget.accounts.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.name}
+              </option>
+            ))}
+          </select>
+        </FormField>
+        <FormField label="Horizon">
+          <select
+            name="forecast-horizon"
+            value={horizon}
+            onChange={(e) => {
+              setHorizon(e.target.value);
+              setLimit(8);
+            }}
+          >
+            <option value="month">Fin du mois</option>
+            <option value={30}>30 jours</option>
+            <option value={60}>60 jours</option>
+            <option value={90}>90 jours</option>
+          </select>
+        </FormField>
+      </div>
+      {o.firstNegative && !hidden && (
+        <p className="forecast-warning" role="status">
+          Un solde négatif est prévu à partir du {shortDate(o.firstNegative.date)} d’après les mouvements connus.
+        </p>
+      )}
+      {!o.accounts.length && (
+        <p className="field-hint">
+          {budget.accounts.length
+            ? "Aucun compte courant ou espèces. Choisissez un compte d’épargne pour voir sa projection."
+            : "Ajoutez un compte et vos échéances pour voir une projection."}
+        </p>
+      )}
+      {o.accounts.length > 0 && (
+        <>
+          {initialAccountId && (
+            <dl className="bank-tools-summary">
+              <div>
+                <dt>Solde actuel</dt>
+                <dd>{m(o.current)}</dd>
+              </div>
+              <div>
+                <dt>Solde prévu au {shortDate(o.end.date)}</dt>
+                <dd>{m(o.end.value)}</dd>
+              </div>
+            </dl>
+          )}
+          <ProjectionChart
+            key={`${id ?? "all"}:${days}`}
+            budget={budget}
+            today={today}
+            hidden={hidden}
+            accountId={id}
+            days={days}
+          />
+          <h3>Prochains mouvements connus</h3>
+          {o.accounts.some((a) => a.openingDate > today && a.openingDate <= o.end.date) && (
+            <ul className="outlook-movements">
+              {o.accounts
+                .filter((a) => a.openingDate > today && a.openingDate <= o.end.date)
+                .map((a) => (
+                  <li key={a.id}>
+                    <span>
+                      <strong>Solde de référence · {a.name}</strong>
+                      <small>{shortDate(a.openingDate)}</small>
+                    </span>
+                    <b>{m(a.openingBalance)}</b>
+                  </li>
+                ))}
+            </ul>
+          )}
+          {!o.movements.length ? (
+            <p className="field-hint">
+              Aucun mouvement prévu sur cet horizon. Ajoutez vos échéances pour enrichir cette estimation.
+            </p>
+          ) : (
+            <ul className="outlook-movements">
+              {o.movements.slice(0, limit).map((t) => (
+                <li key={t.id}>
+                  <span>
+                    <strong>{t.label}</strong>
+                    <small>
+                      {shortDate(t.date)} · {budget.accounts.find((a) => a.id === t.accountId)?.name}
+                      {t.transferId ? " · virement interne" : ""}
+                    </small>
+                  </span>
+                  <b>{m(t.amount)}</b>
+                </li>
+              ))}
+            </ul>
+          )}
+          {o.movements.length > limit && (
+            <button type="button" className="text-button" onClick={() => setLimit(limit + 20)}>
+              Afficher plus de mouvements ({o.movements.length - limit})
+            </button>
+          )}
+          <p className="field-hint">
+            Estimation selon les opérations et récurrences présentes dans Pécule. Les achats non saisis et les montants
+            variables non prévus restent à ajouter.
+          </p>
+        </>
+      )}
+    </section>
+  );
 }

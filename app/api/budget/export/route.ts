@@ -12,10 +12,9 @@ export async function GET() {
     const user = await getChatGPTUser();
     if (!user) return Response.json({ error: "Connectez-vous pour exporter votre budget." }, { status: 401, headers });
     await ensureDatabase();
-    const { rows } = await getPool().query(
-      `SELECT payload FROM ${tablePrefix}budgets WHERE user_id = $1`,
-      [user.userId],
-    );
+    const { rows } = await getPool().query(`SELECT payload FROM ${tablePrefix}budgets WHERE user_id = $1`, [
+      user.userId,
+    ]);
     if (!rows[0]) return Response.json({ error: "Aucun budget à exporter." }, { status: 404, headers });
     const day = new Date().toISOString().slice(0, 10);
     const body = JSON.stringify(JSON.parse(rows[0].payload), null, 2);

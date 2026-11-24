@@ -1,26 +1,92 @@
 "use client";
-import type {Modal} from "./budget-modal";
+import type { Modal } from "./budget-modal";
 import AmountInput from "./amount-input";
 import Empty from "./budget-empty";
 import OperationEditor from "./operation-editor";
 import AccountEditor from "./account-editor";
 import TransferEditor from "./transfer-editor";
 
-import {confirmedTransfer,operationToJournal} from "./save-continuity";
+import { confirmedTransfer, operationToJournal } from "./save-continuity";
 import LaunchScreen from "./launch-screen";
 import LaunchTransition from "./launch-transition";
 import Image from "next/image";
 import { recordedOperationTotals } from "../lib/operation-totals";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState, useEffectEvent, type CSSProperties, type FormEvent } from "react";
-import { ArrowDownLeft, ArrowUpRight, ArrowLeftRight, ArrowLeft, ArrowRight, Plus, LayoutGrid, Wallet, Repeat2, ChartNoAxesCombined, Search, ChevronRight, ChevronDown, X, Check, Cloud, CloudOff, Settings2, Download, Upload, LogOut, Smartphone, Sparkles, MoreHorizontal, Pencil, Trash2, Info, CalendarDays, LoaderCircle, CircleAlert, LockKeyhole, Funnel, Keyboard, type LucideIcon } from "lucide-react";
-import { accountBalance, colors, demoBudget, emptyBudget, futureTransactions, materialize, money, overview, parseDate, shiftDate, shortDate, todayISO, type Account, type Budget, type Rule, type Transaction } from "../lib/budget";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useEffectEvent,
+  type CSSProperties,
+  type FormEvent,
+} from "react";
+import {
+  ArrowDownLeft,
+  ArrowUpRight,
+  ArrowLeftRight,
+  ArrowLeft,
+  ArrowRight,
+  Plus,
+  LayoutGrid,
+  Wallet,
+  Repeat2,
+  ChartNoAxesCombined,
+  Search,
+  ChevronRight,
+  ChevronDown,
+  X,
+  Check,
+  Cloud,
+  CloudOff,
+  Settings2,
+  Download,
+  Upload,
+  LogOut,
+  Smartphone,
+  Sparkles,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+  Info,
+  CalendarDays,
+  LoaderCircle,
+  CircleAlert,
+  LockKeyhole,
+  Funnel,
+  Keyboard,
+  type LucideIcon,
+} from "lucide-react";
+import {
+  accountBalance,
+  colors,
+  demoBudget,
+  emptyBudget,
+  futureTransactions,
+  materialize,
+  money,
+  overview,
+  parseDate,
+  shiftDate,
+  shortDate,
+  todayISO,
+  type Account,
+  type Budget,
+  type Rule,
+  type Transaction,
+} from "../lib/budget";
 import { transactionRecurrence, convertTransactionToRecurring } from "../lib/transaction-recurrence";
-import {reserveLines} from "../lib/budget-presentation";
-import {getAvailableSignal} from "../lib/available-signal";
-import {pendingCaptureIntent} from "../lib/offline-reconcile";
-import {useOfflineQueue} from "./use-offline-queue";
-import {queueOperation,removePendingOperations,deactivateOfflineProfile,offlinePreparationToken} from "../lib/offline-store";
+import { reserveLines } from "../lib/budget-presentation";
+import { getAvailableSignal } from "../lib/available-signal";
+import { pendingCaptureIntent } from "../lib/offline-reconcile";
+import { useOfflineQueue } from "./use-offline-queue";
+import {
+  queueOperation,
+  removePendingOperations,
+  deactivateOfflineProfile,
+  offlinePreparationToken,
+} from "../lib/offline-store";
 import PendingOperations from "./pending-operations";
 import { useModalViewport } from "./use-modal-viewport";
 import GoogleConnection from "./google-connection";
@@ -43,13 +109,17 @@ import { FormDraftProvider, useFormDraftStore } from "./form-drafts";
 import SubscriptionOverview from "./subscription-overview";
 import RecurringItem from "./recurring-item";
 import ReminderSettings from "./reminder-settings";
-import {CaptureRoutine,DailyReview,catchupDate} from "./capture-routine";
-import {CaptureFavorites,FavoriteEditor} from "./capture-favorites";
-import {captureAccount,favoriteFromTransaction,type Favorite} from "../lib/capture";
-import AccountVerification from './account-verification';
+import { CaptureRoutine, DailyReview, catchupDate } from "./capture-routine";
+import { CaptureFavorites, FavoriteEditor } from "./capture-favorites";
+import { captureAccount, favoriteFromTransaction, type Favorite } from "../lib/capture";
+import AccountVerification from "./account-verification";
 import AccountBalanceAdjustment from "./account-balance-adjustment";
 import FormSection from "./form-section";
-import TransactionFilters, { OperationFilterControls, LedgerTools, type OperationFilterValues } from "./operation-filters";
+import TransactionFilters, {
+  OperationFilterControls,
+  LedgerTools,
+  type OperationFilterValues,
+} from "./operation-filters";
 import FormOptions from "./form-options";
 import AccountActivity from "./account-activity";
 import EmptyState from "./empty-state";
@@ -64,322 +134,3780 @@ import SpendingPlan from "./spending-plan";
 import ThemePicker from "./theme-picker";
 import MobileDock from "./mobile-dock";
 import SubmitButton from "./submit-button";
-import OperationGesture,{GestureActions} from './operation-gesture';
-import QuickAddGesture from './quick-add-gesture';
-import {usePreviewDepth} from './use-preview-depth';
-import {useWalletGesture} from './use-wallet-gesture';
+import OperationGesture, { GestureActions } from "./operation-gesture";
+import QuickAddGesture from "./quick-add-gesture";
+import { usePreviewDepth } from "./use-preview-depth";
+import { useWalletGesture } from "./use-wallet-gesture";
 import WalletAccountDetail from "./wallet-account-detail";
-import {walletColor,walletSurfaceStyles,accountKind} from "../lib/wallet-presentation";
+import { walletColor, walletSurfaceStyles, accountKind } from "../lib/wallet-presentation";
 import { useViewMotion } from "./use-view-motion";
 import BudgetNotice from "./budget-notice";
 import { useModalMotion } from "./use-modal-motion";
-import { WalletActionIcon, PrivacyShutter, NavigationIndicator, GoalIllustration, type OccurrenceReceipt } from "./signature-interactions";
+import {
+  WalletActionIcon,
+  PrivacyShutter,
+  NavigationIndicator,
+  GoalIllustration,
+  type OccurrenceReceipt,
+} from "./signature-interactions";
 import { occurrenceFeedback } from "../lib/occurrence-feedback";
 import { confirmationKind, type ConfirmationKind } from "../lib/confirmation-kind";
 import MerchantFields, { MerchantIcon } from "./merchant-fields";
 import { ValidatedForm, FormField, revealFormControl } from "./validated-form";
 import { csvCell, parseAmount } from "../lib/csv";
 
-type Page="plan"|"overview"|"transactions"|"recurring"|"accounts"|"goals"|"settings";
+type Page = "plan" | "overview" | "transactions" | "recurring" | "accounts" | "goals" | "settings";
 
-const nav:{id:Page;label:string;short:string;icon:LucideIcon}[]=[{id:"overview",label:"Vue d’ensemble",short:"Accueil",icon:LayoutGrid},{id:"transactions",label:"Opérations",short:"Opérations",icon:ArrowLeftRight},{id:"recurring",label:"Récurrences",short:"Récurrences",icon:Repeat2},{id:"accounts",label:"Mes comptes",short:"Comptes",icon:Wallet},{id:"goals",label:"Mon épargne",short:"Épargne",icon:ChartNoAxesCombined}];
-const pageTitles:Record<Page,string>={plan:"Votre équilibre, mois après mois.",overview:"Vue d’ensemble",transactions:"Vos opérations",recurring:"Un quotidien bien anticipé.",accounts:"Chaque compte à sa place.",goals:"De la place pour vos projets.",settings:"Pécule, à votre façon."};
-nav.push({id:"plan",label:"Mon équilibre 50/30/20",short:"Équilibre",icon:LayoutGrid});
-const uid=()=>crypto.randomUUID();
-const inputAmount=(cents:number)=>String(cents/100);
-function downloadFile(content:string,name:string,type:string){const url=URL.createObjectURL(new Blob([content],{type}));const a=document.createElement("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+const nav: { id: Page; label: string; short: string; icon: LucideIcon }[] = [
+  { id: "overview", label: "Vue d’ensemble", short: "Accueil", icon: LayoutGrid },
+  { id: "transactions", label: "Opérations", short: "Opérations", icon: ArrowLeftRight },
+  { id: "recurring", label: "Récurrences", short: "Récurrences", icon: Repeat2 },
+  { id: "accounts", label: "Mes comptes", short: "Comptes", icon: Wallet },
+  { id: "goals", label: "Mon épargne", short: "Épargne", icon: ChartNoAxesCombined },
+];
+const pageTitles: Record<Page, string> = {
+  plan: "Votre équilibre, mois après mois.",
+  overview: "Vue d’ensemble",
+  transactions: "Vos opérations",
+  recurring: "Un quotidien bien anticipé.",
+  accounts: "Chaque compte à sa place.",
+  goals: "De la place pour vos projets.",
+  settings: "Pécule, à votre façon.",
+};
+nav.push({ id: "plan", label: "Mon équilibre 50/30/20", short: "Équilibre", icon: LayoutGrid });
+const uid = () => crypto.randomUUID();
+const inputAmount = (cents: number) => String(cents / 100);
+function downloadFile(content: string, name: string, type: string) {
+  const url = URL.createObjectURL(new Blob([content], { type }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 
+function dateLabel(date: string, today: string) {
+  return date === today
+    ? "Aujourd’hui"
+    : date === shiftDate(today, -1)
+      ? "Hier"
+      : parseDate(date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+}
 
-function dateLabel(date:string,today:string){return date===today?"Aujourd’hui":date===shiftDate(today,-1)?"Hier":parseDate(date).toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});}
-
-type BudgetAppProps={user:{id?:string;name:string|null;email:string}|null};
-export default function BudgetApp(props:BudgetAppProps){return <FormDraftProvider><BudgetAppContent {...props}/></FormDraftProvider>;}
-function BudgetAppContent({user}:BudgetAppProps){
-  const drafts=useFormDraftStore();
-  const compact=useCompactViewport();
-  const modalKey=(value:Modal)=>[value.type,"item" in value?value.item?.id??"new":value.type==="balance"?value.accountId:"new",value.type==="transaction"?value.direction??"expense":"",value.type==="transaction"?value.accountId??"":"",value.type==="rule"?value.sourceTransactionId??value.proposal?.label??"":"","goal" in value?value.goal?.id??"":"",value.type==="transaction"?value.sequence??0:"",value.type==="transaction"?value.favoriteId??"":"",value.type==="transaction"?value.initialDate??"current":""].join(":");
-  const [today,setToday]=useState(todayISO);
-  const pendingCapture=useRef<Extract<Modal,{type:"transaction"}>|null>(null);
-  const [merchantDirection,setMerchantDirection]=useState("expense");
-  const [ruleFilter,setRuleFilter]=useState("all");
-  const ruleState=(r:Rule)=>r.endDate&&r.endDate<today?"ended":r.active?"active":"paused";
-  const [budget,setBudget]=useState<Budget>(()=>demoBudget(todayISO()));
-  const [demo,setDemoState]=useState(true),[hasBudget,setHasBudget]=useState(false),[loaded,setLoaded]=useState(!user);
-  const [launchFromBoot]=useState(!loaded);
-  const demoScope=useRef(true);
-  const setDemo=useCallback((value:boolean)=>{if(demoScope.current!==value)drafts?.clearAll();demoScope.current=value;setDemoState(value);},[drafts]);
-  const googleReturn=useGoogleReturn();
-  const [selectedPage,setPage]=useState<Page|null>(null),[saving,setSaving]=useState(false);
-  const page=selectedPage??(googleReturn?"settings":"overview");
-  const {modal,setModal:transitionModal,dialogRef,backdropRef,shadeRef,closingRef}=useModalMotion<Modal>();
-  useModalViewport(!!modal,backdropRef);
-  const modalSession=useRef(false);
-  const headingAfterClose=useRef(false);
-  const online=useNetworkOnline();
-  const [loadError,setLoadError]=useState(false),[error,setError]=useState(""),[toast,setToastText]=useState("");
-  const [toastSuccess,setToastSuccess]=useState(false),[toastSequence,setToastSequence]=useState(0);
-  const [toastKind,setToastKind]=useState<ConfirmationKind>("confirmation");
-  const [toastReceipt,setToastReceipt]=useState<OccurrenceReceipt|undefined>();
-  const [undoTransaction,setUndoTransaction]=useState<Transaction>();
-  const setToast=useCallback((message:string,success=false,kind:ConfirmationKind="confirmation",receipt?:OccurrenceReceipt,undo?:Transaction)=>{setUndoTransaction(undo);setToastText(message);setToastSuccess(success);setToastKind(kind);setToastReceipt(receipt);setToastSequence(n=>n+1);},[]);
-  const [hidden,setHidden]=usePrivacyPreference();
-  const setModal=useCallback((value:Modal|null)=>{if(value===null)setError("");transitionModal(value);},[transitionModal,setError]);
-  const [query,setQuery]=useState(""),[typeFilter,setTypeFilter]=useState("all"),[accountFilter,setAccountFilter]=useState("all"),[month,setMonth]=useState(todayISO().slice(0,7));
-  const [sync]=useState(()=>new BudgetSync(undefined,20_000,user?.id));
-  const [sessionExpired,setSessionExpired]=useState(false);
-  const [reconciliationDrafts,setReconciliationDrafts]=useState<Record<string,ReconciliationDraft>>({});
-  const [transactionEpoch,setTransactionEpoch]=useState(0);
-  const retainReconciliationDraft=useCallback((id:string,draft:ReconciliationDraft)=>setReconciliationDrafts(previous=>({...previous,[id]:draft})),[setReconciliationDrafts]);
-  const [importDraft,setImportDraft]=useState<ImportDraft|null>(null);
-  const [comparisonImports,setComparisonImports]=useState<Record<string,ImportDraft>>({});
-  const importContextAccount=modal?.type==="import"&&modal.returnTo?modal.accountId:undefined;
-  const importReturn=modal?.type==="import"&&modal.returnTo&&importContextAccount
-    ? {type:modal.returnTo,accountId:importContextAccount} as const
-    : null;
-  const retainActiveImportDraft=useCallback((draft:ImportDraft|null)=>{
-    if(!importContextAccount){setImportDraft(draft);return;}
-    setComparisonImports(previous=>{
-      if(draft)return {...previous,[importContextAccount]:draft};
-      if(!previous[importContextAccount])return previous;
-      const next={...previous};delete next[importContextAccount];return next;
-    });
-  },[importContextAccount]);
-  const [conflict,setConflict]=useState<{base:Budget;local:Budget;remote:Budget;items:MergeConflict[];message:string;undoId?:string}|null>(null);
-  const [conflictChoices,setConflictChoices]=useState<Record<string,"local"|"remote">>({});
-  const conflictRef=useRef(false);
-  const modalOpen=useRef(false);
-  useEffect(()=>{modalOpen.current=!!modal;if(modal)sync.invalidateReads();},[modal,sync]);
-  useEffect(()=>{
-    if(!importDraft&&!Object.keys(comparisonImports).length&&!conflict&&!Object.values(reconciliationDrafts).some(draft=>draft.balance.trim()))return;
-    const warn=(event:BeforeUnloadEvent)=>{event.preventDefault();event.returnValue="";};
-    window.addEventListener("beforeunload",warn);return()=>window.removeEventListener("beforeunload",warn);
-  },[importDraft,comparisonImports,conflict,reconciliationDrafts]);
-  const pendingDraftKey=useRef<string|undefined>(undefined);
-  const saveLock=useRef(false),previousFocus=useRef<HTMLElement|null>(null);
-  const [installPrompt,setInstallPrompt]=useState<{prompt:()=>Promise<void>;userChoice:Promise<{outcome:string}>}|null>(null);
-  const [pendingEditing,setPendingEditing]=useState(false);
-  const offlineSynced=useCallback((next:Budget)=>{setBudget(next);setDemo(false);setHasBudget(true);setLoadError(false);},[setDemo]);
-  const offlineSessionError=useCallback(()=>{setSessionExpired(true);setLoadError(true);},[]);
-  const offline=useOfflineQueue({userId:user?.id,enabled:!!user?.id&&hasBudget&&!demo&&!sessionExpired,online,today,sync,lockRef:saveLock,canFlush:!modal&&!saving&&!conflict&&!pendingEditing,onSynced:offlineSynced,onSessionError:offlineSessionError});
-  useEffect(()=>{if(!user)void deactivateOfflineProfile().catch(()=>{});},[user]);
-  const busy=saving||offline.working,prepareOffline=offline.prepare;
-  const load=useCallback(async(quiet=false)=>{
-    if(!user)return;
-    if(conflictRef.current||(quiet&&modalOpen.current))return;
-    try{const token=offlinePreparationToken(),result=await sync.load();if(!result)return;if(result.budget){setBudget(materialize(result.budget));setDemo(false);setHasBudget(true);void prepareOffline(result.budget,token);}setSessionExpired(false);setLoadError(false);}
-    catch(e){setLoadError(true);if(e instanceof BudgetRequestError&&e.status===401){setSessionExpired(true);await deactivateOfflineProfile().catch(()=>{});}if(!quiet)setToast(e instanceof Error?e.message:"Impossible de charger les données.");}
-    finally{setLoaded(true);}
-  },[user,sync,setToast,setDemo,setBudget,setHasBudget,setSessionExpired,setLoadError,setLoaded,prepareOffline]);
-  useEffect(()=>{const initialLoad=requestAnimationFrame(()=>{void load();});const on=()=>{if(!saveLock.current)void load(true);};window.addEventListener("online",on);const tick=setInterval(()=>setToday(todayISO()),60000);if("serviceWorker" in navigator)void navigator.serviceWorker.register("/sw.js",{updateViaCache:"none"}).catch(()=>{});const prompt=(e:Event)=>{e.preventDefault();setInstallPrompt(e as unknown as typeof installPrompt);};window.addEventListener("beforeinstallprompt",prompt);return()=>{cancelAnimationFrame(initialLoad);clearInterval(tick);window.removeEventListener("online",on);window.removeEventListener("beforeinstallprompt",prompt);};},[load]);
-  useEffect(()=>{if(demo || modal || !online)return;const refresh=()=>{if(document.visibilityState==="visible"&&!saveLock.current)void load(true);};const timer=setInterval(refresh,30000);document.addEventListener("visibilitychange",refresh);return()=>{clearInterval(timer);document.removeEventListener("visibilitychange",refresh);};},[demo,modal,online,load]);
-  useEffect(()=>{if(!toast)return;const t=setTimeout(()=>setToast(""),undoTransaction?12000:6500);return()=>clearTimeout(t);},[toast,toastSequence,undoTransaction,setToast]);
-  useEffect(()=>{if(!modal){if(modalSession.current){const heading=headingAfterClose.current?document.querySelector<HTMLElement>("#main-content h1"):null;if(heading){heading.setAttribute("tabindex","-1");heading.focus({preventScroll:true});}else if(previousFocus.current?.isConnected)previousFocus.current.focus({preventScroll:true});}headingAfterClose.current=false;modalSession.current=false;return;}if(!modalSession.current){previousFocus.current=document.activeElement as HTMLElement;modalSession.current=true;}const prev=document.body.style.overflow;document.body.style.overflow="hidden";requestAnimationFrame(()=>(dialogRef.current?.querySelector<HTMLElement>(".capture-amount input,input:not([type=radio]):not([type=checkbox]),select,textarea")??dialogRef.current?.querySelector<HTMLElement>("button"))?.focus({preventScroll:true}));const onKey=(e:KeyboardEvent)=>{if(e.key==="Escape"&&!saveLock.current)setModal(null);if(e.key==="Tab"){const allItems=dialogRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),a[href]');const items=Array.from(allItems??[]).filter(item=>!item.closest("[inert]")&&item.getClientRects().length>0);if(!items.length)return;const first=items[0],last=items[items.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}};window.addEventListener("keydown",onKey);return()=>{document.body.style.overflow=prev;window.removeEventListener("keydown",onKey);};},[modal,setModal,dialogRef]);
-  const b=useMemo(()=>materialize(budget,today),[budget,today]);
-  const o=useMemo(()=>overview(b,today),[b,today]);
-  const m=(n:number,decimals=true,signed=false)=>hidden?"•••• €":money(n,decimals,signed);
-  const depthSurface=useRef<HTMLDivElement>(null);
-  const previewOpen=modal?.type==="operation-actions"||modal?.type==="account-actions";
-  usePreviewDepth(previewOpen,depthSurface);
-  const viewMotion = useViewMotion(page);
-  const sheetGesture=useWalletGesture(dialogRef,()=>{if(!saving&&!conflict)setModal(null);});
-  const activeNavTap=useRef({page:"",time:0});
-  const mobileNavigate=(target:Page,now:number)=>{if(target!==page){activeNavTap.current={page:target,time:0};navigate(target);return;}if(target==="transactions"&&activeNavTap.current.page===target&&now-activeNavTap.current.time<900){document.querySelector<HTMLInputElement>('[aria-label="Rechercher une opération"]')?.focus();}else{window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});}activeNavTap.current={page:target,time:now};};
-  const operationMotion = useViewMotion<HTMLElement>(`${month}:${typeFilter}:${accountFilter}`);
-  const recurrenceMotion = useViewMotion<HTMLDivElement>(ruleFilter);
-  const navigate=(p:Page)=>{setPage(p);setQuery("");window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});};
-  const resetDirection=(value:Modal)=>{if(value.type==="transaction")setMerchantDirection(value.item?value.item.amount>0?"income":"expense":value.direction??"expense");else if(value.type==="rule")setMerchantDirection(((value.item??value.proposal)?.amount??0)>0?"income":"expense");};
-  const open=(value:Modal)=>{if(offline.working){setToast("La synchronisation des saisies locales est en cours.");return;}if(value.type==="transaction"&&!value.item&&!value.accountId)value={...value,accountId:page==="transactions"&&b.accounts.some(a=>a.id===accountFilter)?accountFilter:captureAccount(b)};setError("");if(value.type==="transaction"||value.type==="rule")setMerchantDirection(value.type==="rule"?((value.item??value.proposal)?.amount??0)>0?"income":"expense":value.item?value.item.amount>0?"income":"expense":value.direction??"expense");if(value.type==="transaction"||value.type==="rule"){const direction=drafts?.get(modalKey(value))?.direction?.[0];if(direction)setMerchantDirection(direction);}setModal(value);};
-  const captureAction=useEffectEvent((action:'add'|'review')=>{if(action==='review')open({type:"review"});else if(b.accounts.length)open({type:"transaction"});else open({type:"account"});});
-  useEffect(()=>{const key=(event:KeyboardEvent)=>{if(event.key.toLowerCase()!=="n"||event.ctrlKey||event.metaKey||event.altKey||event.isComposing||document.querySelector('[role="dialog"]')||((event.target as HTMLElement)?.closest('input,textarea,select,[contenteditable="true"]')))return;event.preventDefault();captureAction('add');};window.addEventListener('keydown',key);const initial=requestAnimationFrame(()=>{if(new URLSearchParams(location.search).get('daily-review')==='1'){captureAction('review');const url=new URL(location.href);url.searchParams.delete('daily-review');history.replaceState(null,'',url.pathname+url.search+url.hash);}});return()=>{cancelAnimationFrame(initial);window.removeEventListener('keydown',key);};},[]);
-  function openFavorite(favorite:Favorite,context?:{accountId:string;date:string}){const source=modal?.type==="transaction"?modal:undefined;const preferred=b.accounts.some(a=>a.id===favorite.accountId)?favorite.accountId:context?.accountId??(page==="transactions"&&b.accounts.some(a=>a.id===accountFilter)?accountFilter:undefined);open({type:"transaction",direction:favorite.direction,accountId:captureAccount(b,preferred),initialDate:context?.date,returnReviewDate:context?source?.returnReviewDate:undefined,returnAccountId:context?source?.returnAccountId:undefined,returnToBalance:context?source?.returnToBalance:undefined,initialAmount:favorite.amount,favoriteId:favorite.id,initialLabel:favorite.label,initialCategory:favorite.category,initialMerchantId:favorite.merchantId,initialCustomIconUrl:favorite.customIconUrl});}
-  function savedFeedback(next:Budget,before:Budget=b){
-    const occurrence=modal?.type==="transaction"&&modal.item?.ruleId?next.transactions.find(item=>item.id===modal.item?.id):undefined;
-    const kind=confirmationKind(occurrence?.ruleId?"occurrence":modal?.type,before,next);
-    const receipt=occurrence?.ruleId?occurrenceFeedback(next,occurrence.ruleId,occurrence.date,today):undefined;
-    return {kind,receipt};
-  }
-  async function save(next:Budget,message="C’est enregistré.",real=false,undoId?:string):Promise<boolean>{
-    if(saveLock.current||conflictRef.current||closingRef.current)return false;
-    const draftKey=undoId?undefined:modal?modalKey(modal):document.activeElement?.closest("form")?.dataset.draftKey;pendingDraftKey.current=draftKey;
-    const {kind,receipt}=undoId?{kind:"confirmation" as const,receipt:undefined}:savedFeedback(next);
-    const inlineResult=modal?.type==="import";
-    const added=modal?.type==="transaction"&&!modal.item?next.transactions.find(t=>!b.transactions.some(old=>old.id===t.id)):undefined;
-    const origin=dialogRef.current?.querySelector('.capture-amount')?.getBoundingClientRect();
-    const continuity=async()=>{try{if(modal?.type==="transfer")await confirmedTransfer();if(added&&modal?.type==="transaction"&&!pendingCapture.current&&!modal.returnReviewDate&&!modal.returnAccountId)operationToJournal(added.id,origin);}catch{/* Visual feedback must never turn a committed write into a retry. */}};
-    const successMessage=kind==="goal"?message+" Bravo, votre objectif est atteint !":message;
-    if(demo&&!real){if(draftKey)drafts?.clear(draftKey);setBudget(materialize(next,today));if(inlineResult)setToast("");else setToast(successMessage+" · Démonstration",true,kind,receipt,added);saveLock.current=true;setSaving(true);try{await continuity();}finally{saveLock.current=false;setSaving(false);}return true;}
-    if(!online||offline.connectionUnavailable||loadError&&!sessionExpired){
-      if(!undoId&&user?.id&&hasBudget&&!sessionExpired&&modal?.type==='transaction'&&!modal.item){
-        const rows=next.transactions.filter(t=>!budget.transactions.some(old=>old.id===t.id)&&!t.ruleId&&!t.transferId);
-        const checked=budgetSchema.safeParse(next);if(rows.length!==1||!checked.success){setError('Vérifiez cette opération avant de la conserver.');return false;}
-        saveLock.current=true;setSaving(true);
-        try{const transaction=checked.data.transactions.find(t=>t.id===rows[0].id)!;await queueOperation({id:transaction.id,userId:user.id,transaction,createdAt:new Date().toISOString()});if(draftKey)drafts?.clear(draftKey);await offline.refresh();setToast('Opération conservée sur cet appareil · en attente de synchronisation.');return true;}
-        catch(cause){setError(cause instanceof Error?cause.message:'La conservation locale a échoué. Votre saisie reste dans le formulaire.');return false;}
-        finally{saveLock.current=false;setSaving(false);}
+type BudgetAppProps = { user: { id?: string; name: string | null; email: string } | null };
+export default function BudgetApp(props: BudgetAppProps) {
+  return (
+    <FormDraftProvider>
+      <BudgetAppContent {...props} />
+    </FormDraftProvider>
+  );
+}
+function BudgetAppContent({ user }: BudgetAppProps) {
+  const drafts = useFormDraftStore();
+  const compact = useCompactViewport();
+  const modalKey = (value: Modal) =>
+    [
+      value.type,
+      "item" in value ? (value.item?.id ?? "new") : value.type === "balance" ? value.accountId : "new",
+      value.type === "transaction" ? (value.direction ?? "expense") : "",
+      value.type === "transaction" ? (value.accountId ?? "") : "",
+      value.type === "rule" ? (value.sourceTransactionId ?? value.proposal?.label ?? "") : "",
+      "goal" in value ? (value.goal?.id ?? "") : "",
+      value.type === "transaction" ? (value.sequence ?? 0) : "",
+      value.type === "transaction" ? (value.favoriteId ?? "") : "",
+      value.type === "transaction" ? (value.initialDate ?? "current") : "",
+    ].join(":");
+  const [today, setToday] = useState(todayISO);
+  const pendingCapture = useRef<Extract<Modal, { type: "transaction" }> | null>(null);
+  const [merchantDirection, setMerchantDirection] = useState("expense");
+  const [ruleFilter, setRuleFilter] = useState("all");
+  const ruleState = (r: Rule) => (r.endDate && r.endDate < today ? "ended" : r.active ? "active" : "paused");
+  const [budget, setBudget] = useState<Budget>(() => demoBudget(todayISO()));
+  const [demo, setDemoState] = useState(true),
+    [hasBudget, setHasBudget] = useState(false),
+    [loaded, setLoaded] = useState(!user);
+  const [launchFromBoot] = useState(!loaded);
+  const demoScope = useRef(true);
+  const setDemo = useCallback(
+    (value: boolean) => {
+      if (demoScope.current !== value) drafts?.clearAll();
+      demoScope.current = value;
+      setDemoState(value);
+    },
+    [drafts],
+  );
+  const googleReturn = useGoogleReturn();
+  const [selectedPage, setPage] = useState<Page | null>(null),
+    [saving, setSaving] = useState(false);
+  const page = selectedPage ?? (googleReturn ? "settings" : "overview");
+  const { modal, setModal: transitionModal, dialogRef, backdropRef, shadeRef, closingRef } = useModalMotion<Modal>();
+  useModalViewport(!!modal, backdropRef);
+  const modalSession = useRef(false);
+  const headingAfterClose = useRef(false);
+  const online = useNetworkOnline();
+  const [loadError, setLoadError] = useState(false),
+    [error, setError] = useState(""),
+    [toast, setToastText] = useState("");
+  const [toastSuccess, setToastSuccess] = useState(false),
+    [toastSequence, setToastSequence] = useState(0);
+  const [toastKind, setToastKind] = useState<ConfirmationKind>("confirmation");
+  const [toastReceipt, setToastReceipt] = useState<OccurrenceReceipt | undefined>();
+  const [undoTransaction, setUndoTransaction] = useState<Transaction>();
+  const setToast = useCallback(
+    (
+      message: string,
+      success = false,
+      kind: ConfirmationKind = "confirmation",
+      receipt?: OccurrenceReceipt,
+      undo?: Transaction,
+    ) => {
+      setUndoTransaction(undo);
+      setToastText(message);
+      setToastSuccess(success);
+      setToastKind(kind);
+      setToastReceipt(receipt);
+      setToastSequence((n) => n + 1);
+    },
+    [],
+  );
+  const [hidden, setHidden] = usePrivacyPreference();
+  const setModal = useCallback(
+    (value: Modal | null) => {
+      if (value === null) setError("");
+      transitionModal(value);
+    },
+    [transitionModal, setError],
+  );
+  const [query, setQuery] = useState(""),
+    [typeFilter, setTypeFilter] = useState("all"),
+    [accountFilter, setAccountFilter] = useState("all"),
+    [month, setMonth] = useState(todayISO().slice(0, 7));
+  const [sync] = useState(() => new BudgetSync(undefined, 20_000, user?.id));
+  const [sessionExpired, setSessionExpired] = useState(false);
+  const [reconciliationDrafts, setReconciliationDrafts] = useState<Record<string, ReconciliationDraft>>({});
+  const [transactionEpoch, setTransactionEpoch] = useState(0);
+  const retainReconciliationDraft = useCallback(
+    (id: string, draft: ReconciliationDraft) => setReconciliationDrafts((previous) => ({ ...previous, [id]: draft })),
+    [setReconciliationDrafts],
+  );
+  const [importDraft, setImportDraft] = useState<ImportDraft | null>(null);
+  const [comparisonImports, setComparisonImports] = useState<Record<string, ImportDraft>>({});
+  const importContextAccount = modal?.type === "import" && modal.returnTo ? modal.accountId : undefined;
+  const importReturn =
+    modal?.type === "import" && modal.returnTo && importContextAccount
+      ? ({ type: modal.returnTo, accountId: importContextAccount } as const)
+      : null;
+  const retainActiveImportDraft = useCallback(
+    (draft: ImportDraft | null) => {
+      if (!importContextAccount) {
+        setImportDraft(draft);
+        return;
       }
-      if(undoId){setToast("Reconnectez-vous pour annuler l’opération.",false,"confirmation",undefined,undoTransaction);return false;}
-      setError('La saisie locale est disponible pour une nouvelle opération. Cette autre action nécessite Internet.');return false;
-    }
-    if(!user){window.location.assign(new URL("/sign-in",window.location.origin).href);return false;}
-    if(loadError){setError("Rechargez d’abord votre budget pour éviter de remplacer vos données.");setToast("Rechargez votre budget avant de le modifier.");return false;}
-    saveLock.current=true;setSaving(true);setError("");
-    const saved=materialize(next,today);
-    const base=sync.getBaseline()??emptyBudget(),preparationToken=offlinePreparationToken();
-    try{
-      try{await sync.save(saved);}catch(cause){
-        if(!(cause instanceof BudgetRequestError)||cause.status!==409)throw cause;
-        const latest=await sync.load();
-        if(!latest?.budget)throw cause;
-        const merged=mergeBudgets(materialize(base,today),saved,materialize(latest.budget,today));
-        {
-          conflictRef.current=true;setConflictChoices({});
-          setConflict({base:materialize(base,today),local:saved,remote:materialize(latest.budget,today),items:merged.conflicts,message,undoId});
-          setError(merged.conflicts.length?"Des modifications concernent les mêmes éléments. Choisissez la version à conserver.":"");return false;
+      setComparisonImports((previous) => {
+        if (draft) return { ...previous, [importContextAccount]: draft };
+        if (!previous[importContextAccount]) return previous;
+        const next = { ...previous };
+        delete next[importContextAccount];
+        return next;
+      });
+    },
+    [importContextAccount],
+  );
+  const [conflict, setConflict] = useState<{
+    base: Budget;
+    local: Budget;
+    remote: Budget;
+    items: MergeConflict[];
+    message: string;
+    undoId?: string;
+  } | null>(null);
+  const [conflictChoices, setConflictChoices] = useState<Record<string, "local" | "remote">>({});
+  const conflictRef = useRef(false);
+  const modalOpen = useRef(false);
+  useEffect(() => {
+    modalOpen.current = !!modal;
+    if (modal) sync.invalidateReads();
+  }, [modal, sync]);
+  useEffect(() => {
+    if (
+      !importDraft &&
+      !Object.keys(comparisonImports).length &&
+      !conflict &&
+      !Object.values(reconciliationDrafts).some((draft) => draft.balance.trim())
+    )
+      return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [importDraft, comparisonImports, conflict, reconciliationDrafts]);
+  const pendingDraftKey = useRef<string | undefined>(undefined);
+  const saveLock = useRef(false),
+    previousFocus = useRef<HTMLElement | null>(null);
+  const [installPrompt, setInstallPrompt] = useState<{
+    prompt: () => Promise<void>;
+    userChoice: Promise<{ outcome: string }>;
+  } | null>(null);
+  const [pendingEditing, setPendingEditing] = useState(false);
+  const offlineSynced = useCallback(
+    (next: Budget) => {
+      setBudget(next);
+      setDemo(false);
+      setHasBudget(true);
+      setLoadError(false);
+    },
+    [setDemo],
+  );
+  const offlineSessionError = useCallback(() => {
+    setSessionExpired(true);
+    setLoadError(true);
+  }, []);
+  const offline = useOfflineQueue({
+    userId: user?.id,
+    enabled: !!user?.id && hasBudget && !demo && !sessionExpired,
+    online,
+    today,
+    sync,
+    lockRef: saveLock,
+    canFlush: !modal && !saving && !conflict && !pendingEditing,
+    onSynced: offlineSynced,
+    onSessionError: offlineSessionError,
+  });
+  useEffect(() => {
+    if (!user) void deactivateOfflineProfile().catch(() => {});
+  }, [user]);
+  const busy = saving || offline.working,
+    prepareOffline = offline.prepare;
+  const load = useCallback(
+    async (quiet = false) => {
+      if (!user) return;
+      if (conflictRef.current || (quiet && modalOpen.current)) return;
+      try {
+        const token = offlinePreparationToken(),
+          result = await sync.load();
+        if (!result) return;
+        if (result.budget) {
+          setBudget(materialize(result.budget));
+          setDemo(false);
+          setHasBudget(true);
+          void prepareOffline(result.budget, token);
         }
-
+        setSessionExpired(false);
+        setLoadError(false);
+      } catch (e) {
+        setLoadError(true);
+        if (e instanceof BudgetRequestError && e.status === 401) {
+          setSessionExpired(true);
+          await deactivateOfflineProfile().catch(() => {});
+        }
+        if (!quiet) setToast(e instanceof Error ? e.message : "Impossible de charger les données.");
+      } finally {
+        setLoaded(true);
       }
-      if(draftKey)drafts?.clear(draftKey);
-      void prepareOffline(saved,preparationToken);setBudget(saved);setDemo(false);setHasBudget(true);if(inlineResult)setToast("");else setToast(successMessage,true,kind,receipt,added);await continuity();return true;}
-    catch(e){
-      if(!(e instanceof BudgetRequestError)||e.status>=500){
-        if(!undoId&&user?.id&&modal?.type==='transaction'&&!modal.item){const entry=pendingCaptureIntent(base,saved,user.id);if(entry){try{await queueOperation(entry);if(draftKey)drafts?.clear(draftKey);await offline.refresh();setToast('Connexion interrompue : opération conservée sur cet appareil, en attente de confirmation.');return true;}catch{/* Keep the existing in-memory conflict recovery if local storage fails. */}}}
-        // A lost response can follow a committed write. Retain the exact IDs for a safe retry.
-        const before=materialize(base,today);conflictRef.current=true;setConflictChoices({});
-        setConflict({base:before,local:saved,remote:before,items:[],message,undoId});
-        setError("La sauvegarde n’a pas pu être confirmée. Votre saisie est conservée ; réessayez ici pour éviter un doublon.");return false;
+    },
+    [
+      user,
+      sync,
+      setToast,
+      setDemo,
+      setBudget,
+      setHasBudget,
+      setSessionExpired,
+      setLoadError,
+      setLoaded,
+      prepareOffline,
+    ],
+  );
+  useEffect(() => {
+    const initialLoad = requestAnimationFrame(() => {
+      void load();
+    });
+    const on = () => {
+      if (!saveLock.current) void load(true);
+    };
+    window.addEventListener("online", on);
+    const tick = setInterval(() => setToday(todayISO()), 60000);
+    if ("serviceWorker" in navigator)
+      void navigator.serviceWorker.register("/sw.js", { updateViaCache: "none" }).catch(() => {});
+    const prompt = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e as unknown as typeof installPrompt);
+    };
+    window.addEventListener("beforeinstallprompt", prompt);
+    return () => {
+      cancelAnimationFrame(initialLoad);
+      clearInterval(tick);
+      window.removeEventListener("online", on);
+      window.removeEventListener("beforeinstallprompt", prompt);
+    };
+  }, [load]);
+  useEffect(() => {
+    if (demo || modal || !online) return;
+    const refresh = () => {
+      if (document.visibilityState === "visible" && !saveLock.current) void load(true);
+    };
+    const timer = setInterval(refresh, 30000);
+    document.addEventListener("visibilitychange", refresh);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", refresh);
+    };
+  }, [demo, modal, online, load]);
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(""), undoTransaction ? 12000 : 6500);
+    return () => clearTimeout(t);
+  }, [toast, toastSequence, undoTransaction, setToast]);
+  useEffect(() => {
+    if (!modal) {
+      if (modalSession.current) {
+        const heading = headingAfterClose.current ? document.querySelector<HTMLElement>("#main-content h1") : null;
+        if (heading) {
+          heading.setAttribute("tabindex", "-1");
+          heading.focus({ preventScroll: true });
+        } else if (previousFocus.current?.isConnected) previousFocus.current.focus({ preventScroll: true });
       }
-      if(e.status===401||e.status===409){setLoadError(true);if(e.status===401){setSessionExpired(true);await deactivateOfflineProfile().catch(()=>{});}}
-      const detail=e.message;setError(detail);setToast(detail);return false;
-    }
-    finally{saveLock.current=false;setSaving(false);}
-  }
-  async function undoLastOperation(){
-    if(!undoTransaction||saveLock.current||conflictRef.current||closingRef.current)return;
-    if(!demo&&(!online||offline.connectionUnavailable||loadError)){
-      setToast("Reconnectez-vous pour annuler l’opération.",false,"confirmation",undefined,undoTransaction);
+      headingAfterClose.current = false;
+      modalSession.current = false;
       return;
     }
-    const current=b.transactions.find(item=>item.id===undoTransaction.id);
-    if(!sameBudgetValue(current,undoTransaction)){
+    if (!modalSession.current) {
+      previousFocus.current = document.activeElement as HTMLElement;
+      modalSession.current = true;
+    }
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    requestAnimationFrame(() =>
+      (
+        dialogRef.current?.querySelector<HTMLElement>(
+          ".capture-amount input,input:not([type=radio]):not([type=checkbox]),select,textarea",
+        ) ?? dialogRef.current?.querySelector<HTMLElement>("button")
+      )?.focus({ preventScroll: true }),
+    );
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !saveLock.current) setModal(null);
+      if (e.key === "Tab") {
+        const allItems = dialogRef.current?.querySelectorAll<HTMLElement>(
+          "button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),a[href]",
+        );
+        const items = Array.from(allItems ?? []).filter(
+          (item) => !item.closest("[inert]") && item.getClientRects().length > 0,
+        );
+        if (!items.length) return;
+        const first = items[0],
+          last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [modal, setModal, dialogRef]);
+  const b = useMemo(() => materialize(budget, today), [budget, today]);
+  const o = useMemo(() => overview(b, today), [b, today]);
+  const m = (n: number, decimals = true, signed = false) => (hidden ? "•••• €" : money(n, decimals, signed));
+  const depthSurface = useRef<HTMLDivElement>(null);
+  const previewOpen = modal?.type === "operation-actions" || modal?.type === "account-actions";
+  usePreviewDepth(previewOpen, depthSurface);
+  const viewMotion = useViewMotion(page);
+  const sheetGesture = useWalletGesture(dialogRef, () => {
+    if (!saving && !conflict) setModal(null);
+  });
+  const activeNavTap = useRef({ page: "", time: 0 });
+  const mobileNavigate = (target: Page, now: number) => {
+    if (target !== page) {
+      activeNavTap.current = { page: target, time: 0 };
+      navigate(target);
+      return;
+    }
+    if (target === "transactions" && activeNavTap.current.page === target && now - activeNavTap.current.time < 900) {
+      document.querySelector<HTMLInputElement>('[aria-label="Rechercher une opération"]')?.focus();
+    } else {
+      window.scrollTo({
+        top: 0,
+        behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "instant" : "smooth",
+      });
+    }
+    activeNavTap.current = { page: target, time: now };
+  };
+  const operationMotion = useViewMotion<HTMLElement>(`${month}:${typeFilter}:${accountFilter}`);
+  const recurrenceMotion = useViewMotion<HTMLDivElement>(ruleFilter);
+  const navigate = (p: Page) => {
+    setPage(p);
+    setQuery("");
+    window.scrollTo({
+      top: 0,
+      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+    });
+  };
+  const resetDirection = (value: Modal) => {
+    if (value.type === "transaction")
+      setMerchantDirection(
+        value.item ? (value.item.amount > 0 ? "income" : "expense") : (value.direction ?? "expense"),
+      );
+    else if (value.type === "rule")
+      setMerchantDirection(((value.item ?? value.proposal)?.amount ?? 0) > 0 ? "income" : "expense");
+  };
+  const open = (value: Modal) => {
+    if (offline.working) {
+      setToast("La synchronisation des saisies locales est en cours.");
+      return;
+    }
+    if (value.type === "transaction" && !value.item && !value.accountId)
+      value = {
+        ...value,
+        accountId:
+          page === "transactions" && b.accounts.some((a) => a.id === accountFilter) ? accountFilter : captureAccount(b),
+      };
+    setError("");
+    if (value.type === "transaction" || value.type === "rule")
+      setMerchantDirection(
+        value.type === "rule"
+          ? ((value.item ?? value.proposal)?.amount ?? 0) > 0
+            ? "income"
+            : "expense"
+          : value.item
+            ? value.item.amount > 0
+              ? "income"
+              : "expense"
+            : (value.direction ?? "expense"),
+      );
+    if (value.type === "transaction" || value.type === "rule") {
+      const direction = drafts?.get(modalKey(value))?.direction?.[0];
+      if (direction) setMerchantDirection(direction);
+    }
+    setModal(value);
+  };
+  const captureAction = useEffectEvent((action: "add" | "review") => {
+    if (action === "review") open({ type: "review" });
+    else if (b.accounts.length) open({ type: "transaction" });
+    else open({ type: "account" });
+  });
+  useEffect(() => {
+    const key = (event: KeyboardEvent) => {
+      if (
+        event.key.toLowerCase() !== "n" ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.altKey ||
+        event.isComposing ||
+        document.querySelector('[role="dialog"]') ||
+        (event.target as HTMLElement)?.closest('input,textarea,select,[contenteditable="true"]')
+      )
+        return;
+      event.preventDefault();
+      captureAction("add");
+    };
+    window.addEventListener("keydown", key);
+    const initial = requestAnimationFrame(() => {
+      if (new URLSearchParams(location.search).get("daily-review") === "1") {
+        captureAction("review");
+        const url = new URL(location.href);
+        url.searchParams.delete("daily-review");
+        history.replaceState(null, "", url.pathname + url.search + url.hash);
+      }
+    });
+    return () => {
+      cancelAnimationFrame(initial);
+      window.removeEventListener("keydown", key);
+    };
+  }, []);
+  function openFavorite(favorite: Favorite, context?: { accountId: string; date: string }) {
+    const source = modal?.type === "transaction" ? modal : undefined;
+    const preferred = b.accounts.some((a) => a.id === favorite.accountId)
+      ? favorite.accountId
+      : (context?.accountId ??
+        (page === "transactions" && b.accounts.some((a) => a.id === accountFilter) ? accountFilter : undefined));
+    open({
+      type: "transaction",
+      direction: favorite.direction,
+      accountId: captureAccount(b, preferred),
+      initialDate: context?.date,
+      returnReviewDate: context ? source?.returnReviewDate : undefined,
+      returnAccountId: context ? source?.returnAccountId : undefined,
+      returnToBalance: context ? source?.returnToBalance : undefined,
+      initialAmount: favorite.amount,
+      favoriteId: favorite.id,
+      initialLabel: favorite.label,
+      initialCategory: favorite.category,
+      initialMerchantId: favorite.merchantId,
+      initialCustomIconUrl: favorite.customIconUrl,
+    });
+  }
+  function savedFeedback(next: Budget, before: Budget = b) {
+    const occurrence =
+      modal?.type === "transaction" && modal.item?.ruleId
+        ? next.transactions.find((item) => item.id === modal.item?.id)
+        : undefined;
+    const kind = confirmationKind(occurrence?.ruleId ? "occurrence" : modal?.type, before, next);
+    const receipt = occurrence?.ruleId
+      ? occurrenceFeedback(next, occurrence.ruleId, occurrence.date, today)
+      : undefined;
+    return { kind, receipt };
+  }
+  async function save(next: Budget, message = "C’est enregistré.", real = false, undoId?: string): Promise<boolean> {
+    if (saveLock.current || conflictRef.current || closingRef.current) return false;
+    const draftKey = undoId
+      ? undefined
+      : modal
+        ? modalKey(modal)
+        : document.activeElement?.closest("form")?.dataset.draftKey;
+    pendingDraftKey.current = draftKey;
+    const { kind, receipt } = undoId ? { kind: "confirmation" as const, receipt: undefined } : savedFeedback(next);
+    const inlineResult = modal?.type === "import";
+    const added =
+      modal?.type === "transaction" && !modal.item
+        ? next.transactions.find((t) => !b.transactions.some((old) => old.id === t.id))
+        : undefined;
+    const origin = dialogRef.current?.querySelector(".capture-amount")?.getBoundingClientRect();
+    const continuity = async () => {
+      try {
+        if (modal?.type === "transfer") await confirmedTransfer();
+        if (
+          added &&
+          modal?.type === "transaction" &&
+          !pendingCapture.current &&
+          !modal.returnReviewDate &&
+          !modal.returnAccountId
+        )
+          operationToJournal(added.id, origin);
+      } catch {
+        /* Visual feedback must never turn a committed write into a retry. */
+      }
+    };
+    const successMessage = kind === "goal" ? message + " Bravo, votre objectif est atteint !" : message;
+    if (demo && !real) {
+      if (draftKey) drafts?.clear(draftKey);
+      setBudget(materialize(next, today));
+      if (inlineResult) setToast("");
+      else setToast(successMessage + " · Démonstration", true, kind, receipt, added);
+      saveLock.current = true;
+      setSaving(true);
+      try {
+        await continuity();
+      } finally {
+        saveLock.current = false;
+        setSaving(false);
+      }
+      return true;
+    }
+    if (!online || offline.connectionUnavailable || (loadError && !sessionExpired)) {
+      if (!undoId && user?.id && hasBudget && !sessionExpired && modal?.type === "transaction" && !modal.item) {
+        const rows = next.transactions.filter(
+          (t) => !budget.transactions.some((old) => old.id === t.id) && !t.ruleId && !t.transferId,
+        );
+        const checked = budgetSchema.safeParse(next);
+        if (rows.length !== 1 || !checked.success) {
+          setError("Vérifiez cette opération avant de la conserver.");
+          return false;
+        }
+        saveLock.current = true;
+        setSaving(true);
+        try {
+          const transaction = checked.data.transactions.find((t) => t.id === rows[0].id)!;
+          await queueOperation({
+            id: transaction.id,
+            userId: user.id,
+            transaction,
+            createdAt: new Date().toISOString(),
+          });
+          if (draftKey) drafts?.clear(draftKey);
+          await offline.refresh();
+          setToast("Opération conservée sur cet appareil · en attente de synchronisation.");
+          return true;
+        } catch (cause) {
+          setError(
+            cause instanceof Error
+              ? cause.message
+              : "La conservation locale a échoué. Votre saisie reste dans le formulaire.",
+          );
+          return false;
+        } finally {
+          saveLock.current = false;
+          setSaving(false);
+        }
+      }
+      if (undoId) {
+        setToast("Reconnectez-vous pour annuler l’opération.", false, "confirmation", undefined, undoTransaction);
+        return false;
+      }
+      setError("La saisie locale est disponible pour une nouvelle opération. Cette autre action nécessite Internet.");
+      return false;
+    }
+    if (!user) {
+      window.location.assign(new URL("/sign-in", window.location.origin).href);
+      return false;
+    }
+    if (loadError) {
+      setError("Rechargez d’abord votre budget pour éviter de remplacer vos données.");
+      setToast("Rechargez votre budget avant de le modifier.");
+      return false;
+    }
+    saveLock.current = true;
+    setSaving(true);
+    setError("");
+    const saved = materialize(next, today);
+    const base = sync.getBaseline() ?? emptyBudget(),
+      preparationToken = offlinePreparationToken();
+    try {
+      try {
+        await sync.save(saved);
+      } catch (cause) {
+        if (!(cause instanceof BudgetRequestError) || cause.status !== 409) throw cause;
+        const latest = await sync.load();
+        if (!latest?.budget) throw cause;
+        const merged = mergeBudgets(materialize(base, today), saved, materialize(latest.budget, today));
+        {
+          conflictRef.current = true;
+          setConflictChoices({});
+          setConflict({
+            base: materialize(base, today),
+            local: saved,
+            remote: materialize(latest.budget, today),
+            items: merged.conflicts,
+            message,
+            undoId,
+          });
+          setError(
+            merged.conflicts.length
+              ? "Des modifications concernent les mêmes éléments. Choisissez la version à conserver."
+              : "",
+          );
+          return false;
+        }
+      }
+      if (draftKey) drafts?.clear(draftKey);
+      void prepareOffline(saved, preparationToken);
+      setBudget(saved);
+      setDemo(false);
+      setHasBudget(true);
+      if (inlineResult) setToast("");
+      else setToast(successMessage, true, kind, receipt, added);
+      await continuity();
+      return true;
+    } catch (e) {
+      if (!(e instanceof BudgetRequestError) || e.status >= 500) {
+        if (!undoId && user?.id && modal?.type === "transaction" && !modal.item) {
+          const entry = pendingCaptureIntent(base, saved, user.id);
+          if (entry) {
+            try {
+              await queueOperation(entry);
+              if (draftKey) drafts?.clear(draftKey);
+              await offline.refresh();
+              setToast("Connexion interrompue : opération conservée sur cet appareil, en attente de confirmation.");
+              return true;
+            } catch {
+              /* Keep the existing in-memory conflict recovery if local storage fails. */
+            }
+          }
+        }
+        // A lost response can follow a committed write. Retain the exact IDs for a safe retry.
+        const before = materialize(base, today);
+        conflictRef.current = true;
+        setConflictChoices({});
+        setConflict({ base: before, local: saved, remote: before, items: [], message, undoId });
+        setError(
+          "La sauvegarde n’a pas pu être confirmée. Votre saisie est conservée ; réessayez ici pour éviter un doublon.",
+        );
+        return false;
+      }
+      if (e.status === 401 || e.status === 409) {
+        setLoadError(true);
+        if (e.status === 401) {
+          setSessionExpired(true);
+          await deactivateOfflineProfile().catch(() => {});
+        }
+      }
+      const detail = e.message;
+      setError(detail);
+      setToast(detail);
+      return false;
+    } finally {
+      saveLock.current = false;
+      setSaving(false);
+    }
+  }
+  async function undoLastOperation() {
+    if (!undoTransaction || saveLock.current || conflictRef.current || closingRef.current) return;
+    if (!demo && (!online || offline.connectionUnavailable || loadError)) {
+      setToast("Reconnectez-vous pour annuler l’opération.", false, "confirmation", undefined, undoTransaction);
+      return;
+    }
+    const current = b.transactions.find((item) => item.id === undoTransaction.id);
+    if (!sameBudgetValue(current, undoTransaction)) {
       setToast("L’opération a changé. Ouvrez-la dans le journal pour la vérifier.");
       return;
     }
-    await save({...b,transactions:b.transactions.filter(item=>item.id!==undoTransaction.id)},"Opération annulée.",false,undoTransaction.id);
+    await save(
+      { ...b, transactions: b.transactions.filter((item) => item.id !== undoTransaction.id) },
+      "Opération annulée.",
+      false,
+      undoTransaction.id,
+    );
   }
-  async function resolveConflict(){
-    if(!conflict||saveLock.current||closingRef.current)return;
-    const result=mergeBudgets(conflict.base,conflict.local,conflict.remote,conflictChoices);
-    if(result.conflicts.length)return;
-    const validated=budgetSchema.safeParse(result.budget);
-    if(!validated.success){setError("Ces choix ne sont pas compatibles : "+validated.error.issues[0].message+". Ajustez les versions à conserver.");return;}
-    saveLock.current=true;setSaving(true);setError("");
-    try{
-      await sync.save(materialize(validated.data,today));
-      setBudget(materialize(validated.data,today));setDemo(false);setHasBudget(true);if(conflict.undoId){
-        const retained=validated.data.transactions.some(item=>item.id===conflict.undoId);
-        setToast(retained?"L’opération a été conservée.":conflict.message,!retained);
-      }else{
-        const feedback=savedFeedback(validated.data,conflict.remote);
-        setToast(conflict.message,true,feedback.kind,feedback.receipt);
-      }setLoadError(false);
-      if(pendingDraftKey.current)drafts?.clear(pendingDraftKey.current);pendingDraftKey.current=undefined;
-      conflictRef.current=false;setConflict(null);setTransactionEpoch(previous=>previous+1);if(conflict.undoId)return;if(modal?.type==="import"){retainActiveImportDraft(null);if(importReturn){open(importReturn);return;}}
-      if(modal?.type==="reconcile")setReconciliationDrafts(previous=>{const next={...previous};delete next[modal.accountId];return next;});
-      if(pendingCapture.current){const capture=pendingCapture.current;pendingCapture.current=null;open(capture);}else if(modal?.type==="transaction"&&modal.returnReviewDate)open({type:"review",date:modal.returnReviewDate});else if((modal?.type==="transaction"||modal?.type==="account"||modal?.type==="match-transfers")&&modal.returnAccountId)open({type:modal.type==="transaction"&&modal.returnToBalance?"balance":"reconcile",accountId:modal.returnAccountId});else if(modal?.type==="confirm"&&modal.onDone)modal.onDone();else setModal(null);
-    }catch(cause){
-      if(cause instanceof BudgetRequestError&&cause.status===409){
-        try{const latest=await sync.load();if(latest?.budget){const next=mergeBudgets(conflict.remote,validated.data,latest.budget);setConflict({base:conflict.remote,local:validated.data,remote:latest.budget,items:next.conflicts,message:conflict.message,undoId:conflict.undoId});setConflictChoices({});}}catch{setError("Impossible de relire le budget. Vos choix sont conservés. Réessayez.");}
-      }else setError(cause instanceof Error?cause.message:"Impossible d’enregistrer. Vos choix sont conservés.");
-    }finally{saveLock.current=false;setSaving(false);}
+  async function resolveConflict() {
+    if (!conflict || saveLock.current || closingRef.current) return;
+    const result = mergeBudgets(conflict.base, conflict.local, conflict.remote, conflictChoices);
+    if (result.conflicts.length) return;
+    const validated = budgetSchema.safeParse(result.budget);
+    if (!validated.success) {
+      setError(
+        "Ces choix ne sont pas compatibles : " +
+          validated.error.issues[0].message +
+          ". Ajustez les versions à conserver.",
+      );
+      return;
+    }
+    saveLock.current = true;
+    setSaving(true);
+    setError("");
+    try {
+      await sync.save(materialize(validated.data, today));
+      setBudget(materialize(validated.data, today));
+      setDemo(false);
+      setHasBudget(true);
+      if (conflict.undoId) {
+        const retained = validated.data.transactions.some((item) => item.id === conflict.undoId);
+        setToast(retained ? "L’opération a été conservée." : conflict.message, !retained);
+      } else {
+        const feedback = savedFeedback(validated.data, conflict.remote);
+        setToast(conflict.message, true, feedback.kind, feedback.receipt);
+      }
+      setLoadError(false);
+      if (pendingDraftKey.current) drafts?.clear(pendingDraftKey.current);
+      pendingDraftKey.current = undefined;
+      conflictRef.current = false;
+      setConflict(null);
+      setTransactionEpoch((previous) => previous + 1);
+      if (conflict.undoId) return;
+      if (modal?.type === "import") {
+        retainActiveImportDraft(null);
+        if (importReturn) {
+          open(importReturn);
+          return;
+        }
+      }
+      if (modal?.type === "reconcile")
+        setReconciliationDrafts((previous) => {
+          const next = { ...previous };
+          delete next[modal.accountId];
+          return next;
+        });
+      if (pendingCapture.current) {
+        const capture = pendingCapture.current;
+        pendingCapture.current = null;
+        open(capture);
+      } else if (modal?.type === "transaction" && modal.returnReviewDate)
+        open({ type: "review", date: modal.returnReviewDate });
+      else if (
+        (modal?.type === "transaction" || modal?.type === "account" || modal?.type === "match-transfers") &&
+        modal.returnAccountId
+      )
+        open({
+          type: modal.type === "transaction" && modal.returnToBalance ? "balance" : "reconcile",
+          accountId: modal.returnAccountId,
+        });
+      else if (modal?.type === "confirm" && modal.onDone) modal.onDone();
+      else setModal(null);
+    } catch (cause) {
+      if (cause instanceof BudgetRequestError && cause.status === 409) {
+        try {
+          const latest = await sync.load();
+          if (latest?.budget) {
+            const next = mergeBudgets(conflict.remote, validated.data, latest.budget);
+            setConflict({
+              base: conflict.remote,
+              local: validated.data,
+              remote: latest.budget,
+              items: next.conflicts,
+              message: conflict.message,
+              undoId: conflict.undoId,
+            });
+            setConflictChoices({});
+          }
+        } catch {
+          setError("Impossible de relire le budget. Vos choix sont conservés. Réessayez.");
+        }
+      } else setError(cause instanceof Error ? cause.message : "Impossible d’enregistrer. Vos choix sont conservés.");
+    } finally {
+      saveLock.current = false;
+      setSaving(false);
+    }
   }
-  useEffect(()=>{if(conflict)requestAnimationFrame(()=>document.querySelector<HTMLElement>(".conflict-panel h3")?.focus());},[conflict]);
-  const conflictPanel=conflict&&<section className="card conflict-panel" aria-label="Résoudre les modifications concurrentes"><h3 tabIndex={-1}>Deux versions à rapprocher</h3><p>Votre saisie est conservée. Les changements sur des éléments différents sont réunis ; choisissez pour chaque élément modifié des deux côtés.</p>{conflict.items.map(item=><fieldset key={item.key}><legend>{item.label}</legend>{(["remote","local"] as const).map(side=><label className="field" key={side}><span><input type="radio" name={`conflict-${item.key}`} disabled={busy} checked={conflictChoices[item.key]===side} onChange={()=>setConflictChoices({...conflictChoices,[item.key]:side})}/>{side==="local"?"Ma modification":"Version de l’autre appareil"}</span><ConflictValue value={item[side]} budget={side==="local"?conflict.local:conflict.remote}/></label>)}</fieldset>)}{error&&<p className="form-error" role="alert">{error}</p>}<button type="button" className="primary" disabled={saving||conflict.items.some(x=>!conflictChoices[x.key])} onClick={()=>void resolveConflict()}>Enregistrer les versions choisies</button></section>;
-  const editItem=<T extends {id:string}>(list:T[],item:T)=>list.some(r=>r.id===item.id)?list.map(r=>r.id===item.id?item:r):[...list,item];
-  function remove(kind:"account"|"transaction"|"rule"|"goal",id:string){
-    if(kind==="account"&&(b.transactions.some(t=>t.accountId===id)||b.rules.some(t=>t.accountId===id))){setToast("Ce compte contient des opérations ou des récurrences. Supprimez-les d’abord.");return;}
-    const returnAccountId=modal?.type==="transaction"?modal.returnAccountId:undefined;
-    open({type:"confirm",onDone:returnAccountId?()=>open({type:modal?.type==="transaction"&&modal.returnToBalance?"balance":"reconcile",accountId:returnAccountId}):undefined,title:kind==="transaction"?"Supprimer cette opération ?":kind==="rule"?"Supprimer cette récurrence ?":kind==="goal"?"Supprimer cet objectif ?":"Supprimer ce compte ?",message:kind==="rule"?"Les opérations déjà enregistrées seront conservées. Les prochaines échéances seront supprimées.":kind==="goal"?"Les virements déjà enregistrés seront conservés. L’objectif et sa réserve seront supprimés.":"Cette action est définitive. Les soldes et les prévisions seront recalculés.",action:async()=>{
-      const next=structuredClone(b);
-      if(kind==="account")next.accounts=next.accounts.filter(a=>a.id!==id);
-      if(kind==="rule")next.rules=next.rules.filter(a=>a.id!==id);
-      if(kind==="goal")next.goals=next.goals.filter(a=>a.id!==id);
-      if(kind==="transaction"){const t=next.transactions.find(a=>a.id===id);const removed=next.transactions.filter(a=>a.id===id||(t?.transferId&&a.transferId===t.transferId));next.transactions=next.transactions.filter(a=>!removed.includes(a));for(const item of removed){if(item.ruleId){const r=next.rules.find(r=>r.id===item.ruleId);if(r&&!r.excludedDates.includes(item.date))r.excludedDates.push(item.date);}if(item.goalId&&item.amount>0){const g=next.goals.find(g=>g.id===item.goalId);if(g)g.saved=Math.max(0,g.saved-item.amount);}}}
-      return save(next,"Suppression enregistrée.");}});
+  useEffect(() => {
+    if (conflict) requestAnimationFrame(() => document.querySelector<HTMLElement>(".conflict-panel h3")?.focus());
+  }, [conflict]);
+  const conflictPanel = conflict && (
+    <section className="card conflict-panel" aria-label="Résoudre les modifications concurrentes">
+      <h3 tabIndex={-1}>Deux versions à rapprocher</h3>
+      <p>
+        Votre saisie est conservée. Les changements sur des éléments différents sont réunis ; choisissez pour chaque
+        élément modifié des deux côtés.
+      </p>
+      {conflict.items.map((item) => (
+        <fieldset key={item.key}>
+          <legend>{item.label}</legend>
+          {(["remote", "local"] as const).map((side) => (
+            <label className="field" key={side}>
+              <span>
+                <input
+                  type="radio"
+                  name={`conflict-${item.key}`}
+                  disabled={busy}
+                  checked={conflictChoices[item.key] === side}
+                  onChange={() => setConflictChoices({ ...conflictChoices, [item.key]: side })}
+                />
+                {side === "local" ? "Ma modification" : "Version de l’autre appareil"}
+              </span>
+              <ConflictValue value={item[side]} budget={side === "local" ? conflict.local : conflict.remote} />
+            </label>
+          ))}
+        </fieldset>
+      ))}
+      {error && (
+        <p className="form-error" role="alert">
+          {error}
+        </p>
+      )}
+      <button
+        type="button"
+        className="primary"
+        disabled={saving || conflict.items.some((x) => !conflictChoices[x.key])}
+        onClick={() => void resolveConflict()}
+      >
+        Enregistrer les versions choisies
+      </button>
+    </section>
+  );
+  const editItem = <T extends { id: string }>(list: T[], item: T) =>
+    list.some((r) => r.id === item.id) ? list.map((r) => (r.id === item.id ? item : r)) : [...list, item];
+  function remove(kind: "account" | "transaction" | "rule" | "goal", id: string) {
+    if (
+      kind === "account" &&
+      (b.transactions.some((t) => t.accountId === id) || b.rules.some((t) => t.accountId === id))
+    ) {
+      setToast("Ce compte contient des opérations ou des récurrences. Supprimez-les d’abord.");
+      return;
+    }
+    const returnAccountId = modal?.type === "transaction" ? modal.returnAccountId : undefined;
+    open({
+      type: "confirm",
+      onDone: returnAccountId
+        ? () =>
+            open({
+              type: modal?.type === "transaction" && modal.returnToBalance ? "balance" : "reconcile",
+              accountId: returnAccountId,
+            })
+        : undefined,
+      title:
+        kind === "transaction"
+          ? "Supprimer cette opération ?"
+          : kind === "rule"
+            ? "Supprimer cette récurrence ?"
+            : kind === "goal"
+              ? "Supprimer cet objectif ?"
+              : "Supprimer ce compte ?",
+      message:
+        kind === "rule"
+          ? "Les opérations déjà enregistrées seront conservées. Les prochaines échéances seront supprimées."
+          : kind === "goal"
+            ? "Les virements déjà enregistrés seront conservés. L’objectif et sa réserve seront supprimés."
+            : "Cette action est définitive. Les soldes et les prévisions seront recalculés.",
+      action: async () => {
+        const next = structuredClone(b);
+        if (kind === "account") next.accounts = next.accounts.filter((a) => a.id !== id);
+        if (kind === "rule") next.rules = next.rules.filter((a) => a.id !== id);
+        if (kind === "goal") next.goals = next.goals.filter((a) => a.id !== id);
+        if (kind === "transaction") {
+          const t = next.transactions.find((a) => a.id === id);
+          const removed = next.transactions.filter(
+            (a) => a.id === id || (t?.transferId && a.transferId === t.transferId),
+          );
+          next.transactions = next.transactions.filter((a) => !removed.includes(a));
+          for (const item of removed) {
+            if (item.ruleId) {
+              const r = next.rules.find((r) => r.id === item.ruleId);
+              if (r && !r.excludedDates.includes(item.date)) r.excludedDates.push(item.date);
+            }
+            if (item.goalId && item.amount > 0) {
+              const g = next.goals.find((g) => g.id === item.goalId);
+              if (g) g.saved = Math.max(0, g.saved - item.amount);
+            }
+          }
+        }
+        return save(next, "Suppression enregistrée.");
+      },
+    });
   }
-  const filterValues:OperationFilterValues={type:typeFilter,account:accountFilter,month};
-  const updateFilters=(value:OperationFilterValues)=>{setTypeFilter(value.type);setAccountFilter(value.account);setMonth(value.month);};
-  const filterCount=Number(typeFilter!=="all")+Number(accountFilter!=="all")+Number(month!==today.slice(0,7));
-  const accountOptions=b.accounts.map(a=><option key={a.id} value={a.id}>{a.name}</option>);
-  const transactionRows=(items:Transaction[],full=false)=>items.map(t=><OperationGesture id={t.id} label={t.label} className={`transaction-row ${full?"full":""}`} key={t.id} onClick={()=>open({type:"transaction",item:t})}><MerchantIcon label={t.label} merchantId={t.merchantId} customIconUrl={t.customIconUrl} fallback={<CategoryIcon category={t.category}/>}/><span className="transaction-title"><strong>{t.label}</strong><small>{full?<>{b.accounts.find(a=>a.id===t.accountId)?.name}<span className="transaction-mobile-category"> · {t.category}</span></>:t.category}{t.ruleId&&<Repeat2 size={11}/>}</small></span>{full&&<span className="category-label">{t.category}</span>}<span className="transaction-amount"><strong className={t.amount>0?"positive":""}>{m(t.amount,true,true)}</strong><small>{shortDate(t.date)}</small></span><ChevronRight className="row-chevron" size={15}/></OperationGesture>);
-  const visibleMonthRows=b.transactions.filter(t=>t.date.startsWith(month)&&t.date<=today&&(accountFilter==="all"||t.accountId===accountFilter)&&(typeFilter==="all"||(typeFilter==="expense"?t.amount<0:t.amount>0))&&(t.label+" "+t.category+" "+t.note).toLocaleLowerCase("fr").includes(query.toLocaleLowerCase("fr")));
-  const {income:monthIncome,spent:monthSpent}=recordedOperationTotals(visibleMonthRows,today);
-  const monthName=parseDate(month+"-01").toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
-  function exportCSV(){const rows=[["Date","Libellé","Montant","Catégorie","Compte","Note"],...b.transactions.map(t=>[t.date,csvCell(t.label),(t.amount/100).toFixed(2).replace(".",","),csvCell(t.category),csvCell(b.accounts.find(a=>a.id===t.accountId)?.name??""),csvCell(t.note)])];downloadFile("\uFEFF"+rows.map(r=>r.join(";")).join("\r\n"),`pecule-operations-${today}.csv`,"text/csv;charset=utf-8");}
-  const transferSource=modal?.type==="transfer"&&b.accounts.some(a=>a.id===modal.accountId)?modal.accountId:b.accounts.find(a=>a.type!=="savings")?.id??b.accounts[0]?.id;
-  const transferTarget=b.accounts.find(a=>a.type==="savings"&&a.id!==transferSource)?.id??b.accounts.find(a=>a.id!==transferSource)?.id;
-  const ruleDraft=modal?.type==="rule"?modal.item??modal.proposal:undefined;
-  const recurrenceSource=modal?.type==="rule"&&modal.sourceTransactionId?b.transactions.find(t=>t.id===modal.sourceTransactionId):undefined;
-  const recurrenceMin=recurrenceSource?shiftDate(recurrenceSource.date>today?recurrenceSource.date:today,1):"2000-01-01";
-  const modalTitle=modal?.type==="operation-actions"?"Actions de l’opération":modal?.type==="account-actions"?"Raccourcis du compte":modal?.type==="wallet-account"?(b.accounts.find(a=>a.id===modal.accountId)?.name??"Le compte"):modal?.type==="review"?"Faire le point sur ma saisie":modal?.type==="favorites"?"Vos favoris":modal?.type==="favorite"?(modal.item?"Modifier le favori":"Créer un favori"):modal?.type==="balance"?"Ajuster le solde":modal?.type==="account-forecast"?"Solde prévisionnel":modal?.type==="filters"?"Filtrer les opérations":modal?.type==="navigation"?"Plus dans Pécule":modal?.type==="reconcile"?`Rapprocher ${b.accounts.find(a=>a.id===modal.accountId)?.name??"le compte"}`:modal?.type==="bulk"?"Modifier plusieurs opérations":modal?.type==="match-transfers"?"Associer des virements internes":modal?.type==="imports"?"Vos imports bancaires":modal?.type==="actions"?"Une action, en un geste.":modal?.type==="transaction"?(modal.item?"Le détail de l’opération":"Ajouter une opération"):modal?.type==="account"?(modal.item?"Modifier le compte":"Un nouveau compte"):modal?.type==="rule"?(modal.item?"Modifier la récurrence":modal.proposal?"Vérifier cette récurrence":"Prévoir une récurrence"):modal?.type==="goal"?(modal.item?"Modifier votre objectif":"Un projet à concrétiser"):modal?.type==="transfer"?"Enregistrer un virement":modal?.type==="contribution"?"Faire grandir votre projet":modal?.type==="import"?"Importer vos opérations":modal?.type==="start"?"Bienvenue chez vous.":modal?.type==="calculation"?"Un disponible qui a du sens.":modal?.type==="install"?"Pécule, à portée de main.":modal?.type==="confirm"?modal.title:"";
-  async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();if(!modal)return;setError("");const f=new FormData(e.currentTarget),v=(key:string)=>String(f.get(key)??"").trim(),amount=(key:string)=>parseAmount(v(key));const next=structuredClone(b);let success=false;
-    if(modal.type==="start"){const nextBudget=emptyBudget(v("name"));const initial=amount("balance");if(initial===null){setError("Indiquez un solde valide.");return;}nextBudget.accounts=[{id:uid(),name:v("accountName"),bank:"",type:"current",openingBalance:initial,openingDate:today,color:colors[0]}];success=await save(nextBudget,"Votre budget est prêt. Bienvenue dans Pécule !",true);if(success){setMonth(today.slice(0,7));setPage("overview");}}
-    if(modal.type==="account"){const balance=amount("balance");if(balance===null){setError("Indiquez un solde valide.");return;}const item:Account={...modal.item,id:modal.item?.id??uid(),name:v("name"),bank:v("bank"),type:v("type") as Account["type"],openingBalance:balance,openingDate:v("date"),color:v("color")};next.accounts=editItem(next.accounts,item);success=await save(next);}
-    if(modal.type==="transaction"){const n=amount("amount");if(n===null||n<=0){setError("Le montant doit être supérieur à zéro.");return;}const old=modal.item;const item:Transaction={...old,id:old?.id??uid(),label:v("label"),amount:n*(v("direction")==="expense"?-1:1),date:v("date"),accountId:v("account"),category:v("category"),note:v("note"),...(v("merchantId")?{merchantId:v("merchantId")} : {}),...(v("customIconUrl")?{customIconUrl:v("customIconUrl")}:{}),...(old?.ruleId?{ruleId:old.ruleId}:{})};if(old?.ruleId&&old.date!==item.date){const r=next.rules.find(r=>r.id===old.ruleId);if(r&&!r.excludedDates.includes(old.date))r.excludedDates.push(old.date);}const acc=next.accounts.find(a=>a.id===item.accountId);if(acc&&item.balanceIncluded&&item.date>acc.openingDate){setError("Une opération historique doit rester comprise dans la date du solde de référence.");return;}if(acc&&!item.balanceIncluded&&item.date<acc.openingDate){setError("Cette date précède le solde de référence du compte. Modifiez d’abord sa date de référence.");return;}if(!v("customIconUrl"))delete item.customIconUrl;if(!v("merchantId"))delete item.merchantId;next.transactions=editItem(next.transactions,item);next.settings.capture={...next.settings.capture,lastAccountId:item.accountId};if(f.get("saveFavorite")){const favorites=next.settings.capture.favorites??[];if(favorites.length>=20){setError("La limite de vingt favoris est atteinte. Gérez vos favoris avant d’en ajouter un.");return;}next.settings.capture.favorites=[...favorites,favoriteFromTransaction(item,uid())];}if(f.get("rememberCategory")){try{next.settings.categoryRules=rememberCategory(next.settings.categoryRules,item.label,item.merchantId,item.amount>0,item.category);}catch(cause){setError(cause instanceof Error?cause.message:"Impossible de mémoriser cette catégorie.");return;}}pendingCapture.current=!modal.item&&(e.nativeEvent as SubmitEvent).submitter instanceof HTMLButtonElement&&((e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement).value==="continue"?{type:"transaction",accountId:item.accountId,initialDate:item.date,direction:item.amount>0?"income":"expense",sequence:(modal.sequence??0)+1,returnReviewDate:modal.returnReviewDate,returnAccountId:modal.returnAccountId,returnToBalance:modal.returnToBalance}:null;success=await save(next);}
-    if(modal.type==="rule"){const n=amount("amount");if(n===null||n<=0){setError("Indiquez un montant supérieur à zéro.");const control=e.currentTarget.querySelector<HTMLInputElement>('input[name="amount"]');if(control)revealFormControl(control);return;}if(v("end")&&v("end")<v("date")){setError("La date de fin doit suivre la date de début.");const control=e.currentTarget.querySelector<HTMLInputElement>('input[name="end"]');if(control)revealFormControl(control);return;}const item:Rule={id:modal.item?.id??uid(),label:v("label"),amount:n*(v("direction")==="expense"?-1:1),accountId:v("account"),category:v("category"),startDate:v("date"),endDate:v("end"),frequency:v("frequency") as Rule["frequency"],timing:v("timing") as Rule["timing"],day:Number(v("day")),active:modal.item?.active??true,holidays:v("holidays") as Rule["holidays"],excludedDates:modal.item?.excludedDates??[],...(v("merchantId")?{merchantId:v("merchantId")} : {}),...(v("customIconUrl")?{customIconUrl:v("customIconUrl")}:{})};if(modal.sourceTransactionId){try{const converted=convertTransactionToRecurring(next,modal.sourceTransactionId,item,today);next.rules=converted.rules;next.transactions=converted.transactions;}catch(error){setError(error instanceof Error?error.message:"Impossible de créer cette récurrence.");return;}}else next.rules=editItem(next.rules,item);success=await save(next,modal.sourceTransactionId?"Récurrence créée. L’opération d’origine est conservée.":undefined);}
-    if(modal.type==="goal"){const target=amount("target"),saved=amount("saved"),monthly=amount("monthly");if(target===null||target<=0||saved===null||saved<0||monthly===null||monthly<0){setError("Vérifiez les montants de votre objectif.");return;}next.goals=editItem(next.goals,{id:modal.item?.id??uid(),name:v("name"),target,saved,monthly,color:v("color"),icon:v("icon"),deadline:v("deadline")});success=await save(next);}
-    if(modal.type==="transfer"||modal.type==="contribution"){const n=amount("amount");if(n===null||n<=0){setError("Indiquez un montant supérieur à zéro.");return;}const goal=modal.type==="contribution"?modal.goal:modal.goal;const from=v("from"),to=v("to");if(from===to||!from||!to){setError("Choisissez deux comptes différents.");return;}const fromAcc=b.accounts.find(a=>a.id===from),toAcc=b.accounts.find(a=>a.id===to);if(goal&&toAcc?.type!=="savings"){setError("Choisissez un compte d’épargne comme destination.");return;}if(goal&&fromAcc?.type==="savings"){setError("Choisissez un compte courant comme source pour réserver votre épargne.");return;}const date=v("date");if(goal&&date>today){setError("Un versement vers un objectif doit être daté d’aujourd’hui ou d’avant.");return;}if([fromAcc,toAcc].some(a=>a&&date<a.openingDate)){setError("La date doit suivre les soldes de référence des deux comptes.");return;}const transferId=uid();next.transactions.push({id:uid(),label:goal?`Épargne · ${goal.name}`:"Virement entre comptes",amount:-n,date,accountId:from,category:"Virement",note:v("note"),transferId},{id:uid(),label:goal?`Épargne · ${goal.name}`:"Virement entre comptes",amount:n,date,accountId:to,category:"Virement",note:v("note"),transferId,...(goal?{goalId:goal.id}:{})});if(goal)next.goals=next.goals.map(g=>g.id===goal.id?{...g,saved:g.saved+n}:g);success=await save(next,"Virement enregistré dans Pécule.");}
-    if(success){drafts?.clear(modalKey(modal));if(modal.type==="rule"&&modal.sourceTransactionId){open({type:"transaction",item:next.transactions.find(t=>t.id===modal.sourceTransactionId)});return;}if(modal.type==="transaction"&&pendingCapture.current){const capture=pendingCapture.current;pendingCapture.current=null;open(capture);requestAnimationFrame(()=>dialogRef.current?.querySelector<HTMLInputElement>('input[name="amount"]')?.focus());return;}if(modal.type==="transaction"&&modal.returnReviewDate){open({type:"review",date:modal.returnReviewDate});return;}if((modal.type==="transaction"||modal.type==="account")&&modal.returnAccountId)open({type:modal.type==="transaction"&&modal.returnToBalance?"balance":"reconcile",accountId:modal.returnAccountId});else setModal(null);}
+  const filterValues: OperationFilterValues = { type: typeFilter, account: accountFilter, month };
+  const updateFilters = (value: OperationFilterValues) => {
+    setTypeFilter(value.type);
+    setAccountFilter(value.account);
+    setMonth(value.month);
+  };
+  const filterCount =
+    Number(typeFilter !== "all") + Number(accountFilter !== "all") + Number(month !== today.slice(0, 7));
+  const accountOptions = b.accounts.map((a) => (
+    <option key={a.id} value={a.id}>
+      {a.name}
+    </option>
+  ));
+  const transactionRows = (items: Transaction[], full = false) =>
+    items.map((t) => (
+      <OperationGesture
+        id={t.id}
+        label={t.label}
+        className={`transaction-row ${full ? "full" : ""}`}
+        key={t.id}
+        onClick={() => open({ type: "transaction", item: t })}
+      >
+        <MerchantIcon
+          label={t.label}
+          merchantId={t.merchantId}
+          customIconUrl={t.customIconUrl}
+          fallback={<CategoryIcon category={t.category} />}
+        />
+        <span className="transaction-title">
+          <strong>{t.label}</strong>
+          <small>
+            {full ? (
+              <>
+                {b.accounts.find((a) => a.id === t.accountId)?.name}
+                <span className="transaction-mobile-category"> · {t.category}</span>
+              </>
+            ) : (
+              t.category
+            )}
+            {t.ruleId && <Repeat2 size={11} />}
+          </small>
+        </span>
+        {full && <span className="category-label">{t.category}</span>}
+        <span className="transaction-amount">
+          <strong className={t.amount > 0 ? "positive" : ""}>{m(t.amount, true, true)}</strong>
+          <small>{shortDate(t.date)}</small>
+        </span>
+        <ChevronRight className="row-chevron" size={15} />
+      </OperationGesture>
+    ));
+  const visibleMonthRows = b.transactions.filter(
+    (t) =>
+      t.date.startsWith(month) &&
+      t.date <= today &&
+      (accountFilter === "all" || t.accountId === accountFilter) &&
+      (typeFilter === "all" || (typeFilter === "expense" ? t.amount < 0 : t.amount > 0)) &&
+      (t.label + " " + t.category + " " + t.note).toLocaleLowerCase("fr").includes(query.toLocaleLowerCase("fr")),
+  );
+  const { income: monthIncome, spent: monthSpent } = recordedOperationTotals(visibleMonthRows, today);
+  const monthName = parseDate(month + "-01").toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+  function exportCSV() {
+    const rows = [
+      ["Date", "Libellé", "Montant", "Catégorie", "Compte", "Note"],
+      ...b.transactions.map((t) => [
+        t.date,
+        csvCell(t.label),
+        (t.amount / 100).toFixed(2).replace(".", ","),
+        csvCell(t.category),
+        csvCell(b.accounts.find((a) => a.id === t.accountId)?.name ?? ""),
+        csvCell(t.note),
+      ]),
+    ];
+    downloadFile(
+      "\uFEFF" + rows.map((r) => r.join(";")).join("\r\n"),
+      `pecule-operations-${today}.csv`,
+      "text/csv;charset=utf-8",
+    );
   }
-  if(!loaded)return <LaunchScreen/>;
-  const capturing=modal?.type==="transaction"&&!modal.item;
-  const notice=toast?<BudgetNotice key={toastSequence} message={toast} success={toastSuccess} variant={toastKind} receipt={toastReceipt} onUndo={undoTransaction&&(!modal||capturing)?()=>void undoLastOperation():undefined} undoDisabled={busy} onClose={()=>setToast("")}/>:null;
-  return <GestureActions.Provider value={{operation:transactionId=>open({type:"operation-actions",transactionId}),account:accountId=>open({type:"account-actions",accountId})}}><div className={`app-shell page-${page}`} data-offline-ready={offline.prepared} data-private={hidden} data-depth-preview={previewOpen||undefined}><LaunchTransition fromBoot={launchFromBoot}/>
-    <aside aria-label="Navigation et espace personnel" className="sidebar" inert={!!modal}><Link className="brand" href="/" onClick={e=>{e.preventDefault();navigate("overview");}} aria-label="Pécule, accueil"><Image unoptimized width={32} height={32} src="/favicon.svg" alt=""/><span>pecule<span className="brand-dot">.</span></span></Link><div className="workspace-label">MON ESPACE PERSONNEL <LockKeyhole size={11}/></div><nav aria-label="Navigation principale"><NavigationIndicator active={page}/>{nav.map(({id,label,icon:Icon})=><button type="button" key={id} onClick={()=>navigate(id)} className={`nav-item ${page===id?"active":""}`} aria-current={page===id?"page":undefined}><Icon size={19} strokeWidth={1.7}/><span>{label}</span>{id==="goals"&&b.goals.length>0&&<span className="nav-count">{b.goals.length}</span>}</button>)}</nav><div className="sidebar-bottom"><div className="sidebar-note"><span className="note-orbit"><Sparkles size={18}/></span><strong>Les petits pas font<br/>les grands projets.</strong><p>Un peu de clarté, chaque jour.</p></div><button type="button" className={`nav-item ${page==="settings"?"active":""}`} onClick={()=>navigate("settings")}><Settings2 size={19}/><span>Réglages</span></button><div className="profile"><span className="avatar">{(b.name||user?.name||"M").charAt(0).toUpperCase()}</span><span><strong>{demo?"Mon espace démo":b.name||"Mon espace"}</strong><small><span className={`status-dot ${!online?"offline":""}`}/>{demo?"Pour découvrir Pécule":!online?"Hors connexion":"Espace personnel"}</small></span><LockKeyhole size={14}/></div></div></aside>
-    <div className="main-wrap" ref={depthSurface} inert={!!modal}><header className="topbar"><div className="breadcrumb"><span>Mon espace</span><ChevronRight size={12}/><strong>{nav.find(n=>n.id===page)?.label??"Réglages"}</strong></div><Link href="/" className="mobile-brand" onClick={e=>{e.preventDefault();navigate("overview");}}>pecule<span>.</span></Link><div className="topbar-actions"><span className={`sync-state ${!online||loadError?"warning":""}`}>{busy?<LoaderCircle size={13} className="spin"/>:!online?<CloudOff size={14}/>:<Cloud size={14}/>}<span>{!online?"Hors connexion":busy?"Synchronisation…":loadError?"Connexion à vérifier":offline.entries.length?`${offline.entries.length} en attente`:!loaded?"Chargement…":demo?"Démonstration":"Synchronisé"}</span></span><button className="icon-button" type="button" title={hidden?"Afficher les montants":"Masquer les montants"} aria-label={hidden?"Afficher les montants":"Masquer les montants"} aria-pressed={hidden} onClick={()=>{setHidden(!hidden);}}><PrivacyShutter hidden={hidden}/></button><button type="button" className="mobile-settings icon-button" aria-label="Réglages" onClick={()=>navigate("settings")}><Settings2 size={19}/></button></div></header>
-    {!modal&&conflictPanel}
-    <main ref={viewMotion} id="main-content" inert={!!conflict}>
-      {demo&&<div className="demo-banner"><span><Sparkles size={14}/><span>Un aperçu de votre futur budget.<strong> Les données sont fictives.</strong></span></span><button type="button" disabled={!loaded} onClick={()=>hasBudget?void load():open({type:"start"})}>{hasBudget?"Retrouver mon budget":"Créer mon budget"}<ArrowRight size={14}/></button></div>}
-      {loadError&&<div className="error-banner"><CircleAlert size={17}/><span>{sessionExpired?"Votre session a expiré. Reconnectez-vous pour retrouver votre budget.":"Connexion à vérifier. Une nouvelle opération peut être conservée localement ; les autres modifications attendront une relecture du budget."}</span>{sessionExpired?<a href="/sign-in">Me reconnecter</a>:<button type="button" onClick={()=>void load()}>Réessayer</button>}</div>}
-      {!online&&<div className="error-banner"><CloudOff size={17}/><span>Vous êtes hors connexion. Une nouvelle opération peut être conservée sur cet appareil ; les autres modifications nécessitent Internet.</span></div>}
-      {page!=="overview"&&<div className="page-heading"><div><h1>{pageTitles[page]}</h1><p>{page==="plan"?"Vos besoins, vos envies et votre épargne, au même endroit.":page==="transactions"?"Les petits achats comme les grandes étapes.":page==="recurring"?"Les rentrées et les sorties d’argent, sans les surprises.":page==="accounts"?"Une vision claire de votre argent, où qu’il soit.":page==="goals"?"Chaque petit pas vous rapproche de ce qui compte.":"Un budget qui s’adapte à votre quotidien."}</p></div>{page!=="settings"&&page!=="plan"&&<button type="button" className="primary" onClick={()=>open({type:page==="accounts"?"account":page==="goals"?"goal":page==="recurring"?"rule":"transaction"})}><Plus size={16}/>{page==="accounts"?"Ajouter un compte":page==="goals"?"Créer un objectif":page==="recurring"?"Ajouter une récurrence":"Nouvelle opération"}</button>}</div>}
-      <PendingOperations onEditingChange={setPendingEditing} onInspect={item=>open({type:"transaction",item})} entries={offline.entries} errors={offline.errors} error={offline.error} budget={b} hidden={hidden} working={offline.working} onRetry={()=>void offline.flush()} onChanged={()=>void offline.refresh()} onRemove={entry=>open({type:"confirm",title:"Retirer cette saisie locale ?",message:"Cette opération en attente sera retirée de cet appareil. Aucune opération du serveur ne sera supprimée.",action:async()=>{if(!await removePendingOperations(entry.userId,[entry.id],[entry]))throw new Error("Cette saisie a changé dans un autre onglet. Relisez-la avant de la retirer.");await offline.refresh();return true;}})}/>{page==="overview"&&<ClarteDashboard pending={offline.entries.length} budget={b} today={today} hidden={hidden} demo={demo} online={online} saving={busy} loadError={loadError} onWalletAccount={a=>open({type:"wallet-account",accountId:a.id})} onAccountForecast={a=>open({type:"account-forecast",accountId:a.id})} onTransfer={()=>open({type:"transfer"})} onImport={()=>open({type:"import"})} onToggleHidden={()=>{setHidden(!hidden);}} onSettings={()=>navigate("settings")} onAdd={()=>b.accounts.length?open({type:"transaction"}):open({type:"account"})} onCalculate={()=>open({type:"calculation"})} onAccounts={()=>navigate("accounts")} onAccount={a=>{setAccountFilter(a.id);setTypeFilter("all");setMonth(today.slice(0,7));navigate("transactions");}} onAdjustAccount={a=>open({type:"balance",accountId:a.id})} onTransaction={t=>open({type:"transaction",item:t})} onUpcoming={t=>{const rule=b.rules.find(r=>r.id===t.ruleId);open(rule?{type:"rule",item:rule}:{type:"transaction",item:t});}} onTransactions={()=>{setMonth(today.slice(0,7));navigate("transactions");}} onRecurring={()=>navigate("recurring")} onGoals={()=>navigate("goals")} onPlan={()=>navigate("plan")} onAddAccount={()=>open({type:"account"})} capture={<CaptureRoutine budget={b} today={today} hidden={hidden} saving={busy} onAdd={()=>b.accounts.length?open({type:"transaction"}):open({type:"account"})} onFavorite={openFavorite} onFavorites={()=>open({type:"favorites"})} onReview={()=>open({type:"review"})} onCatchup={()=>open({type:"review",date:catchupDate(b,today)})} onReminders={()=>navigate("settings")}/>} chart={<ForecastOutlook budget={b} today={today} hidden={hidden}/>}/>}
-      {page==="plan"&&<SpendingPlan budget={b} today={today} month={month} setMonth={setMonth} hidden={hidden} saving={busy} onSave={save} onOperations={()=>{setMonth(today.slice(0,7));navigate("transactions");}}/>}
-      {page==="transactions"&&<>{accountFilter!=="all"&&b.accounts.some(a=>a.id===accountFilter)&&<section className="account-ledger-context" aria-label="Compte sélectionné"><div><span>{b.accounts.find(a=>a.id===accountFilter)?.name}</span><strong>{m(accountBalance(b,accountFilter,today))}</strong><small>Solde actuel</small></div><button type="button" className="text-button" onClick={()=>setAccountFilter("all")}>Tous les comptes</button></section>}<section className="metric-strip"><div><span>Revenus reçus · {monthName}</span><strong className="positive">{m(monthIncome,true,true)}</strong></div><div><span>Dépenses enregistrées · {monthName}</span><strong>{m(monthSpent)}</strong></div><div><span>Solde actuel des comptes courants</span><strong>{m(o.total)}</strong></div></section><section ref={operationMotion} className="card transactions-card"><div className="toolbar"><div className="search-input"><Search size={17}/><input aria-label="Rechercher une opération" placeholder="Rechercher…" value={query} onChange={e=>setQuery(e.target.value)}/>{query&&<button type="button" className="icon-button" aria-label="Effacer la recherche" onClick={e=>{setQuery("");e.currentTarget.parentElement?.querySelector("input")?.focus();}}><X size={16}/></button>}</div>{compact&&<button type="button" className="secondary operation-filter-trigger" aria-label={`Filtrer les opérations, ${filterCount} filtre${filterCount>1?"s":""} actif${filterCount>1?"s":""}`} aria-haspopup="dialog" onClick={()=>open({type:"filters"})}><Funnel size={17}/>Filtrer{filterCount>0&&<span className="filter-count">{filterCount}</span>}</button>}</div><LedgerTools compact={compact}><div className="toolbar-actions"><button type="button" className="secondary compact" onClick={()=>open({type:"import"})}><Upload size={15}/>{importDraft?"Reprendre l’import":"Importer"}</button><button type="button" className="secondary compact" onClick={()=>open({type:"imports"})}>Mes imports</button><button type="button" className="secondary compact" onClick={()=>open({type:"match-transfers"})}>Associer des virements</button><button type="button" className="secondary compact" title="Exporter toutes les opérations en CSV" aria-label="Exporter en CSV" onClick={exportCSV}><Download size={18}/><span>Exporter CSV</span></button></div></LedgerTools>{!compact&&<OperationFilterControls values={filterValues} accounts={b.accounts} onChange={updateFilters}/>}{(query||typeFilter!=="all"||accountFilter!=="all"||month!==today.slice(0,7))&&<div className="active-filters" aria-label="Filtres actifs">{query&&<button type="button" onClick={()=>setQuery("")} aria-label="Retirer le filtre de recherche">Recherche : {query}<X size={14}/></button>}{typeFilter!=="all"&&<button type="button" onClick={()=>setTypeFilter("all")} aria-label="Retirer le filtre de type">{typeFilter==="expense"?"Dépenses":"Revenus"}<X size={14}/></button>}{accountFilter!=="all"&&<button type="button" onClick={()=>setAccountFilter("all")} aria-label="Retirer le filtre de compte">{b.accounts.find(a=>a.id===accountFilter)?.name}<X size={14}/></button>}{month!==today.slice(0,7)&&<button type="button" onClick={()=>setMonth(today.slice(0,7))} aria-label="Revenir au mois actuel">{parseDate(month+"-01").toLocaleDateString("fr-FR",{month:"long",year:"numeric"})}<X size={14}/></button>}<button type="button" className="text-button" onClick={()=>{setQuery("");setTypeFilter("all");setAccountFilter("all");setMonth(today.slice(0,7));}}>Réinitialiser les filtres</button></div>}{(()=>{const items=[...b.transactions].filter(t=>t.date.startsWith(month)&&(accountFilter==="all"||t.accountId===accountFilter)&&(typeFilter==="all"||(typeFilter==="expense"?t.amount<0:t.amount>0))&&(t.label+" "+t.category+" "+t.note).toLocaleLowerCase("fr").includes(query.toLocaleLowerCase("fr"))).sort((a,b)=>b.date.localeCompare(a.date));return items.length?<TransactionSelection key={JSON.stringify([query,typeFilter,accountFilter,month,transactionEpoch])} items={items} renderRow={t=>transactionRows([t],true)} formatAmount={n=>m(n,true,true)} dateLabel={date=>dateLabel(date,today)+(date>today?" · À venir":"")} onBulk={ids=>open({type:"bulk",ids})}/>:<Empty icon={Search} title="Rien pour le moment" description="Aucune opération ne correspond à cette période ou à vos filtres." action={<button type="button" className="text-button" onClick={()=>b.accounts.length?open({type:"transaction"}):open({type:"account"})}>Ajouter une opération <Plus size={14}/></button>}/>;})()}</section><p className="metric-note">Totaux des opérations enregistrées pour la période et les filtres choisis, hors virements et opérations futures.</p><SpendingInsights key={month} budget={b} month={month} today={today} hidden={hidden}/></>}
-      {page==="recurring"&&<><SubscriptionOverview budget={b} today={today} hidden={hidden} onEdit={item=>open({type:"rule",item})} onCreate={item=>{const proposal=transactionRecurrence(item,b,today);if(proposal)open({type:"rule",proposal,sourceTransactionId:item.id});else setToast("Ouvrez cette opération pour vérifier ses données avant de prévoir la suite.");}}/><div className="recurrence-filters" role="group" aria-label="État des récurrences">{[{id:"all",label:"Toutes"},{id:"active",label:"Actives"},{id:"paused",label:"En pause"},{id:"ended",label:"Terminées"}].map(f=><button type="button" key={f.id} aria-pressed={ruleFilter===f.id} onClick={()=>setRuleFilter(f.id)}>{f.label}<span>{b.rules.filter(r=>f.id==="all"||ruleState(r)===f.id).length}</span></button>)}</div><RecurringSuggestions budget={b} today={today} hidden={hidden} onReview={suggestion=>open({type:"rule",proposal:suggestion.rule})}/><AnimatedDetails className="recurrence-help"><summary><CalendarDays size={18}/>Dates et jours ouvrés<ChevronDown size={17}/></summary><p>Choisissez une date fixe ou le dernier jour du mois hors week-end et jours fériés. Les opérations sont ajoutées à leur échéance, à partir de la date choisie.</p></AnimatedDetails>{[true,false].map(income=>{const allRules=b.rules.filter(r=>(r.amount>0)===income),rules=allRules.filter(r=>ruleFilter==="all"||ruleState(r)===ruleFilter);return <section className="recurring-section" key={String(income)}><div className="section-heading"><h2>{income?"Les rentrées d’argent":"Les dépenses récurrentes"}</h2><span>{rules.length} récurrence{rules.length>1?"s":""}</span></div>{rules.length?<div ref={recurrenceMotion} className="rule-grid">{rules.map(r=>{const next=futureTransactions({...b,rules:[r],transactions:[]},shiftDate(today,1),shiftDate(today,370))[0];return <RecurringItem key={r.id} rule={r} state={ruleState(r)} accountName={b.accounts.find(a=>a.id===r.accountId)?.name} next={next} saving={busy} formatMoney={n=>m(n,true,true)} onEdit={()=>open({type:"rule",item:r})} onToggle={()=>{void save({...b,rules:b.rules.map(x=>x.id===r.id?{...x,active:!x.active}:x)},r.active?"Récurrence mise en pause.":"Récurrence réactivée.");}} onDelete={()=>remove("rule",r.id)}/>;})}</div>:<div className="card"><Empty icon={income?ArrowDownLeft:Repeat2} title={allRules.length?"Aucune récurrence dans cet état":income?"Prévoyez votre prochain revenu":"Anticipez les sorties d’argent"} description={allRules.length?"Choisissez Toutes pour retrouver vos récurrences.":income?"Salaire, allocation, revenu complémentaire : chacun a son rythme.":"Loyer, abonnement, assurance… gardez une longueur d’avance."} action={<button type="button" className="text-button" onClick={()=>b.accounts.length?open({type:"rule"}):open({type:"account"})}>Ajouter une récurrence <Plus size={14}/></button>}/></div>}</section>;})}</>}
-      {page==="accounts"&&<><section className="metric-strip"><div><span>Votre argent au total</span><strong>{m(o.total+o.saved)}</strong></div><div><span>Disponible sur comptes courants</span><strong>{m(o.total)}</strong></div><div><span>À l’abri sur l’épargne</span><strong>{m(o.saved)}</strong></div></section><div className="section-heading"><h2>Vos comptes, simplement</h2><button type="button" className="secondary compact" onClick={()=>b.accounts.length>=2?open({type:"transfer"}):setToast("Ajoutez un deuxième compte pour enregistrer un virement.")}><ArrowLeftRight size={15}/>Virement entre comptes</button></div><div className="account-grid">{b.accounts.map(a=><article className="card account-card" key={a.id}><div className="account-card-top"><span className="bank-icon large" style={{"--item-color":walletColor(a.color)} as CSSProperties}><Wallet size={24}/></span><div className="card-actions"><button type="button" className="secondary compact record-edit" aria-label={`Modifier ${a.name}`} onClick={()=>open({type:"account",item:a})}><Pencil size={15}/>Modifier</button></div></div><span className="account-kind">{accountKind(a)}</span><h3>{a.name}</h3><p>{a.bank||"Compte personnel"}</p><div className="account-balance">{m(accountBalance(b,a.id,today))}</div><AccountVerification budget={b} accountId={a.id} today={today} saving={busy} onVerify={()=>open({type:"reconcile",accountId:a.id})}/><AccountActivity budget={b} accountId={a.id} today={today} hidden={hidden} onTransaction={t=>open({type:"transaction",item:t})} onUpcoming={t=>{const rule=b.rules.find(r=>r.id===t.ruleId);open(rule?{type:"rule",item:rule}:{type:"transaction",item:t});}} onAll={()=>{setAccountFilter(a.id);setTypeFilter("all");setMonth(today.slice(0,7));navigate("transactions");}}/><button type="button" className="secondary full-width balance-adjust-trigger" aria-label={`Ajuster le solde de ${a.name}`} disabled={busy} onClick={()=>open({type:"balance",accountId:a.id})}><Pencil size={15}/>Ajuster le solde</button><div className="record-danger"><button type="button" className="destructive-action" aria-label={`Supprimer ${a.name}`} onClick={()=>remove("account",a.id)}><Trash2 size={15}/>Supprimer ce compte</button></div></article>)}<button className="add-tile" type="button" onClick={()=>open({type:"account"})}><span><Plus size={23}/></span><strong>Un compte de plus ?</strong><small>Courant, épargne ou espèces.<br/>À vous de choisir.</small></button></div><div className="info-callout subtle"><LockKeyhole size={19}/><div><strong>Chacun ses comptes, chacun son espace.</strong><p>Vos comptes sont liés à votre connexion personnelle. Ajouter un compte ici ne crée pas de connexion avec votre banque.</p></div></div></>}
-      {page==="goals"&&<><div className="goal-intro"><div><h2>{m(b.goals.reduce((s,g)=>s+g.saved,0),false)} <span>déjà consacrés à vos projets.</span></h2><p>Le suivi de vos objectifs est indépendant du solde de vos livrets.</p></div><div className="goal-intro-icon"><Sparkles size={32} strokeWidth={1.2}/></div></div><div className="goal-grid">{b.goals.map(g=>{const progress=Math.min(100,Math.max(0,g.saved/g.target*100));return <article className="card goal-card" key={g.id}><div className="goal-card-top"><span className="goal-icon" style={{"--item-color":walletColor(g.color)} as CSSProperties}><GoalIllustration icon={g.icon} progress={hidden?0:progress}/></span><div className="card-actions"><button type="button" className="secondary compact record-edit" aria-label={`Modifier ${g.name}`} onClick={()=>open({type:"goal",item:g})}><Pencil size={15}/>Modifier</button></div></div><h3>{g.name}</h3><p>{g.deadline?`À votre rythme, jusqu’au ${shortDate(g.deadline)} ${g.deadline.slice(0,4)}`:"Un projet qui avance à votre rythme"}</p><div className="goal-amount"><strong>{m(g.saved,false)}</strong><span>sur {m(g.target,false)}</span></div><div className="progress-track" role="progressbar" aria-label={`Progression de ${g.name}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={hidden?undefined:Math.round(progress)} aria-valuetext={hidden?"Progression masquée":undefined}><span style={{width:hidden?"0%":progress+"%","--item-color":walletColor(g.color)} as CSSProperties}/></div><p className="goal-remaining">{!hidden&&g.saved>=g.target?"Objectif atteint":<><strong>{m(Math.max(0,g.target-g.saved),false)}</strong> restent à mettre de côté</>}</p><div className="goal-progress-label"><span>{hidden?"Progression masquée":`${Math.round(progress)} % du chemin`}</span><strong>{m(g.monthly,false)} / mois réservés</strong></div><button type="button" className="secondary full-width" onClick={()=>open({type:"contribution",goal:g})}><Plus size={15}/>Enregistrer un versement</button><div className="record-danger"><button type="button" className="destructive-action" aria-label={`Supprimer ${g.name}`} onClick={()=>remove("goal",g.id)}><Trash2 size={15}/>Supprimer cet objectif</button></div></article>;})}<button className="add-tile" type="button" onClick={()=>open({type:"goal"})}><span><Plus size={23}/></span><strong>Et votre prochain projet ?</strong><small>Une envie, un voyage ou<br/>simplement l’esprit tranquille.</small></button></div><div className="info-callout subtle"><Info size={19}/><div><strong>Votre épargne reste un choix.</strong><p>Choisissez votre objectif et votre réserve mensuelle. Cette réserve réduit le disponible sans déplacer d’argent. Un versement enregistré entre un compte courant et un compte d’épargne réduit la réserve restante du mois.</p></div></div></>}
-      {page==="settings"&&<div key={demo?"demo-settings":"personal-settings"} className="settings-workspace"><ReminderSettings demo={demo}/><section className="card settings-panel offline-preparation"><h3>Saisie hors connexion</h3><p>{demo?"Connectez-vous et ouvrez votre budget en ligne pour préparer cet appareil.":offline.prepared?"La saisie locale est prête sur cet appareil.":"La préparation se fait pendant une ouverture en ligne. Gardez Pécule ouvert tant qu’elle n’est pas terminée."}</p><p className="field-hint">Seuls les noms des comptes et les opérations en attente sont conservés localement. Ouvrez Pécule avec le même compte pour synchroniser ; une déconnexion verrouille ce formulaire sans supprimer les saisies en attente.</p><a className="text-button" href="/offline.html">Ouvrir la saisie locale</a></section><AnimatedDetails className="card gesture-help"><summary>Gestes et raccourcis iPhone<ChevronDown size={17}/></summary><ul><li>Balayez le contenu de l’accueil pour changer d’onglet. Les bords restent réservés à iOS.</li><li>Glissez le + vers le haut pour une dépense. Maintenez-le pour choisir Dépense, Revenu ou Virement.</li><li>Maintenez une opération pour son aperçu, ou balayez-la vers la gauche pour ses actions.</li><li>Maintenez une carte de compte pour ses raccourcis.</li><li>Tirez l’en-tête d’un panneau vers le bas pour le fermer. Votre brouillon reste conservé.</li><li>Touchez l’onglet actif du menu pour remonter. Sur Opérations, deux appuis rapprochés ouvrent la recherche.</li></ul><p className="field-hint">Les boutons restent disponibles. Aucune écriture n’est enregistrée par un geste seul.</p></AnimatedDetails><nav className="settings-index" aria-label="Rubriques des réglages"><a href="#settings-appearance">Apparence</a><a href="#settings-budget">Budget</a><a href="#settings-data">Données</a><a href="#settings-account">Compte</a></nav><section className="settings-group" id="settings-appearance" aria-labelledby="appearance-title"><header><h2 id="appearance-title">Apparence et application</h2><p>Votre confort de lecture, sur cet appareil.</p></header><div className="settings-grid"><ThemePicker onSaved={()=>setToast("Votre apparence a été mise à jour sur cet appareil.",true,"settings")}/><section className="card settings-card"><span className="settings-icon"><Smartphone size={21}/></span><h3>Toujours à portée de main.</h3><p>Retrouvez Pécule sur votre écran d’accueil, comme une application.</p><button className="secondary full-width" type="button" onClick={()=>open({type:"install"})}>Installer Pécule <ArrowUpRight size={15}/></button></section></div></section><section className="settings-group" id="settings-budget" aria-labelledby="budget-title"><header><h2 id="budget-title">Votre budget au quotidien</h2><p>Calcul du disponible, seuils et catégories.</p></header><div className="settings-grid"><section className="card settings-card"><h3>Mon quotidien</h3><p>Quelques repères pour un budget qui vous ressemble.</p><ValidatedForm draftKey="settings:preferences" onSubmit={async e=>{e.preventDefault();const f=new FormData(e.currentTarget),reserve=parseAmount(String(f.get("reserve")));if(reserve===null||reserve<0){setError("La réserve doit être un montant positif ou nul.");return;}if(await save({...b,name:String(f.get("name")).trim(),settings:{...b.settings,horizon:f.get("horizon") as Budget["settings"]["horizon"],reserve,holidayCalendar:f.get("holidays") as Budget["settings"]["holidayCalendar"]}}))drafts?.clear("settings:preferences");}}><FormField label="Votre prénom"><input name="name" maxLength={60} defaultValue={b.name}/></FormField><FormField label="Calculer mon disponible jusqu’à…" hint="Sans salaire prévu, Pécule utilise la fin du mois."><select name="horizon" defaultValue={b.settings.horizon}><option value="salary">Mon prochain salaire</option><option value="month">La fin du mois</option></select></FormField><FormField label="Réserve complémentaire pour la période" hint="S’ajoute aux réserves mensuelles de vos objectifs. Ce montant est retiré du disponible sans mouvement bancaire."><span className="amount-input"><input type="number" name="reserve" min="0" max="1000000000" step="0.01" defaultValue={inputAmount(b.settings.reserve)}/><span>€</span></span></FormField><FormField label="Calendrier par défaut des nouvelles récurrences" hint="France : jours fériés nationaux, hors spécificités régionales. Chaque récurrence garde son propre calendrier."><select name="holidays" defaultValue={b.settings.holidayCalendar}><option value="FR">France · lundi à vendredi, hors jours fériés</option><option value="none">Lundi à vendredi · sans jours fériés</option></select></FormField>{error&&<ErrorMessage>{error}</ErrorMessage>}<button className="primary" type="submit" disabled={busy}>{saving?<LoaderCircle size={16} className="spin"/>:<Check size={16}/>}Enregistrer mes préférences</button></ValidatedForm></section><BudgetPreferences key={JSON.stringify(b.settings)} budget={b} saving={busy} hidden={hidden} save={save} confirm={(title,message,action)=>open({type:"confirm",title,message,action})}/></div></section><section className="settings-group" id="settings-data" aria-labelledby="data-title"><header><h2 id="data-title">Vos données</h2><p>Sauvegarder, exporter et retrouver votre budget.</p></header><section className="card settings-card"><h3>Vos données vous appartiennent.</h3><p>{demo?"Vous explorez la démonstration. Aucune donnée de cette démo n’est enregistrée sur votre compte.":"Vos données sont enregistrées sur votre compte et synchronisées entre vos appareils. Elles ne sont pas partagées avec les autres utilisateurs."}</p><div className="settings-links">{demo?<button type="button" onClick={()=>downloadFile(JSON.stringify(b,null,2),`pecule-sauvegarde-${today}.json`,"application/json")}><Download size={16}/>Télécharger une sauvegarde JSON</button>:<a href="/api/budget/export" download><Download size={16}/>Télécharger une sauvegarde JSON</a>}<button type="button" onClick={exportCSV}><Download size={16}/>Exporter mes opérations en CSV</button><label className="restore-backup"><Upload size={16}/>Restaurer une sauvegarde JSON<input type="file" accept=".json,application/json" onChange={async e=>{const file=e.target.files?.[0];if(!file)return;e.target.value="";if(file.size>4000000){setToast("La sauvegarde dépasse 4 Mo.");return;}try{const {budgetSchema}=await import("../lib/validation");const result=budgetSchema.safeParse(JSON.parse(await file.text()));if(!result.success)throw new Error("La sauvegarde Pécule est invalide.");const restored=result.data;open({type:"confirm",title:"Restaurer cette sauvegarde ?",message:"Cette sauvegarde remplacera votre budget actuel. Téléchargez d’abord votre budget si vous souhaitez le conserver.",action:()=>save(restored,"Votre sauvegarde a été restaurée.")});}catch(err){setToast(err instanceof Error?err.message:"Fichier illisible.");}}}/></label><button type="button" onClick={()=>{drafts?.clearAll();setBudget(demoBudget(today));setDemo(true);navigate("overview");}}><Sparkles size={16}/>Explorer la démonstration</button>{demo?<button type="button" onClick={()=>hasBudget?void load():open({type:"start"})}><ArrowRight size={16}/>{hasBudget?"Retrouver mon budget":"Créer mon budget personnel"}</button>:null}</div></section></section><section className="settings-group" id="settings-account" aria-labelledby="account-title"><header><h2 id="account-title">Votre compte</h2><p>{user?"Votre accès personnel à Pécule.":"Vous explorez Pécule sans connexion."}</p></header><div className="settings-grid">{user?<><section className="card settings-card"><h3>Connexion personnelle</h3><p className="account-email">{user.email}</p><a className="secondary" href="/sign-out" target="_top"><LogOut size={16}/>Me déconnecter</a></section><GoogleConnection email={user.email}/></>:<section className="card settings-card"><h3>Un espace pour votre budget</h3><p>Connectez-vous pour retrouver vos données sur vos appareils.</p><a className="secondary" href="/sign-in">Me connecter <ArrowRight size={15}/></a></section>}</div></section><div className="settings-brand"><Image unoptimized width={32} height={32} src="/favicon.svg" alt=""/><span>Pécule <small>Votre argent, l’esprit léger. · v1.0</small></span></div></div>}
-    </main></div>
-    <div className="floating-actions" inert={!!modal}><button type="button" className="floating-action-trigger" aria-label="Ouvrir les actions" aria-haspopup="dialog" aria-expanded={modal?.type==="actions"} onClick={()=>open({type:"actions"})}><WalletActionIcon open={modal?.type==="actions"}/><span>Ajouter</span></button></div><MobileDock expanded={!!modal}><nav className="mobile-nav floating-nav" aria-label="Navigation mobile"><NavigationIndicator active={page}/>{nav.filter(item=>["overview","transactions","accounts"].includes(item.id)).map(({id,short,icon:Icon})=><button type="button" key={id} aria-label={short} className={page===id?"active":""} aria-current={page===id?"page":undefined} onClick={e=>mobileNavigate(id,e.timeStamp)}><Icon size={21} strokeWidth={1.7}/><span>{short}</span></button>)}<button type="button" className={["recurring","goals","plan","settings"].includes(page)?"active":""} aria-label="Plus" aria-haspopup="dialog" aria-expanded={modal?.type==="navigation"} onClick={()=>open({type:"navigation"})}><MoreHorizontal size={21}/><span>Plus</span></button></nav><QuickAddGesture disabled={saving||!!modal} onChoose={kind=>open(kind==="transfer"?{type:"transfer"}:{type:"transaction",direction:kind})}/></MobileDock>
-    {!capturing&&notice}
-    {modal&&<div className={`modal-backdrop modal-motion ${previewOpen?"context-preview-backdrop":""}`} ref={backdropRef} onMouseDown={e=>{if(e.target===e.currentTarget&&!saving)setModal(null);}}><div className="modal-shade" ref={shadeRef} aria-hidden="true"/><div className={`modal ${previewOpen?"context-preview-modal":""} ${["import","reconcile","bulk","match-transfers"].includes(modal.type)?"wide":""} ${modal.type==="actions"||modal.type==="navigation"?"actions-modal":""} ${modal.type==="transaction"&&!modal.item?.transferId?"operation-modal":""} ${modal.type==="transaction"&&!modal.item?"capture-modal":""} ${modal.type==="wallet-account"?"wallet-account-modal":""}`} style={modal.type==="wallet-account"?walletSurfaceStyles(b.accounts.find(a=>a.id===modal.accountId)?.color??"#335cff") as CSSProperties:undefined} ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="dialog-title"><div className="modal-heading" {...sheetGesture} data-panel-gesture><div><h2 id="dialog-title" className={previewOpen?"sr-only":undefined}>{modalTitle}</h2></div>{capturing&&<button type="button" className="icon-button capture-keyboard-dismiss" aria-label="Masquer le clavier" title="Masquer le clavier" onPointerDown={event=>event.preventDefault()} onClick={()=>{if(document.activeElement instanceof HTMLElement)document.activeElement.blur();}}><Keyboard size={19}/><ChevronDown size={12}/></button>}<button type="button" className="icon-button" aria-label="Fermer" disabled={busy} onClick={()=>setModal(null)}>{modal.type==="wallet-account"?<ArrowLeft size={21}/>:<X size={21}/>}</button></div>
-    {conflictPanel}
-    <div className="modal-content" inert={!!conflict}>
-    {modal.type==="operation-actions"&&(()=>{const t=b.transactions.find(t=>t.id===modal.transactionId);if(!t)return <p>Cette opération n’est plus disponible.</p>;const linked=b.rules.find(r=>r.id===t.ruleId),proposal=transactionRecurrence(t,b,today);return <div className="gesture-preview"><div className="gesture-operation-preview"><div className="gesture-preview-head"><MerchantIcon label={t.label} merchantId={t.merchantId} customIconUrl={t.customIconUrl} fallback={<CategoryIcon category={t.category}/>}/><span>{shortDate(t.date)}</span></div><h3>{t.label}</h3><strong>{m(t.amount,true,true)}</strong><dl className="gesture-preview-context"><div><dt>Compte</dt><dd>{b.accounts.find(a=>a.id===t.accountId)?.name}</dd></div><div><dt>Catégorie</dt><dd>{t.category}</dd></div></dl></div><div className="gesture-context-actions"><button type="button" disabled={busy} onClick={()=>open({type:"transaction",item:t})}><Pencil size={18}/>Modifier</button>{!t.transferId&&<button type="button" disabled={busy} onClick={()=>open({type:"transaction",sequence:Date.now(),direction:t.amount>0?"income":"expense",accountId:t.accountId,initialDate:today,initialAmount:Math.abs(t.amount),initialLabel:t.label,initialCategory:t.category,initialMerchantId:t.merchantId,initialCustomIconUrl:t.customIconUrl,initialNote:t.note})}><Plus size={18}/>Dupliquer</button>}{(linked||proposal)&&<button type="button" disabled={busy} onClick={()=>open(linked?{type:"rule",item:linked}:{type:"rule",proposal:proposal!,sourceTransactionId:t.id})}><Repeat2 size={18}/>{linked?"Modifier la récurrence associée":"Créer une récurrence"}</button>}<button type="button" className="destructive-action" disabled={busy} onClick={()=>remove("transaction",t.id)}><Trash2 size={18}/>{t.transferId?"Supprimer ce virement":"Supprimer cette opération"}</button></div><p className="field-hint">{t.transferId?"Les deux écritures de ce virement sont liées. La suppression demandera confirmation.":"La duplication ouvre une nouvelle saisie à vérifier avant enregistrement."}</p></div>;})()}
-    {modal.type==="account-forecast"&&<ForecastOutlook key={modal.accountId} budget={b} today={today} hidden={hidden} initialAccountId={modal.accountId}/>}
-    {modal.type==="account-actions"&&(()=>{const a=b.accounts.find(a=>a.id===modal.accountId);return a?<div className="gesture-preview"><div className="gesture-account-preview" style={walletSurfaceStyles(a.color) as CSSProperties}><Wallet size={23}/><h3>{a.name}</h3><strong>{m(accountBalance(b,a.id,today))}</strong><p>{a.bank||"Compte personnel"}</p></div><div className="gesture-context-actions"><button type="button" onClick={()=>open({type:"wallet-account",accountId:a.id})}><Wallet size={18}/>Voir le compte</button><button type="button" disabled={busy} onClick={()=>open({type:"transaction",accountId:a.id,direction:"expense"})}><Plus size={18}/>Ajouter une dépense</button><button type="button" disabled={saving||b.accounts.length<2} onClick={()=>open({type:"transfer",accountId:a.id})}><ArrowLeftRight size={18}/>Virement</button><button type="button" disabled={busy} onClick={()=>open({type:"balance",accountId:a.id})}><Pencil size={18}/>Ajuster le solde</button><button type="button" disabled={busy} onClick={()=>open({type:"import",accountId:a.id})}><Upload size={18}/>Importer</button></div></div>:<p>Ce compte n’est plus disponible.</p>;})()}
-    {modal.type==="wallet-account"&&(()=>{const account=b.accounts.find(a=>a.id===modal.accountId);return account?<WalletAccountDetail budget={b} account={account} today={today} hidden={hidden} saving={busy} dialogRef={dialogRef} onClose={()=>setModal(null)} onAdd={()=>open({type:"transaction",accountId:account.id})} onTransfer={()=>open({type:"transfer",accountId:account.id})} onAdjust={()=>open({type:"balance",accountId:account.id})} onImport={()=>open({type:"import",accountId:account.id})} onAll={()=>{headingAfterClose.current=true;setAccountFilter(account.id);setTypeFilter("all");setMonth(today.slice(0,7));setModal(null);navigate("transactions");}} onTransaction={item=>open({type:"transaction",item})} onUpcoming={t=>{const rule=b.rules.find(r=>r.id===t.ruleId);open(rule?{type:"rule",item:rule}:{type:"transaction",item:t});}} onEdit={()=>open({type:"account",item:account})} onVerify={()=>open({type:"reconcile",accountId:account.id})}/>:<p className="field-hint">Ce compte n’est plus disponible.</p>;})()}
-    {modal.type==="review"&&<DailyReview budget={b} today={today} hidden={hidden} saving={busy} serverError={error} initialDate={modal.date} onAdd={date=>open({type:"transaction",initialDate:date,returnReviewDate:date})} onEdit={item=>open({type:"transaction",item,returnReviewDate:item.date})} onImport={()=>open({type:"import"})} onReconcile={accountId=>open({type:"reconcile",accountId})} save={save}/>}
-    {modal.type==="favorites"&&<CaptureFavorites budget={b} hidden={hidden} saving={busy} serverError={error} onCreate={()=>open({type:"favorite"})} onEdit={item=>open({type:"favorite",item})} onUse={openFavorite} save={save}/>}
-    {modal.type==="favorite"&&<FavoriteEditor key={modalKey(modal)} draftKey={modalKey(modal)} budget={b} item={modal.item} saving={busy} serverError={error} save={save} onDone={()=>open({type:"favorites"})} onCancel={()=>open({type:"favorites"})} initialDirection={drafts?.get(modalKey(modal))?.direction?.[0] as Favorite["direction"]|undefined}/>}
-    {modal.type==="balance"&&b.accounts.some(a=>a.id===modal.accountId)&&<AccountBalanceAdjustment key={modal.accountId} budget={b} accountId={modal.accountId} today={today} hidden={hidden} saving={busy} serverError={error} draftKey={modalKey(modal)} initialValue={drafts?.get(modalKey(modal))?.balance?.[0]??""} onCompare={balance=>{setReconciliationDrafts(previous=>({...previous,[modal.accountId]:{date:today,balance,checked:[],query:""}}));open({type:"reconcile",accountId:modal.accountId});}} onInspect={item=>open({type:"transaction",item,returnAccountId:modal.accountId,returnToBalance:true})} onImport={()=>open({type:"import",accountId:modal.accountId,returnTo:"balance"})} onMissing={difference=>open({type:"transaction",accountId:modal.accountId,initialDate:today,initialAmount:Math.abs(difference),direction:difference>0?"income":"expense",returnAccountId:modal.accountId,returnToBalance:true})} save={save} onDone={()=>setModal(null)} onCancel={()=>setModal(null)}/>}
-    {modal.type==="filters"&&<TransactionFilters initial={filterValues} accounts={b.accounts} today={today} onApply={value=>{updateFilters(value);setModal(null);}} onCancel={()=>setModal(null)}/>}
-    {modal.type==="reconcile"&&b.accounts.some(a=>a.id===modal.accountId)&&<BankReconciliation key={modal.accountId} budget={b} accountId={modal.accountId} today={today} hidden={hidden} saving={busy} serverError={error} initialDraft={reconciliationDrafts[modal.accountId]} onDraftChange={retainReconciliationDraft} save={save} onDone={()=>{setReconciliationDrafts(previous=>{const next={...previous};delete next[modal.accountId];return next;});setModal(null);}} onEdit={item=>open({type:"transaction",item,returnAccountId:modal.accountId})} onAdd={(date,amount)=>open({type:"transaction",direction:amount>0?"income":"expense",accountId:modal.accountId,initialDate:date,initialAmount:Math.abs(amount),returnAccountId:modal.accountId})} onEditAccount={()=>open({type:"account",item:b.accounts.find(a=>a.id===modal.accountId),returnAccountId:modal.accountId})} onTransfers={()=>open({type:"match-transfers",returnAccountId:modal.accountId})} onImport={()=>open({type:"import",accountId:modal.accountId,returnTo:"reconcile"})}/>}
-    {modal.type==="bulk"&&<BulkEdit budget={b} ids={modal.ids} today={today} hidden={hidden} saving={busy} serverError={error} save={save} onDone={()=>{setTransactionEpoch(previous=>previous+1);setModal(null);}}/>}
-    {modal.type==="match-transfers"&&<TransferMatching budget={b} saving={busy} hidden={hidden} serverError={error} save={save} initialDebit={modal.initialDebit} onDone={()=>{setTransactionEpoch(previous=>previous+1);if(modal.returnAccountId)open({type:"reconcile",accountId:modal.returnAccountId});else setModal(null);}}/>}
-    {modal.type==="imports"&&<div><p className="form-intro">Annuler un import supprime les opérations encore présentes de ce lot, y compris celles modifiées depuis. Les autres opérations et les soldes de référence sont conservés.</p>{importBatches(b,today).length?importBatches(b,today).map(batch=><section className="card" key={batch.id}><h3>{batch.count} opérations ajoutées · {batch.matchedCount} associées · {shortDate(batch.from)} → {shortDate(batch.to)}</h3><p>{batch.accounts.map(id=>b.accounts.find(a=>a.id===id)?.name??"Compte supprimé").join(", ")}</p><p>Variation cumulée des soldes aujourd’hui après annulation : {m(-batch.impact)}</p><button type="button" className="secondary" onClick={()=>open({type:"confirm",title:"Annuler cet import ?",message:`Les ${batch.count} opérations restantes de ce lot seront supprimées, même si elles ont été modifiées. Les associations bancaires de ce lot seront retirées en conservant leurs opérations d’origine. Aucun mouvement bancaire ne sera effectué.`,action:async()=>{try{return await save(removeImportBatch(b,batch.id),"Import annulé.");}catch(cause){setError(cause instanceof Error?cause.message:"Impossible d’annuler cet import.");return false;}}})}>Annuler cet import</button></section>):<EmptyState title="Aucun import pour le moment" description="Importez un relevé CSV pour retrouver ici vos lots et leurs options d’annulation." action={<button type="button" className="secondary" onClick={()=>open({type:"import"})}><Upload size={16}/>Importer un relevé</button>}/>}</div>}
-    {modal.type==="navigation"&&<nav className="navigation-menu" aria-label="Navigation complémentaire">{[...nav.filter(item=>["recurring","goals","plan"].includes(item.id)),{id:"settings" as Page,label:"Réglages",short:"Réglages",icon:Settings2}].map(({id,label,icon:Icon})=><button type="button" key={id} className={page===id?"selected":""} aria-current={page===id?"page":undefined} onClick={()=>{headingAfterClose.current=true;setModal(null);navigate(id);}}><span className="navigation-menu-icon"><Icon size={21}/></span><span><strong>{label}</strong><small>{id==="recurring"?"Vos revenus et charges prévus":id==="goals"?"Vos projets et réserves d’épargne":id==="plan"?"Besoins, envies et épargne":"Apparence et préférences du budget"}</small></span><ChevronRight size={18}/></button>)}</nav>}
-    {modal.type==="actions"&&<div className="quick-actions"><div className="wallet-menu-intro"><WalletActionIcon open/><p className="form-intro">Les petites actions qui gardent votre budget au clair.</p></div><div className="quick-action-grid">{[{title:"Une dépense",hint:"Un achat à enregistrer",icon:ArrowUpRight,color:"#a77362",background:"#faf0ec",target:{type:"transaction",direction:"expense"},needsAccount:true},{title:"Un revenu",hint:"De l’argent qui arrive",icon:ArrowDownLeft,color:"#568d77",background:"#edf5f0",target:{type:"transaction",direction:"income"},needsAccount:true},{title:"Virement entre comptes",hint:"Déplacer de l’argent entre vos comptes",icon:ArrowLeftRight,color:"#568d77",background:"#edf5f0",target:{type:"transfer"},needsAccount:false},{title:"Une récurrence",hint:"Un revenu ou une charge",icon:Repeat2,color:"#7d77a8",background:"#f1eff8",target:{type:"rule"},needsAccount:true},{title:"Un compte",hint:"Courant, épargne ou espèces",icon:Wallet,color:"#6888bb",background:"#edf3fc",target:{type:"account"},needsAccount:false},{title:"Un objectif",hint:"Une envie à concrétiser",icon:Sparkles,color:"#b18b55",background:"#faf4ea",target:{type:"goal"},needsAccount:false},{title:"Un import CSV",hint:"Vos opérations bancaires",icon:Upload,color:"#7388a2",background:"#eef2f7",target:{type:"import"},needsAccount:true}].map(({title,hint,icon:Icon,color,background,target,needsAccount})=><button type="button" key={title} className="quick-action" onClick={()=>{if(needsAccount&&!b.accounts.length){setToast("Ajoutez d’abord un compte pour enregistrer vos opérations.");open({type:"account"});}else open(target as Modal);}}><span className="quick-action-icon" style={{"--category-color":color,"--category-background":background} as CSSProperties}><Icon size={22} strokeWidth={1.6}/></span><strong>{title}</strong><small>{hint}</small><ChevronRight size={13} className="quick-action-chevron"/></button>)}</div></div>}
-    {modal.type==="start"&&<>{!user?<div className="sign-in-prompt"><span className="empty-icon"><LockKeyhole size={26}/></span><p>Connectez-vous pour créer votre espace personnel et retrouver vos données sur iPhone et ordinateur. Votre budget est accessible avec votre adresse e-mail et votre mot de passe.</p><a className="primary full-width" href="/sign-in" target="_top">Se connecter ou créer un compte <ArrowRight size={17}/></a><small>Les comptes de démonstration ne seront pas ajoutés à votre budget.</small></div>:<BudgetSetup name={user.name?.split(" ")[0]??""} onSave={save} onDone={()=>{setModal(null);setMonth(today.slice(0,7));setPage("overview");}}/>}</>}
-    {modal.type==="transaction"&&<OperationEditor key={modalKey(modal)} modal={modal} b={b} today={today} draftKey={modalKey(modal)} busy={busy} error={error} onReset={()=>resetDirection(modal)} onClose={()=>modal.returnToBalance&&modal.returnAccountId?open({type:"balance",accountId:modal.returnAccountId}):setModal(null)} submit={submit} open={open} remove={remove} hidden={hidden} notice={notice} offlineCapture={!online||loadError||offline.connectionUnavailable} captureSaving={saving||offline.working} merchantDirection={merchantDirection} setMerchantDirection={setMerchantDirection} noteDraftOpen={!!drafts?.get(modalKey(modal))?.note?.[0]} openFavorite={openFavorite} m={m}/>}
-    {modal.type==="account"&&<AccountEditor key={modalKey(modal)} modal={modal} b={b} today={today} draftKey={modalKey(modal)} busy={busy} error={error} onReset={()=>resetDirection(modal)} onClose={()=>setModal(null)} submit={submit} open={open} remove={remove}/>}
-    {modal.type==="rule"&&<>{!b.accounts.length?<Empty icon={Wallet} title="Commençons par un compte" description="Les récurrences seront rattachées à ce compte." action={<button type="button" className="primary" onClick={()=>open({type:"account"})}>Ajouter un compte</button>}/>:<ValidatedForm key={modalKey(modal)} draftKey={modalKey(modal)} onReset={()=>resetDirection(modal)} busy={busy} actions={<><button type="submit" className="primary full-width" disabled={busy}>{saving?<LoaderCircle size={16} className="spin"/>:<Repeat2 size={16}/>}Enregistrer la récurrence</button><button type="button" className="text-button panel-cancel" disabled={busy} onClick={()=>recurrenceSource?open({type:"transaction",item:recurrenceSource}):setModal(null)}>Annuler</button></>} onSubmit={submit}>{recurrenceSource&&<div className="info-callout"><Repeat2 size={18}/><p>L’opération enregistrée est conservée. Choisissez la fréquence et la prochaine échéance : seules les échéances futures seront ajoutées, sans doublon de l’opération d’origine.</p></div>}<FormSection title="La récurrence"><MerchantFields categoryRules={b.settings.categoryRules} initialLabel={ruleDraft?.label} initialCategory={ruleDraft?.category} initialMerchantId={ruleDraft?.merchantId} initialCustomIconUrl={ruleDraft?.customIconUrl} direction={merchantDirection}/><div className="form-grid"><FormField label="Type"><select name="direction" onChange={e=>setMerchantDirection(e.target.value)} defaultValue={ruleDraft&&ruleDraft.amount>0?"income":"expense"}><option value="expense">Dépense récurrente</option><option value="income">Entrée d’argent récurrente</option></select></FormField><FormField label="Montant"><AmountInput name="amount" defaultValue={ruleDraft?Math.abs(ruleDraft.amount):undefined}/></FormField></div><div className="form-grid"><FormField label="Compte"><select name="account" defaultValue={ruleDraft?.accountId??b.accounts[0]?.id}>{accountOptions}</select></FormField></div></FormSection><FormSection title="Le rythme"><div className="form-grid"><FormField label="Fréquence"><select name="frequency" defaultValue={ruleDraft?.frequency??"monthly"}><option value="monthly">Chaque mois</option><option value="weekly">Chaque semaine</option><option value="yearly">Chaque année</option></select></FormField><FormField label="Règle de date"><select name="timing" defaultValue={ruleDraft?.timing??"date"}><option value="date">Jour fixe</option><option value="last-business-day">Dernier jour ouvré du mois</option></select></FormField></div><div className="form-grid"><FormField label="Jour du mois (pour une date fixe)" hint="Un jour absent du mois est ramené au dernier jour."><input name="day" type="number" min="1" max="31" required defaultValue={ruleDraft?.day??parseDate(today).getDate()}/></FormField></div><div className="form-grid"><FormField label="À partir du"><input name="date" type="date" min={recurrenceMin} max="2100-12-31" required defaultValue={ruleDraft?.startDate??shiftDate(today,1)}/></FormField></div><FormOptions title="Jours fériés et fin de série" initialOpen={!!ruleDraft?.endDate||!!ruleDraft&&ruleDraft.holidays!==b.settings.holidayCalendar}><FormField label="Jours fériés à exclure"><select name="holidays" defaultValue={ruleDraft?.holidays??b.settings.holidayCalendar}><option value="FR">France · calendrier national</option><option value="none">Aucun · week-ends uniquement</option></select></FormField><FormField label="Jusqu’au (facultatif)"><input name="end" type="date" min="2000-01-01" max="2100-12-31" defaultValue={ruleDraft?.endDate}/></FormField><p className="field-hint">Chaque semaine : le jour de la date de début est utilisé. Chaque année : le mois de début est utilisé. Les autres règles de date concernent les fréquences mensuelles et annuelles. Les opérations passées restent conservées après une modification.</p></FormOptions></FormSection>{error&&<ErrorMessage>{error}</ErrorMessage>}</ValidatedForm>}</>}
-    {modal.type==="goal"&&<ValidatedForm key={modalKey(modal)} draftKey={modalKey(modal)} onReset={()=>resetDirection(modal)} busy={busy} actions={<><SubmitButton busy={busy} icon={<Sparkles size={16}/>}>Enregistrer mon objectif</SubmitButton><button type="button" className="text-button panel-cancel" disabled={busy} onClick={()=>setModal(null)}>Annuler</button></>} onSubmit={submit}><FormSection title="Votre projet"><FormField label="Quel projet avez-vous en tête ?"><input name="name" maxLength={120} required placeholder="Un voyage, une sécurité, une envie…" defaultValue={modal.item?.name}/></FormField><div className="form-grid"><FormField label="Objectif à atteindre"><AmountInput name="target" defaultValue={modal.item?.target}/></FormField><FormField label="Déjà mis de côté"><span className="amount-input"><input name="saved" type="number" step="0.01" min="0" max="1000000000" required defaultValue={inputAmount(modal.item?.saved??0)}/><span>€</span></span></FormField></div></FormSection><FormSection title="Votre rythme"><FormField label="À réserver chaque mois" hint="Facultatif : mettez 0 pour avancer librement. La réserve restante est retirée du disponible, sans effectuer de virement bancaire."><span className="amount-input"><input name="monthly" type="number" step="0.01" min="0" max="1000000000" required defaultValue={inputAmount(modal.item?.monthly??0)}/><span>€</span></span></FormField><FormOptions title="Date et personnalisation"><FormField label="Une date en tête ? (facultatif)"><input name="deadline" type="date" min="2000-01-01" max="2100-12-31" defaultValue={modal.item?.deadline}/></FormField><div className="form-grid"><FormField label="Une petite touche personnelle"><select name="icon" defaultValue={modal.item?.icon??"sun"}><option value="sun">Un rayon de soleil</option><option value="shield">La tranquillité</option><option value="home">Un chez-soi</option><option value="plane">Une aventure</option><option value="sparkles">Une envie</option></select></FormField><div className="field"><span>Couleur</span><div className="color-choices">{colors.map((c,i)=><label key={c} style={{background:walletColor(c)}} title={`Couleur ${i+1}`}><input type="radio" name="color" value={c} defaultChecked={modal.item?modal.item.color===c:i===2} required/><Check size={17}/><span className="sr-only">Couleur {i+1}</span></label>)}</div></div></div></FormOptions><p className="field-hint">Le montant déjà mis de côté sert au suivi de cet objectif. Il ne modifie pas le solde de vos comptes.</p></FormSection>{error&&<ErrorMessage>{error}</ErrorMessage>}</ValidatedForm>}
-    {(modal.type==="transfer"||modal.type==="contribution")&&<TransferEditor key={modalKey(modal)} modal={modal} b={b} today={today} draftKey={modalKey(modal)} busy={busy} error={error} onReset={()=>resetDirection(modal)} onClose={()=>setModal(null)} submit={submit} open={open} remove={remove} hidden={hidden} transferSource={transferSource} transferTarget={transferTarget}/>}
-    {modal.type==="import"&&<BankImport onView={(accountId,month)=>{setAccountFilter(accountId);setTypeFilter("all");setMonth(month);navigate("transactions");setModal(null);}} onBack={importReturn?()=>open(importReturn):undefined} initialAccountId={modal.accountId} initialDraft={importContextAccount?comparisonImports[importContextAccount]??null:importDraft} onDraftChange={retainActiveImportDraft} budget={b} today={today} saving={busy} save={save} serverError={error} onDone={()=>importReturn?open(importReturn):setModal(null)} onAddAccount={()=>open({type:"account"})} downloadTemplate={()=>downloadFile("\uFEFFDate;Libellé;Montant;Catégorie;Devise\r\n"+today+";Exemple de courses;-42,50;Alimentation;EUR\r\n","pecule-modele.csv","text/csv;charset=utf-8")}/>}
-    {modal.type==="calculation"&&<div className="calculation-detail"><p>Votre disponible indique ce que vous pouvez encore dépenser après vos engagements connus.</p><div><span>Comptes courants et espèces</span><strong>{m(o.total)}</strong></div><div><span>− Dépenses prévues jusqu’au {shortDate(o.end)}</span><strong>{m(o.expenses)}</strong></div><div><span>− Réserve d’épargne restante</span><strong>{m(o.reserve)}</strong></div><section className="reserve-breakdown" aria-label="Détail de la réserve"><h3>Détail de la réserve</h3>{reserveLines(b,today).length?<dl>{reserveLines(b,today).map(row=><div key={row.id}><dt>{row.label}</dt><dd>{m(row.amount)}</dd></div>)}</dl>:<p>Aucune réserve prévue.</p>}</section><div className="calculation-total"><span>Votre marge de manœuvre</span><strong>{m(o.available)}</strong></div><section className="signal-explanation"><h3>Comprendre le signal</h3><p>{getAvailableSignal(o.available,o.days,b.settings.dailyComfortCents).label} : {getAvailableSignal(o.available,o.days,b.settings.dailyComfortCents).description}</p><p>Négatif : le disponible est sous zéro. Attention : il est positif ou nul, mais sous votre seuil quotidien. Confort : le seuil quotidien est atteint. Ce seuil se règle dans Réglages.</p></section><p className="field-hint">Les revenus futurs ne sont pas ajoutés au disponible. Les comptes d’épargne sont exclus. Les dépenses non saisies et les achats imprévus ne sont pas anticipés. Les récurrences sont enregistrées automatiquement à leur date prévue ; vérifiez les montants par rapport à votre banque.</p><p className="field-hint">La réserve est celle de cette période : réserve complémentaire + montants mensuels de vos objectifs, diminués des versements d’épargne enregistrés ce mois-ci. Le montant par jour répartit le disponible positif sur les jours restants, aujourd’hui inclus.</p><button type="button" className="secondary full-width" onClick={()=>{setModal(null);navigate("settings");}}>Ajuster mes préférences <Settings2 size={15}/></button></div>}
-    {modal.type==="install"&&<div className="install-content"><Image unoptimized width={192} height={192} src="/icons/icon-192.png" alt="Pécule"/><p>Un accès direct à votre budget depuis votre écran d’accueil.</p><ol><li><span>1</span><div><strong>Ouvrez Pécule dans Safari sur iPhone.</strong><p>Utilisez l’adresse du site publié.</p></div></li><li><span>2</span><div><strong>Ouvrez le menu de partage.</strong><p>Puis choisissez « Sur l’écran d’accueil ».</p></div></li><li><span>3</span><div><strong>Ajoutez Pécule.</strong><p>Activez l’ouverture comme application si l’option est proposée.</p></div></li></ol><div className="info-callout"><Cloud size={17}/><p>Une connexion Internet est nécessaire pour charger et modifier le budget. Vos données restent synchronisées sur votre compte.</p></div>{installPrompt&&<button type="button" className="primary full-width" onClick={async()=>{await installPrompt.prompt();await installPrompt.userChoice;setInstallPrompt(null);}}>Installer sur cet appareil <Download size={16}/></button>}</div>}
-    {modal.type==="confirm"&&<div><p className="form-intro">{modal.message}</p>{error&&<ErrorMessage>{error}</ErrorMessage>}<div className="form-actions"><button type="button" className="secondary" disabled={busy} onClick={()=>setModal(null)}>Annuler</button><button type="button" className="danger" disabled={busy} onClick={async()=>{if(await modal.action()){if(modal.onDone)modal.onDone();else setModal(null);}}}>{saving?<LoaderCircle size={16} className="spin"/>:<Trash2 size={16}/>}Confirmer</button></div></div>}
-    </div></div></div>}
-  </div></GestureActions.Provider>;
+  const transferSource =
+    modal?.type === "transfer" && b.accounts.some((a) => a.id === modal.accountId)
+      ? modal.accountId
+      : (b.accounts.find((a) => a.type !== "savings")?.id ?? b.accounts[0]?.id);
+  const transferTarget =
+    b.accounts.find((a) => a.type === "savings" && a.id !== transferSource)?.id ??
+    b.accounts.find((a) => a.id !== transferSource)?.id;
+  const ruleDraft = modal?.type === "rule" ? (modal.item ?? modal.proposal) : undefined;
+  const recurrenceSource =
+    modal?.type === "rule" && modal.sourceTransactionId
+      ? b.transactions.find((t) => t.id === modal.sourceTransactionId)
+      : undefined;
+  const recurrenceMin = recurrenceSource
+    ? shiftDate(recurrenceSource.date > today ? recurrenceSource.date : today, 1)
+    : "2000-01-01";
+  const modalTitle =
+    modal?.type === "operation-actions"
+      ? "Actions de l’opération"
+      : modal?.type === "account-actions"
+        ? "Raccourcis du compte"
+        : modal?.type === "wallet-account"
+          ? (b.accounts.find((a) => a.id === modal.accountId)?.name ?? "Le compte")
+          : modal?.type === "review"
+            ? "Faire le point sur ma saisie"
+            : modal?.type === "favorites"
+              ? "Vos favoris"
+              : modal?.type === "favorite"
+                ? modal.item
+                  ? "Modifier le favori"
+                  : "Créer un favori"
+                : modal?.type === "balance"
+                  ? "Ajuster le solde"
+                  : modal?.type === "account-forecast"
+                    ? "Solde prévisionnel"
+                    : modal?.type === "filters"
+                      ? "Filtrer les opérations"
+                      : modal?.type === "navigation"
+                        ? "Plus dans Pécule"
+                        : modal?.type === "reconcile"
+                          ? `Rapprocher ${b.accounts.find((a) => a.id === modal.accountId)?.name ?? "le compte"}`
+                          : modal?.type === "bulk"
+                            ? "Modifier plusieurs opérations"
+                            : modal?.type === "match-transfers"
+                              ? "Associer des virements internes"
+                              : modal?.type === "imports"
+                                ? "Vos imports bancaires"
+                                : modal?.type === "actions"
+                                  ? "Une action, en un geste."
+                                  : modal?.type === "transaction"
+                                    ? modal.item
+                                      ? "Le détail de l’opération"
+                                      : "Ajouter une opération"
+                                    : modal?.type === "account"
+                                      ? modal.item
+                                        ? "Modifier le compte"
+                                        : "Un nouveau compte"
+                                      : modal?.type === "rule"
+                                        ? modal.item
+                                          ? "Modifier la récurrence"
+                                          : modal.proposal
+                                            ? "Vérifier cette récurrence"
+                                            : "Prévoir une récurrence"
+                                        : modal?.type === "goal"
+                                          ? modal.item
+                                            ? "Modifier votre objectif"
+                                            : "Un projet à concrétiser"
+                                          : modal?.type === "transfer"
+                                            ? "Enregistrer un virement"
+                                            : modal?.type === "contribution"
+                                              ? "Faire grandir votre projet"
+                                              : modal?.type === "import"
+                                                ? "Importer vos opérations"
+                                                : modal?.type === "start"
+                                                  ? "Bienvenue chez vous."
+                                                  : modal?.type === "calculation"
+                                                    ? "Un disponible qui a du sens."
+                                                    : modal?.type === "install"
+                                                      ? "Pécule, à portée de main."
+                                                      : modal?.type === "confirm"
+                                                        ? modal.title
+                                                        : "";
+  async function submit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!modal) return;
+    setError("");
+    const f = new FormData(e.currentTarget),
+      v = (key: string) => String(f.get(key) ?? "").trim(),
+      amount = (key: string) => parseAmount(v(key));
+    const next = structuredClone(b);
+    let success = false;
+    if (modal.type === "start") {
+      const nextBudget = emptyBudget(v("name"));
+      const initial = amount("balance");
+      if (initial === null) {
+        setError("Indiquez un solde valide.");
+        return;
+      }
+      nextBudget.accounts = [
+        {
+          id: uid(),
+          name: v("accountName"),
+          bank: "",
+          type: "current",
+          openingBalance: initial,
+          openingDate: today,
+          color: colors[0],
+        },
+      ];
+      success = await save(nextBudget, "Votre budget est prêt. Bienvenue dans Pécule !", true);
+      if (success) {
+        setMonth(today.slice(0, 7));
+        setPage("overview");
+      }
+    }
+    if (modal.type === "account") {
+      const balance = amount("balance");
+      if (balance === null) {
+        setError("Indiquez un solde valide.");
+        return;
+      }
+      const item: Account = {
+        ...modal.item,
+        id: modal.item?.id ?? uid(),
+        name: v("name"),
+        bank: v("bank"),
+        type: v("type") as Account["type"],
+        openingBalance: balance,
+        openingDate: v("date"),
+        color: v("color"),
+      };
+      next.accounts = editItem(next.accounts, item);
+      success = await save(next);
+    }
+    if (modal.type === "transaction") {
+      const n = amount("amount");
+      if (n === null || n <= 0) {
+        setError("Le montant doit être supérieur à zéro.");
+        return;
+      }
+      const old = modal.item;
+      const item: Transaction = {
+        ...old,
+        id: old?.id ?? uid(),
+        label: v("label"),
+        amount: n * (v("direction") === "expense" ? -1 : 1),
+        date: v("date"),
+        accountId: v("account"),
+        category: v("category"),
+        note: v("note"),
+        ...(v("merchantId") ? { merchantId: v("merchantId") } : {}),
+        ...(v("customIconUrl") ? { customIconUrl: v("customIconUrl") } : {}),
+        ...(old?.ruleId ? { ruleId: old.ruleId } : {}),
+      };
+      if (old?.ruleId && old.date !== item.date) {
+        const r = next.rules.find((r) => r.id === old.ruleId);
+        if (r && !r.excludedDates.includes(old.date)) r.excludedDates.push(old.date);
+      }
+      const acc = next.accounts.find((a) => a.id === item.accountId);
+      if (acc && item.balanceIncluded && item.date > acc.openingDate) {
+        setError("Une opération historique doit rester comprise dans la date du solde de référence.");
+        return;
+      }
+      if (acc && !item.balanceIncluded && item.date < acc.openingDate) {
+        setError("Cette date précède le solde de référence du compte. Modifiez d’abord sa date de référence.");
+        return;
+      }
+      if (!v("customIconUrl")) delete item.customIconUrl;
+      if (!v("merchantId")) delete item.merchantId;
+      next.transactions = editItem(next.transactions, item);
+      next.settings.capture = { ...next.settings.capture, lastAccountId: item.accountId };
+      if (f.get("saveFavorite")) {
+        const favorites = next.settings.capture.favorites ?? [];
+        if (favorites.length >= 20) {
+          setError("La limite de vingt favoris est atteinte. Gérez vos favoris avant d’en ajouter un.");
+          return;
+        }
+        next.settings.capture.favorites = [...favorites, favoriteFromTransaction(item, uid())];
+      }
+      if (f.get("rememberCategory")) {
+        try {
+          next.settings.categoryRules = rememberCategory(
+            next.settings.categoryRules,
+            item.label,
+            item.merchantId,
+            item.amount > 0,
+            item.category,
+          );
+        } catch (cause) {
+          setError(cause instanceof Error ? cause.message : "Impossible de mémoriser cette catégorie.");
+          return;
+        }
+      }
+      pendingCapture.current =
+        !modal.item &&
+        (e.nativeEvent as SubmitEvent).submitter instanceof HTMLButtonElement &&
+        ((e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement).value === "continue"
+          ? {
+              type: "transaction",
+              accountId: item.accountId,
+              initialDate: item.date,
+              direction: item.amount > 0 ? "income" : "expense",
+              sequence: (modal.sequence ?? 0) + 1,
+              returnReviewDate: modal.returnReviewDate,
+              returnAccountId: modal.returnAccountId,
+              returnToBalance: modal.returnToBalance,
+            }
+          : null;
+      success = await save(next);
+    }
+    if (modal.type === "rule") {
+      const n = amount("amount");
+      if (n === null || n <= 0) {
+        setError("Indiquez un montant supérieur à zéro.");
+        const control = e.currentTarget.querySelector<HTMLInputElement>('input[name="amount"]');
+        if (control) revealFormControl(control);
+        return;
+      }
+      if (v("end") && v("end") < v("date")) {
+        setError("La date de fin doit suivre la date de début.");
+        const control = e.currentTarget.querySelector<HTMLInputElement>('input[name="end"]');
+        if (control) revealFormControl(control);
+        return;
+      }
+      const item: Rule = {
+        id: modal.item?.id ?? uid(),
+        label: v("label"),
+        amount: n * (v("direction") === "expense" ? -1 : 1),
+        accountId: v("account"),
+        category: v("category"),
+        startDate: v("date"),
+        endDate: v("end"),
+        frequency: v("frequency") as Rule["frequency"],
+        timing: v("timing") as Rule["timing"],
+        day: Number(v("day")),
+        active: modal.item?.active ?? true,
+        holidays: v("holidays") as Rule["holidays"],
+        excludedDates: modal.item?.excludedDates ?? [],
+        ...(v("merchantId") ? { merchantId: v("merchantId") } : {}),
+        ...(v("customIconUrl") ? { customIconUrl: v("customIconUrl") } : {}),
+      };
+      if (modal.sourceTransactionId) {
+        try {
+          const converted = convertTransactionToRecurring(next, modal.sourceTransactionId, item, today);
+          next.rules = converted.rules;
+          next.transactions = converted.transactions;
+        } catch (error) {
+          setError(error instanceof Error ? error.message : "Impossible de créer cette récurrence.");
+          return;
+        }
+      } else next.rules = editItem(next.rules, item);
+      success = await save(
+        next,
+        modal.sourceTransactionId ? "Récurrence créée. L’opération d’origine est conservée." : undefined,
+      );
+    }
+    if (modal.type === "goal") {
+      const target = amount("target"),
+        saved = amount("saved"),
+        monthly = amount("monthly");
+      if (target === null || target <= 0 || saved === null || saved < 0 || monthly === null || monthly < 0) {
+        setError("Vérifiez les montants de votre objectif.");
+        return;
+      }
+      next.goals = editItem(next.goals, {
+        id: modal.item?.id ?? uid(),
+        name: v("name"),
+        target,
+        saved,
+        monthly,
+        color: v("color"),
+        icon: v("icon"),
+        deadline: v("deadline"),
+      });
+      success = await save(next);
+    }
+    if (modal.type === "transfer" || modal.type === "contribution") {
+      const n = amount("amount");
+      if (n === null || n <= 0) {
+        setError("Indiquez un montant supérieur à zéro.");
+        return;
+      }
+      const goal = modal.type === "contribution" ? modal.goal : modal.goal;
+      const from = v("from"),
+        to = v("to");
+      if (from === to || !from || !to) {
+        setError("Choisissez deux comptes différents.");
+        return;
+      }
+      const fromAcc = b.accounts.find((a) => a.id === from),
+        toAcc = b.accounts.find((a) => a.id === to);
+      if (goal && toAcc?.type !== "savings") {
+        setError("Choisissez un compte d’épargne comme destination.");
+        return;
+      }
+      if (goal && fromAcc?.type === "savings") {
+        setError("Choisissez un compte courant comme source pour réserver votre épargne.");
+        return;
+      }
+      const date = v("date");
+      if (goal && date > today) {
+        setError("Un versement vers un objectif doit être daté d’aujourd’hui ou d’avant.");
+        return;
+      }
+      if ([fromAcc, toAcc].some((a) => a && date < a.openingDate)) {
+        setError("La date doit suivre les soldes de référence des deux comptes.");
+        return;
+      }
+      const transferId = uid();
+      next.transactions.push(
+        {
+          id: uid(),
+          label: goal ? `Épargne · ${goal.name}` : "Virement entre comptes",
+          amount: -n,
+          date,
+          accountId: from,
+          category: "Virement",
+          note: v("note"),
+          transferId,
+        },
+        {
+          id: uid(),
+          label: goal ? `Épargne · ${goal.name}` : "Virement entre comptes",
+          amount: n,
+          date,
+          accountId: to,
+          category: "Virement",
+          note: v("note"),
+          transferId,
+          ...(goal ? { goalId: goal.id } : {}),
+        },
+      );
+      if (goal) next.goals = next.goals.map((g) => (g.id === goal.id ? { ...g, saved: g.saved + n } : g));
+      success = await save(next, "Virement enregistré dans Pécule.");
+    }
+    if (success) {
+      drafts?.clear(modalKey(modal));
+      if (modal.type === "rule" && modal.sourceTransactionId) {
+        open({ type: "transaction", item: next.transactions.find((t) => t.id === modal.sourceTransactionId) });
+        return;
+      }
+      if (modal.type === "transaction" && pendingCapture.current) {
+        const capture = pendingCapture.current;
+        pendingCapture.current = null;
+        open(capture);
+        requestAnimationFrame(() =>
+          dialogRef.current?.querySelector<HTMLInputElement>('input[name="amount"]')?.focus(),
+        );
+        return;
+      }
+      if (modal.type === "transaction" && modal.returnReviewDate) {
+        open({ type: "review", date: modal.returnReviewDate });
+        return;
+      }
+      if ((modal.type === "transaction" || modal.type === "account") && modal.returnAccountId)
+        open({
+          type: modal.type === "transaction" && modal.returnToBalance ? "balance" : "reconcile",
+          accountId: modal.returnAccountId,
+        });
+      else setModal(null);
+    }
+  }
+  if (!loaded) return <LaunchScreen />;
+  const capturing = modal?.type === "transaction" && !modal.item;
+  const notice = toast ? (
+    <BudgetNotice
+      key={toastSequence}
+      message={toast}
+      success={toastSuccess}
+      variant={toastKind}
+      receipt={toastReceipt}
+      onUndo={undoTransaction && (!modal || capturing) ? () => void undoLastOperation() : undefined}
+      undoDisabled={busy}
+      onClose={() => setToast("")}
+    />
+  ) : null;
+  return (
+    <GestureActions.Provider
+      value={{
+        operation: (transactionId) => open({ type: "operation-actions", transactionId }),
+        account: (accountId) => open({ type: "account-actions", accountId }),
+      }}
+    >
+      <div
+        className={`app-shell page-${page}`}
+        data-offline-ready={offline.prepared}
+        data-private={hidden}
+        data-depth-preview={previewOpen || undefined}
+      >
+        <LaunchTransition fromBoot={launchFromBoot} />
+        <aside aria-label="Navigation et espace personnel" className="sidebar" inert={!!modal}>
+          <Link
+            className="brand"
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("overview");
+            }}
+            aria-label="Pécule, accueil"
+          >
+            <Image unoptimized width={32} height={32} src="/favicon.svg" alt="" />
+            <span>
+              pecule<span className="brand-dot">.</span>
+            </span>
+          </Link>
+          <div className="workspace-label">
+            MON ESPACE PERSONNEL <LockKeyhole size={11} />
+          </div>
+          <nav aria-label="Navigation principale">
+            <NavigationIndicator active={page} />
+            {nav.map(({ id, label, icon: Icon }) => (
+              <button
+                type="button"
+                key={id}
+                onClick={() => navigate(id)}
+                className={`nav-item ${page === id ? "active" : ""}`}
+                aria-current={page === id ? "page" : undefined}
+              >
+                <Icon size={19} strokeWidth={1.7} />
+                <span>{label}</span>
+                {id === "goals" && b.goals.length > 0 && <span className="nav-count">{b.goals.length}</span>}
+              </button>
+            ))}
+          </nav>
+          <div className="sidebar-bottom">
+            <div className="sidebar-note">
+              <span className="note-orbit">
+                <Sparkles size={18} />
+              </span>
+              <strong>
+                Les petits pas font
+                <br />
+                les grands projets.
+              </strong>
+              <p>Un peu de clarté, chaque jour.</p>
+            </div>
+            <button
+              type="button"
+              className={`nav-item ${page === "settings" ? "active" : ""}`}
+              onClick={() => navigate("settings")}
+            >
+              <Settings2 size={19} />
+              <span>Réglages</span>
+            </button>
+            <div className="profile">
+              <span className="avatar">{(b.name || user?.name || "M").charAt(0).toUpperCase()}</span>
+              <span>
+                <strong>{demo ? "Mon espace démo" : b.name || "Mon espace"}</strong>
+                <small>
+                  <span className={`status-dot ${!online ? "offline" : ""}`} />
+                  {demo ? "Pour découvrir Pécule" : !online ? "Hors connexion" : "Espace personnel"}
+                </small>
+              </span>
+              <LockKeyhole size={14} />
+            </div>
+          </div>
+        </aside>
+        <div className="main-wrap" ref={depthSurface} inert={!!modal}>
+          <header className="topbar">
+            <div className="breadcrumb">
+              <span>Mon espace</span>
+              <ChevronRight size={12} />
+              <strong>{nav.find((n) => n.id === page)?.label ?? "Réglages"}</strong>
+            </div>
+            <Link
+              href="/"
+              className="mobile-brand"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("overview");
+              }}
+            >
+              pecule<span>.</span>
+            </Link>
+            <div className="topbar-actions">
+              <span className={`sync-state ${!online || loadError ? "warning" : ""}`}>
+                {busy ? (
+                  <LoaderCircle size={13} className="spin" />
+                ) : !online ? (
+                  <CloudOff size={14} />
+                ) : (
+                  <Cloud size={14} />
+                )}
+                <span>
+                  {!online
+                    ? "Hors connexion"
+                    : busy
+                      ? "Synchronisation…"
+                      : loadError
+                        ? "Connexion à vérifier"
+                        : offline.entries.length
+                          ? `${offline.entries.length} en attente`
+                          : !loaded
+                            ? "Chargement…"
+                            : demo
+                              ? "Démonstration"
+                              : "Synchronisé"}
+                </span>
+              </span>
+              <button
+                className="icon-button"
+                type="button"
+                title={hidden ? "Afficher les montants" : "Masquer les montants"}
+                aria-label={hidden ? "Afficher les montants" : "Masquer les montants"}
+                aria-pressed={hidden}
+                onClick={() => {
+                  setHidden(!hidden);
+                }}
+              >
+                <PrivacyShutter hidden={hidden} />
+              </button>
+              <button
+                type="button"
+                className="mobile-settings icon-button"
+                aria-label="Réglages"
+                onClick={() => navigate("settings")}
+              >
+                <Settings2 size={19} />
+              </button>
+            </div>
+          </header>
+          {!modal && conflictPanel}
+          <main ref={viewMotion} id="main-content" inert={!!conflict}>
+            {demo && (
+              <div className="demo-banner">
+                <span>
+                  <Sparkles size={14} />
+                  <span>
+                    Un aperçu de votre futur budget.<strong> Les données sont fictives.</strong>
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  disabled={!loaded}
+                  onClick={() => (hasBudget ? void load() : open({ type: "start" }))}
+                >
+                  {hasBudget ? "Retrouver mon budget" : "Créer mon budget"}
+                  <ArrowRight size={14} />
+                </button>
+              </div>
+            )}
+            {loadError && (
+              <div className="error-banner">
+                <CircleAlert size={17} />
+                <span>
+                  {sessionExpired
+                    ? "Votre session a expiré. Reconnectez-vous pour retrouver votre budget."
+                    : "Connexion à vérifier. Une nouvelle opération peut être conservée localement ; les autres modifications attendront une relecture du budget."}
+                </span>
+                {sessionExpired ? (
+                  <a href="/sign-in">Me reconnecter</a>
+                ) : (
+                  <button type="button" onClick={() => void load()}>
+                    Réessayer
+                  </button>
+                )}
+              </div>
+            )}
+            {!online && (
+              <div className="error-banner">
+                <CloudOff size={17} />
+                <span>
+                  Vous êtes hors connexion. Une nouvelle opération peut être conservée sur cet appareil ; les autres
+                  modifications nécessitent Internet.
+                </span>
+              </div>
+            )}
+            {page !== "overview" && (
+              <div className="page-heading">
+                <div>
+                  <h1>{pageTitles[page]}</h1>
+                  <p>
+                    {page === "plan"
+                      ? "Vos besoins, vos envies et votre épargne, au même endroit."
+                      : page === "transactions"
+                        ? "Les petits achats comme les grandes étapes."
+                        : page === "recurring"
+                          ? "Les rentrées et les sorties d’argent, sans les surprises."
+                          : page === "accounts"
+                            ? "Une vision claire de votre argent, où qu’il soit."
+                            : page === "goals"
+                              ? "Chaque petit pas vous rapproche de ce qui compte."
+                              : "Un budget qui s’adapte à votre quotidien."}
+                  </p>
+                </div>
+                {page !== "settings" && page !== "plan" && (
+                  <button
+                    type="button"
+                    className="primary"
+                    onClick={() =>
+                      open({
+                        type:
+                          page === "accounts"
+                            ? "account"
+                            : page === "goals"
+                              ? "goal"
+                              : page === "recurring"
+                                ? "rule"
+                                : "transaction",
+                      })
+                    }
+                  >
+                    <Plus size={16} />
+                    {page === "accounts"
+                      ? "Ajouter un compte"
+                      : page === "goals"
+                        ? "Créer un objectif"
+                        : page === "recurring"
+                          ? "Ajouter une récurrence"
+                          : "Nouvelle opération"}
+                  </button>
+                )}
+              </div>
+            )}
+            <PendingOperations
+              onEditingChange={setPendingEditing}
+              onInspect={(item) => open({ type: "transaction", item })}
+              entries={offline.entries}
+              errors={offline.errors}
+              error={offline.error}
+              budget={b}
+              hidden={hidden}
+              working={offline.working}
+              onRetry={() => void offline.flush()}
+              onChanged={() => void offline.refresh()}
+              onRemove={(entry) =>
+                open({
+                  type: "confirm",
+                  title: "Retirer cette saisie locale ?",
+                  message:
+                    "Cette opération en attente sera retirée de cet appareil. Aucune opération du serveur ne sera supprimée.",
+                  action: async () => {
+                    if (!(await removePendingOperations(entry.userId, [entry.id], [entry])))
+                      throw new Error("Cette saisie a changé dans un autre onglet. Relisez-la avant de la retirer.");
+                    await offline.refresh();
+                    return true;
+                  },
+                })
+              }
+            />
+            {page === "overview" && (
+              <ClarteDashboard
+                pending={offline.entries.length}
+                budget={b}
+                today={today}
+                hidden={hidden}
+                demo={demo}
+                online={online}
+                saving={busy}
+                loadError={loadError}
+                onWalletAccount={(a) => open({ type: "wallet-account", accountId: a.id })}
+                onAccountForecast={(a) => open({ type: "account-forecast", accountId: a.id })}
+                onTransfer={() => open({ type: "transfer" })}
+                onImport={() => open({ type: "import" })}
+                onToggleHidden={() => {
+                  setHidden(!hidden);
+                }}
+                onSettings={() => navigate("settings")}
+                onAdd={() => (b.accounts.length ? open({ type: "transaction" }) : open({ type: "account" }))}
+                onCalculate={() => open({ type: "calculation" })}
+                onAccounts={() => navigate("accounts")}
+                onAccount={(a) => {
+                  setAccountFilter(a.id);
+                  setTypeFilter("all");
+                  setMonth(today.slice(0, 7));
+                  navigate("transactions");
+                }}
+                onAdjustAccount={(a) => open({ type: "balance", accountId: a.id })}
+                onTransaction={(t) => open({ type: "transaction", item: t })}
+                onUpcoming={(t) => {
+                  const rule = b.rules.find((r) => r.id === t.ruleId);
+                  open(rule ? { type: "rule", item: rule } : { type: "transaction", item: t });
+                }}
+                onTransactions={() => {
+                  setMonth(today.slice(0, 7));
+                  navigate("transactions");
+                }}
+                onRecurring={() => navigate("recurring")}
+                onGoals={() => navigate("goals")}
+                onPlan={() => navigate("plan")}
+                onAddAccount={() => open({ type: "account" })}
+                capture={
+                  <CaptureRoutine
+                    budget={b}
+                    today={today}
+                    hidden={hidden}
+                    saving={busy}
+                    onAdd={() => (b.accounts.length ? open({ type: "transaction" }) : open({ type: "account" }))}
+                    onFavorite={openFavorite}
+                    onFavorites={() => open({ type: "favorites" })}
+                    onReview={() => open({ type: "review" })}
+                    onCatchup={() => open({ type: "review", date: catchupDate(b, today) })}
+                    onReminders={() => navigate("settings")}
+                  />
+                }
+                chart={<ForecastOutlook budget={b} today={today} hidden={hidden} />}
+              />
+            )}
+            {page === "plan" && (
+              <SpendingPlan
+                budget={b}
+                today={today}
+                month={month}
+                setMonth={setMonth}
+                hidden={hidden}
+                saving={busy}
+                onSave={save}
+                onOperations={() => {
+                  setMonth(today.slice(0, 7));
+                  navigate("transactions");
+                }}
+              />
+            )}
+            {page === "transactions" && (
+              <>
+                {accountFilter !== "all" && b.accounts.some((a) => a.id === accountFilter) && (
+                  <section className="account-ledger-context" aria-label="Compte sélectionné">
+                    <div>
+                      <span>{b.accounts.find((a) => a.id === accountFilter)?.name}</span>
+                      <strong>{m(accountBalance(b, accountFilter, today))}</strong>
+                      <small>Solde actuel</small>
+                    </div>
+                    <button type="button" className="text-button" onClick={() => setAccountFilter("all")}>
+                      Tous les comptes
+                    </button>
+                  </section>
+                )}
+                <section className="metric-strip">
+                  <div>
+                    <span>Revenus reçus · {monthName}</span>
+                    <strong className="positive">{m(monthIncome, true, true)}</strong>
+                  </div>
+                  <div>
+                    <span>Dépenses enregistrées · {monthName}</span>
+                    <strong>{m(monthSpent)}</strong>
+                  </div>
+                  <div>
+                    <span>Solde actuel des comptes courants</span>
+                    <strong>{m(o.total)}</strong>
+                  </div>
+                </section>
+                <section ref={operationMotion} className="card transactions-card">
+                  <div className="toolbar">
+                    <div className="search-input">
+                      <Search size={17} />
+                      <input
+                        aria-label="Rechercher une opération"
+                        placeholder="Rechercher…"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                      />
+                      {query && (
+                        <button
+                          type="button"
+                          className="icon-button"
+                          aria-label="Effacer la recherche"
+                          onClick={(e) => {
+                            setQuery("");
+                            e.currentTarget.parentElement?.querySelector("input")?.focus();
+                          }}
+                        >
+                          <X size={16} />
+                        </button>
+                      )}
+                    </div>
+                    {compact && (
+                      <button
+                        type="button"
+                        className="secondary operation-filter-trigger"
+                        aria-label={`Filtrer les opérations, ${filterCount} filtre${filterCount > 1 ? "s" : ""} actif${filterCount > 1 ? "s" : ""}`}
+                        aria-haspopup="dialog"
+                        onClick={() => open({ type: "filters" })}
+                      >
+                        <Funnel size={17} />
+                        Filtrer{filterCount > 0 && <span className="filter-count">{filterCount}</span>}
+                      </button>
+                    )}
+                  </div>
+                  <LedgerTools compact={compact}>
+                    <div className="toolbar-actions">
+                      <button type="button" className="secondary compact" onClick={() => open({ type: "import" })}>
+                        <Upload size={15} />
+                        {importDraft ? "Reprendre l’import" : "Importer"}
+                      </button>
+                      <button type="button" className="secondary compact" onClick={() => open({ type: "imports" })}>
+                        Mes imports
+                      </button>
+                      <button
+                        type="button"
+                        className="secondary compact"
+                        onClick={() => open({ type: "match-transfers" })}
+                      >
+                        Associer des virements
+                      </button>
+                      <button
+                        type="button"
+                        className="secondary compact"
+                        title="Exporter toutes les opérations en CSV"
+                        aria-label="Exporter en CSV"
+                        onClick={exportCSV}
+                      >
+                        <Download size={18} />
+                        <span>Exporter CSV</span>
+                      </button>
+                    </div>
+                  </LedgerTools>
+                  {!compact && (
+                    <OperationFilterControls values={filterValues} accounts={b.accounts} onChange={updateFilters} />
+                  )}
+                  {(query || typeFilter !== "all" || accountFilter !== "all" || month !== today.slice(0, 7)) && (
+                    <div className="active-filters" aria-label="Filtres actifs">
+                      {query && (
+                        <button type="button" onClick={() => setQuery("")} aria-label="Retirer le filtre de recherche">
+                          Recherche : {query}
+                          <X size={14} />
+                        </button>
+                      )}
+                      {typeFilter !== "all" && (
+                        <button
+                          type="button"
+                          onClick={() => setTypeFilter("all")}
+                          aria-label="Retirer le filtre de type"
+                        >
+                          {typeFilter === "expense" ? "Dépenses" : "Revenus"}
+                          <X size={14} />
+                        </button>
+                      )}
+                      {accountFilter !== "all" && (
+                        <button
+                          type="button"
+                          onClick={() => setAccountFilter("all")}
+                          aria-label="Retirer le filtre de compte"
+                        >
+                          {b.accounts.find((a) => a.id === accountFilter)?.name}
+                          <X size={14} />
+                        </button>
+                      )}
+                      {month !== today.slice(0, 7) && (
+                        <button
+                          type="button"
+                          onClick={() => setMonth(today.slice(0, 7))}
+                          aria-label="Revenir au mois actuel"
+                        >
+                          {parseDate(month + "-01").toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}
+                          <X size={14} />
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        className="text-button"
+                        onClick={() => {
+                          setQuery("");
+                          setTypeFilter("all");
+                          setAccountFilter("all");
+                          setMonth(today.slice(0, 7));
+                        }}
+                      >
+                        Réinitialiser les filtres
+                      </button>
+                    </div>
+                  )}
+                  {(() => {
+                    const items = [...b.transactions]
+                      .filter(
+                        (t) =>
+                          t.date.startsWith(month) &&
+                          (accountFilter === "all" || t.accountId === accountFilter) &&
+                          (typeFilter === "all" || (typeFilter === "expense" ? t.amount < 0 : t.amount > 0)) &&
+                          (t.label + " " + t.category + " " + t.note)
+                            .toLocaleLowerCase("fr")
+                            .includes(query.toLocaleLowerCase("fr")),
+                      )
+                      .sort((a, b) => b.date.localeCompare(a.date));
+                    return items.length ? (
+                      <TransactionSelection
+                        key={JSON.stringify([query, typeFilter, accountFilter, month, transactionEpoch])}
+                        items={items}
+                        renderRow={(t) => transactionRows([t], true)}
+                        formatAmount={(n) => m(n, true, true)}
+                        dateLabel={(date) => dateLabel(date, today) + (date > today ? " · À venir" : "")}
+                        onBulk={(ids) => open({ type: "bulk", ids })}
+                      />
+                    ) : (
+                      <Empty
+                        icon={Search}
+                        title="Rien pour le moment"
+                        description="Aucune opération ne correspond à cette période ou à vos filtres."
+                        action={
+                          <button
+                            type="button"
+                            className="text-button"
+                            onClick={() =>
+                              b.accounts.length ? open({ type: "transaction" }) : open({ type: "account" })
+                            }
+                          >
+                            Ajouter une opération <Plus size={14} />
+                          </button>
+                        }
+                      />
+                    );
+                  })()}
+                </section>
+                <p className="metric-note">
+                  Totaux des opérations enregistrées pour la période et les filtres choisis, hors virements et
+                  opérations futures.
+                </p>
+                <SpendingInsights key={month} budget={b} month={month} today={today} hidden={hidden} />
+              </>
+            )}
+            {page === "recurring" && (
+              <>
+                <SubscriptionOverview
+                  budget={b}
+                  today={today}
+                  hidden={hidden}
+                  onEdit={(item) => open({ type: "rule", item })}
+                  onCreate={(item) => {
+                    const proposal = transactionRecurrence(item, b, today);
+                    if (proposal) open({ type: "rule", proposal, sourceTransactionId: item.id });
+                    else setToast("Ouvrez cette opération pour vérifier ses données avant de prévoir la suite.");
+                  }}
+                />
+                <div className="recurrence-filters" role="group" aria-label="État des récurrences">
+                  {[
+                    { id: "all", label: "Toutes" },
+                    { id: "active", label: "Actives" },
+                    { id: "paused", label: "En pause" },
+                    { id: "ended", label: "Terminées" },
+                  ].map((f) => (
+                    <button
+                      type="button"
+                      key={f.id}
+                      aria-pressed={ruleFilter === f.id}
+                      onClick={() => setRuleFilter(f.id)}
+                    >
+                      {f.label}
+                      <span>{b.rules.filter((r) => f.id === "all" || ruleState(r) === f.id).length}</span>
+                    </button>
+                  ))}
+                </div>
+                <RecurringSuggestions
+                  budget={b}
+                  today={today}
+                  hidden={hidden}
+                  onReview={(suggestion) => open({ type: "rule", proposal: suggestion.rule })}
+                />
+                <AnimatedDetails className="recurrence-help">
+                  <summary>
+                    <CalendarDays size={18} />
+                    Dates et jours ouvrés
+                    <ChevronDown size={17} />
+                  </summary>
+                  <p>
+                    Choisissez une date fixe ou le dernier jour du mois hors week-end et jours fériés. Les opérations
+                    sont ajoutées à leur échéance, à partir de la date choisie.
+                  </p>
+                </AnimatedDetails>
+                {[true, false].map((income) => {
+                  const allRules = b.rules.filter((r) => r.amount > 0 === income),
+                    rules = allRules.filter((r) => ruleFilter === "all" || ruleState(r) === ruleFilter);
+                  return (
+                    <section className="recurring-section" key={String(income)}>
+                      <div className="section-heading">
+                        <h2>{income ? "Les rentrées d’argent" : "Les dépenses récurrentes"}</h2>
+                        <span>
+                          {rules.length} récurrence{rules.length > 1 ? "s" : ""}
+                        </span>
+                      </div>
+                      {rules.length ? (
+                        <div ref={recurrenceMotion} className="rule-grid">
+                          {rules.map((r) => {
+                            const next = futureTransactions(
+                              { ...b, rules: [r], transactions: [] },
+                              shiftDate(today, 1),
+                              shiftDate(today, 370),
+                            )[0];
+                            return (
+                              <RecurringItem
+                                key={r.id}
+                                rule={r}
+                                state={ruleState(r)}
+                                accountName={b.accounts.find((a) => a.id === r.accountId)?.name}
+                                next={next}
+                                saving={busy}
+                                formatMoney={(n) => m(n, true, true)}
+                                onEdit={() => open({ type: "rule", item: r })}
+                                onToggle={() => {
+                                  void save(
+                                    {
+                                      ...b,
+                                      rules: b.rules.map((x) => (x.id === r.id ? { ...x, active: !x.active } : x)),
+                                    },
+                                    r.active ? "Récurrence mise en pause." : "Récurrence réactivée.",
+                                  );
+                                }}
+                                onDelete={() => remove("rule", r.id)}
+                              />
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="card">
+                          <Empty
+                            icon={income ? ArrowDownLeft : Repeat2}
+                            title={
+                              allRules.length
+                                ? "Aucune récurrence dans cet état"
+                                : income
+                                  ? "Prévoyez votre prochain revenu"
+                                  : "Anticipez les sorties d’argent"
+                            }
+                            description={
+                              allRules.length
+                                ? "Choisissez Toutes pour retrouver vos récurrences."
+                                : income
+                                  ? "Salaire, allocation, revenu complémentaire : chacun a son rythme."
+                                  : "Loyer, abonnement, assurance… gardez une longueur d’avance."
+                            }
+                            action={
+                              <button
+                                type="button"
+                                className="text-button"
+                                onClick={() => (b.accounts.length ? open({ type: "rule" }) : open({ type: "account" }))}
+                              >
+                                Ajouter une récurrence <Plus size={14} />
+                              </button>
+                            }
+                          />
+                        </div>
+                      )}
+                    </section>
+                  );
+                })}
+              </>
+            )}
+            {page === "accounts" && (
+              <>
+                <section className="metric-strip">
+                  <div>
+                    <span>Votre argent au total</span>
+                    <strong>{m(o.total + o.saved)}</strong>
+                  </div>
+                  <div>
+                    <span>Disponible sur comptes courants</span>
+                    <strong>{m(o.total)}</strong>
+                  </div>
+                  <div>
+                    <span>À l’abri sur l’épargne</span>
+                    <strong>{m(o.saved)}</strong>
+                  </div>
+                </section>
+                <div className="section-heading">
+                  <h2>Vos comptes, simplement</h2>
+                  <button
+                    type="button"
+                    className="secondary compact"
+                    onClick={() =>
+                      b.accounts.length >= 2
+                        ? open({ type: "transfer" })
+                        : setToast("Ajoutez un deuxième compte pour enregistrer un virement.")
+                    }
+                  >
+                    <ArrowLeftRight size={15} />
+                    Virement entre comptes
+                  </button>
+                </div>
+                <div className="account-grid">
+                  {b.accounts.map((a) => (
+                    <article className="card account-card" key={a.id}>
+                      <div className="account-card-top">
+                        <span
+                          className="bank-icon large"
+                          style={{ "--item-color": walletColor(a.color) } as CSSProperties}
+                        >
+                          <Wallet size={24} />
+                        </span>
+                        <div className="card-actions">
+                          <button
+                            type="button"
+                            className="secondary compact record-edit"
+                            aria-label={`Modifier ${a.name}`}
+                            onClick={() => open({ type: "account", item: a })}
+                          >
+                            <Pencil size={15} />
+                            Modifier
+                          </button>
+                        </div>
+                      </div>
+                      <span className="account-kind">{accountKind(a)}</span>
+                      <h3>{a.name}</h3>
+                      <p>{a.bank || "Compte personnel"}</p>
+                      <div className="account-balance">{m(accountBalance(b, a.id, today))}</div>
+                      <AccountVerification
+                        budget={b}
+                        accountId={a.id}
+                        today={today}
+                        saving={busy}
+                        onVerify={() => open({ type: "reconcile", accountId: a.id })}
+                      />
+                      <AccountActivity
+                        budget={b}
+                        accountId={a.id}
+                        today={today}
+                        hidden={hidden}
+                        onTransaction={(t) => open({ type: "transaction", item: t })}
+                        onUpcoming={(t) => {
+                          const rule = b.rules.find((r) => r.id === t.ruleId);
+                          open(rule ? { type: "rule", item: rule } : { type: "transaction", item: t });
+                        }}
+                        onAll={() => {
+                          setAccountFilter(a.id);
+                          setTypeFilter("all");
+                          setMonth(today.slice(0, 7));
+                          navigate("transactions");
+                        }}
+                      />
+                      <button
+                        type="button"
+                        className="secondary full-width balance-adjust-trigger"
+                        aria-label={`Ajuster le solde de ${a.name}`}
+                        disabled={busy}
+                        onClick={() => open({ type: "balance", accountId: a.id })}
+                      >
+                        <Pencil size={15} />
+                        Ajuster le solde
+                      </button>
+                      <div className="record-danger">
+                        <button
+                          type="button"
+                          className="destructive-action"
+                          aria-label={`Supprimer ${a.name}`}
+                          onClick={() => remove("account", a.id)}
+                        >
+                          <Trash2 size={15} />
+                          Supprimer ce compte
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                  <button className="add-tile" type="button" onClick={() => open({ type: "account" })}>
+                    <span>
+                      <Plus size={23} />
+                    </span>
+                    <strong>Un compte de plus ?</strong>
+                    <small>
+                      Courant, épargne ou espèces.
+                      <br />À vous de choisir.
+                    </small>
+                  </button>
+                </div>
+                <div className="info-callout subtle">
+                  <LockKeyhole size={19} />
+                  <div>
+                    <strong>Chacun ses comptes, chacun son espace.</strong>
+                    <p>
+                      Vos comptes sont liés à votre connexion personnelle. Ajouter un compte ici ne crée pas de
+                      connexion avec votre banque.
+                    </p>
+                  </div>
+                </div>
+              </>
+            )}
+            {page === "goals" && (
+              <>
+                <div className="goal-intro">
+                  <div>
+                    <h2>
+                      {m(
+                        b.goals.reduce((s, g) => s + g.saved, 0),
+                        false,
+                      )}{" "}
+                      <span>déjà consacrés à vos projets.</span>
+                    </h2>
+                    <p>Le suivi de vos objectifs est indépendant du solde de vos livrets.</p>
+                  </div>
+                  <div className="goal-intro-icon">
+                    <Sparkles size={32} strokeWidth={1.2} />
+                  </div>
+                </div>
+                <div className="goal-grid">
+                  {b.goals.map((g) => {
+                    const progress = Math.min(100, Math.max(0, (g.saved / g.target) * 100));
+                    return (
+                      <article className="card goal-card" key={g.id}>
+                        <div className="goal-card-top">
+                          <span className="goal-icon" style={{ "--item-color": walletColor(g.color) } as CSSProperties}>
+                            <GoalIllustration icon={g.icon} progress={hidden ? 0 : progress} />
+                          </span>
+                          <div className="card-actions">
+                            <button
+                              type="button"
+                              className="secondary compact record-edit"
+                              aria-label={`Modifier ${g.name}`}
+                              onClick={() => open({ type: "goal", item: g })}
+                            >
+                              <Pencil size={15} />
+                              Modifier
+                            </button>
+                          </div>
+                        </div>
+                        <h3>{g.name}</h3>
+                        <p>
+                          {g.deadline
+                            ? `À votre rythme, jusqu’au ${shortDate(g.deadline)} ${g.deadline.slice(0, 4)}`
+                            : "Un projet qui avance à votre rythme"}
+                        </p>
+                        <div className="goal-amount">
+                          <strong>{m(g.saved, false)}</strong>
+                          <span>sur {m(g.target, false)}</span>
+                        </div>
+                        <div
+                          className="progress-track"
+                          role="progressbar"
+                          aria-label={`Progression de ${g.name}`}
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                          aria-valuenow={hidden ? undefined : Math.round(progress)}
+                          aria-valuetext={hidden ? "Progression masquée" : undefined}
+                        >
+                          <span
+                            style={
+                              {
+                                width: hidden ? "0%" : progress + "%",
+                                "--item-color": walletColor(g.color),
+                              } as CSSProperties
+                            }
+                          />
+                        </div>
+                        <p className="goal-remaining">
+                          {!hidden && g.saved >= g.target ? (
+                            "Objectif atteint"
+                          ) : (
+                            <>
+                              <strong>{m(Math.max(0, g.target - g.saved), false)}</strong> restent à mettre de côté
+                            </>
+                          )}
+                        </p>
+                        <div className="goal-progress-label">
+                          <span>{hidden ? "Progression masquée" : `${Math.round(progress)} % du chemin`}</span>
+                          <strong>{m(g.monthly, false)} / mois réservés</strong>
+                        </div>
+                        <button
+                          type="button"
+                          className="secondary full-width"
+                          onClick={() => open({ type: "contribution", goal: g })}
+                        >
+                          <Plus size={15} />
+                          Enregistrer un versement
+                        </button>
+                        <div className="record-danger">
+                          <button
+                            type="button"
+                            className="destructive-action"
+                            aria-label={`Supprimer ${g.name}`}
+                            onClick={() => remove("goal", g.id)}
+                          >
+                            <Trash2 size={15} />
+                            Supprimer cet objectif
+                          </button>
+                        </div>
+                      </article>
+                    );
+                  })}
+                  <button className="add-tile" type="button" onClick={() => open({ type: "goal" })}>
+                    <span>
+                      <Plus size={23} />
+                    </span>
+                    <strong>Et votre prochain projet ?</strong>
+                    <small>
+                      Une envie, un voyage ou
+                      <br />
+                      simplement l’esprit tranquille.
+                    </small>
+                  </button>
+                </div>
+                <div className="info-callout subtle">
+                  <Info size={19} />
+                  <div>
+                    <strong>Votre épargne reste un choix.</strong>
+                    <p>
+                      Choisissez votre objectif et votre réserve mensuelle. Cette réserve réduit le disponible sans
+                      déplacer d’argent. Un versement enregistré entre un compte courant et un compte d’épargne réduit
+                      la réserve restante du mois.
+                    </p>
+                  </div>
+                </div>
+              </>
+            )}
+            {page === "settings" && (
+              <div key={demo ? "demo-settings" : "personal-settings"} className="settings-workspace">
+                <ReminderSettings demo={demo} />
+                <section className="card settings-panel offline-preparation">
+                  <h3>Saisie hors connexion</h3>
+                  <p>
+                    {demo
+                      ? "Connectez-vous et ouvrez votre budget en ligne pour préparer cet appareil."
+                      : offline.prepared
+                        ? "La saisie locale est prête sur cet appareil."
+                        : "La préparation se fait pendant une ouverture en ligne. Gardez Pécule ouvert tant qu’elle n’est pas terminée."}
+                  </p>
+                  <p className="field-hint">
+                    Seuls les noms des comptes et les opérations en attente sont conservés localement. Ouvrez Pécule
+                    avec le même compte pour synchroniser ; une déconnexion verrouille ce formulaire sans supprimer les
+                    saisies en attente.
+                  </p>
+                  <a className="text-button" href="/offline.html">
+                    Ouvrir la saisie locale
+                  </a>
+                </section>
+                <AnimatedDetails className="card gesture-help">
+                  <summary>
+                    Gestes et raccourcis iPhone
+                    <ChevronDown size={17} />
+                  </summary>
+                  <ul>
+                    <li>Balayez le contenu de l’accueil pour changer d’onglet. Les bords restent réservés à iOS.</li>
+                    <li>
+                      Glissez le + vers le haut pour une dépense. Maintenez-le pour choisir Dépense, Revenu ou Virement.
+                    </li>
+                    <li>Maintenez une opération pour son aperçu, ou balayez-la vers la gauche pour ses actions.</li>
+                    <li>Maintenez une carte de compte pour ses raccourcis.</li>
+                    <li>Tirez l’en-tête d’un panneau vers le bas pour le fermer. Votre brouillon reste conservé.</li>
+                    <li>
+                      Touchez l’onglet actif du menu pour remonter. Sur Opérations, deux appuis rapprochés ouvrent la
+                      recherche.
+                    </li>
+                  </ul>
+                  <p className="field-hint">
+                    Les boutons restent disponibles. Aucune écriture n’est enregistrée par un geste seul.
+                  </p>
+                </AnimatedDetails>
+                <nav className="settings-index" aria-label="Rubriques des réglages">
+                  <a href="#settings-appearance">Apparence</a>
+                  <a href="#settings-budget">Budget</a>
+                  <a href="#settings-data">Données</a>
+                  <a href="#settings-account">Compte</a>
+                </nav>
+                <section className="settings-group" id="settings-appearance" aria-labelledby="appearance-title">
+                  <header>
+                    <h2 id="appearance-title">Apparence et application</h2>
+                    <p>Votre confort de lecture, sur cet appareil.</p>
+                  </header>
+                  <div className="settings-grid">
+                    <ThemePicker
+                      onSaved={() => setToast("Votre apparence a été mise à jour sur cet appareil.", true, "settings")}
+                    />
+                    <section className="card settings-card">
+                      <span className="settings-icon">
+                        <Smartphone size={21} />
+                      </span>
+                      <h3>Toujours à portée de main.</h3>
+                      <p>Retrouvez Pécule sur votre écran d’accueil, comme une application.</p>
+                      <button className="secondary full-width" type="button" onClick={() => open({ type: "install" })}>
+                        Installer Pécule <ArrowUpRight size={15} />
+                      </button>
+                    </section>
+                  </div>
+                </section>
+                <section className="settings-group" id="settings-budget" aria-labelledby="budget-title">
+                  <header>
+                    <h2 id="budget-title">Votre budget au quotidien</h2>
+                    <p>Calcul du disponible, seuils et catégories.</p>
+                  </header>
+                  <div className="settings-grid">
+                    <section className="card settings-card">
+                      <h3>Mon quotidien</h3>
+                      <p>Quelques repères pour un budget qui vous ressemble.</p>
+                      <ValidatedForm
+                        draftKey="settings:preferences"
+                        onSubmit={async (e) => {
+                          e.preventDefault();
+                          const f = new FormData(e.currentTarget),
+                            reserve = parseAmount(String(f.get("reserve")));
+                          if (reserve === null || reserve < 0) {
+                            setError("La réserve doit être un montant positif ou nul.");
+                            return;
+                          }
+                          if (
+                            await save({
+                              ...b,
+                              name: String(f.get("name")).trim(),
+                              settings: {
+                                ...b.settings,
+                                horizon: f.get("horizon") as Budget["settings"]["horizon"],
+                                reserve,
+                                holidayCalendar: f.get("holidays") as Budget["settings"]["holidayCalendar"],
+                              },
+                            })
+                          )
+                            drafts?.clear("settings:preferences");
+                        }}
+                      >
+                        <FormField label="Votre prénom">
+                          <input name="name" maxLength={60} defaultValue={b.name} />
+                        </FormField>
+                        <FormField
+                          label="Calculer mon disponible jusqu’à…"
+                          hint="Sans salaire prévu, Pécule utilise la fin du mois."
+                        >
+                          <select name="horizon" defaultValue={b.settings.horizon}>
+                            <option value="salary">Mon prochain salaire</option>
+                            <option value="month">La fin du mois</option>
+                          </select>
+                        </FormField>
+                        <FormField
+                          label="Réserve complémentaire pour la période"
+                          hint="S’ajoute aux réserves mensuelles de vos objectifs. Ce montant est retiré du disponible sans mouvement bancaire."
+                        >
+                          <span className="amount-input">
+                            <input
+                              type="number"
+                              name="reserve"
+                              min="0"
+                              max="1000000000"
+                              step="0.01"
+                              defaultValue={inputAmount(b.settings.reserve)}
+                            />
+                            <span>€</span>
+                          </span>
+                        </FormField>
+                        <FormField
+                          label="Calendrier par défaut des nouvelles récurrences"
+                          hint="France : jours fériés nationaux, hors spécificités régionales. Chaque récurrence garde son propre calendrier."
+                        >
+                          <select name="holidays" defaultValue={b.settings.holidayCalendar}>
+                            <option value="FR">France · lundi à vendredi, hors jours fériés</option>
+                            <option value="none">Lundi à vendredi · sans jours fériés</option>
+                          </select>
+                        </FormField>
+                        {error && <ErrorMessage>{error}</ErrorMessage>}
+                        <button className="primary" type="submit" disabled={busy}>
+                          {saving ? <LoaderCircle size={16} className="spin" /> : <Check size={16} />}Enregistrer mes
+                          préférences
+                        </button>
+                      </ValidatedForm>
+                    </section>
+                    <BudgetPreferences
+                      key={JSON.stringify(b.settings)}
+                      budget={b}
+                      saving={busy}
+                      hidden={hidden}
+                      save={save}
+                      confirm={(title, message, action) => open({ type: "confirm", title, message, action })}
+                    />
+                  </div>
+                </section>
+                <section className="settings-group" id="settings-data" aria-labelledby="data-title">
+                  <header>
+                    <h2 id="data-title">Vos données</h2>
+                    <p>Sauvegarder, exporter et retrouver votre budget.</p>
+                  </header>
+                  <section className="card settings-card">
+                    <h3>Vos données vous appartiennent.</h3>
+                    <p>
+                      {demo
+                        ? "Vous explorez la démonstration. Aucune donnée de cette démo n’est enregistrée sur votre compte."
+                        : "Vos données sont enregistrées sur votre compte et synchronisées entre vos appareils. Elles ne sont pas partagées avec les autres utilisateurs."}
+                    </p>
+                    <div className="settings-links">
+                      {demo ? (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            downloadFile(
+                              JSON.stringify(b, null, 2),
+                              `pecule-sauvegarde-${today}.json`,
+                              "application/json",
+                            )
+                          }
+                        >
+                          <Download size={16} />
+                          Télécharger une sauvegarde JSON
+                        </button>
+                      ) : (
+                        <a href="/api/budget/export" download>
+                          <Download size={16} />
+                          Télécharger une sauvegarde JSON
+                        </a>
+                      )}
+                      <button type="button" onClick={exportCSV}>
+                        <Download size={16} />
+                        Exporter mes opérations en CSV
+                      </button>
+                      <label className="restore-backup">
+                        <Upload size={16} />
+                        Restaurer une sauvegarde JSON
+                        <input
+                          type="file"
+                          accept=".json,application/json"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            e.target.value = "";
+                            if (file.size > 4000000) {
+                              setToast("La sauvegarde dépasse 4 Mo.");
+                              return;
+                            }
+                            try {
+                              const { budgetSchema } = await import("../lib/validation");
+                              const result = budgetSchema.safeParse(JSON.parse(await file.text()));
+                              if (!result.success) throw new Error("La sauvegarde Pécule est invalide.");
+                              const restored = result.data;
+                              open({
+                                type: "confirm",
+                                title: "Restaurer cette sauvegarde ?",
+                                message:
+                                  "Cette sauvegarde remplacera votre budget actuel. Téléchargez d’abord votre budget si vous souhaitez le conserver.",
+                                action: () => save(restored, "Votre sauvegarde a été restaurée."),
+                              });
+                            } catch (err) {
+                              setToast(err instanceof Error ? err.message : "Fichier illisible.");
+                            }
+                          }}
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          drafts?.clearAll();
+                          setBudget(demoBudget(today));
+                          setDemo(true);
+                          navigate("overview");
+                        }}
+                      >
+                        <Sparkles size={16} />
+                        Explorer la démonstration
+                      </button>
+                      {demo ? (
+                        <button type="button" onClick={() => (hasBudget ? void load() : open({ type: "start" }))}>
+                          <ArrowRight size={16} />
+                          {hasBudget ? "Retrouver mon budget" : "Créer mon budget personnel"}
+                        </button>
+                      ) : null}
+                    </div>
+                  </section>
+                </section>
+                <section className="settings-group" id="settings-account" aria-labelledby="account-title">
+                  <header>
+                    <h2 id="account-title">Votre compte</h2>
+                    <p>{user ? "Votre accès personnel à Pécule." : "Vous explorez Pécule sans connexion."}</p>
+                  </header>
+                  <div className="settings-grid">
+                    {user ? (
+                      <>
+                        <section className="card settings-card">
+                          <h3>Connexion personnelle</h3>
+                          <p className="account-email">{user.email}</p>
+                          <a className="secondary" href="/sign-out" target="_top">
+                            <LogOut size={16} />
+                            Me déconnecter
+                          </a>
+                        </section>
+                        <GoogleConnection email={user.email} />
+                      </>
+                    ) : (
+                      <section className="card settings-card">
+                        <h3>Un espace pour votre budget</h3>
+                        <p>Connectez-vous pour retrouver vos données sur vos appareils.</p>
+                        <a className="secondary" href="/sign-in">
+                          Me connecter <ArrowRight size={15} />
+                        </a>
+                      </section>
+                    )}
+                  </div>
+                </section>
+                <div className="settings-brand">
+                  <Image unoptimized width={32} height={32} src="/favicon.svg" alt="" />
+                  <span>
+                    Pécule <small>Votre argent, l’esprit léger. · v1.0</small>
+                  </span>
+                </div>
+              </div>
+            )}
+          </main>
+        </div>
+        <div className="floating-actions" inert={!!modal}>
+          <button
+            type="button"
+            className="floating-action-trigger"
+            aria-label="Ouvrir les actions"
+            aria-haspopup="dialog"
+            aria-expanded={modal?.type === "actions"}
+            onClick={() => open({ type: "actions" })}
+          >
+            <WalletActionIcon open={modal?.type === "actions"} />
+            <span>Ajouter</span>
+          </button>
+        </div>
+        <MobileDock expanded={!!modal}>
+          <nav className="mobile-nav floating-nav" aria-label="Navigation mobile">
+            <NavigationIndicator active={page} />
+            {nav
+              .filter((item) => ["overview", "transactions", "accounts"].includes(item.id))
+              .map(({ id, short, icon: Icon }) => (
+                <button
+                  type="button"
+                  key={id}
+                  aria-label={short}
+                  className={page === id ? "active" : ""}
+                  aria-current={page === id ? "page" : undefined}
+                  onClick={(e) => mobileNavigate(id, e.timeStamp)}
+                >
+                  <Icon size={21} strokeWidth={1.7} />
+                  <span>{short}</span>
+                </button>
+              ))}
+            <button
+              type="button"
+              className={["recurring", "goals", "plan", "settings"].includes(page) ? "active" : ""}
+              aria-label="Plus"
+              aria-haspopup="dialog"
+              aria-expanded={modal?.type === "navigation"}
+              onClick={() => open({ type: "navigation" })}
+            >
+              <MoreHorizontal size={21} />
+              <span>Plus</span>
+            </button>
+          </nav>
+          <QuickAddGesture
+            disabled={saving || !!modal}
+            onChoose={(kind) =>
+              open(kind === "transfer" ? { type: "transfer" } : { type: "transaction", direction: kind })
+            }
+          />
+        </MobileDock>
+        {!capturing && notice}
+        {modal && (
+          <div
+            className={`modal-backdrop modal-motion ${previewOpen ? "context-preview-backdrop" : ""}`}
+            ref={backdropRef}
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget && !saving) setModal(null);
+            }}
+          >
+            <div className="modal-shade" ref={shadeRef} aria-hidden="true" />
+            <div
+              className={`modal ${previewOpen ? "context-preview-modal" : ""} ${["import", "reconcile", "bulk", "match-transfers"].includes(modal.type) ? "wide" : ""} ${modal.type === "actions" || modal.type === "navigation" ? "actions-modal" : ""} ${modal.type === "transaction" && !modal.item?.transferId ? "operation-modal" : ""} ${modal.type === "transaction" && !modal.item ? "capture-modal" : ""} ${modal.type === "wallet-account" ? "wallet-account-modal" : ""}`}
+              style={
+                modal.type === "wallet-account"
+                  ? (walletSurfaceStyles(
+                      b.accounts.find((a) => a.id === modal.accountId)?.color ?? "#335cff",
+                    ) as CSSProperties)
+                  : undefined
+              }
+              ref={dialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="dialog-title"
+            >
+              <div className="modal-heading" {...sheetGesture} data-panel-gesture>
+                <div>
+                  <h2 id="dialog-title" className={previewOpen ? "sr-only" : undefined}>
+                    {modalTitle}
+                  </h2>
+                </div>
+                {capturing && (
+                  <button
+                    type="button"
+                    className="icon-button capture-keyboard-dismiss"
+                    aria-label="Masquer le clavier"
+                    title="Masquer le clavier"
+                    onPointerDown={(event) => event.preventDefault()}
+                    onClick={() => {
+                      if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+                    }}
+                  >
+                    <Keyboard size={19} />
+                    <ChevronDown size={12} />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="icon-button"
+                  aria-label="Fermer"
+                  disabled={busy}
+                  onClick={() => setModal(null)}
+                >
+                  {modal.type === "wallet-account" ? <ArrowLeft size={21} /> : <X size={21} />}
+                </button>
+              </div>
+              {conflictPanel}
+              <div className="modal-content" inert={!!conflict}>
+                {modal.type === "operation-actions" &&
+                  (() => {
+                    const t = b.transactions.find((t) => t.id === modal.transactionId);
+                    if (!t) return <p>Cette opération n’est plus disponible.</p>;
+                    const linked = b.rules.find((r) => r.id === t.ruleId),
+                      proposal = transactionRecurrence(t, b, today);
+                    return (
+                      <div className="gesture-preview">
+                        <div className="gesture-operation-preview">
+                          <div className="gesture-preview-head">
+                            <MerchantIcon
+                              label={t.label}
+                              merchantId={t.merchantId}
+                              customIconUrl={t.customIconUrl}
+                              fallback={<CategoryIcon category={t.category} />}
+                            />
+                            <span>{shortDate(t.date)}</span>
+                          </div>
+                          <h3>{t.label}</h3>
+                          <strong>{m(t.amount, true, true)}</strong>
+                          <dl className="gesture-preview-context">
+                            <div>
+                              <dt>Compte</dt>
+                              <dd>{b.accounts.find((a) => a.id === t.accountId)?.name}</dd>
+                            </div>
+                            <div>
+                              <dt>Catégorie</dt>
+                              <dd>{t.category}</dd>
+                            </div>
+                          </dl>
+                        </div>
+                        <div className="gesture-context-actions">
+                          <button type="button" disabled={busy} onClick={() => open({ type: "transaction", item: t })}>
+                            <Pencil size={18} />
+                            Modifier
+                          </button>
+                          {!t.transferId && (
+                            <button
+                              type="button"
+                              disabled={busy}
+                              onClick={() =>
+                                open({
+                                  type: "transaction",
+                                  sequence: Date.now(),
+                                  direction: t.amount > 0 ? "income" : "expense",
+                                  accountId: t.accountId,
+                                  initialDate: today,
+                                  initialAmount: Math.abs(t.amount),
+                                  initialLabel: t.label,
+                                  initialCategory: t.category,
+                                  initialMerchantId: t.merchantId,
+                                  initialCustomIconUrl: t.customIconUrl,
+                                  initialNote: t.note,
+                                })
+                              }
+                            >
+                              <Plus size={18} />
+                              Dupliquer
+                            </button>
+                          )}
+                          {(linked || proposal) && (
+                            <button
+                              type="button"
+                              disabled={busy}
+                              onClick={() =>
+                                open(
+                                  linked
+                                    ? { type: "rule", item: linked }
+                                    : { type: "rule", proposal: proposal!, sourceTransactionId: t.id },
+                                )
+                              }
+                            >
+                              <Repeat2 size={18} />
+                              {linked ? "Modifier la récurrence associée" : "Créer une récurrence"}
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            className="destructive-action"
+                            disabled={busy}
+                            onClick={() => remove("transaction", t.id)}
+                          >
+                            <Trash2 size={18} />
+                            {t.transferId ? "Supprimer ce virement" : "Supprimer cette opération"}
+                          </button>
+                        </div>
+                        <p className="field-hint">
+                          {t.transferId
+                            ? "Les deux écritures de ce virement sont liées. La suppression demandera confirmation."
+                            : "La duplication ouvre une nouvelle saisie à vérifier avant enregistrement."}
+                        </p>
+                      </div>
+                    );
+                  })()}
+                {modal.type === "account-forecast" && (
+                  <ForecastOutlook
+                    key={modal.accountId}
+                    budget={b}
+                    today={today}
+                    hidden={hidden}
+                    initialAccountId={modal.accountId}
+                  />
+                )}
+                {modal.type === "account-actions" &&
+                  (() => {
+                    const a = b.accounts.find((a) => a.id === modal.accountId);
+                    return a ? (
+                      <div className="gesture-preview">
+                        <div className="gesture-account-preview" style={walletSurfaceStyles(a.color) as CSSProperties}>
+                          <Wallet size={23} />
+                          <h3>{a.name}</h3>
+                          <strong>{m(accountBalance(b, a.id, today))}</strong>
+                          <p>{a.bank || "Compte personnel"}</p>
+                        </div>
+                        <div className="gesture-context-actions">
+                          <button type="button" onClick={() => open({ type: "wallet-account", accountId: a.id })}>
+                            <Wallet size={18} />
+                            Voir le compte
+                          </button>
+                          <button
+                            type="button"
+                            disabled={busy}
+                            onClick={() => open({ type: "transaction", accountId: a.id, direction: "expense" })}
+                          >
+                            <Plus size={18} />
+                            Ajouter une dépense
+                          </button>
+                          <button
+                            type="button"
+                            disabled={saving || b.accounts.length < 2}
+                            onClick={() => open({ type: "transfer", accountId: a.id })}
+                          >
+                            <ArrowLeftRight size={18} />
+                            Virement
+                          </button>
+                          <button
+                            type="button"
+                            disabled={busy}
+                            onClick={() => open({ type: "balance", accountId: a.id })}
+                          >
+                            <Pencil size={18} />
+                            Ajuster le solde
+                          </button>
+                          <button
+                            type="button"
+                            disabled={busy}
+                            onClick={() => open({ type: "import", accountId: a.id })}
+                          >
+                            <Upload size={18} />
+                            Importer
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p>Ce compte n’est plus disponible.</p>
+                    );
+                  })()}
+                {modal.type === "wallet-account" &&
+                  (() => {
+                    const account = b.accounts.find((a) => a.id === modal.accountId);
+                    return account ? (
+                      <WalletAccountDetail
+                        budget={b}
+                        account={account}
+                        today={today}
+                        hidden={hidden}
+                        saving={busy}
+                        dialogRef={dialogRef}
+                        onClose={() => setModal(null)}
+                        onAdd={() => open({ type: "transaction", accountId: account.id })}
+                        onTransfer={() => open({ type: "transfer", accountId: account.id })}
+                        onAdjust={() => open({ type: "balance", accountId: account.id })}
+                        onImport={() => open({ type: "import", accountId: account.id })}
+                        onAll={() => {
+                          headingAfterClose.current = true;
+                          setAccountFilter(account.id);
+                          setTypeFilter("all");
+                          setMonth(today.slice(0, 7));
+                          setModal(null);
+                          navigate("transactions");
+                        }}
+                        onTransaction={(item) => open({ type: "transaction", item })}
+                        onUpcoming={(t) => {
+                          const rule = b.rules.find((r) => r.id === t.ruleId);
+                          open(rule ? { type: "rule", item: rule } : { type: "transaction", item: t });
+                        }}
+                        onEdit={() => open({ type: "account", item: account })}
+                        onVerify={() => open({ type: "reconcile", accountId: account.id })}
+                      />
+                    ) : (
+                      <p className="field-hint">Ce compte n’est plus disponible.</p>
+                    );
+                  })()}
+                {modal.type === "review" && (
+                  <DailyReview
+                    budget={b}
+                    today={today}
+                    hidden={hidden}
+                    saving={busy}
+                    serverError={error}
+                    initialDate={modal.date}
+                    onAdd={(date) => open({ type: "transaction", initialDate: date, returnReviewDate: date })}
+                    onEdit={(item) => open({ type: "transaction", item, returnReviewDate: item.date })}
+                    onImport={() => open({ type: "import" })}
+                    onReconcile={(accountId) => open({ type: "reconcile", accountId })}
+                    save={save}
+                  />
+                )}
+                {modal.type === "favorites" && (
+                  <CaptureFavorites
+                    budget={b}
+                    hidden={hidden}
+                    saving={busy}
+                    serverError={error}
+                    onCreate={() => open({ type: "favorite" })}
+                    onEdit={(item) => open({ type: "favorite", item })}
+                    onUse={openFavorite}
+                    save={save}
+                  />
+                )}
+                {modal.type === "favorite" && (
+                  <FavoriteEditor
+                    key={modalKey(modal)}
+                    draftKey={modalKey(modal)}
+                    budget={b}
+                    item={modal.item}
+                    saving={busy}
+                    serverError={error}
+                    save={save}
+                    onDone={() => open({ type: "favorites" })}
+                    onCancel={() => open({ type: "favorites" })}
+                    initialDirection={drafts?.get(modalKey(modal))?.direction?.[0] as Favorite["direction"] | undefined}
+                  />
+                )}
+                {modal.type === "balance" && b.accounts.some((a) => a.id === modal.accountId) && (
+                  <AccountBalanceAdjustment
+                    key={modal.accountId}
+                    budget={b}
+                    accountId={modal.accountId}
+                    today={today}
+                    hidden={hidden}
+                    saving={busy}
+                    serverError={error}
+                    draftKey={modalKey(modal)}
+                    initialValue={drafts?.get(modalKey(modal))?.balance?.[0] ?? ""}
+                    onCompare={(balance) => {
+                      setReconciliationDrafts((previous) => ({
+                        ...previous,
+                        [modal.accountId]: { date: today, balance, checked: [], query: "" },
+                      }));
+                      open({ type: "reconcile", accountId: modal.accountId });
+                    }}
+                    onInspect={(item) =>
+                      open({ type: "transaction", item, returnAccountId: modal.accountId, returnToBalance: true })
+                    }
+                    onImport={() => open({ type: "import", accountId: modal.accountId, returnTo: "balance" })}
+                    onMissing={(difference) =>
+                      open({
+                        type: "transaction",
+                        accountId: modal.accountId,
+                        initialDate: today,
+                        initialAmount: Math.abs(difference),
+                        direction: difference > 0 ? "income" : "expense",
+                        returnAccountId: modal.accountId,
+                        returnToBalance: true,
+                      })
+                    }
+                    save={save}
+                    onDone={() => setModal(null)}
+                    onCancel={() => setModal(null)}
+                  />
+                )}
+                {modal.type === "filters" && (
+                  <TransactionFilters
+                    initial={filterValues}
+                    accounts={b.accounts}
+                    today={today}
+                    onApply={(value) => {
+                      updateFilters(value);
+                      setModal(null);
+                    }}
+                    onCancel={() => setModal(null)}
+                  />
+                )}
+                {modal.type === "reconcile" && b.accounts.some((a) => a.id === modal.accountId) && (
+                  <BankReconciliation
+                    key={modal.accountId}
+                    budget={b}
+                    accountId={modal.accountId}
+                    today={today}
+                    hidden={hidden}
+                    saving={busy}
+                    serverError={error}
+                    initialDraft={reconciliationDrafts[modal.accountId]}
+                    onDraftChange={retainReconciliationDraft}
+                    save={save}
+                    onDone={() => {
+                      setReconciliationDrafts((previous) => {
+                        const next = { ...previous };
+                        delete next[modal.accountId];
+                        return next;
+                      });
+                      setModal(null);
+                    }}
+                    onEdit={(item) => open({ type: "transaction", item, returnAccountId: modal.accountId })}
+                    onAdd={(date, amount) =>
+                      open({
+                        type: "transaction",
+                        direction: amount > 0 ? "income" : "expense",
+                        accountId: modal.accountId,
+                        initialDate: date,
+                        initialAmount: Math.abs(amount),
+                        returnAccountId: modal.accountId,
+                      })
+                    }
+                    onEditAccount={() =>
+                      open({
+                        type: "account",
+                        item: b.accounts.find((a) => a.id === modal.accountId),
+                        returnAccountId: modal.accountId,
+                      })
+                    }
+                    onTransfers={() => open({ type: "match-transfers", returnAccountId: modal.accountId })}
+                    onImport={() => open({ type: "import", accountId: modal.accountId, returnTo: "reconcile" })}
+                  />
+                )}
+                {modal.type === "bulk" && (
+                  <BulkEdit
+                    budget={b}
+                    ids={modal.ids}
+                    today={today}
+                    hidden={hidden}
+                    saving={busy}
+                    serverError={error}
+                    save={save}
+                    onDone={() => {
+                      setTransactionEpoch((previous) => previous + 1);
+                      setModal(null);
+                    }}
+                  />
+                )}
+                {modal.type === "match-transfers" && (
+                  <TransferMatching
+                    budget={b}
+                    saving={busy}
+                    hidden={hidden}
+                    serverError={error}
+                    save={save}
+                    initialDebit={modal.initialDebit}
+                    onDone={() => {
+                      setTransactionEpoch((previous) => previous + 1);
+                      if (modal.returnAccountId) open({ type: "reconcile", accountId: modal.returnAccountId });
+                      else setModal(null);
+                    }}
+                  />
+                )}
+                {modal.type === "imports" && (
+                  <div>
+                    <p className="form-intro">
+                      Annuler un import supprime les opérations encore présentes de ce lot, y compris celles modifiées
+                      depuis. Les autres opérations et les soldes de référence sont conservés.
+                    </p>
+                    {importBatches(b, today).length ? (
+                      importBatches(b, today).map((batch) => (
+                        <section className="card" key={batch.id}>
+                          <h3>
+                            {batch.count} opérations ajoutées · {batch.matchedCount} associées · {shortDate(batch.from)}{" "}
+                            → {shortDate(batch.to)}
+                          </h3>
+                          <p>
+                            {batch.accounts
+                              .map((id) => b.accounts.find((a) => a.id === id)?.name ?? "Compte supprimé")
+                              .join(", ")}
+                          </p>
+                          <p>Variation cumulée des soldes aujourd’hui après annulation : {m(-batch.impact)}</p>
+                          <button
+                            type="button"
+                            className="secondary"
+                            onClick={() =>
+                              open({
+                                type: "confirm",
+                                title: "Annuler cet import ?",
+                                message: `Les ${batch.count} opérations restantes de ce lot seront supprimées, même si elles ont été modifiées. Les associations bancaires de ce lot seront retirées en conservant leurs opérations d’origine. Aucun mouvement bancaire ne sera effectué.`,
+                                action: async () => {
+                                  try {
+                                    return await save(removeImportBatch(b, batch.id), "Import annulé.");
+                                  } catch (cause) {
+                                    setError(
+                                      cause instanceof Error ? cause.message : "Impossible d’annuler cet import.",
+                                    );
+                                    return false;
+                                  }
+                                },
+                              })
+                            }
+                          >
+                            Annuler cet import
+                          </button>
+                        </section>
+                      ))
+                    ) : (
+                      <EmptyState
+                        title="Aucun import pour le moment"
+                        description="Importez un relevé CSV pour retrouver ici vos lots et leurs options d’annulation."
+                        action={
+                          <button type="button" className="secondary" onClick={() => open({ type: "import" })}>
+                            <Upload size={16} />
+                            Importer un relevé
+                          </button>
+                        }
+                      />
+                    )}
+                  </div>
+                )}
+                {modal.type === "navigation" && (
+                  <nav className="navigation-menu" aria-label="Navigation complémentaire">
+                    {[
+                      ...nav.filter((item) => ["recurring", "goals", "plan"].includes(item.id)),
+                      { id: "settings" as Page, label: "Réglages", short: "Réglages", icon: Settings2 },
+                    ].map(({ id, label, icon: Icon }) => (
+                      <button
+                        type="button"
+                        key={id}
+                        className={page === id ? "selected" : ""}
+                        aria-current={page === id ? "page" : undefined}
+                        onClick={() => {
+                          headingAfterClose.current = true;
+                          setModal(null);
+                          navigate(id);
+                        }}
+                      >
+                        <span className="navigation-menu-icon">
+                          <Icon size={21} />
+                        </span>
+                        <span>
+                          <strong>{label}</strong>
+                          <small>
+                            {id === "recurring"
+                              ? "Vos revenus et charges prévus"
+                              : id === "goals"
+                                ? "Vos projets et réserves d’épargne"
+                                : id === "plan"
+                                  ? "Besoins, envies et épargne"
+                                  : "Apparence et préférences du budget"}
+                          </small>
+                        </span>
+                        <ChevronRight size={18} />
+                      </button>
+                    ))}
+                  </nav>
+                )}
+                {modal.type === "actions" && (
+                  <div className="quick-actions">
+                    <div className="wallet-menu-intro">
+                      <WalletActionIcon open />
+                      <p className="form-intro">Les petites actions qui gardent votre budget au clair.</p>
+                    </div>
+                    <div className="quick-action-grid">
+                      {[
+                        {
+                          title: "Une dépense",
+                          hint: "Un achat à enregistrer",
+                          icon: ArrowUpRight,
+                          color: "#a77362",
+                          background: "#faf0ec",
+                          target: { type: "transaction", direction: "expense" },
+                          needsAccount: true,
+                        },
+                        {
+                          title: "Un revenu",
+                          hint: "De l’argent qui arrive",
+                          icon: ArrowDownLeft,
+                          color: "#568d77",
+                          background: "#edf5f0",
+                          target: { type: "transaction", direction: "income" },
+                          needsAccount: true,
+                        },
+                        {
+                          title: "Virement entre comptes",
+                          hint: "Déplacer de l’argent entre vos comptes",
+                          icon: ArrowLeftRight,
+                          color: "#568d77",
+                          background: "#edf5f0",
+                          target: { type: "transfer" },
+                          needsAccount: false,
+                        },
+                        {
+                          title: "Une récurrence",
+                          hint: "Un revenu ou une charge",
+                          icon: Repeat2,
+                          color: "#7d77a8",
+                          background: "#f1eff8",
+                          target: { type: "rule" },
+                          needsAccount: true,
+                        },
+                        {
+                          title: "Un compte",
+                          hint: "Courant, épargne ou espèces",
+                          icon: Wallet,
+                          color: "#6888bb",
+                          background: "#edf3fc",
+                          target: { type: "account" },
+                          needsAccount: false,
+                        },
+                        {
+                          title: "Un objectif",
+                          hint: "Une envie à concrétiser",
+                          icon: Sparkles,
+                          color: "#b18b55",
+                          background: "#faf4ea",
+                          target: { type: "goal" },
+                          needsAccount: false,
+                        },
+                        {
+                          title: "Un import CSV",
+                          hint: "Vos opérations bancaires",
+                          icon: Upload,
+                          color: "#7388a2",
+                          background: "#eef2f7",
+                          target: { type: "import" },
+                          needsAccount: true,
+                        },
+                      ].map(({ title, hint, icon: Icon, color, background, target, needsAccount }) => (
+                        <button
+                          type="button"
+                          key={title}
+                          className="quick-action"
+                          onClick={() => {
+                            if (needsAccount && !b.accounts.length) {
+                              setToast("Ajoutez d’abord un compte pour enregistrer vos opérations.");
+                              open({ type: "account" });
+                            } else open(target as Modal);
+                          }}
+                        >
+                          <span
+                            className="quick-action-icon"
+                            style={{ "--category-color": color, "--category-background": background } as CSSProperties}
+                          >
+                            <Icon size={22} strokeWidth={1.6} />
+                          </span>
+                          <strong>{title}</strong>
+                          <small>{hint}</small>
+                          <ChevronRight size={13} className="quick-action-chevron" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {modal.type === "start" && (
+                  <>
+                    {!user ? (
+                      <div className="sign-in-prompt">
+                        <span className="empty-icon">
+                          <LockKeyhole size={26} />
+                        </span>
+                        <p>
+                          Connectez-vous pour créer votre espace personnel et retrouver vos données sur iPhone et
+                          ordinateur. Votre budget est accessible avec votre adresse e-mail et votre mot de passe.
+                        </p>
+                        <a className="primary full-width" href="/sign-in" target="_top">
+                          Se connecter ou créer un compte <ArrowRight size={17} />
+                        </a>
+                        <small>Les comptes de démonstration ne seront pas ajoutés à votre budget.</small>
+                      </div>
+                    ) : (
+                      <BudgetSetup
+                        name={user.name?.split(" ")[0] ?? ""}
+                        onSave={save}
+                        onDone={() => {
+                          setModal(null);
+                          setMonth(today.slice(0, 7));
+                          setPage("overview");
+                        }}
+                      />
+                    )}
+                  </>
+                )}
+                {modal.type === "transaction" && (
+                  <OperationEditor
+                    key={modalKey(modal)}
+                    modal={modal}
+                    b={b}
+                    today={today}
+                    draftKey={modalKey(modal)}
+                    busy={busy}
+                    error={error}
+                    onReset={() => resetDirection(modal)}
+                    onClose={() =>
+                      modal.returnToBalance && modal.returnAccountId
+                        ? open({ type: "balance", accountId: modal.returnAccountId })
+                        : setModal(null)
+                    }
+                    submit={submit}
+                    open={open}
+                    remove={remove}
+                    hidden={hidden}
+                    notice={notice}
+                    offlineCapture={!online || loadError || offline.connectionUnavailable}
+                    captureSaving={saving || offline.working}
+                    merchantDirection={merchantDirection}
+                    setMerchantDirection={setMerchantDirection}
+                    noteDraftOpen={!!drafts?.get(modalKey(modal))?.note?.[0]}
+                    openFavorite={openFavorite}
+                    m={m}
+                  />
+                )}
+                {modal.type === "account" && (
+                  <AccountEditor
+                    key={modalKey(modal)}
+                    modal={modal}
+                    b={b}
+                    today={today}
+                    draftKey={modalKey(modal)}
+                    busy={busy}
+                    error={error}
+                    onReset={() => resetDirection(modal)}
+                    onClose={() => setModal(null)}
+                    submit={submit}
+                    open={open}
+                    remove={remove}
+                  />
+                )}
+                {modal.type === "rule" && (
+                  <>
+                    {!b.accounts.length ? (
+                      <Empty
+                        icon={Wallet}
+                        title="Commençons par un compte"
+                        description="Les récurrences seront rattachées à ce compte."
+                        action={
+                          <button type="button" className="primary" onClick={() => open({ type: "account" })}>
+                            Ajouter un compte
+                          </button>
+                        }
+                      />
+                    ) : (
+                      <ValidatedForm
+                        key={modalKey(modal)}
+                        draftKey={modalKey(modal)}
+                        onReset={() => resetDirection(modal)}
+                        busy={busy}
+                        actions={
+                          <>
+                            <button type="submit" className="primary full-width" disabled={busy}>
+                              {saving ? <LoaderCircle size={16} className="spin" /> : <Repeat2 size={16} />}Enregistrer
+                              la récurrence
+                            </button>
+                            <button
+                              type="button"
+                              className="text-button panel-cancel"
+                              disabled={busy}
+                              onClick={() =>
+                                recurrenceSource
+                                  ? open({ type: "transaction", item: recurrenceSource })
+                                  : setModal(null)
+                              }
+                            >
+                              Annuler
+                            </button>
+                          </>
+                        }
+                        onSubmit={submit}
+                      >
+                        {recurrenceSource && (
+                          <div className="info-callout">
+                            <Repeat2 size={18} />
+                            <p>
+                              L’opération enregistrée est conservée. Choisissez la fréquence et la prochaine échéance :
+                              seules les échéances futures seront ajoutées, sans doublon de l’opération d’origine.
+                            </p>
+                          </div>
+                        )}
+                        <FormSection title="La récurrence">
+                          <MerchantFields
+                            categoryRules={b.settings.categoryRules}
+                            initialLabel={ruleDraft?.label}
+                            initialCategory={ruleDraft?.category}
+                            initialMerchantId={ruleDraft?.merchantId}
+                            initialCustomIconUrl={ruleDraft?.customIconUrl}
+                            direction={merchantDirection}
+                          />
+                          <div className="form-grid">
+                            <FormField label="Type">
+                              <select
+                                name="direction"
+                                onChange={(e) => setMerchantDirection(e.target.value)}
+                                defaultValue={ruleDraft && ruleDraft.amount > 0 ? "income" : "expense"}
+                              >
+                                <option value="expense">Dépense récurrente</option>
+                                <option value="income">Entrée d’argent récurrente</option>
+                              </select>
+                            </FormField>
+                            <FormField label="Montant">
+                              <AmountInput
+                                name="amount"
+                                defaultValue={ruleDraft ? Math.abs(ruleDraft.amount) : undefined}
+                              />
+                            </FormField>
+                          </div>
+                          <div className="form-grid">
+                            <FormField label="Compte">
+                              <select name="account" defaultValue={ruleDraft?.accountId ?? b.accounts[0]?.id}>
+                                {accountOptions}
+                              </select>
+                            </FormField>
+                          </div>
+                        </FormSection>
+                        <FormSection title="Le rythme">
+                          <div className="form-grid">
+                            <FormField label="Fréquence">
+                              <select name="frequency" defaultValue={ruleDraft?.frequency ?? "monthly"}>
+                                <option value="monthly">Chaque mois</option>
+                                <option value="weekly">Chaque semaine</option>
+                                <option value="yearly">Chaque année</option>
+                              </select>
+                            </FormField>
+                            <FormField label="Règle de date">
+                              <select name="timing" defaultValue={ruleDraft?.timing ?? "date"}>
+                                <option value="date">Jour fixe</option>
+                                <option value="last-business-day">Dernier jour ouvré du mois</option>
+                              </select>
+                            </FormField>
+                          </div>
+                          <div className="form-grid">
+                            <FormField
+                              label="Jour du mois (pour une date fixe)"
+                              hint="Un jour absent du mois est ramené au dernier jour."
+                            >
+                              <input
+                                name="day"
+                                type="number"
+                                min="1"
+                                max="31"
+                                required
+                                defaultValue={ruleDraft?.day ?? parseDate(today).getDate()}
+                              />
+                            </FormField>
+                          </div>
+                          <div className="form-grid">
+                            <FormField label="À partir du">
+                              <input
+                                name="date"
+                                type="date"
+                                min={recurrenceMin}
+                                max="2100-12-31"
+                                required
+                                defaultValue={ruleDraft?.startDate ?? shiftDate(today, 1)}
+                              />
+                            </FormField>
+                          </div>
+                          <FormOptions
+                            title="Jours fériés et fin de série"
+                            initialOpen={
+                              !!ruleDraft?.endDate || (!!ruleDraft && ruleDraft.holidays !== b.settings.holidayCalendar)
+                            }
+                          >
+                            <FormField label="Jours fériés à exclure">
+                              <select name="holidays" defaultValue={ruleDraft?.holidays ?? b.settings.holidayCalendar}>
+                                <option value="FR">France · calendrier national</option>
+                                <option value="none">Aucun · week-ends uniquement</option>
+                              </select>
+                            </FormField>
+                            <FormField label="Jusqu’au (facultatif)">
+                              <input
+                                name="end"
+                                type="date"
+                                min="2000-01-01"
+                                max="2100-12-31"
+                                defaultValue={ruleDraft?.endDate}
+                              />
+                            </FormField>
+                            <p className="field-hint">
+                              Chaque semaine : le jour de la date de début est utilisé. Chaque année : le mois de début
+                              est utilisé. Les autres règles de date concernent les fréquences mensuelles et annuelles.
+                              Les opérations passées restent conservées après une modification.
+                            </p>
+                          </FormOptions>
+                        </FormSection>
+                        {error && <ErrorMessage>{error}</ErrorMessage>}
+                      </ValidatedForm>
+                    )}
+                  </>
+                )}
+                {modal.type === "goal" && (
+                  <ValidatedForm
+                    key={modalKey(modal)}
+                    draftKey={modalKey(modal)}
+                    onReset={() => resetDirection(modal)}
+                    busy={busy}
+                    actions={
+                      <>
+                        <SubmitButton busy={busy} icon={<Sparkles size={16} />}>
+                          Enregistrer mon objectif
+                        </SubmitButton>
+                        <button
+                          type="button"
+                          className="text-button panel-cancel"
+                          disabled={busy}
+                          onClick={() => setModal(null)}
+                        >
+                          Annuler
+                        </button>
+                      </>
+                    }
+                    onSubmit={submit}
+                  >
+                    <FormSection title="Votre projet">
+                      <FormField label="Quel projet avez-vous en tête ?">
+                        <input
+                          name="name"
+                          maxLength={120}
+                          required
+                          placeholder="Un voyage, une sécurité, une envie…"
+                          defaultValue={modal.item?.name}
+                        />
+                      </FormField>
+                      <div className="form-grid">
+                        <FormField label="Objectif à atteindre">
+                          <AmountInput name="target" defaultValue={modal.item?.target} />
+                        </FormField>
+                        <FormField label="Déjà mis de côté">
+                          <span className="amount-input">
+                            <input
+                              name="saved"
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              max="1000000000"
+                              required
+                              defaultValue={inputAmount(modal.item?.saved ?? 0)}
+                            />
+                            <span>€</span>
+                          </span>
+                        </FormField>
+                      </div>
+                    </FormSection>
+                    <FormSection title="Votre rythme">
+                      <FormField
+                        label="À réserver chaque mois"
+                        hint="Facultatif : mettez 0 pour avancer librement. La réserve restante est retirée du disponible, sans effectuer de virement bancaire."
+                      >
+                        <span className="amount-input">
+                          <input
+                            name="monthly"
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            max="1000000000"
+                            required
+                            defaultValue={inputAmount(modal.item?.monthly ?? 0)}
+                          />
+                          <span>€</span>
+                        </span>
+                      </FormField>
+                      <FormOptions title="Date et personnalisation">
+                        <FormField label="Une date en tête ? (facultatif)">
+                          <input
+                            name="deadline"
+                            type="date"
+                            min="2000-01-01"
+                            max="2100-12-31"
+                            defaultValue={modal.item?.deadline}
+                          />
+                        </FormField>
+                        <div className="form-grid">
+                          <FormField label="Une petite touche personnelle">
+                            <select name="icon" defaultValue={modal.item?.icon ?? "sun"}>
+                              <option value="sun">Un rayon de soleil</option>
+                              <option value="shield">La tranquillité</option>
+                              <option value="home">Un chez-soi</option>
+                              <option value="plane">Une aventure</option>
+                              <option value="sparkles">Une envie</option>
+                            </select>
+                          </FormField>
+                          <div className="field">
+                            <span>Couleur</span>
+                            <div className="color-choices">
+                              {colors.map((c, i) => (
+                                <label key={c} style={{ background: walletColor(c) }} title={`Couleur ${i + 1}`}>
+                                  <input
+                                    type="radio"
+                                    name="color"
+                                    value={c}
+                                    defaultChecked={modal.item ? modal.item.color === c : i === 2}
+                                    required
+                                  />
+                                  <Check size={17} />
+                                  <span className="sr-only">Couleur {i + 1}</span>
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </FormOptions>
+                      <p className="field-hint">
+                        Le montant déjà mis de côté sert au suivi de cet objectif. Il ne modifie pas le solde de vos
+                        comptes.
+                      </p>
+                    </FormSection>
+                    {error && <ErrorMessage>{error}</ErrorMessage>}
+                  </ValidatedForm>
+                )}
+                {(modal.type === "transfer" || modal.type === "contribution") && (
+                  <TransferEditor
+                    key={modalKey(modal)}
+                    modal={modal}
+                    b={b}
+                    today={today}
+                    draftKey={modalKey(modal)}
+                    busy={busy}
+                    error={error}
+                    onReset={() => resetDirection(modal)}
+                    onClose={() => setModal(null)}
+                    submit={submit}
+                    open={open}
+                    remove={remove}
+                    hidden={hidden}
+                    transferSource={transferSource}
+                    transferTarget={transferTarget}
+                  />
+                )}
+                {modal.type === "import" && (
+                  <BankImport
+                    onView={(accountId, month) => {
+                      setAccountFilter(accountId);
+                      setTypeFilter("all");
+                      setMonth(month);
+                      navigate("transactions");
+                      setModal(null);
+                    }}
+                    onBack={importReturn ? () => open(importReturn) : undefined}
+                    initialAccountId={modal.accountId}
+                    initialDraft={
+                      importContextAccount ? (comparisonImports[importContextAccount] ?? null) : importDraft
+                    }
+                    onDraftChange={retainActiveImportDraft}
+                    budget={b}
+                    today={today}
+                    saving={busy}
+                    save={save}
+                    serverError={error}
+                    onDone={() => (importReturn ? open(importReturn) : setModal(null))}
+                    onAddAccount={() => open({ type: "account" })}
+                    downloadTemplate={() =>
+                      downloadFile(
+                        "\uFEFFDate;Libellé;Montant;Catégorie;Devise\r\n" +
+                          today +
+                          ";Exemple de courses;-42,50;Alimentation;EUR\r\n",
+                        "pecule-modele.csv",
+                        "text/csv;charset=utf-8",
+                      )
+                    }
+                  />
+                )}
+                {modal.type === "calculation" && (
+                  <div className="calculation-detail">
+                    <p>Votre disponible indique ce que vous pouvez encore dépenser après vos engagements connus.</p>
+                    <div>
+                      <span>Comptes courants et espèces</span>
+                      <strong>{m(o.total)}</strong>
+                    </div>
+                    <div>
+                      <span>− Dépenses prévues jusqu’au {shortDate(o.end)}</span>
+                      <strong>{m(o.expenses)}</strong>
+                    </div>
+                    <div>
+                      <span>− Réserve d’épargne restante</span>
+                      <strong>{m(o.reserve)}</strong>
+                    </div>
+                    <section className="reserve-breakdown" aria-label="Détail de la réserve">
+                      <h3>Détail de la réserve</h3>
+                      {reserveLines(b, today).length ? (
+                        <dl>
+                          {reserveLines(b, today).map((row) => (
+                            <div key={row.id}>
+                              <dt>{row.label}</dt>
+                              <dd>{m(row.amount)}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                      ) : (
+                        <p>Aucune réserve prévue.</p>
+                      )}
+                    </section>
+                    <div className="calculation-total">
+                      <span>Votre marge de manœuvre</span>
+                      <strong>{m(o.available)}</strong>
+                    </div>
+                    <section className="signal-explanation">
+                      <h3>Comprendre le signal</h3>
+                      <p>
+                        {getAvailableSignal(o.available, o.days, b.settings.dailyComfortCents).label} :{" "}
+                        {getAvailableSignal(o.available, o.days, b.settings.dailyComfortCents).description}
+                      </p>
+                      <p>
+                        Négatif : le disponible est sous zéro. Attention : il est positif ou nul, mais sous votre seuil
+                        quotidien. Confort : le seuil quotidien est atteint. Ce seuil se règle dans Réglages.
+                      </p>
+                    </section>
+                    <p className="field-hint">
+                      Les revenus futurs ne sont pas ajoutés au disponible. Les comptes d’épargne sont exclus. Les
+                      dépenses non saisies et les achats imprévus ne sont pas anticipés. Les récurrences sont
+                      enregistrées automatiquement à leur date prévue ; vérifiez les montants par rapport à votre
+                      banque.
+                    </p>
+                    <p className="field-hint">
+                      La réserve est celle de cette période : réserve complémentaire + montants mensuels de vos
+                      objectifs, diminués des versements d’épargne enregistrés ce mois-ci. Le montant par jour répartit
+                      le disponible positif sur les jours restants, aujourd’hui inclus.
+                    </p>
+                    <button
+                      type="button"
+                      className="secondary full-width"
+                      onClick={() => {
+                        setModal(null);
+                        navigate("settings");
+                      }}
+                    >
+                      Ajuster mes préférences <Settings2 size={15} />
+                    </button>
+                  </div>
+                )}
+                {modal.type === "install" && (
+                  <div className="install-content">
+                    <Image unoptimized width={192} height={192} src="/icons/icon-192.png" alt="Pécule" />
+                    <p>Un accès direct à votre budget depuis votre écran d’accueil.</p>
+                    <ol>
+                      <li>
+                        <span>1</span>
+                        <div>
+                          <strong>Ouvrez Pécule dans Safari sur iPhone.</strong>
+                          <p>Utilisez l’adresse du site publié.</p>
+                        </div>
+                      </li>
+                      <li>
+                        <span>2</span>
+                        <div>
+                          <strong>Ouvrez le menu de partage.</strong>
+                          <p>Puis choisissez « Sur l’écran d’accueil ».</p>
+                        </div>
+                      </li>
+                      <li>
+                        <span>3</span>
+                        <div>
+                          <strong>Ajoutez Pécule.</strong>
+                          <p>Activez l’ouverture comme application si l’option est proposée.</p>
+                        </div>
+                      </li>
+                    </ol>
+                    <div className="info-callout">
+                      <Cloud size={17} />
+                      <p>
+                        Une connexion Internet est nécessaire pour charger et modifier le budget. Vos données restent
+                        synchronisées sur votre compte.
+                      </p>
+                    </div>
+                    {installPrompt && (
+                      <button
+                        type="button"
+                        className="primary full-width"
+                        onClick={async () => {
+                          await installPrompt.prompt();
+                          await installPrompt.userChoice;
+                          setInstallPrompt(null);
+                        }}
+                      >
+                        Installer sur cet appareil <Download size={16} />
+                      </button>
+                    )}
+                  </div>
+                )}
+                {modal.type === "confirm" && (
+                  <div>
+                    <p className="form-intro">{modal.message}</p>
+                    {error && <ErrorMessage>{error}</ErrorMessage>}
+                    <div className="form-actions">
+                      <button type="button" className="secondary" disabled={busy} onClick={() => setModal(null)}>
+                        Annuler
+                      </button>
+                      <button
+                        type="button"
+                        className="danger"
+                        disabled={busy}
+                        onClick={async () => {
+                          if (await modal.action()) {
+                            if (modal.onDone) modal.onDone();
+                            else setModal(null);
+                          }
+                        }}
+                      >
+                        {saving ? <LoaderCircle size={16} className="spin" /> : <Trash2 size={16} />}Confirmer
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </GestureActions.Provider>
+  );
 }
