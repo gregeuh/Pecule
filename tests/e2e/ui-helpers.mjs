@@ -12,7 +12,7 @@ export async function waitForWallet(page) {
 export async function openOperationComposer(page) {
  const mobile=(page.viewportSize()?.width??1440)<=760;
  await page.locator(mobile?'.mobile-add':'.floating-action-trigger').click();
- await page.getByRole('button',{name:/Une dépense/}).click();
+ if(!mobile)await page.getByRole('button',{name:/Une dépense/}).click();
  await page.locator('input[name="amount"]').waitFor();
 }
 
