@@ -9,6 +9,7 @@ Direction validée : Revolut et Apple Wallet, couleurs franches, lecture dense, 
 | Palette, fontes et rôles typographiques | `app/theme.css` |
 | Densité des pages, surfaces, textes, logos | `app/wallet.css` |
 | Profondeur, matière et aperçu | `app/wallet-depth.css` |
+| Fond coloré animé et matière verre (Liquid Glass) | `app/glass.css`, `app/glass-backdrop.tsx` ; couleurs dans `app/theme.css` |
 | Couleurs de compte, contraste et matière personnalisée | `lib/wallet-presentation.ts` |
 | Durées et courbes | `app/motion.css`, consommées par `app/ui-motion.ts` |
 | Présence, ouverture et sortie des dialogues | `app/use-modal-motion.ts`, surface visuelle `app/modal-surface-motion.ts` |

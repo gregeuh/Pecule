@@ -4,9 +4,9 @@ colors:
   background: "#fbeee3"
   surface: "#fffaf6"
   ink: "#2b2320"
-  muted: "#6a554b"
+  muted: "#5f4c44"
   primary: "#bf4f2a"
-  text-accent: "#a8431f"
+  text-accent: "#8a3719"
 typography:
   body:
     fontFamily: '"DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'

@@ -11,9 +11,9 @@ export const appearanceChoices: { id: AppearanceChoice; label: string; swatch: [
   { id: "peche", label: "Pêche", swatch: ["#ff9d7e", "#ffd0a6", "#d6c4ff"] },
   { id: "lavande", label: "Lavande", swatch: ["#b8a4ff", "#ffc0a4", "#a9d6ff"] },
   { id: "menthe", label: "Menthe", swatch: ["#8fdcc0", "#a9d6ff", "#ffe1a8"] },
-  { id: "ocean", label: "Océan", swatch: ["#5aa9e6", "#7fe0d6", "#6f8fe0"] },
-  { id: "nuit", label: "Nuit", swatch: ["#a0412c", "#5a3a8e", "#c06a2e"] },
-  { id: "auto", label: "Automatique", swatch: ["#ff9d7e", "#5a3a8e", "#ffd0a6"] },
+  { id: "ocean", label: "Océan", swatch: ["#7db9ea", "#9be8df", "#93abe9"] },
+  { id: "nuit", label: "Nuit", swatch: ["#8a3423", "#4a2f78", "#a0561f"] },
+  { id: "auto", label: "Automatique", swatch: ["#ff9d7e", "#4a2f78", "#ffd0a6"] },
 ];
 
 export function readPalette(value: string | null): LightPalette {

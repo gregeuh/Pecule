@@ -74,6 +74,12 @@ for (const p of ["peche", "lavande", "menthe", "ocean", "nuit"]) {
         `${p} muted on ${surface}: ${contrast(t["--muted"], surface).toFixed(2)}`,
       );
     }
+    // Text also sits straight on the wash (headings, totals): each blob is drawn at --wash-opacity over --bg.
+    for (const k of ["--wash-1", "--wash-2", "--wash-3"]) {
+      const onWash = mix(t["--bg"], t[k], Number(t["--wash-opacity"]));
+      for (const ink of ["--ink", "--muted", "--blue"])
+        assert(contrast(t[ink], onWash) >= 4.5, `${p} ${ink} on ${k}: ${contrast(t[ink], onWash).toFixed(2)}`);
+    }
     assert(contrast(t["--on-action"], t["--action-bg"]) >= 4.5, `${p} action text`);
     assert(contrast(t["--blue"], t["--bg"]) >= 4.5, `${p} text accent`);
     assert(contrast(t["--blue"], t["--card"]) >= 4.5, `${p} text accent on cards`);

@@ -15,6 +15,7 @@
   --motion-illustration: 480ms;
   --motion-track: 140ms;
   --motion-settle: cubic-bezier(.22, 1, .36, 1);
+  --motion-spring-out: cubic-bezier(.34, 1.36, .64, 1);
 }
 .confirmation-art {
   color: inherit;
