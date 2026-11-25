@@ -10,7 +10,6 @@ import { confirmedTransfer, operationToJournal } from "./save-continuity";
 import LaunchScreen from "./launch-screen";
 import LaunchTransition from "./launch-transition";
 import Image from "next/image";
-import { recordedOperationTotals } from "../lib/operation-totals";
 import Link from "next/link";
 import {
   useCallback,
@@ -33,7 +32,6 @@ import {
   Wallet,
   Repeat2,
   ChartNoAxesCombined,
-  Search,
   ChevronRight,
   ChevronDown,
   X,
@@ -52,7 +50,6 @@ import {
   LoaderCircle,
   CircleAlert,
   LockKeyhole,
-  Funnel,
   Keyboard,
   RotateCcw,
   type LucideIcon,
@@ -94,7 +91,6 @@ import ConflictValue from "./conflict-value";
 import BudgetSetup from "./budget-setup";
 import BankReconciliation, { type ReconciliationDraft } from "./bank-reconciliation";
 import BulkEdit from "./bulk-edit";
-import TransactionSelection from "./transaction-selection";
 import TransferMatching from "./transfer-matching";
 
 import BankImport, { type ImportDraft } from "./bank-import";
@@ -103,6 +99,7 @@ import { importBatches, removeImportBatch } from "../lib/import-batches";
 import { budgetSchema } from "../lib/validation";
 import AnimatedDetails from "./animated-details";
 import SettingsPage from "./settings-page";
+import TransactionsPage from "./transactions-page";
 import { downloadFile, inputAmount } from "./download-file";
 import { usePrivacyPreference, useNetworkOnline, useGoogleReturn, useCompactViewport } from "./browser-preferences";
 import { FormDraftProvider, useFormDraftStore } from "./form-drafts";
@@ -114,11 +111,7 @@ import { captureAccount, favoriteFromTransaction, type Favorite } from "../lib/c
 import AccountVerification from "./account-verification";
 import AccountBalanceAdjustment from "./account-balance-adjustment";
 import FormSection from "./form-section";
-import TransactionFilters, {
-  OperationFilterControls,
-  LedgerTools,
-  type OperationFilterValues,
-} from "./operation-filters";
+import TransactionFilters, { type OperationFilterValues } from "./operation-filters";
 import FormOptions from "./form-options";
 import AccountActivity from "./account-activity";
 import EmptyState from "./empty-state";
@@ -126,12 +119,11 @@ import { ErrorMessage } from "./interface-feedback";
 import CategoryIcon from "./category-icon";
 import ForecastOutlook from "./forecast-outlook";
 import ClarteDashboard from "./clarte-dashboard";
-import SpendingInsights from "./spending-insights";
 import RecurringSuggestions from "./recurring-suggestions";
 import SpendingPlan from "./spending-plan";
 import MobileDock from "./mobile-dock";
 import SubmitButton from "./submit-button";
-import OperationGesture, { GestureActions } from "./operation-gesture";
+import { GestureActions } from "./operation-gesture";
 import QuickAddGesture from "./quick-add-gesture";
 import { usePreviewDepth } from "./use-preview-depth";
 import { useWalletGesture } from "./use-wallet-gesture";
@@ -173,14 +165,6 @@ const pageTitles: Record<Page, string> = {
 };
 nav.push({ id: "plan", label: "Mon équilibre 50/30/20", short: "Équilibre", icon: LayoutGrid });
 const uid = () => crypto.randomUUID();
-
-function dateLabel(date: string, today: string) {
-  return date === today
-    ? "Aujourd’hui"
-    : date === shiftDate(today, -1)
-      ? "Hier"
-      : parseDate(date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
-}
 
 type BudgetAppProps = { user: { id?: string; name: string | null; email: string } | null };
 export default function BudgetApp(props: BudgetAppProps) {
@@ -1043,60 +1027,11 @@ function BudgetAppContent({ user }: BudgetAppProps) {
     setAccountFilter(value.account);
     setMonth(value.month);
   };
-  const filterCount =
-    Number(typeFilter !== "all") + Number(accountFilter !== "all") + Number(month !== today.slice(0, 7));
   const accountOptions = b.accounts.map((a) => (
     <option key={a.id} value={a.id}>
       {a.name}
     </option>
   ));
-  const transactionRows = (items: Transaction[], full = false) =>
-    items.map((t) => (
-      <OperationGesture
-        id={t.id}
-        label={t.label}
-        className={`transaction-row ${full ? "full" : ""}`}
-        key={t.id}
-        onClick={() => open({ type: "transaction", item: t })}
-      >
-        <MerchantIcon
-          label={t.label}
-          merchantId={t.merchantId}
-          customIconUrl={t.customIconUrl}
-          fallback={<CategoryIcon category={t.category} />}
-        />
-        <span className="transaction-title">
-          <strong>{t.label}</strong>
-          <small>
-            {full ? (
-              <>
-                {b.accounts.find((a) => a.id === t.accountId)?.name}
-                <span className="transaction-mobile-category"> · {t.category}</span>
-              </>
-            ) : (
-              t.category
-            )}
-            {t.ruleId && <Repeat2 size={11} />}
-          </small>
-        </span>
-        {full && <span className="category-label">{t.category}</span>}
-        <span className="transaction-amount">
-          <strong className={t.amount > 0 ? "positive" : ""}>{m(t.amount, true, true)}</strong>
-          <small>{shortDate(t.date)}</small>
-        </span>
-        <ChevronRight className="row-chevron" size={15} />
-      </OperationGesture>
-    ));
-  const visibleMonthRows = b.transactions.filter(
-    (t) =>
-      t.date.startsWith(month) &&
-      t.date <= today &&
-      (accountFilter === "all" || t.accountId === accountFilter) &&
-      (typeFilter === "all" || (typeFilter === "expense" ? t.amount < 0 : t.amount > 0)) &&
-      (t.label + " " + t.category + " " + t.note).toLocaleLowerCase("fr").includes(query.toLocaleLowerCase("fr")),
-  );
-  const { income: monthIncome, spent: monthSpent } = recordedOperationTotals(visibleMonthRows, today);
-  const monthName = parseDate(month + "-01").toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
   function exportCSV() {
     const rows = [
       ["Date", "Libellé", "Montant", "Catégorie", "Compte", "Note"],
@@ -1828,200 +1763,29 @@ function BudgetAppContent({ user }: BudgetAppProps) {
               />
             )}
             {page === "transactions" && (
-              <>
-                {accountFilter !== "all" && b.accounts.some((a) => a.id === accountFilter) && (
-                  <section className="account-ledger-context" aria-label="Compte sélectionné">
-                    <div>
-                      <span>{b.accounts.find((a) => a.id === accountFilter)?.name}</span>
-                      <strong>{m(accountBalance(b, accountFilter, today))}</strong>
-                      <small>Solde actuel</small>
-                    </div>
-                    <button type="button" className="text-button" onClick={() => setAccountFilter("all")}>
-                      Tous les comptes
-                    </button>
-                  </section>
-                )}
-                <section className="metric-strip">
-                  <div>
-                    <span>Revenus reçus · {monthName}</span>
-                    <strong className="positive">{m(monthIncome, true, true)}</strong>
-                  </div>
-                  <div>
-                    <span>Dépenses enregistrées · {monthName}</span>
-                    <strong>{m(monthSpent)}</strong>
-                  </div>
-                  <div>
-                    <span>Solde actuel des comptes courants</span>
-                    <strong>{m(o.total)}</strong>
-                  </div>
-                </section>
-                <section ref={operationMotion} className="card transactions-card">
-                  <div className="toolbar">
-                    <div className="search-input">
-                      <Search size={17} />
-                      <input
-                        aria-label="Rechercher une opération"
-                        placeholder="Rechercher…"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                      />
-                      {query && (
-                        <button
-                          type="button"
-                          className="icon-button"
-                          aria-label="Effacer la recherche"
-                          onClick={(e) => {
-                            setQuery("");
-                            e.currentTarget.parentElement?.querySelector("input")?.focus();
-                          }}
-                        >
-                          <X size={16} />
-                        </button>
-                      )}
-                    </div>
-                    {compact && (
-                      <button
-                        type="button"
-                        className="secondary operation-filter-trigger"
-                        aria-label={`Filtrer les opérations, ${filterCount} filtre${filterCount > 1 ? "s" : ""} actif${filterCount > 1 ? "s" : ""}`}
-                        aria-haspopup="dialog"
-                        onClick={() => open({ type: "filters" })}
-                      >
-                        <Funnel size={17} />
-                        Filtrer{filterCount > 0 && <span className="filter-count">{filterCount}</span>}
-                      </button>
-                    )}
-                  </div>
-                  <LedgerTools compact={compact}>
-                    <div className="toolbar-actions">
-                      <button type="button" className="secondary compact" onClick={() => open({ type: "import" })}>
-                        <Upload size={15} />
-                        {importDraft ? "Reprendre l’import" : "Importer"}
-                      </button>
-                      <button type="button" className="secondary compact" onClick={() => open({ type: "imports" })}>
-                        Mes imports
-                      </button>
-                      <button
-                        type="button"
-                        className="secondary compact"
-                        onClick={() => open({ type: "match-transfers" })}
-                      >
-                        Associer des virements
-                      </button>
-                      <button
-                        type="button"
-                        className="secondary compact"
-                        title="Exporter toutes les opérations en CSV"
-                        aria-label="Exporter en CSV"
-                        onClick={exportCSV}
-                      >
-                        <Download size={18} />
-                        <span>Exporter CSV</span>
-                      </button>
-                    </div>
-                  </LedgerTools>
-                  {!compact && (
-                    <OperationFilterControls values={filterValues} accounts={b.accounts} onChange={updateFilters} />
-                  )}
-                  {(query || typeFilter !== "all" || accountFilter !== "all" || month !== today.slice(0, 7)) && (
-                    <div className="active-filters" aria-label="Filtres actifs">
-                      {query && (
-                        <button type="button" onClick={() => setQuery("")} aria-label="Retirer le filtre de recherche">
-                          Recherche : {query}
-                          <X size={14} />
-                        </button>
-                      )}
-                      {typeFilter !== "all" && (
-                        <button
-                          type="button"
-                          onClick={() => setTypeFilter("all")}
-                          aria-label="Retirer le filtre de type"
-                        >
-                          {typeFilter === "expense" ? "Dépenses" : "Revenus"}
-                          <X size={14} />
-                        </button>
-                      )}
-                      {accountFilter !== "all" && (
-                        <button
-                          type="button"
-                          onClick={() => setAccountFilter("all")}
-                          aria-label="Retirer le filtre de compte"
-                        >
-                          {b.accounts.find((a) => a.id === accountFilter)?.name}
-                          <X size={14} />
-                        </button>
-                      )}
-                      {month !== today.slice(0, 7) && (
-                        <button
-                          type="button"
-                          onClick={() => setMonth(today.slice(0, 7))}
-                          aria-label="Revenir au mois actuel"
-                        >
-                          {parseDate(month + "-01").toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}
-                          <X size={14} />
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        className="text-button"
-                        onClick={() => {
-                          setQuery("");
-                          setTypeFilter("all");
-                          setAccountFilter("all");
-                          setMonth(today.slice(0, 7));
-                        }}
-                      >
-                        Réinitialiser les filtres
-                      </button>
-                    </div>
-                  )}
-                  {(() => {
-                    const items = [...b.transactions]
-                      .filter(
-                        (t) =>
-                          t.date.startsWith(month) &&
-                          (accountFilter === "all" || t.accountId === accountFilter) &&
-                          (typeFilter === "all" || (typeFilter === "expense" ? t.amount < 0 : t.amount > 0)) &&
-                          (t.label + " " + t.category + " " + t.note)
-                            .toLocaleLowerCase("fr")
-                            .includes(query.toLocaleLowerCase("fr")),
-                      )
-                      .sort((a, b) => b.date.localeCompare(a.date));
-                    return items.length ? (
-                      <TransactionSelection
-                        key={JSON.stringify([query, typeFilter, accountFilter, month, transactionEpoch])}
-                        items={items}
-                        renderRow={(t) => transactionRows([t], true)}
-                        formatAmount={(n) => m(n, true, true)}
-                        dateLabel={(date) => dateLabel(date, today) + (date > today ? " · À venir" : "")}
-                        onBulk={(ids) => open({ type: "bulk", ids })}
-                      />
-                    ) : (
-                      <Empty
-                        icon={Search}
-                        title="Rien pour le moment"
-                        description="Aucune opération ne correspond à cette période ou à vos filtres."
-                        action={
-                          <button
-                            type="button"
-                            className="text-button"
-                            onClick={() =>
-                              b.accounts.length ? open({ type: "transaction" }) : open({ type: "account" })
-                            }
-                          >
-                            Ajouter une opération <Plus size={14} />
-                          </button>
-                        }
-                      />
-                    );
-                  })()}
-                </section>
-                <p className="metric-note">
-                  Totaux des opérations enregistrées pour la période et les filtres choisis, hors virements et
-                  opérations futures.
-                </p>
-                <SpendingInsights key={month} budget={b} month={month} today={today} hidden={hidden} />
-              </>
+              <TransactionsPage
+                budget={b}
+                o={o}
+                today={today}
+                hidden={hidden}
+                compact={compact}
+                m={m}
+                open={open}
+                query={query}
+                setQuery={setQuery}
+                typeFilter={typeFilter}
+                setTypeFilter={setTypeFilter}
+                accountFilter={accountFilter}
+                setAccountFilter={setAccountFilter}
+                month={month}
+                setMonth={setMonth}
+                filterValues={filterValues}
+                updateFilters={updateFilters}
+                transactionEpoch={transactionEpoch}
+                operationMotion={operationMotion}
+                importDraft={importDraft}
+                exportCSV={exportCSV}
+              />
             )}
             {page === "recurring" && (
               <>
