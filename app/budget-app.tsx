@@ -1439,6 +1439,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                 onClick={() => navigate(id)}
                 className={`nav-item ${page === id ? "active" : ""}`}
                 aria-current={page === id ? "page" : undefined}
+                title={label}
               >
                 <Icon size={19} strokeWidth={1.7} />
                 <span>{label}</span>
@@ -1462,6 +1463,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
               type="button"
               className={`nav-item ${page === "settings" ? "active" : ""}`}
               onClick={() => navigate("settings")}
+              title="Réglages"
             >
               <Settings2 size={19} />
               <span>Réglages</span>

@@ -16,7 +16,10 @@ export default function WalletAccounts({
   onAll,
   onAdd,
   onForecast,
+  available,
 }: {
+  /** The home's "disponible", shown as the first summary row (lot 2 of the design review). */
+  available?: { title: string; detail: string; amount: string; onOpen: () => void };
   onForecast: (account: Account) => void;
   budget: Budget;
   today: string;
@@ -111,8 +114,25 @@ export default function WalletAccounts({
               </Pressable>
             ))}
           </div>
-          {summaries.length > 0 && (
-            <ul className="wallet-account-forecasts" aria-label="Soldes et prévisions des comptes">
+          {(summaries.length > 0 || available) && (
+            <ul className="wallet-account-forecasts" aria-label="Disponible, soldes et prévisions des comptes">
+              {available && (
+                <li>
+                  <button
+                    type="button"
+                    className="wallet-available-row"
+                    onClick={available.onOpen}
+                    aria-label={`${available.title} : ${available.amount}, ${available.detail}. Comprendre le calcul`}
+                  >
+                    <span>
+                      <strong>{available.title}</strong>
+                      <small>{available.detail}</small>
+                    </span>
+                    <b>{available.amount}</b>
+                    <ArrowRight size={15} aria-hidden="true" />
+                  </button>
+                </li>
+              )}
               {summaries.map(({ account, outlook, projected }) => (
                 <li key={account.id}>
                   <button
@@ -125,12 +145,8 @@ export default function WalletAccounts({
                     }
                   >
                     <span>
-                      <strong>{account.name}</strong>
-                      <small>
-                        {projected
-                          ? `Actuel ${m(outlook.current)} · prévu au ${shortDate(outlook.end.date)}`
-                          : "Solde actuel"}
-                      </small>
+                      <strong>{projected ? `Prévu au ${shortDate(outlook.end.date)}` : account.name}</strong>
+                      <small>{projected ? account.name : "Solde actuel"}</small>
                     </span>
                     <b>{m(projected ? outlook.end.value : outlook.current)}</b>
                     <ArrowRight size={15} aria-hidden="true" />

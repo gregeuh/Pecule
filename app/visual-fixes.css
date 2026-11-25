@@ -79,3 +79,18 @@
     .sync-state > span
   ) { font-size: 12px; }
 }
+
+/* Tablet and small laptop (761–1099 px): the sidebar keeps its icons only (76 px instead of 224–232 px),
+   so totals and import buttons no longer wrap. Labels stay for screen readers and as hover titles;
+   the motto and profile details return from 1100 px. */
+@media (min-width: 761px) and (max-width: 1099px) {
+  :root .app-shell .sidebar { width: 76px; padding: 30px 10px 0; }
+  :root .app-shell .main-wrap { margin-left: 76px; }
+  :root .app-shell .sidebar .brand { justify-content: center; padding: 0; }
+  :root .app-shell .sidebar .brand img { display: block; width: 36px; height: 36px; border-radius: 11px; }
+  :root .app-shell .sidebar :is(.brand > span, .workspace-label, .sidebar-note, .profile > span:not(.avatar), .profile > svg) { display: none; }
+  :root .app-shell .sidebar .nav-item { position: relative; justify-content: center; gap: 0; padding: 13px 0; }
+  :root .app-shell .sidebar .nav-item > span:not(.nav-count) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  :root .app-shell .sidebar .nav-count { position: absolute; top: 4px; right: 4px; margin: 0; }
+  :root .app-shell .sidebar .profile { justify-content: center; padding-inline: 0; }
+}
