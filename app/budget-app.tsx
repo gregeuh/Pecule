@@ -1,7 +1,5 @@
 "use client";
 import type { Modal } from "./budget-modal";
-import AmountInput from "./amount-input";
-import Empty from "./budget-empty";
 import OperationEditor from "./operation-editor";
 import AccountEditor from "./account-editor";
 import TransferEditor from "./transfer-editor";
@@ -35,7 +33,6 @@ import {
   ChevronRight,
   ChevronDown,
   X,
-  Check,
   Cloud,
   CloudOff,
   Settings2,
@@ -60,8 +57,6 @@ import {
   materialize,
   money,
   overview,
-  parseDate,
-  shiftDate,
   shortDate,
   todayISO,
   type Account,
@@ -99,16 +94,16 @@ import TransactionsPage from "./transactions-page";
 import AccountsPage from "./accounts-page";
 import GoalsPage from "./goals-page";
 import RecurringPage from "./recurring-page";
-import { downloadFile, inputAmount } from "./download-file";
+import GoalEditor from "./goal-editor";
+import RuleEditor from "./rule-editor";
+import { downloadFile } from "./download-file";
 import { usePrivacyPreference, useNetworkOnline, useGoogleReturn, useCompactViewport } from "./browser-preferences";
 import { FormDraftProvider, useFormDraftStore } from "./form-drafts";
 import { CaptureRoutine, DailyReview, catchupDate } from "./capture-routine";
 import { CaptureFavorites, FavoriteEditor } from "./capture-favorites";
 import { captureAccount, favoriteFromTransaction, type Favorite } from "../lib/capture";
 import AccountBalanceAdjustment from "./account-balance-adjustment";
-import FormSection from "./form-section";
 import TransactionFilters, { type OperationFilterValues } from "./operation-filters";
-import FormOptions from "./form-options";
 import EmptyState from "./empty-state";
 import { ErrorMessage } from "./interface-feedback";
 import CategoryIcon from "./category-icon";
@@ -116,13 +111,12 @@ import ForecastOutlook from "./forecast-outlook";
 import ClarteDashboard from "./clarte-dashboard";
 import SpendingPlan from "./spending-plan";
 import MobileDock from "./mobile-dock";
-import SubmitButton from "./submit-button";
 import { GestureActions } from "./operation-gesture";
 import QuickAddGesture from "./quick-add-gesture";
 import { usePreviewDepth } from "./use-preview-depth";
 import { useWalletGesture } from "./use-wallet-gesture";
 import WalletAccountDetail from "./wallet-account-detail";
-import { walletColor, walletSurfaceStyles } from "../lib/wallet-presentation";
+import { walletSurfaceStyles } from "../lib/wallet-presentation";
 import { useViewMotion } from "./use-view-motion";
 import BudgetNotice from "./budget-notice";
 import { useModalMotion } from "./use-modal-motion";
@@ -134,8 +128,8 @@ import {
 } from "./signature-interactions";
 import { occurrenceFeedback } from "../lib/occurrence-feedback";
 import { confirmationKind, type ConfirmationKind } from "../lib/confirmation-kind";
-import MerchantFields, { MerchantIcon } from "./merchant-fields";
-import { ValidatedForm, FormField, revealFormControl } from "./validated-form";
+import { MerchantIcon } from "./merchant-fields";
+import { revealFormControl } from "./validated-form";
 import { csvCell, parseAmount } from "../lib/csv";
 
 type Page = "plan" | "overview" | "transactions" | "recurring" | "accounts" | "goals" | "settings";
@@ -1019,11 +1013,6 @@ function BudgetAppContent({ user }: BudgetAppProps) {
     setAccountFilter(value.account);
     setMonth(value.month);
   };
-  const accountOptions = b.accounts.map((a) => (
-    <option key={a.id} value={a.id}>
-      {a.name}
-    </option>
-  ));
   function exportCSV() {
     const rows = [
       ["Date", "Libellé", "Montant", "Catégorie", "Compte", "Note"],
@@ -1049,14 +1038,6 @@ function BudgetAppContent({ user }: BudgetAppProps) {
   const transferTarget =
     b.accounts.find((a) => a.type === "savings" && a.id !== transferSource)?.id ??
     b.accounts.find((a) => a.id !== transferSource)?.id;
-  const ruleDraft = modal?.type === "rule" ? (modal.item ?? modal.proposal) : undefined;
-  const recurrenceSource =
-    modal?.type === "rule" && modal.sourceTransactionId
-      ? b.transactions.find((t) => t.id === modal.sourceTransactionId)
-      : undefined;
-  const recurrenceMin = recurrenceSource
-    ? shiftDate(recurrenceSource.date > today ? recurrenceSource.date : today, 1)
-    : "2000-01-01";
   const modalTitle =
     modal?.type === "operation-actions"
       ? "Actions de l’opération"
@@ -2581,284 +2562,32 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                   />
                 )}
                 {modal.type === "rule" && (
-                  <>
-                    {!b.accounts.length ? (
-                      <Empty
-                        icon={Wallet}
-                        title="Commençons par un compte"
-                        description="Les récurrences seront rattachées à ce compte."
-                        action={
-                          <button type="button" className="primary" onClick={() => open({ type: "account" })}>
-                            Ajouter un compte
-                          </button>
-                        }
-                      />
-                    ) : (
-                      <ValidatedForm
-                        key={modalKey(modal)}
-                        draftKey={modalKey(modal)}
-                        onReset={() => resetDirection(modal)}
-                        busy={busy}
-                        actions={
-                          <>
-                            <button type="submit" className="primary full-width" disabled={busy}>
-                              {saving ? <LoaderCircle size={16} className="spin" /> : <Repeat2 size={16} />}Enregistrer
-                              la récurrence
-                            </button>
-                            <button
-                              type="button"
-                              className="text-button panel-cancel"
-                              disabled={busy}
-                              onClick={() =>
-                                recurrenceSource
-                                  ? open({ type: "transaction", item: recurrenceSource })
-                                  : setModal(null)
-                              }
-                            >
-                              Annuler
-                            </button>
-                          </>
-                        }
-                        onSubmit={submit}
-                      >
-                        {recurrenceSource && (
-                          <div className="info-callout">
-                            <Repeat2 size={18} />
-                            <p>
-                              L’opération enregistrée est conservée. Choisissez la fréquence et la prochaine échéance :
-                              seules les échéances futures seront ajoutées, sans doublon de l’opération d’origine.
-                            </p>
-                          </div>
-                        )}
-                        <FormSection title="La récurrence">
-                          <MerchantFields
-                            categoryRules={b.settings.categoryRules}
-                            initialLabel={ruleDraft?.label}
-                            initialCategory={ruleDraft?.category}
-                            initialMerchantId={ruleDraft?.merchantId}
-                            initialCustomIconUrl={ruleDraft?.customIconUrl}
-                            direction={merchantDirection}
-                          />
-                          <div className="form-grid">
-                            <FormField label="Type">
-                              <select
-                                name="direction"
-                                onChange={(e) => setMerchantDirection(e.target.value)}
-                                defaultValue={ruleDraft && ruleDraft.amount > 0 ? "income" : "expense"}
-                              >
-                                <option value="expense">Dépense récurrente</option>
-                                <option value="income">Entrée d’argent récurrente</option>
-                              </select>
-                            </FormField>
-                            <FormField label="Montant">
-                              <AmountInput
-                                name="amount"
-                                defaultValue={ruleDraft ? Math.abs(ruleDraft.amount) : undefined}
-                              />
-                            </FormField>
-                          </div>
-                          <div className="form-grid">
-                            <FormField label="Compte">
-                              <select name="account" defaultValue={ruleDraft?.accountId ?? b.accounts[0]?.id}>
-                                {accountOptions}
-                              </select>
-                            </FormField>
-                          </div>
-                        </FormSection>
-                        <FormSection title="Le rythme">
-                          <div className="form-grid">
-                            <FormField label="Fréquence">
-                              <select name="frequency" defaultValue={ruleDraft?.frequency ?? "monthly"}>
-                                <option value="monthly">Chaque mois</option>
-                                <option value="weekly">Chaque semaine</option>
-                                <option value="yearly">Chaque année</option>
-                              </select>
-                            </FormField>
-                            <FormField label="Règle de date">
-                              <select name="timing" defaultValue={ruleDraft?.timing ?? "date"}>
-                                <option value="date">Jour fixe</option>
-                                <option value="last-business-day">Dernier jour ouvré du mois</option>
-                              </select>
-                            </FormField>
-                          </div>
-                          <div className="form-grid">
-                            <FormField
-                              label="Jour du mois (pour une date fixe)"
-                              hint="Un jour absent du mois est ramené au dernier jour."
-                            >
-                              <input
-                                name="day"
-                                type="number"
-                                min="1"
-                                max="31"
-                                required
-                                defaultValue={ruleDraft?.day ?? parseDate(today).getDate()}
-                              />
-                            </FormField>
-                          </div>
-                          <div className="form-grid">
-                            <FormField label="À partir du">
-                              <input
-                                name="date"
-                                type="date"
-                                min={recurrenceMin}
-                                max="2100-12-31"
-                                required
-                                defaultValue={ruleDraft?.startDate ?? shiftDate(today, 1)}
-                              />
-                            </FormField>
-                          </div>
-                          <FormOptions
-                            title="Jours fériés et fin de série"
-                            initialOpen={
-                              !!ruleDraft?.endDate || (!!ruleDraft && ruleDraft.holidays !== b.settings.holidayCalendar)
-                            }
-                          >
-                            <FormField label="Jours fériés à exclure">
-                              <select name="holidays" defaultValue={ruleDraft?.holidays ?? b.settings.holidayCalendar}>
-                                <option value="FR">France · calendrier national</option>
-                                <option value="none">Aucun · week-ends uniquement</option>
-                              </select>
-                            </FormField>
-                            <FormField label="Jusqu’au (facultatif)">
-                              <input
-                                name="end"
-                                type="date"
-                                min="2000-01-01"
-                                max="2100-12-31"
-                                defaultValue={ruleDraft?.endDate}
-                              />
-                            </FormField>
-                            <p className="field-hint">
-                              Chaque semaine : le jour de la date de début est utilisé. Chaque année : le mois de début
-                              est utilisé. Les autres règles de date concernent les fréquences mensuelles et annuelles.
-                              Les opérations passées restent conservées après une modification.
-                            </p>
-                          </FormOptions>
-                        </FormSection>
-                        {error && <ErrorMessage>{error}</ErrorMessage>}
-                      </ValidatedForm>
-                    )}
-                  </>
+                  <RuleEditor
+                    modal={modal}
+                    budget={b}
+                    today={today}
+                    formKey={modalKey(modal)}
+                    busy={busy}
+                    saving={saving}
+                    error={error}
+                    merchantDirection={merchantDirection}
+                    setMerchantDirection={setMerchantDirection}
+                    open={open}
+                    submit={submit}
+                    onReset={() => resetDirection(modal)}
+                    onCancel={() => setModal(null)}
+                  />
                 )}
                 {modal.type === "goal" && (
-                  <ValidatedForm
-                    key={modalKey(modal)}
-                    draftKey={modalKey(modal)}
-                    onReset={() => resetDirection(modal)}
+                  <GoalEditor
+                    modal={modal}
+                    formKey={modalKey(modal)}
                     busy={busy}
-                    actions={
-                      <>
-                        <SubmitButton busy={busy} icon={<Sparkles size={16} />}>
-                          Enregistrer mon objectif
-                        </SubmitButton>
-                        <button
-                          type="button"
-                          className="text-button panel-cancel"
-                          disabled={busy}
-                          onClick={() => setModal(null)}
-                        >
-                          Annuler
-                        </button>
-                      </>
-                    }
-                    onSubmit={submit}
-                  >
-                    <FormSection title="Votre projet">
-                      <FormField label="Quel projet avez-vous en tête ?">
-                        <input
-                          name="name"
-                          maxLength={120}
-                          required
-                          placeholder="Un voyage, une sécurité, une envie…"
-                          defaultValue={modal.item?.name}
-                        />
-                      </FormField>
-                      <div className="form-grid">
-                        <FormField label="Objectif à atteindre">
-                          <AmountInput name="target" defaultValue={modal.item?.target} />
-                        </FormField>
-                        <FormField label="Déjà mis de côté">
-                          <span className="amount-input">
-                            <input
-                              name="saved"
-                              type="number"
-                              step="0.01"
-                              min="0"
-                              max="1000000000"
-                              required
-                              defaultValue={inputAmount(modal.item?.saved ?? 0)}
-                            />
-                            <span>€</span>
-                          </span>
-                        </FormField>
-                      </div>
-                    </FormSection>
-                    <FormSection title="Votre rythme">
-                      <FormField
-                        label="À réserver chaque mois"
-                        hint="Facultatif : mettez 0 pour avancer librement. La réserve restante est retirée du disponible, sans effectuer de virement bancaire."
-                      >
-                        <span className="amount-input">
-                          <input
-                            name="monthly"
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            max="1000000000"
-                            required
-                            defaultValue={inputAmount(modal.item?.monthly ?? 0)}
-                          />
-                          <span>€</span>
-                        </span>
-                      </FormField>
-                      <FormOptions title="Date et personnalisation">
-                        <FormField label="Une date en tête ? (facultatif)">
-                          <input
-                            name="deadline"
-                            type="date"
-                            min="2000-01-01"
-                            max="2100-12-31"
-                            defaultValue={modal.item?.deadline}
-                          />
-                        </FormField>
-                        <div className="form-grid">
-                          <FormField label="Une petite touche personnelle">
-                            <select name="icon" defaultValue={modal.item?.icon ?? "sun"}>
-                              <option value="sun">Un rayon de soleil</option>
-                              <option value="shield">La tranquillité</option>
-                              <option value="home">Un chez-soi</option>
-                              <option value="plane">Une aventure</option>
-                              <option value="sparkles">Une envie</option>
-                            </select>
-                          </FormField>
-                          <div className="field">
-                            <span>Couleur</span>
-                            <div className="color-choices">
-                              {colors.map((c, i) => (
-                                <label key={c} style={{ background: walletColor(c) }} title={`Couleur ${i + 1}`}>
-                                  <input
-                                    type="radio"
-                                    name="color"
-                                    value={c}
-                                    defaultChecked={modal.item ? modal.item.color === c : i === 2}
-                                    required
-                                  />
-                                  <Check size={17} />
-                                  <span className="sr-only">Couleur {i + 1}</span>
-                                </label>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </FormOptions>
-                      <p className="field-hint">
-                        Le montant déjà mis de côté sert au suivi de cet objectif. Il ne modifie pas le solde de vos
-                        comptes.
-                      </p>
-                    </FormSection>
-                    {error && <ErrorMessage>{error}</ErrorMessage>}
-                  </ValidatedForm>
+                    error={error}
+                    submit={submit}
+                    onReset={() => resetDirection(modal)}
+                    onCancel={() => setModal(null)}
+                  />
                 )}
                 {(modal.type === "transfer" || modal.type === "contribution") && (
                   <TransferEditor
