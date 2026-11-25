@@ -18,9 +18,11 @@ import "./gestures.css";
 import "./wallet-depth.css";
 import "./launch.css";
 import "./save-continuity.css";
+import "./glass.css";
 import { launchBootstrap } from "../lib/launch-bootstrap";
 import { launchImages } from "../lib/launch-images";
 import AppearanceProvider from "./theme-provider";
+import GlassBackdrop from "./glass-backdrop";
 export const metadata: Metadata = {
   title: "Pécule — Votre argent, l’esprit léger",
   description:
@@ -52,7 +54,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body>
         <script dangerouslySetInnerHTML={{ __html: launchBootstrap }} />
-        <AppearanceProvider>{children}</AppearanceProvider>
+        <AppearanceProvider>
+          <GlassBackdrop />
+          {children}
+        </AppearanceProvider>
       </body>
     </html>
   );
