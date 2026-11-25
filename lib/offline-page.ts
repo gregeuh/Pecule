@@ -1,4 +1,9 @@
 try {
+  const palette = localStorage.getItem("pecule-palette");
+  if (palette === "lavande" || palette === "menthe" || palette === "ocean")
+    document.documentElement.dataset.palette = palette;
+} catch {}
+try {
   const theme = localStorage.getItem("pecule-theme");
   if (theme === "light" || (theme !== "dark" && matchMedia("(prefers-color-scheme:light)").matches))
     document.documentElement.classList.add("theme-light");

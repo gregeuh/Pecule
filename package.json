@@ -45,6 +45,7 @@
     "test:e2e:typography": "node tests/e2e/typography.mjs",
     "test:e2e:editors": "node tests/e2e/financial-editors.mjs",
     "test:e2e:reflow": "node tests/e2e/desktop-reflow.mjs",
+    "test:e2e:appearance": "node tests/e2e/appearance.mjs",
     "format": "prettier --write \"{app,lib,tests,scripts}/**/*.{ts,tsx,mts,mjs}\"",
     "format:check": "prettier --check \"{app,lib,tests,scripts}/**/*.{ts,tsx,mts,mjs}\"",
     "install:ci": "npm ci --include=dev --include=optional"

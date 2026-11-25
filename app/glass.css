@@ -92,3 +92,33 @@
   :root :is(.glass, .app-shell .mobile-dock .mobile-nav.floating-nav, :is(.topbar, .clarte-header-actions) .icon-button, .app-shell > .sidebar, .modal-backdrop .modal) { background: var(--glass-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
   .glass-backdrop > i { opacity: .55; }
 }
+
+/* Réglages: the theme picker, six glass tiles with a live preview of each palette. */
+:root .theme-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 14px 0 10px; }
+@media (min-width: 1100px) { :root .theme-choices { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+:root .theme-choice { position: relative; display: flex; flex-direction: column; gap: 6px; cursor: pointer; border-radius: 18px; }
+:root .theme-preview { position: relative; display: block; height: 64px; border-radius: 16px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow var(--motion-feedback) ease, transform var(--motion-press) ease-out; }
+:root .theme-preview > i { position: absolute; width: 60%; height: 70%; border-radius: 50%; filter: blur(10px); opacity: .9; }
+:root .theme-preview > i:nth-child(1) { left: -14%; top: -20%; }
+:root .theme-preview > i:nth-child(2) { right: -16%; top: 20%; }
+:root .theme-preview > i:nth-child(3) { left: 10%; bottom: -36%; }
+:root .theme-preview > b { position: absolute; left: 14%; right: 14%; bottom: 10px; height: 14px; border-radius: 99px; background: rgba(255, 255, 255, .62); box-shadow: inset 0 1px 1px #fff; }
+:root .theme-preview[data-preview="peche"] { background: #fbeee3; }
+:root .theme-preview[data-preview="lavande"] { background: #efeaff; }
+:root .theme-preview[data-preview="menthe"] { background: #e8f5ef; }
+:root .theme-preview[data-preview="ocean"] { background: #dbe7f3; }
+:root .theme-preview[data-preview="nuit"] { background: #1a1216; }
+:root .theme-preview[data-preview="nuit"] > b { background: rgba(255, 255, 255, .16); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .3); }
+:root .theme-preview[data-preview="auto"] { background: linear-gradient(110deg, #fbeee3 50%, #1a1216 50%); }
+:root .theme-name { display: flex; align-items: center; justify-content: center; gap: 4px; min-height: 24px; color: var(--ink); font-size: 14px; font-weight: 600; }
+:root .theme-choice:has(input:checked) .theme-preview { box-shadow: inset 0 0 0 1px var(--line), 0 0 0 3px var(--action-bg); }
+:root .theme-choice:has(input:focus-visible) .theme-preview { outline: 3px solid var(--blue); outline-offset: 3px; }
+:root .theme-choice:active .theme-preview { transform: scale(.96); }
+@media (prefers-reduced-motion: reduce) { :root .theme-choice:active .theme-preview { transform: none; } }
+:root .theme-input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 1; }
+
+/* iPhone sticky header: the wash shows through instead of a flat grey band. */
+@media (max-width: 760px) {
+  :root .app-shell .topbar { background: color-mix(in srgb, var(--bg) 62%, transparent); -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%); }
+}
+@media (prefers-reduced-transparency: reduce) and (max-width: 760px) { :root .app-shell .topbar { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; } }

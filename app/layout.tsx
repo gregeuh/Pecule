@@ -20,6 +20,7 @@ import "./launch.css";
 import "./save-continuity.css";
 import "./glass.css";
 import { launchBootstrap } from "../lib/launch-bootstrap";
+import { paletteBootstrap } from "../lib/appearance";
 import { launchImages } from "../lib/launch-images";
 import AppearanceProvider from "./theme-provider";
 import GlassBackdrop from "./glass-backdrop";
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body>
         <script dangerouslySetInnerHTML={{ __html: launchBootstrap }} />
+        <script dangerouslySetInnerHTML={{ __html: paletteBootstrap }} />
         <AppearanceProvider>
           <GlassBackdrop />
           {children}

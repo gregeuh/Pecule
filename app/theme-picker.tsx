@@ -1,30 +1,71 @@
 "use client";
+import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
+import { Check } from "lucide-react";
+import {
+  appearanceChoices,
+  choiceToStorage,
+  PALETTE_KEY,
+  readPalette,
+  storageToChoice,
+  type AppearanceChoice,
+} from "../lib/appearance";
+
+const listeners = new Set<() => void>();
+const subscribe = (listener: () => void) => {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+};
+const applyPalette = (palette: string) => {
+  try {
+    localStorage.setItem(PALETTE_KEY, palette);
+  } catch {}
+  document.documentElement.dataset.palette = palette;
+  listeners.forEach((listener) => listener());
+};
+const currentPalette = () => readPalette(document.documentElement.dataset.palette ?? null);
+
+/** Thèmes Liquid Glass : quatre palettes claires, Nuit, et Automatique (palette claire le jour, Nuit le soir). */
 export default function ThemePicker({ onSaved }: { onSaved?: () => void }) {
   const { theme = "system", setTheme } = useTheme();
+  const palette = useSyncExternalStore(subscribe, currentPalette, () => "peche" as const);
+  const chosen = storageToChoice(theme, palette);
+  const choose = (choice: AppearanceChoice) => {
+    const next = choiceToStorage(choice, palette);
+    applyPalette(next.palette);
+    setTheme(next.mode);
+    onSaved?.();
+  };
   return (
-    <section className="card settings-card">
-      <h3>À la lumière de votre journée.</h3>
-      <p>
-        L’apparence automatique suit le mode clair ou sombre de cet appareil, même lorsqu’il change pendant
-        l’utilisation.
+    <section className="card settings-card theme-card">
+      <h3 id="theme-title">Thème</h3>
+      <div className="theme-choices" role="radiogroup" aria-labelledby="theme-title">
+        {appearanceChoices.map(({ id, label, swatch }) => (
+          <label key={id} className="theme-choice" data-choice={id}>
+            <input
+              type="radio"
+              name="theme"
+              value={id}
+              checked={chosen === id}
+              onChange={() => choose(id)}
+              className="theme-input"
+            />
+            <span className="theme-preview" aria-hidden="true" data-preview={id}>
+              {swatch.map((color, index) => (
+                <i key={index} style={{ background: color }} />
+              ))}
+              <b />
+            </span>
+            <span className="theme-name">
+              {chosen === id && <Check size={14} aria-hidden="true" />}
+              {label}
+            </span>
+          </label>
+        ))}
+      </div>
+      <p className="field-hint">
+        Automatique suit l’iPhone : votre dernier thème clair le jour, Nuit le soir. Ce choix s’applique à cet appareil.
       </p>
-      <label className="field" htmlFor="theme-preference">
-        <span>Apparence</span>
-        <select
-          id="theme-preference"
-          value={theme}
-          onChange={(e) => {
-            setTheme(e.target.value);
-            onSaved?.();
-          }}
-        >
-          <option value="system">Automatique · comme l’appareil</option>
-          <option value="light">Clair</option>
-          <option value="dark">Sombre</option>
-        </select>
-      </label>
-      <p className="field-hint">Ce choix s’applique à cet appareil.</p>
     </section>
   );
 }
