@@ -108,3 +108,12 @@
 :root .modal.actions-modal .quick-action > small { max-width: none; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 :root .modal.actions-modal .quick-action-chevron { top: 50%; transform: translateY(-50%); }
 :root .modal.actions-modal .quick-action:nth-child(3) { margin-bottom: 10px; }
+
+/* Lot 4: "Budget" in the iPhone dock gathers Équilibre and Récurrences; this switch moves between them.
+   Desktop keeps both in the sidebar. */
+:root .budget-switch { display: none; }
+@media (max-width: 760px) {
+  :root .budget-switch { display: flex; gap: 4px; padding: 4px; margin: 4px 0 18px; border-radius: 14px; background: var(--surface-inset, rgba(21, 23, 29, .06)); }
+  :root .budget-switch > button { flex: 1; min-height: 44px; border-radius: 10px; color: var(--muted); font: 500 15px var(--font-body); }
+  :root .budget-switch > button[aria-current="page"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 2px rgba(21, 23, 29, .08); }
+}

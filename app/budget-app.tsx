@@ -39,13 +39,13 @@ import {
   Download,
   Upload,
   Sparkles,
-  MoreHorizontal,
   Pencil,
   Trash2,
   LoaderCircle,
   CircleAlert,
   LockKeyhole,
   Keyboard,
+  ChartPie,
   RotateCcw,
   type LucideIcon,
 } from "lucide-react";
@@ -1595,6 +1595,25 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                 </span>
               </div>
             )}
+            {(page === "plan" || page === "recurring") && (
+              <nav className="budget-switch" aria-label="Budget">
+                {(
+                  [
+                    ["plan", "Équilibre"],
+                    ["recurring", "Récurrences"],
+                  ] as [Page, string][]
+                ).map(([id, label]) => (
+                  <button
+                    type="button"
+                    key={id}
+                    aria-current={page === id ? "page" : undefined}
+                    onClick={() => navigate(id)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </nav>
+            )}
             {page !== "overview" && (
               <div className="page-heading">
                 <div>
@@ -1854,32 +1873,29 @@ function BudgetAppContent({ user }: BudgetAppProps) {
         <MobileDock expanded={!!modal}>
           <nav className="mobile-nav floating-nav" aria-label="Navigation mobile">
             <NavigationIndicator active={page} />
-            {nav
-              .filter((item) => ["overview", "transactions", "accounts"].includes(item.id))
-              .map(({ id, short, icon: Icon }) => (
+            {(
+              [
+                { id: "overview", short: "Accueil", icon: LayoutGrid, pages: ["overview", "accounts"] },
+                { id: "transactions", short: "Opérations", icon: ArrowLeftRight, pages: ["transactions"] },
+                { id: "plan", short: "Budget", icon: ChartPie, pages: ["plan", "recurring"] },
+                { id: "goals", short: "Épargne", icon: ChartNoAxesCombined, pages: ["goals"] },
+              ] as { id: Page; short: string; icon: LucideIcon; pages: Page[] }[]
+            ).map(({ id, short, icon: Icon, pages }) => {
+              const current = pages.includes(page);
+              return (
                 <button
                   type="button"
                   key={id}
                   aria-label={short}
-                  className={page === id ? "active" : ""}
-                  aria-current={page === id ? "page" : undefined}
-                  onClick={(e) => mobileNavigate(id, e.timeStamp)}
+                  className={current ? "active" : ""}
+                  aria-current={current ? "page" : undefined}
+                  onClick={(e) => mobileNavigate(current ? page : id, e.timeStamp)}
                 >
                   <Icon size={21} strokeWidth={1.7} />
                   <span>{short}</span>
                 </button>
-              ))}
-            <button
-              type="button"
-              className={["recurring", "goals", "plan", "settings"].includes(page) ? "active" : ""}
-              aria-label="Plus"
-              aria-haspopup="dialog"
-              aria-expanded={modal?.type === "navigation"}
-              onClick={() => open({ type: "navigation" })}
-            >
-              <MoreHorizontal size={21} />
-              <span>Plus</span>
-            </button>
+              );
+            })}
           </nav>
           <QuickAddGesture
             disabled={saving || !!modal}
