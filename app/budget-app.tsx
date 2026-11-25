@@ -1070,7 +1070,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                               : modal?.type === "imports"
                                 ? "Vos imports bancaires"
                                 : modal?.type === "actions"
-                                  ? "Une action, en un geste."
+                                  ? "Ajouter"
                                   : modal?.type === "transaction"
                                     ? modal.item
                                       ? "Le détail de l’opération"
@@ -2398,10 +2398,6 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                 )}
                 {modal.type === "actions" && (
                   <div className="quick-actions">
-                    <div className="wallet-menu-intro">
-                      <WalletActionIcon open />
-                      <p className="form-intro">Les petites actions qui gardent votre budget au clair.</p>
-                    </div>
                     <div className="quick-action-grid">
                       {[
                         {

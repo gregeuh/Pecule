@@ -26,10 +26,6 @@ import {
   ChevronRight,
   CircleAlert,
   TriangleAlert,
-  Pencil,
-  Plus,
-  ArrowLeftRight,
-  Upload,
   ChevronDown,
 } from "lucide-react";
 import {
@@ -416,44 +412,6 @@ export default function ClarteDashboard(p: Props) {
       <div className="wallet-home-grid">
         <div className="wallet-home-accounts">
           {accounts}
-          <div className="wallet-quick-actions">
-            <button type="button" disabled={p.saving} onClick={p.onAdd}>
-              <span>
-                <Plus size={19} />
-              </span>
-              Ajouter
-            </button>
-            <button
-              type="button"
-              disabled={p.saving || b.accounts.length < 2}
-              title={b.accounts.length < 2 ? "Ajoutez un deuxième compte pour un virement" : undefined}
-              onClick={p.onTransfer}
-            >
-              <span>
-                <ArrowLeftRight size={19} />
-              </span>
-              Virement
-            </button>
-            <button
-              type="button"
-              disabled={p.saving || !b.accounts.length}
-              onClick={() => {
-                const a = b.accounts.find((a) => a.type === "current") ?? b.accounts[0];
-                if (a) p.onAdjustAccount(a);
-              }}
-            >
-              <span>
-                <Pencil size={18} />
-              </span>
-              Ajuster
-            </button>
-            <button type="button" disabled={p.saving} onClick={p.onImport}>
-              <span>
-                <Upload size={19} />
-              </span>
-              Importer
-            </button>
-          </div>
           <AnimatedDetails className="wallet-capture">
             <summary>
               Ma saisie et mes favoris

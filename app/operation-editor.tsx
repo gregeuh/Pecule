@@ -134,6 +134,7 @@ export default function OperationEditor({
           onTransfer={() => open({ type: "transfer" })}
           onFavorite={openFavorite}
           onFavorites={() => open({ type: "favorites" })}
+          onOther={(target) => open({ type: target })}
         />
       ) : (
         <ValidatedForm
