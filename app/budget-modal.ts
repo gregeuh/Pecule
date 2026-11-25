@@ -12,6 +12,7 @@ export type Modal =
   | { type: "balance"; accountId: string }
   | { type: "filters" }
   | { type: "navigation" }
+  | { type: "search" }
   | { type: "actions" }
   | {
       type: "transaction";

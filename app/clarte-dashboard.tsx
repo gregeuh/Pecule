@@ -13,6 +13,8 @@ import CategoryIcon from "./category-icon";
 import EmptyState from "./empty-state";
 import { PrivacyShutter, GoalIllustration, NavigationIndicator } from "./signature-interactions";
 import BudgetAlerts from "./budget-alerts";
+import MonthAssist from "./month-assist";
+import type { PaydayPlan } from "../lib/month-assist";
 import { getAvailableSignal } from "../lib/available-signal";
 import {
   ArrowRight,
@@ -20,6 +22,7 @@ import {
   CloudOff,
   LoaderCircle,
   Settings2,
+  Search,
   Info,
   ShieldCheck,
   CalendarDays,
@@ -66,6 +69,9 @@ type Props = {
   onRecurring: () => void;
   onGoals: () => void;
   onPlan: () => void;
+  onSearch: () => void;
+  onPaydaySavings: (plan: PaydayPlan) => void;
+  onPostpone: (item: Transaction, date: string) => void;
   onAddAccount: () => void;
   chart: ReactNode;
   capture: ReactNode;
@@ -398,6 +404,15 @@ export default function ClarteDashboard(p: Props) {
           <button
             type="button"
             className="icon-button"
+            aria-label="Rechercher dans Pécule"
+            title="Rechercher (touche /)"
+            onClick={p.onSearch}
+          >
+            <Search size={20} />
+          </button>
+          <button
+            type="button"
+            className="icon-button"
             aria-label={p.hidden ? "Afficher les montants" : "Masquer les montants"}
             aria-pressed={p.hidden}
             onClick={p.onToggleHidden}
@@ -412,6 +427,16 @@ export default function ClarteDashboard(p: Props) {
       <div className="wallet-home-grid">
         <div className="wallet-home-accounts">
           {accounts}
+          {!p.loadError && (
+            <MonthAssist
+              budget={b}
+              today={p.today}
+              hidden={p.hidden}
+              busy={p.saving}
+              onPaydaySavings={p.onPaydaySavings}
+              onPostpone={p.onPostpone}
+            />
+          )}
           <AnimatedDetails className="wallet-capture">
             <summary>
               Ma saisie et mes favoris
