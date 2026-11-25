@@ -1,4 +1,4 @@
-import { getChatGPTUser } from "../../../../chatgpt-auth";
+import { getSessionUser } from "../../../../session-user";
 import { ensureDatabase } from "../../../../../lib/auth";
 import { getPool, tablePrefix } from "../../../../../lib/postgres";
 export const dynamic = "force-dynamic";
@@ -12,7 +12,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ rev
   if (!/^[1-9][0-9]{0,8}$/.test(revision))
     return Response.json({ error: "Version inconnue." }, { status: 404, headers });
   try {
-    const user = await getChatGPTUser();
+    const user = await getSessionUser();
     if (!user) return Response.json({ error: "Connectez-vous pour voir vos versions." }, { status: 401, headers });
     await ensureDatabase();
     const { rows } = await getPool().query(

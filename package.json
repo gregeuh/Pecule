@@ -51,8 +51,8 @@
   },
   "dependencies": {
     "@lottiefiles/dotlottie-web": "^0.81.0",
-    "better-auth": "1.7.13",
-    "lucide-react": "^1.31.0",
+    "better-auth": "1.7.28",
+    "lucide-react": "^1.80.0",
     "next": "16.4.6",
     "next-themes": "^0.4.6",
     "pg": "8.23.1",
@@ -73,7 +73,7 @@
     "eslint": "9.39.4",
     "eslint-config-next": "16.4.6",
     "playwright": "1.64.1",
-    "postcss": "^8.5.0",
+    "postcss": "^8.5.33",
     "prettier": "^3.10.1",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3"

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getChatGPTUser } from "../../chatgpt-auth";
+import { getSessionUser } from "../../session-user";
 import { getPool } from "../../../lib/postgres";
 import { ensurePush, pushAvailable, pushId, pushTable, sendReminder } from "../../../lib/push-server";
 import { safePushEndpoint } from "../../../lib/reminders";
@@ -24,7 +24,7 @@ const body = z.discriminatedUnion("action", [
 ]);
 export async function GET() {
   try {
-    const user = await getChatGPTUser();
+    const user = await getSessionUser();
     if (!user) return reply({ error: "Connectez-vous pour gérer vos rappels." }, 401);
     if (!pushAvailable()) return reply({ available: false, devices: [] });
     await ensurePush();
@@ -40,7 +40,7 @@ export async function GET() {
 export async function POST(request: Request) {
   if (request.headers.get("origin") !== new URL(request.url).origin) return reply({ error: "Origine refusée." }, 403);
   try {
-    const user = await getChatGPTUser();
+    const user = await getSessionUser();
     if (!user) return reply({ error: "Votre session a expiré." }, 401);
     if (!pushAvailable()) return reply({ error: "Les notifications sont temporairement indisponibles." }, 503);
     if (Number(request.headers.get("content-length")) > 10000)
