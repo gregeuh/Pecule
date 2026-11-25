@@ -374,3 +374,4 @@ Premier lot de la revue de design validée par l'utilisateur. `app/visual-fixes.
 - Carte de compte : un seul séparateur entre la vérification bancaire et l'activité.
 - iPhone : les libellés se coupent entre les mots (césure française) et les montants restent sur une ligne ; l'état de synchronisation affiche son texte dès qu'il n'est pas « Synchronisé ».
 - Tablette et ordinateur : les textes secondaires mesurés entre 9 et 11 px passent à 12 px ; les pastilles de compteur de la barre latérale gardent leur taille.
+- Séparateur des milliers : dans les textes en DM Sans, l'espace fine U+202F est servie par Inter (voir `docs/font-assets.md`), car le sous-ensemble DM Sans ne la contient pas.

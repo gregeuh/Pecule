@@ -1,5 +1,9 @@
 /* Canonical shared palette and type roles. Layout and motion keep their own owners. */
 @font-face{font-family:DM Sans;font-style:normal;font-weight:100 1000;font-display:swap;src:url(/fonts/dm-sans-latin.woff2)format("woff2")}
+/* money() separates thousands with U+202F. The DM Sans subset has no glyph for it, so every device drew it
+   with its own fallback font, often under 2 px ("1250,00 €"). This face serves that character alone from
+   Inter, which has it: the same separator as the amounts set in Inter, on every device. */
+@font-face{font-family:DM Sans;font-style:normal;font-weight:100 1000;font-display:swap;src:url(/fonts/inter-latin.woff2)format("woff2");unicode-range:U+202F}
 @font-face{font-family:Manrope;font-style:normal;font-weight:200 800;font-display:swap;src:url(/fonts/manrope-latin.woff2)format("woff2")}
 @font-face{font-family:Inter;font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/inter-latin.woff2) format("woff2")}
 :root {

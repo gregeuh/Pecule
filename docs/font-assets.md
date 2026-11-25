@@ -14,3 +14,7 @@ npm run build
 ```
 
 Le fichier porte un nouveau nom pour ne pas réutiliser une ancienne réponse en cache. Préchargement, CSS normal, CSS hors ligne et service worker pointent vers le même nom. `scripts/build-offline.mjs` inclut les octets des trois fontes dans la version du cache. Après une modification de fonte : contrôler accents français, centimes, chiffres tabulaires, graisses 400/450/500, rendu des titres, page de connexion et hors-ligne, puis exécuter `test:e2e:typography`.
+
+## Séparateur des milliers — 25 novembre 2026
+
+`money()` sépare les milliers par une espace fine insécable (U+202F). Le sous-ensemble DM Sans ne contient pas ce caractère : chaque appareil le dessinait avec sa police système de secours, souvent sous 2 px (« 1250,00 € »). `app/theme.css` et `public/offline.css` déclarent donc, pour la famille DM Sans, une seconde face limitée à `unicode-range: U+202F` qui pointe vers `inter-latin.woff2`, lequel contient ce glyphe (0,182 em). Les textes en DM Sans utilisent ainsi le même séparateur que les montants en Inter, sans téléchargement supplémentaire (Inter est déjà chargé). Mesuré à 12–14 px : 0,12–0,13 em avant, 0,16–0,18 em après ; hauteurs de ligne inchangées.
