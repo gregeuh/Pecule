@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { getMigrations } from "better-auth/db/migration";
 import { getPool, tablePrefix } from "./postgres";
+import { budgetVersionsSchema } from "./budget-storage";
 
 import { passwordResetEnabled, sendPasswordResetEmail } from "./reset-email";
 
@@ -66,6 +67,7 @@ async function initialize() {
       revision integer NOT NULL, updated_at text NOT NULL
     )`);
     await client.query(`ALTER TABLE ${tablePrefix}budgets ADD COLUMN IF NOT EXISTS last_operation_at timestamptz`);
+    await client.query(budgetVersionsSchema(`${tablePrefix}budget_versions`));
     await client.query("COMMIT");
   } catch (error) {
     await client.query("ROLLBACK");
