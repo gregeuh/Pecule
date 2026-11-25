@@ -1,4 +1,5 @@
 "use client";
+import { inputAmount } from "./download-file";
 import { useEffect, useRef, useState } from "react";
 import AnimatedDetails from "./animated-details";
 import { Check, LoaderCircle, Search, Plus, ChevronDown } from "lucide-react";
@@ -166,7 +167,7 @@ export default function AccountBalanceAdjustment({
               negative
                 ? target === null
                   ? raw.slice(1)
-                  : String(Math.abs(target) / 100)
+                  : inputAmount(Math.abs(target))
                 : "-" + raw.replace(/^\+/, ""),
             );
             setError("");

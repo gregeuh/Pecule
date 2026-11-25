@@ -26,3 +26,56 @@
   /* Operation rows: the category and account line stays on one line. */
   .transaction-row .transaction-title > small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
+
+/* Balance preview before an amount is typed: a quiet dash, not a blue link-like "À préciser". */
+:root .balance-preview-values strong[data-empty="true"] { color: var(--muted); font-weight: 450; }
+
+/* One look for "Annuler" in every panel: quiet grey text, never underlined. */
+:root .modal :is(.operation-cancel, .modal-form-cancel) { color: var(--muted); text-decoration: none; background: transparent; }
+@media (hover: hover) {
+  :root .modal :is(.operation-cancel, .modal-form-cancel):hover { color: var(--ink); }
+}
+
+/* Account cards: one separator between "Vérifier avec ma banque" and "Activité du compte". */
+:root .account-verification + .account-activity { border-top: 0; margin-top: 0; }
+
+/* Narrow phones: break a label between words, never inside one ("Réparat / ion"),
+   and keep an amount on one line. "anywhere" also shrank the title column to a few letters. */
+@media (max-width: 760px) {
+  :root .transaction-title > strong { overflow-wrap: break-word; hyphens: auto; }
+  :root .transaction-amount > strong { white-space: nowrap; }
+}
+
+/* iPhone: the sync label stays hidden only when all is well; any problem or pending entry is spelled out.
+   When hidden, the label is still read by screen readers. */
+@media (max-width: 760px) {
+  :root .sync-state:not([data-quiet="true"]) > span { display: inline; }
+  :root .sync-state[data-quiet="true"] > span { display: inline; position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+
+/* Tablet and desktop: secondary texts measured at 9–11 px on the live site are raised to 12 px.
+   iPhone sizes are already owned by wallet.css (--mobile-meta). Sidebar count badges keep their size. */
+@media (min-width: 761px) {
+  :root .app-shell :is(
+    .wallet-accounts-heading > div > span,
+    .wallet-card-bottom > span,
+    .wallet-quick-actions > button,
+    .wallet-month-summary small,
+    .clarte-section-title > .text-button,
+    .day-summary > small,
+    .transaction-title > small,
+    .transaction-amount > small,
+    .recurrence-filters > button > span,
+    .rule-bottom > .status-pill,
+    .goal-progress-label > span,
+    .goal-progress-label > strong,
+    .settings-brand > span,
+    .settings-brand small,
+    .profile small,
+    .wallet-month-summary > div > span,
+    .clarte-transaction small,
+    .wallet-goal-row small,
+    button[aria-label^="Prévision de"] small,
+    .sync-state > span
+  ) { font-size: 12px; }
+}

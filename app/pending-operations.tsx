@@ -1,4 +1,5 @@
 "use client";
+import { inputAmount } from "./download-file";
 import { useState, useEffect } from "react";
 import { money, type Budget, type Transaction } from "../lib/budget";
 import { parseAmount } from "../lib/csv";
@@ -125,7 +126,7 @@ export default function PendingOperations({
                   <input
                     name="pending-amount"
                     inputMode="decimal"
-                    defaultValue={String(Math.abs(entry.transaction.amount) / 100)}
+                    defaultValue={inputAmount(Math.abs(entry.transaction.amount))}
                     required
                   />
                 </FormField>

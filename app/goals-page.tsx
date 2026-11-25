@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import { Info, Pencil, Plus, Sparkles, Trash2 } from "lucide-react";
 import { shortDate, type Budget } from "../lib/budget";
 import { walletColor } from "../lib/wallet-presentation";
+import { goalProgress } from "../lib/budget-presentation";
 import type { Modal } from "./budget-modal";
 import { GoalIllustration } from "./signature-interactions";
 
@@ -36,7 +37,7 @@ export default function GoalsPage({ budget: b, hidden, m, open, onRemoveGoal }: 
       </div>
       <div className="goal-grid">
         {b.goals.map((g) => {
-          const progress = Math.min(100, Math.max(0, (g.saved / g.target) * 100));
+          const { share: progress, percent } = goalProgress(g.saved, g.target);
           return (
             <article className="card goal-card" key={g.id}>
               <div className="goal-card-top">
@@ -71,7 +72,7 @@ export default function GoalsPage({ budget: b, hidden, m, open, onRemoveGoal }: 
                 aria-label={`Progression de ${g.name}`}
                 aria-valuemin={0}
                 aria-valuemax={100}
-                aria-valuenow={hidden ? undefined : Math.round(progress)}
+                aria-valuenow={hidden ? undefined : percent}
                 aria-valuetext={hidden ? "Progression masquée" : undefined}
               >
                 <span
@@ -93,7 +94,7 @@ export default function GoalsPage({ budget: b, hidden, m, open, onRemoveGoal }: 
                 )}
               </p>
               <div className="goal-progress-label">
-                <span>{hidden ? "Progression masquée" : `${Math.round(progress)} % du chemin`}</span>
+                <span>{hidden ? "Progression masquée" : `${percent} % du chemin`}</span>
                 <strong>{m(g.monthly, false)} / mois réservés</strong>
               </div>
               <button

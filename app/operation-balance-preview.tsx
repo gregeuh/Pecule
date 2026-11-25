@@ -1,4 +1,5 @@
 "use client";
+import { inputAmount } from "./download-file";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { ArrowRight, Wallet, CircleAlert } from "lucide-react";
 import { money, shortDate, type Budget } from "../lib/budget";
@@ -26,7 +27,7 @@ export default function OperationBalancePreview({
     surface = useRef<HTMLElement>(null);
   const [draft, setDraft] = useState<OperationBalanceDraft>(() => ({
     accountId: saved?.account?.[0] ?? accountId,
-    amount: saved?.amount?.[0] ?? (amount === undefined ? "" : String(amount / 100)),
+    amount: saved?.amount?.[0] ?? (amount === undefined ? "" : inputAmount(amount)),
     date: saved?.date?.[0] ?? date,
     direction: saved?.direction?.[0] ?? direction,
   }));
@@ -111,7 +112,16 @@ export default function OperationBalancePreview({
                 data-empty={preview.after === null}
                 data-long={preview.after !== null && format(preview.after).length > 16}
               >
-                {hidden ? "•••• €" : preview.after === null ? "À préciser" : money(preview.after)}
+                {hidden ? (
+                  "•••• €"
+                ) : preview.after === null ? (
+                  <>
+                    <span aria-hidden="true">—</span>
+                    <span className="sr-only">À préciser après le montant</span>
+                  </>
+                ) : (
+                  money(preview.after)
+                )}
               </strong>
             </div>
           </div>

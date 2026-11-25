@@ -363,3 +363,14 @@ Les corrections de l’audit conservent Wallet et les graisses fines. La palette
 `useModalMotion` garde la présence et les interruptions. `morphModalSurface` anime une surface temporaire vide et inerte par transformation ; les champs restent à leur taille finale. Aucun clone de montant, nouvelle bibliothèque ou attente de sauvegarde n’est ajouté. Les tailles et positions ne sont plus interpolées image par image par ce moteur. Les modes réduit, clavier, redimensionnement et annulation nettoient la couche.
 
 Inter est livré en sous-ensemble latin variable, avec accents combinés et licence conservée. La génération est documentée dans `docs/font-assets.md`. Le cache hors ligne dépend aussi des octets des trois fontes. Les éditeurs d’opération, compte et virement sont séparés de BudgetApp, qui reste propriétaire de la sauvegarde financière et des conflits. Référence de livraison : `docs/audit-2026-11-18.md`.
+
+## Corrections de la revue — 25 novembre 2026
+Premier lot de la revue de design validée par l'utilisateur. `app/visual-fixes.css`, chargé en dernier, porte les ajustements de mise en page ; aucune nouvelle couleur ni nouveau composant.
+- Progression d'objectif : `goalProgress` (`lib/budget-presentation.ts`) fournit la part et le pourcentage affiché, arrondi vers le bas, à l'accueil comme dans Épargne.
+- Champs de montant : `inputAmount` affiche toujours les centimes (« 4.80 », jamais « 4.8 »), zéro reste « 0 ».
+- Aperçu de solde avant saisie : un tiret discret en couleur secondaire ; le texte « À préciser après le montant » reste pour les lecteurs d'écran.
+- Le vert des revenus n'apparaît qu'au-dessus de zéro.
+- « Annuler » est partout un texte gris non souligné ; le survol n'existe que sur les appareils à pointeur.
+- Carte de compte : un seul séparateur entre la vérification bancaire et l'activité.
+- iPhone : les libellés se coupent entre les mots (césure française) et les montants restent sur une ligne ; l'état de synchronisation affiche son texte dès qu'il n'est pas « Synchronisé ».
+- Tablette et ordinateur : les textes secondaires mesurés entre 9 et 11 px passent à 12 px ; les pastilles de compteur de la barre latérale gardent leur taille.

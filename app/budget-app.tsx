@@ -1497,7 +1497,11 @@ function BudgetAppContent({ user }: BudgetAppProps) {
               pecule<span>.</span>
             </Link>
             <div className="topbar-actions">
-              <span className={`sync-state ${!online || loadError ? "warning" : ""}`}>
+              <span
+                className={`sync-state ${!online || loadError ? "warning" : ""}`}
+                role="status"
+                data-quiet={online && !busy && !loadError && !offline.entries.length && loaded}
+              >
                 {busy ? (
                   <LoaderCircle size={13} className="spin" />
                 ) : !online ? (

@@ -1,4 +1,5 @@
 "use client";
+import { inputAmount } from "./download-file";
 import AnimatedDetails from "./animated-details";
 import { useMemo, useRef, useState, type FormEvent } from "react";
 import { Home, Sparkles, ShieldCheck, ChevronLeft, ChevronRight, Check, LoaderCircle, ArrowRight } from "lucide-react";
@@ -273,7 +274,7 @@ function PlanSettings({ budget, categories, saving, onSave }: Props & { categori
                   defaultValue={
                     budget.settings.spendingPlan?.monthlyIncome == null
                       ? ""
-                      : String(budget.settings.spendingPlan.monthlyIncome / 100)
+                      : inputAmount(budget.settings.spendingPlan.monthlyIncome)
                   }
                   placeholder="0,00"
                 />

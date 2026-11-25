@@ -136,7 +136,7 @@ export default function TransactionsPage({
       <section className="metric-strip">
         <div>
           <span>Revenus reçus · {monthName}</span>
-          <strong className="positive">{m(monthIncome, true, true)}</strong>
+          <strong className={monthIncome > 0 ? "positive" : undefined}>{m(monthIncome, true, true)}</strong>
         </div>
         <div>
           <span>Dépenses enregistrées · {monthName}</span>

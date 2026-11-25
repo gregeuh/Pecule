@@ -35,3 +35,10 @@ export function roundedAxis(rawMin: number, rawMax: number) {
   const ticks = Array.from({ length: Math.round((max - min) / step) + 1 }, (_, i) => max - i * step);
   return { min, max, step, ticks };
 }
+
+/** Goal progress as a share (0–100, for bars) and as the whole percent shown to people.
+ *  The shown percent is rounded down so a goal never reads 100 % before it is reached. */
+export function goalProgress(saved: number, target: number) {
+  const share = target > 0 ? Math.min(100, Math.max(0, (saved / target) * 100)) : 0;
+  return { share, percent: Math.floor(share) };
+}
