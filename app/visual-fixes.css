@@ -1,0 +1,28 @@
+/* Loaded last: targeted layout fixes found on the live site (25 Nov 2026). */
+
+/* Day totals use the amount typeface: in DM Sans semibold the thousands
+   separator (narrow no-break space) rendered under 2 px ("−1243,55 €"). */
+:root .app-shell .date-group > .day-summary > b {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 760px) {
+  /* Day headers on one line when they fit: "Aujourd’hui ……… 1 opération · net −4,80 €".
+     On narrow screens the summary wraps under itself instead of overlapping the date. */
+  .date-group { align-items: baseline; }
+  .date-group > strong { flex: 1 1 auto; min-width: 0; }
+  .date-group > .day-summary {
+    flex: 0 1 auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: baseline;
+    max-width: none;
+    gap: 2px 6px;
+  }
+  .date-group > .day-summary > small { white-space: nowrap; }
+  /* Operation rows: the category and account line stays on one line. */
+  .transaction-row .transaction-title > small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
