@@ -42,8 +42,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f2f3f7" },
-    { media: "(prefers-color-scheme: dark)", color: "#090b10" },
+    { media: "(prefers-color-scheme: light)", color: "#fbeee3" },
+    { media: "(prefers-color-scheme: dark)", color: "#1a1216" },
   ],
 };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
