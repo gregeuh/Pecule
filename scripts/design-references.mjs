@@ -64,6 +64,7 @@ const sources = [
   "public/fonts/manrope-latin.woff2",
   "app/layout.tsx",
   "app/budget-app.tsx",
+  "app/settings-page.tsx",
   "app/clarte-dashboard.tsx",
   "app/recurring-item.tsx",
   "app/merchant-fields.tsx",
