@@ -100,6 +100,7 @@ import { budgetSchema } from "../lib/validation";
 import AnimatedDetails from "./animated-details";
 import SettingsPage from "./settings-page";
 import TransactionsPage from "./transactions-page";
+import AccountsPage from "./accounts-page";
 import { downloadFile, inputAmount } from "./download-file";
 import { usePrivacyPreference, useNetworkOnline, useGoogleReturn, useCompactViewport } from "./browser-preferences";
 import { FormDraftProvider, useFormDraftStore } from "./form-drafts";
@@ -108,12 +109,10 @@ import RecurringItem from "./recurring-item";
 import { CaptureRoutine, DailyReview, catchupDate } from "./capture-routine";
 import { CaptureFavorites, FavoriteEditor } from "./capture-favorites";
 import { captureAccount, favoriteFromTransaction, type Favorite } from "../lib/capture";
-import AccountVerification from "./account-verification";
 import AccountBalanceAdjustment from "./account-balance-adjustment";
 import FormSection from "./form-section";
 import TransactionFilters, { type OperationFilterValues } from "./operation-filters";
 import FormOptions from "./form-options";
-import AccountActivity from "./account-activity";
 import EmptyState from "./empty-state";
 import { ErrorMessage } from "./interface-feedback";
 import CategoryIcon from "./category-icon";
@@ -128,7 +127,7 @@ import QuickAddGesture from "./quick-add-gesture";
 import { usePreviewDepth } from "./use-preview-depth";
 import { useWalletGesture } from "./use-wallet-gesture";
 import WalletAccountDetail from "./wallet-account-detail";
-import { walletColor, walletSurfaceStyles, accountKind } from "../lib/wallet-presentation";
+import { walletColor, walletSurfaceStyles } from "../lib/wallet-presentation";
 import { useViewMotion } from "./use-view-motion";
 import BudgetNotice from "./budget-notice";
 import { useModalMotion } from "./use-modal-motion";
@@ -1914,131 +1913,23 @@ function BudgetAppContent({ user }: BudgetAppProps) {
               </>
             )}
             {page === "accounts" && (
-              <>
-                <section className="metric-strip">
-                  <div>
-                    <span>Votre argent au total</span>
-                    <strong>{m(o.total + o.saved)}</strong>
-                  </div>
-                  <div>
-                    <span>Disponible sur comptes courants</span>
-                    <strong>{m(o.total)}</strong>
-                  </div>
-                  <div>
-                    <span>À l’abri sur l’épargne</span>
-                    <strong>{m(o.saved)}</strong>
-                  </div>
-                </section>
-                <div className="section-heading">
-                  <h2>Vos comptes, simplement</h2>
-                  <button
-                    type="button"
-                    className="secondary compact"
-                    onClick={() =>
-                      b.accounts.length >= 2
-                        ? open({ type: "transfer" })
-                        : setToast("Ajoutez un deuxième compte pour enregistrer un virement.")
-                    }
-                  >
-                    <ArrowLeftRight size={15} />
-                    Virement entre comptes
-                  </button>
-                </div>
-                <div className="account-grid">
-                  {b.accounts.map((a) => (
-                    <article className="card account-card" key={a.id}>
-                      <div className="account-card-top">
-                        <span
-                          className="bank-icon large"
-                          style={{ "--item-color": walletColor(a.color) } as CSSProperties}
-                        >
-                          <Wallet size={24} />
-                        </span>
-                        <div className="card-actions">
-                          <button
-                            type="button"
-                            className="secondary compact record-edit"
-                            aria-label={`Modifier ${a.name}`}
-                            onClick={() => open({ type: "account", item: a })}
-                          >
-                            <Pencil size={15} />
-                            Modifier
-                          </button>
-                        </div>
-                      </div>
-                      <span className="account-kind">{accountKind(a)}</span>
-                      <h3>{a.name}</h3>
-                      <p>{a.bank || "Compte personnel"}</p>
-                      <div className="account-balance">{m(accountBalance(b, a.id, today))}</div>
-                      <AccountVerification
-                        budget={b}
-                        accountId={a.id}
-                        today={today}
-                        saving={busy}
-                        onVerify={() => open({ type: "reconcile", accountId: a.id })}
-                      />
-                      <AccountActivity
-                        budget={b}
-                        accountId={a.id}
-                        today={today}
-                        hidden={hidden}
-                        onTransaction={(t) => open({ type: "transaction", item: t })}
-                        onUpcoming={(t) => {
-                          const rule = b.rules.find((r) => r.id === t.ruleId);
-                          open(rule ? { type: "rule", item: rule } : { type: "transaction", item: t });
-                        }}
-                        onAll={() => {
-                          setAccountFilter(a.id);
-                          setTypeFilter("all");
-                          setMonth(today.slice(0, 7));
-                          navigate("transactions");
-                        }}
-                      />
-                      <button
-                        type="button"
-                        className="secondary full-width balance-adjust-trigger"
-                        aria-label={`Ajuster le solde de ${a.name}`}
-                        disabled={busy}
-                        onClick={() => open({ type: "balance", accountId: a.id })}
-                      >
-                        <Pencil size={15} />
-                        Ajuster le solde
-                      </button>
-                      <div className="record-danger">
-                        <button
-                          type="button"
-                          className="destructive-action"
-                          aria-label={`Supprimer ${a.name}`}
-                          onClick={() => remove("account", a.id)}
-                        >
-                          <Trash2 size={15} />
-                          Supprimer ce compte
-                        </button>
-                      </div>
-                    </article>
-                  ))}
-                  <button className="add-tile" type="button" onClick={() => open({ type: "account" })}>
-                    <span>
-                      <Plus size={23} />
-                    </span>
-                    <strong>Un compte de plus ?</strong>
-                    <small>
-                      Courant, épargne ou espèces.
-                      <br />À vous de choisir.
-                    </small>
-                  </button>
-                </div>
-                <div className="info-callout subtle">
-                  <LockKeyhole size={19} />
-                  <div>
-                    <strong>Chacun ses comptes, chacun son espace.</strong>
-                    <p>
-                      Vos comptes sont liés à votre connexion personnelle. Ajouter un compte ici ne crée pas de
-                      connexion avec votre banque.
-                    </p>
-                  </div>
-                </div>
-              </>
+              <AccountsPage
+                budget={b}
+                o={o}
+                today={today}
+                hidden={hidden}
+                busy={busy}
+                m={m}
+                open={open}
+                setToast={setToast}
+                onShowOperations={(accountId) => {
+                  setAccountFilter(accountId);
+                  setTypeFilter("all");
+                  setMonth(today.slice(0, 7));
+                  navigate("transactions");
+                }}
+                onRemoveAccount={(accountId) => remove("account", accountId)}
+              />
             )}
             {page === "goals" && (
               <>
