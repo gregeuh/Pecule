@@ -66,6 +66,7 @@ const sources = [
   "app/budget-app.tsx",
   "app/settings-page.tsx",
   "app/transactions-page.tsx",
+  "app/accounts-page.tsx",
   "app/clarte-dashboard.tsx",
   "app/recurring-item.tsx",
   "app/merchant-fields.tsx",
