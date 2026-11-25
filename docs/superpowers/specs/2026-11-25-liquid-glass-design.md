@@ -43,6 +43,7 @@ Il a rejeté le style « sobre » (blanc, lignes fines, minimal) : la refonte ne
 - `app/theme.css` est le seul propriétaire de la palette ; `scripts/check-theme.mjs` (CI) vérifie que DESIGN.md reflète les jetons. Ce contrôle et DESIGN.md seront mis à jour, pas contournés.
 - Les montants restent en chiffres tabulaires, jamais tronqués ; textes ≥ 12 px ; zones tactiles ≥ 44 px ; tests d’accessibilité axe (0 violation) et tests e2e de la CI (`mobile-viewport`, `desktop-reflow`, `financial-editors`, `design-finish`) doivent rester verts.
 - `prefers-reduced-motion` : animations coupées ou réduites à des fondus. `prefers-reduced-transparency` et navigateurs sans `backdrop-filter` : verre remplacé par une surface opaque teintée.
+  - *Limite connue (lot 1)* : Safari sur iPhone ne transmet pas encore « Réduire la transparence » (`prefers-reduced-transparency` n’est reconnu que par Chromium) et n’expose pas le mode économie d’énergie. Sur iPhone, le repli opaque ne s’applique donc qu’aux navigateurs sans `backdrop-filter`. Si le verre ou la dérive du fond pèsent sur un iPhone ancien, un réglage « Réduire la transparence » dans Pécule sera ajouté (lot 5).
 - Masquage des montants : les chiffres animés et la tirelire ne révèlent rien quand les montants sont masqués.
 - Images de lancement iPhone et couleur du manifeste à régénérer avec la nouvelle identité.
 

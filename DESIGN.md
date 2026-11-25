@@ -6,7 +6,7 @@ colors:
   ink: "#2b2320"
   muted: "#5f4c44"
   primary: "#bf4f2a"
-  text-accent: "#8a3719"
+  text-accent: "#823416"
 typography:
   body:
     fontFamily: '"DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'

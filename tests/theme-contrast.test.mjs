@@ -61,7 +61,7 @@ for (const p of ["peche", "lavande", "menthe", "ocean", "nuit"]) {
       "--blue",
     ])
       assert.match(t[k] ?? "", /^#[0-9a-f]{6}$/i, `${p} ${k} is a 6-digit hex`);
-    const alpha = (Number(t["--glass-a"]) + Number(t["--glass-b"])) / 2;
+    const alpha = Number(t["--glass-b"]); // the thinner end of the glass gradient
     // Glass is --glass-base over the colour wash: dark text fears the darkest wash, light text the lightest.
     const glassWorst = mix(p === "nuit" ? lightest(t) : darkest(t), t["--glass-base"], alpha);
     for (const surface of [t["--bg"], t["--card"], t["--glass-solid"], glassWorst]) {
@@ -75,8 +75,18 @@ for (const p of ["peche", "lavande", "menthe", "ocean", "nuit"]) {
       );
     }
     // Text also sits straight on the wash (headings, totals): each blob is drawn at --wash-opacity over --bg.
-    for (const k of ["--wash-1", "--wash-2", "--wash-3"]) {
-      const onWash = mix(t["--bg"], t[k], Number(t["--wash-opacity"]));
+    const o = Number(t["--wash-opacity"]);
+    const single = ["--wash-1", "--wash-2", "--wash-3"].map((k) => [k, mix(t["--bg"], t[k], o)]);
+    // Blobs overlap where they meet: two stacked blobs, in either order.
+    const pairs = [
+      ["--wash-1", "--wash-2"],
+      ["--wash-2", "--wash-3"],
+      ["--wash-1", "--wash-3"],
+    ].flatMap(([a, b]) => [
+      [`${a}+${b}`, mix(mix(t["--bg"], t[a], o), t[b], o)],
+      [`${b}+${a}`, mix(mix(t["--bg"], t[b], o), t[a], o)],
+    ]);
+    for (const [k, onWash] of [...single, ...pairs]) {
       for (const ink of ["--ink", "--muted", "--blue"])
         assert(contrast(t[ink], onWash) >= 4.5, `${p} ${ink} on ${k}: ${contrast(t[ink], onWash).toFixed(2)}`);
     }

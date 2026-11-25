@@ -17,7 +17,7 @@
  --muted:#5f4c44;
  --subtle:#5f4c44;
  --line:#ecd9cb;
- --blue:#8a3719;
+ --blue:#823416;
  --blue-soft:#fbe0d4;
  --green:#08734e;
  --font-display:Nunito,var(--font-body);
@@ -55,13 +55,13 @@
   --apricot-surface: #f5c39e;
   --apricot-ink: #57341f;
   --apricot-muted: #70492e;
-  --apricot-hover: #edb78e;--font-body:Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:light;--danger:#aa394e;--error-ink:#8e263b;--error-bg:#fff0f2;--caution-ink:#714818;--caution-bg:#fff0dc;--wash-1:#ff9d7e;--wash-2:#ffd0a6;--wash-3:#d6c4ff;--wash-opacity:.7;--glass-base:#ffffff;--glass-a:.62;--glass-b:.34;--glass-edge:rgba(255,255,255,.75);--glass-spec:rgba(255,255,255,.7);--glass-shadow:rgba(120,60,30,.14);--glass-tint:rgba(255,255,255,.5);--glass-solid:#fdf5ee;--action-from:#e47a55;--action-to:#bf4f2a;
+  --apricot-hover: #edb78e;--font-body:Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:light;--danger:#aa394e;--error-ink:#8e263b;--error-bg:#fff0f2;--caution-ink:#714818;--caution-bg:#fff0dc;--wash-1:#ff9d7e;--wash-2:#ffd0a6;--wash-3:#d6c4ff;--wash-opacity:.62;--glass-base:#ffffff;--glass-a:.62;--glass-b:.34;--glass-edge:rgba(255,255,255,.75);--glass-spec:rgba(255,255,255,.7);--glass-shadow:rgba(120,60,30,.14);--glass-tint:rgba(255,255,255,.5);--glass-solid:#fdf5ee;--action-from:#e47a55;--action-to:#bf4f2a;
 }
 :root[data-theme="dark"] {
  --bg:#1a1216;
  --card:#2a1f24;
  --ink:#f6ece6;
- --muted:#c3aea4;
+ --muted:#d2c0b7;
  --subtle:#b9a49a;
  --line:#3b2d33;
  --blue:#ffb08f;
@@ -91,10 +91,10 @@
   --apricot-surface: #3d2b21;
   --apricot-ink: #ffd7b8;
   --apricot-muted: #dfb99e;
-  --apricot-hover: #51382a;color-scheme:dark;--danger:#ff9cae;--error-ink:#ffc2ce;--error-bg:#472737;--caution-ink:#ffdcac;--caution-bg:#443622;--wash-1:#8a3423;--wash-2:#4a2f78;--wash-3:#a0561f;--wash-opacity:.55;--glass-base:#1a1216;--glass-a:.55;--glass-b:.4;--glass-edge:rgba(255,255,255,.22);--glass-spec:rgba(255,255,255,.18);--glass-shadow:rgba(0,0,0,.45);--glass-tint:rgba(255,255,255,.1);--glass-solid:#2c2126;--action-from:#f6a587;--action-to:#e9805f;
+  --apricot-hover: #51382a;color-scheme:dark;--danger:#ff9cae;--error-ink:#ffc2ce;--error-bg:#472737;--caution-ink:#ffdcac;--caution-bg:#443622;--wash-1:#8a3423;--wash-2:#4a2f78;--wash-3:#a0561f;--wash-opacity:.45;--glass-base:#1a1216;--glass-a:.6;--glass-b:.48;--glass-edge:rgba(255,255,255,.22);--glass-spec:rgba(255,255,255,.18);--glass-shadow:rgba(0,0,0,.45);--glass-tint:rgba(255,255,255,.1);--glass-solid:#2c2126;--action-from:#f6a587;--action-to:#e9805f;
 }
 
 /* Light palettes chosen in Réglages (lib/appearance.ts). Pêche is :root; Nuit is the dark theme. */
 :root[data-palette="lavande"]:not([data-theme="dark"]) {--bg:#efeaff;--card:#fbf9ff;--ink:#231f33;--muted:#514968;--subtle:#514968;--blue:#863619;--line:#ddd5f3;--blue-soft:#ece4ff;--soft-hover:#e4dbfb;--surface-inset:#e6dff8;--dock-bg:#fbf9ff;--wash-1:#b8a4ff;--wash-2:#ffc0a4;--wash-3:#a9d6ff;--glass-shadow:rgba(70,50,140,.14);--glass-solid:#f7f4ff;}
-:root[data-palette="menthe"]:not([data-theme="dark"]) {--bg:#e8f5ef;--card:#f7fcfa;--ink:#17302a;--muted:#466158;--subtle:#466158;--blue:#9e3f1d;--line:#cfe6dc;--blue-soft:#d5ece2;--soft-hover:#d5ece2;--surface-inset:#dbeee5;--dock-bg:#f7fcfa;--wash-1:#8fdcc0;--wash-2:#a9d6ff;--wash-3:#ffe1a8;--glass-shadow:rgba(30,90,70,.14);--glass-solid:#f3faf7;}
-:root[data-palette="ocean"]:not([data-theme="dark"]) {--bg:#dbe7f3;--card:#f4f8fc;--ink:#0f2131;--muted:#344b61;--subtle:#344b61;--line:#c6d6e6;--blue:#803216;--blue-soft:#cadbeb;--soft-hover:#cadbeb;--surface-inset:#cfdeec;--dock-bg:#f4f8fc;--wash-1:#7db9ea;--wash-2:#9be8df;--wash-3:#93abe9;--glass-shadow:rgba(20,50,90,.16);--glass-solid:#eef4fa;}
+:root[data-palette="menthe"]:not([data-theme="dark"]) {--bg:#e8f5ef;--card:#f7fcfa;--ink:#17302a;--muted:#3f584f;--subtle:#3f584f;--blue:#8f391a;--line:#cfe6dc;--blue-soft:#d5ece2;--soft-hover:#d5ece2;--surface-inset:#dbeee5;--dock-bg:#f7fcfa;--wash-1:#8fdcc0;--wash-2:#a9d6ff;--wash-3:#ffe1a8;--glass-shadow:rgba(30,90,70,.14);--glass-solid:#f3faf7;}
+:root[data-palette="ocean"]:not([data-theme="dark"]) {--bg:#dbe7f3;--card:#f4f8fc;--ink:#0f2131;--muted:#2f4459;--subtle:#2f4459;--line:#c6d6e6;--blue:#6f2b13;--blue-soft:#cadbeb;--soft-hover:#cadbeb;--surface-inset:#cfdeec;--dock-bg:#f4f8fc;--wash-1:#7db9ea;--wash-2:#9be8df;--wash-3:#93abe9;--glass-shadow:rgba(20,50,90,.16);--glass-solid:#eef4fa;}

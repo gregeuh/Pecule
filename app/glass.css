@@ -90,7 +90,7 @@
 }
 @media (prefers-reduced-transparency: reduce) {
   :root :is(.glass, .app-shell .mobile-dock .mobile-nav.floating-nav, :is(.topbar, .clarte-header-actions) .icon-button, .app-shell > .sidebar, .modal-backdrop .modal) { background: var(--glass-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
-  .glass-backdrop > i { opacity: .55; }
+  .glass-backdrop > i { opacity: .55; animation: none; }
 }
 
 /* Réglages: the theme picker, six glass tiles with a live preview of each palette. */
