@@ -117,3 +117,26 @@
   :root .budget-switch > button { flex: 1; min-height: 44px; border-radius: 10px; color: var(--muted); font: 500 15px var(--font-body); }
   :root .budget-switch > button[aria-current="page"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 2px rgba(21, 23, 29, .08); }
 }
+
+/* Lot 4: on desktop each recurrence fits on one line (name and amount | state and next date | actions).
+   Modifier and Mettre en pause stay visible (30 October decision); Supprimer stays apart, behind its divider. */
+@media (min-width: 1100px) {
+  :root .rule-grid .rule-card { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(150px, .9fr) auto; align-items: center; column-gap: 28px; padding: 14px 8px; }
+  :root .rule-grid .rule-card .rule-heading { min-width: 0; }
+  :root .rule-grid .rule-card .rule-amount { font-size: 22px; white-space: nowrap; }
+  :root .rule-grid .rule-card h3 { font-size: 16px; line-height: 1.4; }
+  :root .rule-grid .rule-card .rule-bottom { flex-direction: column; align-items: flex-start; gap: 4px; margin: 0; padding: 0; border: 0; }
+  :root .rule-grid .rule-card .rule-actions { margin: 0; gap: 12px; flex-wrap: nowrap; }
+  :root .rule-grid .rule-card .rule-actions .record-danger { padding-left: 12px; }
+}
+
+/* Lot 4: explanations behind an "i". The title stays; the detail opens on tap. */
+:root .info-note { margin-top: 16px; border-radius: 14px; background: var(--surface-inset); color: var(--muted); }
+:root .info-note > summary { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 10px 14px; cursor: pointer; list-style: none; color: var(--ink); font-size: 14px; font-weight: 500; }
+:root .info-note > summary::-webkit-details-marker { display: none; }
+:root .info-note > summary > span:nth-of-type(1) { flex: 1; min-width: 0; }
+:root .info-note-toggle { display: grid; place-items: center; width: 24px; height: 24px; flex: none; border-radius: 50%; border: 1px solid var(--line); color: var(--blue); font: 600 13px var(--font-display); }
+:root .info-note[open] .info-note-toggle { background: var(--blue); border-color: var(--blue); color: #fff; }
+:root .info-note-body { padding: 0 14px 14px 41px; font-size: 14px; line-height: 1.65; }
+:root .info-note-body p { margin: 0 0 8px; }
+:root .plan-explanation .info-note { margin-top: 0; }
