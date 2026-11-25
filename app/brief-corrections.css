@@ -10,13 +10,10 @@
  .app-shell #main-content { padding-bottom: calc(128px + env(safe-area-inset-bottom)); }
  .mobile-dock { isolation: isolate; }
  .mobile-dock::before { content: ""; position: fixed; left: 0; right: 0; bottom: 0; height: calc(88px + env(safe-area-inset-bottom)); background: var(--bg); z-index: -1; pointer-events: none; }
- .clarte-mobile-primary .clarte-next { padding-inline: 0; }
- .clarte-mobile-primary .clarte-next .clarte-upcoming { width: 100%; padding: 22px; border-radius: 20px; }
- .clarte-next .clarte-upcoming .text-button { color: var(--blue); }
 }
 
 /* P2 — one visual vocabulary for ledger dates, labels and checkboxes. */
-.date-group > strong, .month-control > strong, .clarte-mobile-title > p { text-transform: none; }
+.date-group > strong, .month-control > strong { text-transform: none; }
 .transaction-row .transaction-title > strong, .transaction-row:hover .transaction-title > strong { color: var(--ink); }
 .app-shell input[type="checkbox"], .modal input[type="checkbox"] { appearance: none; -webkit-appearance: none; position: relative; border: 1.5px solid var(--muted); border-radius: 5px; background: var(--surface-inset); width: 20px; height: 20px; flex: 0 0 20px; padding: 0; cursor: pointer; }
 .app-shell input[type="checkbox"]:checked, .modal input[type="checkbox"]:checked,

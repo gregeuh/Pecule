@@ -13,25 +13,19 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
 }
 ::selection { background: var(--soft-hover); color: var(--ink); }
 
-.brand, .clarte-mobile-logo, .auth-logo { color: var(--blue); }
-.sidebar, .card, .clarte-card, .quick-action, .navigation-menu > button,
-.filter-select, .metric-strip, .setup-summary { background: var(--card); }
-.primary, .floating-action-trigger, .dock-add-icon, .setup-monogram,
-.setup-aside { background: var(--action-bg); color: var(--on-action); }
-.setup-aside h2 { color: var(--on-action); }
-.primary:hover, .floating-action-trigger:hover,
-.mobile-nav.floating-nav > .dock-add:hover .dock-add-icon {
+.brand, .clarte-mobile-logo { color: var(--blue); }
+.sidebar, .card, .clarte-card, .quick-action, .filter-select, .metric-strip { background: var(--card); }
+.primary, .floating-action-trigger { background: var(--action-bg); color: var(--on-action); }
+.primary:hover, .floating-action-trigger:hover {
   background: var(--action-hover);
 }
 .floating-action-trigger { border-color: transparent; box-shadow: var(--dock-shadow); }
-.secondary, .nav-item.active, .avatar, .navigation-menu-icon,
-.settings-icon, .empty-icon { background: var(--blue-soft); color: var(--blue); }
-.secondary:hover, .nav-item:hover, .icon-button:hover,
-.quick-action:hover, .navigation-menu > button:hover { background: var(--soft-hover); }
+.secondary, .nav-item.active, .avatar, .settings-icon, .empty-icon { background: var(--blue-soft); color: var(--blue); }
+.secondary:hover, .nav-item:hover, .icon-button:hover, .quick-action:hover { background: var(--soft-hover); }
 .icon-button:hover { color: var(--blue); }
 .danger { background: #aa394e; color: #ffffff; }
 .danger:hover { background: #8e263b; }
-.danger-icon, .field-error { color: var(--danger); }
+.field-error { color: var(--danger); }
 .toast > svg, .toast button { color: inherit; }
 
 /* Apricot identifies upcoming events; it never conveys a financial warning. */
@@ -62,21 +56,13 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
 .goal-intro h2, .settings-card h2, .settings-links a, .restore-backup,
 .sign-in-prompt h3, .calculation-detail > div strong, .install-content li strong,
 .import-row > span > strong, .import-row > strong { color: var(--ink); }
-.account-kind, .account-card > p, .account-card-bottom,
-.goal-amount > span, .goal-progress-label, .rule-bottom > small,
-.settings-card > p, .settings-links, .restore-backup, .sign-in-prompt p,
-.sign-in-prompt small, .file-drop span, .import-row small,
-.install-content li p, .calculation-detail > p, .calculation-detail > div,
-.add-tile > small, .add-tile > strong, .quick-action > small,
-.segmented button { color: var(--muted); }
+.account-kind, .account-card > p, .goal-amount > span, .goal-progress-label, .rule-bottom > small, .settings-card > p, .settings-links, .restore-backup, .sign-in-prompt p, .sign-in-prompt small, .file-drop span, .import-row small, .install-content li p, .calculation-detail > p, .calculation-detail > div, .add-tile > small, .add-tile > strong, .quick-action > small, .segmented button { color: var(--muted); }
 .rule-amount small, .settings-brand small { color: var(--muted); }
 .file-drop strong { color: var(--blue); }
-.settings-links button, .settings-links a, .account-details-link { color: var(--blue); }
-.rule-bottom, .account-card-bottom, .category-label, .date-group > span,
-.toolbar, .filter-bar, .toast, .setup-note { border-color: var(--line); }
+.settings-links button, .settings-links a { color: var(--blue); }
+.rule-bottom, .category-label, .date-group > span, .toolbar, .filter-bar, .toast { border-color: var(--line); }
 .category-label { background: var(--bg); }
-.month-control, .date-chip, .quiet-pill, .quick-action,
-.bank-import-preview, .import-row.disabled { background: var(--card); }
+.month-control, .quick-action, .import-row.disabled { background: var(--card); }
 .progress-track { background: var(--line); }
 /* Historical reference rules mark positive text !important; the canonical token must win. */
 .positive, .transaction-amount.positive strong, .transaction-amount > strong.positive, .clarte-transaction > b.positive { color: var(--green) !important; }
@@ -114,7 +100,6 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
     background: var(--blue-soft);
     color: var(--blue);
   }
-  .dock-add-icon { color: var(--on-action); }
 }
 
 @media (forced-colors: active) {
@@ -134,8 +119,6 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 .clarte-desktop-title h1 { max-width: 22ch; font-size: clamp(30px, 3vw, 42px); }
 .clarte-desktop-title p, .page-heading p { color: var(--muted); line-height: 1.65; }
 .clarte-header { margin-bottom: 32px; }
-.clarte-main, .clarte-aside { gap: 28px; }
-.clarte-grid { gap: 28px; }
 .clarte-card, .clarte-dashboard .clarte-budget { padding: 28px; }
 .clarte-section-title { align-items: center; gap: 12px; margin-bottom: 20px; }
 .clarte-section-title h2 { font-size: 18px; line-height: 1.4; letter-spacing: -.025em; }
@@ -162,8 +145,6 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 .clarte-account strong, .clarte-transaction strong { line-height: 1.45; }
 .clarte-account small, .clarte-transaction small { line-height: 1.6; }
 .clarte-account > b, .clarte-transaction > b { font-size: 14px; font-variant-numeric: tabular-nums; }
-.clarte-accounts-total { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 18px; }
-.clarte-accounts-total > strong { font-size: 28px; letter-spacing: -.03em; }
 .clarte-plan-link { background: var(--blue-soft); }
 .clarte-plan-link h2 { margin-top: 0; color: var(--blue); }
 .clarte-plan-link p { max-width: 45ch; }
@@ -174,10 +155,7 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 .transaction-row { border-color: var(--line); gap: 14px; }
 .transaction-title > strong { font-size: 14px; line-height: 1.5; }
 .transaction-title > small { line-height: 1.7; }
-.transaction-amount strong, .rule-amount, .account-balance,
-.goal-amount strong, .metric-strip strong, .clarte-amount, .clarte-formula dd,
-.clarte-daily-desktop > strong, .clarte-mobile-period > strong,
-.clarte-accounts-total strong, .day-summary b, .projection dd, .chart-summary > strong {
+.transaction-amount strong, .rule-amount, .account-balance, .goal-amount strong, .metric-strip strong, .clarte-amount, .clarte-formula dd, .clarte-daily-desktop > strong, .clarte-mobile-period > strong, .day-summary b, .projection dd, .chart-summary > strong {
   font-variant-numeric: tabular-nums;
   letter-spacing: -.025em;
 }
@@ -208,9 +186,10 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 :root[data-theme="dark"] .modal { background: var(--surface-raised); }
 :root[data-theme="dark"] .modal-heading { background: var(--surface-raised); }
 :root[data-theme="dark"] .field input:not([type="checkbox"]):not([type="radio"]),
-:root[data-theme="dark"] .field select, :root[data-theme="dark"] .field textarea,
-:root[data-theme="dark"] .filter-select, :root[data-theme="dark"] .search-input,
-:root[data-theme="dark"] .bank-import-preview { background: var(--surface-inset); }
+:root[data-theme="dark"] .field select,
+:root[data-theme="dark"] .field textarea,
+:root[data-theme="dark"] .filter-select,
+:root[data-theme="dark"] .search-input { background: var(--surface-inset); }
 :root[data-theme="dark"] .merchant-icon:not(.merchant-icon-dark) { background: var(--surface-raised); }
 :root[data-theme="dark"] .chart-summary > strong { color: var(--ink); }
 :root[data-theme="dark"] .chart-summary > span { color: var(--muted); }
@@ -218,10 +197,6 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 
 @media (max-width: 760px) {
   .clarte-header { margin-bottom: 24px; }
-  .clarte-mobile-title { margin-bottom: 28px; }
-  .clarte-mobile-title h1 { font-size: 30px; letter-spacing: -.035em; line-height: 1.2; }
-  .clarte-mobile-title p { color: var(--muted); font-size: 13px; line-height: 1.7; margin-top: 8px; }
-  .clarte-grid { gap: 24px; }
   .clarte-dashboard .clarte-budget { padding: 26px 22px; }
   .clarte-amount { font-size: clamp(38px, 11.5vw, 54px); }
   .clarte-amount[data-long="true"] { font-size: clamp(27px, 8vw, 38px); }
@@ -279,7 +254,7 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 .account-balance, .goal-amount > strong, .rule-amount { font-family: var(--font-display); font-size: 32px; line-height: 1.35; overflow-wrap: anywhere; }
 .account-kind { color: var(--muted); text-transform: none; letter-spacing: normal; font-size: 12px; }
 .account-card .account-kind { display: block; margin-block: 18px 6px; }
-.account-card-bottom, .rule-bottom { padding-top: 18px; margin-top: 18px; }
+.rule-bottom { padding-top: 18px; margin-top: 18px; }
 .card-actions { gap: 4px; }
 .card-actions > button { min-height: 44px; min-width: 44px; }
 .rule-card.paused { opacity: 1; background: var(--surface-inset); }
@@ -399,11 +374,6 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 .feedback-error { display: flex; align-items: flex-start; gap: 10px; }
 .feedback-error > svg { flex-shrink: 0; margin-top: 2px; }
 .feedback-error > div { min-width: 0; }
-.loading-state { display: flex; align-items: flex-start; justify-content: center; gap: 14px; max-width: 440px; padding: 20px; text-align: left; color: var(--muted); }
-.loading-state > svg { flex-shrink: 0; color: var(--blue); margin-top: 5px; }
-.boot-screen .loading-state h1 { color: var(--ink); font-size: 22px; margin: 0; line-height: 1.4; }
-.loading-state p { font-size: 13px; line-height: 1.7; margin-top: 8px; }
-@media (prefers-reduced-motion:reduce) { .loading-state .spin { animation: none; } }
 @media (forced-colors:active) { .form-error { border: 1px solid CanvasText; } }
 
 .draft-status { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 12px 14px; margin-bottom: 18px; border-radius: 12px; background: var(--blue-soft); color: var(--blue); font-size: 12px; line-height: 1.7; }
@@ -427,7 +397,6 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 .operation-filter-fields .month-control button { min-width: 44px; min-height: 44px; }
 .filter-intro { color: var(--muted); font-size: 13px; line-height: 1.7; margin-bottom: 22px; }
 .filter-reset { min-height: 44px; margin-bottom: 18px; }
-.filter-sheet-actions { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 12px; }
 .ledger-tools-desktop { margin-left: auto; }
 .operation-filter-trigger { white-space: nowrap; min-height: 48px; }
 .filter-count { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding-inline: 4px; border-radius: 50%; background: var(--action-bg); color: var(--on-action); font-variant-numeric: tabular-nums; }
@@ -455,18 +424,7 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 :is(.text-button,.destructive-action,.icon-button):enabled:active { background: var(--blue-soft); }
 :is(.clarte-transaction,.clarte-account,.clarte-due,.transaction-row):active { background: var(--blue-soft); }
 @media (max-width:760px) {
-  .clarte-mobile-primary, .clarte-more-content { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
-  .clarte-next { padding-inline: 4px; }
-  .clarte-next .clarte-upcoming { margin: 0; padding: 4px 0; }
-  .clarte-more { border-block: 1px solid var(--line); min-width: 0; }
-  .clarte-more > summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 80px; padding: 16px 4px; list-style: none; cursor: pointer; }
-  .clarte-more > summary::-webkit-details-marker, .ledger-tools > summary::-webkit-details-marker { display: none; }
-  .clarte-more > summary strong { display: block; font-size: 16px; }
-  .clarte-more > summary small { display: block; color: var(--muted); font-size: 12px; margin-top: 5px; }
-  .clarte-more[open] > summary > svg { transform: rotate(90deg); }
-  .clarte-more-content { padding-block: 8px 24px; }
-  .clarte-more-content .clarte-forecast { display: block; }
-  .clarte-more-content .clarte-calendar { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .ledger-tools > summary::-webkit-details-marker { display: none; }
   .transactions-card .toolbar { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 12px; }
   .transactions-card .toolbar .search-input { width: 100%; min-width: 0; }
   .ledger-tools { grid-column: 1 / -1; min-width: 0; border-block: 1px solid var(--line); }
@@ -490,7 +448,6 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
   .rule-heading { flex-wrap: wrap; }
   .rule-grid .rule-amount { margin-left: 50px; text-align: left; }
   .rule-actions .record-danger { flex-basis: 100%; margin-left: 0; padding-left: 0; border-left: 0; border-top: 1px solid var(--line); padding-top: 8px; }
-  .filter-sheet-actions { grid-template-columns: minmax(0,1fr); }
 }
 @media (prefers-reduced-motion:reduce) {
   :is(.primary,.secondary,.text-button,.destructive-action,.icon-button):enabled { transition: none; }
@@ -524,36 +481,8 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 }
 
 /* The account balances lead the home screen; the available amount is a forecast. */
-.clarte-accounts-primary { margin: 0; }
-.clarte-accounts-primary .clarte-account { display: grid; grid-template-columns: 40px minmax(0,1fr) auto; gap: 14px; border-bottom: 1px solid var(--line); min-height: 96px; }
-.clarte-accounts-primary .clarte-account > b { min-width: 0; max-width: none; margin: 0; font-size: clamp(23px,2.2vw,32px); line-height: 1.35; white-space: normal; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
-.clarte-accounts-primary .clarte-account strong { font-size: 16px; }
-.clarte-accounts-primary .clarte-accounts-total { display: flex; flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px; margin: 20px 0; border: 0; padding-top: 0; }
-.clarte-accounts-primary .clarte-accounts-total strong { font-size: 20px; }
-.clarte-accounts-empty { color: var(--muted); font-size: 14px; line-height: 1.7; padding-block: 12px; }
-.clarte-aside .clarte-amount { font-size: clamp(28px,2.8vw,40px); }
-.clarte-aside .clarte-amount-row { flex-direction: column; align-items: flex-start; gap: 12px; }
-.clarte-aside .clarte-daily-desktop { text-align: left; }
-.clarte-aside .clarte-available-title { flex-wrap: wrap; }
-.clarte-aside .clarte-desktop-until { margin-left: 0; }
-.clarte-aside .clarte-formula { grid-template-columns: minmax(0,1fr); gap: 12px; }
-.clarte-aside .clarte-formula > div { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 12px; }
-.clarte-aside .clarte-formula dd { font-size: 18px; margin: 0; }
-@media (max-width:760px) {
-  .clarte-accounts-primary .clarte-account { grid-template-columns: 36px minmax(0,1fr); gap: 3px 12px; padding-block: 16px; }
-  .clarte-accounts-primary .clarte-account > .clarte-icon { grid-row: span 2; }
-  .clarte-accounts-primary .clarte-account > b { grid-column: 2; font-size: 28px; text-align: left; }
-  .clarte-accounts-primary .clarte-account strong { font-size: 15px; }
-  .clarte-accounts-primary .clarte-account small { margin-top: 2px; }
-  .clarte-accounts-primary .clarte-accounts-total strong { font-size: 19px; }
-}
-.clarte-accounts-primary { order: 0; }
-@media (max-width:760px) { .clarte-next { order: 1; } }
 
 /* Balance correction is a distinct action, never nested inside the account button. */
-.clarte-account-entry { border-bottom: 1px solid var(--line); padding-bottom: 8px; }
-.clarte-accounts-primary .clarte-account-entry .clarte-account { border-bottom: 0; }
-.clarte-account-entry .balance-adjust-trigger { display: flex; min-height: 44px; margin-left: 54px; font-size: 12px; }
 .account-card > .balance-adjust-trigger { margin-top: 16px; }
 .balance-adjust-account { font-weight: 700; overflow-wrap: anywhere; margin-bottom: 20px; }
 .balance-adjust-current { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-bottom: 22px; margin-bottom: 22px; border-bottom: 1px solid var(--line); }
@@ -561,7 +490,6 @@ h1, .page-heading h1, .clarte-desktop-title h1 { letter-spacing: -.035em; line-h
 .balance-adjust-current dd { font-variant-numeric: tabular-nums; font-weight: 600; overflow-wrap: anywhere; }
 .balance-adjust-note { color: var(--muted); font-size: 13px; line-height: 1.7; margin: 18px 0 24px; }
 .balance-adjust-difference { font-variant-numeric: tabular-nums; }
-@media (max-width:760px) { .clarte-account-entry .balance-adjust-trigger { margin-left: 48px; } }
 
 /* Daily capture keeps the same Atelier controls and an explicit, calm review ritual. */
 .capture-routine { order: 0; }

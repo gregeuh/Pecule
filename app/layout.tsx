@@ -18,7 +18,6 @@ import "./gestures.css";
 import "./wallet-depth.css";
 import "./launch.css";
 import "./save-continuity.css";
-import "./visual-fixes.css";
 import { launchBootstrap } from "../lib/launch-bootstrap";
 import { launchImages } from "../lib/launch-images";
 import AppearanceProvider from "./theme-provider";
