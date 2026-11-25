@@ -300,6 +300,16 @@ export default function ClarteDashboard(p: Props) {
       onForecast={p.onAccountForecast}
       onAll={p.onAccounts}
       onAdd={p.onAddAccount}
+      available={
+        b.accounts.some((a) => a.type !== "savings") && !p.loadError
+          ? {
+              title: `Disponible d’ici le ${shortDate(o.salary && b.settings.horizon === "salary" ? o.salary.date : o.end)}`,
+              detail: `${m(Math.floor(o.daily / 100) * 100, false)} par jour${showSignal ? ` · ${signal.label.toLowerCase()}` : ""}`,
+              amount: m(o.available),
+              onOpen: p.onCalculate,
+            }
+          : undefined
+      }
     />
   );
   const { share: goalShare, percent: goalPercent } = goal

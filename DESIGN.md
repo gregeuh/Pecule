@@ -375,3 +375,7 @@ Premier lot de la revue de design validée par l'utilisateur. `app/visual-fixes.
 - iPhone : les libellés se coupent entre les mots (césure française) et les montants restent sur une ligne ; l'état de synchronisation affiche son texte dès qu'il n'est pas « Synchronisé ».
 - Tablette et ordinateur : les textes secondaires mesurés entre 9 et 11 px passent à 12 px ; les pastilles de compteur de la barre latérale gardent leur taille.
 - Séparateur des milliers : dans les textes en DM Sans, l'espace fine U+202F est servie par Inter (voir `docs/font-assets.md`), car le sous-ensemble DM Sans ne la contient pas.
+
+## Revue de design, lot 2 — 25 novembre 2026
+À la demande de l'utilisateur. Les comptes restent en tête de l'accueil (décision du 30 octobre) ; la liste sous la pile Wallet gagne une première ligne « Disponible d'ici le … » (montant, montant par jour et niveau du signal), qui ouvre l'explication du calcul. La ligne de prévision d'un compte prend pour titre « Prévu au … » et le nom du compte en sous-titre : son montant ne se lit plus comme un second solde. Le masquage couvre la nouvelle ligne.
+Entre 761 et 1 099 px, la barre latérale se réduit à ses icônes (76 px) avec le logo ; les libellés restent pour les lecteurs d'écran et en info-bulle (`title`), la phrase « Les petits pas » et le détail du profil reviennent à partir de 1 100 px.
