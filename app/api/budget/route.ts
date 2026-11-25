@@ -1,4 +1,4 @@
-import { getChatGPTUser } from "../../chatgpt-auth";
+import { getSessionUser } from "../../session-user";
 import { ensureDatabase } from "../../../lib/auth";
 import { getPool, tablePrefix } from "../../../lib/postgres";
 import { budgetSaveStatement } from "../../../lib/budget-storage";
@@ -9,7 +9,7 @@ const response = (data: unknown, status = 200) =>
   Response.json(data, { status, headers: { "Cache-Control": "private, no-store", Vary: "Cookie" } });
 export async function GET() {
   try {
-    const user = await getChatGPTUser();
+    const user = await getSessionUser();
     if (!user) return response({ error: "Connectez-vous pour accéder à votre budget." }, 401);
     await ensureDatabase();
     const { rows } = await getPool().query(
@@ -32,7 +32,7 @@ export async function PUT(request: Request) {
   if (!origin || origin !== new URL(request.url).origin)
     return response({ error: "Origine de la requête refusée." }, 403);
   try {
-    const user = await getChatGPTUser();
+    const user = await getSessionUser();
     if (!user) return response({ error: "Votre session a expiré. Reconnectez-vous." }, 401);
     const expectedOwner = request.headers.get("x-pecule-owner");
     if (expectedOwner && expectedOwner !== user.userId)

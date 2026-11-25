@@ -1,4 +1,4 @@
-import { getChatGPTUser } from "../../../chatgpt-auth";
+import { getSessionUser } from "../../../session-user";
 import { ensureDatabase } from "../../../../lib/auth";
 import { getPool, tablePrefix } from "../../../../lib/postgres";
 export const dynamic = "force-dynamic";
@@ -9,7 +9,7 @@ const headers = { "Cache-Control": "private, no-store", Vary: "Cookie" };
 // Personal backup: the signed-in user downloads their own budget as JSON.
 export async function GET() {
   try {
-    const user = await getChatGPTUser();
+    const user = await getSessionUser();
     if (!user) return Response.json({ error: "Connectez-vous pour exporter votre budget." }, { status: 401, headers });
     await ensureDatabase();
     const { rows } = await getPool().query(`SELECT payload FROM ${tablePrefix}budgets WHERE user_id = $1`, [
