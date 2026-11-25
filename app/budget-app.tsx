@@ -104,6 +104,7 @@ import { mergeBudgets, sameBudgetValue, type MergeConflict } from "../lib/budget
 import { importBatches, removeImportBatch } from "../lib/import-batches";
 import { budgetSchema } from "../lib/validation";
 import AnimatedDetails from "./animated-details";
+import BudgetVersions from "./budget-versions";
 import { usePrivacyPreference, useNetworkOnline, useGoogleReturn, useCompactViewport } from "./browser-preferences";
 import { FormDraftProvider, useFormDraftStore } from "./form-drafts";
 import SubscriptionOverview from "./subscription-overview";
@@ -2660,6 +2661,19 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                         </button>
                       ) : null}
                     </div>
+                    {demo ? null : (
+                      <BudgetVersions
+                        onError={setToast}
+                        onRestore={(restored, savedAt) =>
+                          open({
+                            type: "confirm",
+                            title: "Restaurer cette version ?",
+                            message: `Votre budget reviendra à son état du ${savedAt}. La version actuelle restera disponible dans les versions précédentes.`,
+                            action: () => save(restored, "La version a été restaurée."),
+                          })
+                        }
+                      />
+                    )}
                   </section>
                 </section>
                 <section className="settings-group" id="settings-account" aria-labelledby="account-title">

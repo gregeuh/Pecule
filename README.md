@@ -7,6 +7,7 @@ Application personnelle de gestion de budget en français, pensée pour iPhone e
 - Connexion par e-mail et mot de passe (12 caractères minimum), ou Google si `GOOGLE_CLIENT_ID` et `GOOGLE_CLIENT_SECRET` sont définis. L'identité vient toujours de la session vérifiée côté serveur ; l'API n'accepte aucune identité envoyée par le client.
 - Chaque compte possède son propre budget, enregistré en PostgreSQL (une ligne JSON par utilisateur, révision incluse). Le stockage local du navigateur ne sert qu'aux préférences de l'appareil et à la file hors ligne.
 - La révision protège contre l'écrasement par une autre session : en cas de conflit l'API répond 409 et le client propose une fusion.
+- Chaque enregistrement conserve la version remplacée côté serveur : les 30 derniers enregistrements, puis le dernier de chaque jour pendant 60 jours. Réglages → Données → Versions précédentes permet de revenir à l'une d'elles ; la restauration est elle-même un enregistrement, donc annulable.
 - Une fois connecté, téléchargez votre sauvegarde JSON depuis Réglages → Données. Le fichier de `/api/budget/export` contient la dernière version enregistrée sur le serveur et peut être restauré dans Pécule.
 - La démonstration est calculée en mémoire et n'est jamais enregistrée.
 - Les montants sont stockés en centimes entiers. Les virements produisent deux écritures liées et ne comptent ni comme revenus ni comme dépenses.
@@ -38,7 +39,7 @@ Les valeurs restent exclusivement dans les paramètres Vercel ; ne jamais les ve
 - `npm ci` puis `npm run dev`
 - `npx next typegen && npm run typecheck`
 - `npm run lint`
-- `npm test` (tests de domaine, sans base de données)
+- `npm test` (tests de domaine ; le test de l'historique des versions s'exécute sur une vraie base PostgreSQL si `PECULE_TEST_DATABASE_URL` est défini, sinon il est ignoré)
 - `npm run build`
 - `npm run format:check` : vérifie le formatage Prettier (`npm run format` pour l'appliquer)
 - Tests d'interface : scripts `test:e2e:*` (Playwright), voir `tests/e2e/README.md`.
