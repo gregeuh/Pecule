@@ -1,4 +1,5 @@
 "use client";
+import InfoNote from "./info-note";
 import type { CSSProperties } from "react";
 import { ArrowLeftRight, LockKeyhole, Pencil, Plus, Trash2, Wallet } from "lucide-react";
 import { accountBalance, type Budget } from "../lib/budget";
@@ -145,16 +146,12 @@ export default function AccountsPage({
           </small>
         </button>
       </div>
-      <div className="info-callout subtle">
-        <LockKeyhole size={19} />
-        <div>
-          <strong>Chacun ses comptes, chacun son espace.</strong>
-          <p>
-            Vos comptes sont liés à votre connexion personnelle. Ajouter un compte ici ne crée pas de connexion avec
-            votre banque.
-          </p>
-        </div>
-      </div>
+      <InfoNote title="Chacun ses comptes, chacun son espace." icon={LockKeyhole}>
+        <p>
+          Vos comptes sont liés à votre connexion personnelle. Ajouter un compte ici ne crée pas de connexion avec votre
+          banque.
+        </p>
+      </InfoNote>
     </>
   );
 }

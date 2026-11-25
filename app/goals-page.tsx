@@ -1,6 +1,7 @@
 "use client";
+import InfoNote from "./info-note";
 import type { CSSProperties } from "react";
-import { Info, Pencil, Plus, Sparkles, Trash2 } from "lucide-react";
+import { Pencil, Plus, Sparkles, Trash2 } from "lucide-react";
 import { shortDate, type Budget } from "../lib/budget";
 import { walletColor } from "../lib/wallet-presentation";
 import { goalProgress } from "../lib/budget-presentation";
@@ -131,17 +132,13 @@ export default function GoalsPage({ budget: b, hidden, m, open, onRemoveGoal }: 
           </small>
         </button>
       </div>
-      <div className="info-callout subtle">
-        <Info size={19} />
-        <div>
-          <strong>Votre épargne reste un choix.</strong>
-          <p>
-            Choisissez votre objectif et votre réserve mensuelle. Cette réserve réduit le disponible sans déplacer
-            d’argent. Un versement enregistré entre un compte courant et un compte d’épargne réduit la réserve restante
-            du mois.
-          </p>
-        </div>
-      </div>
+      <InfoNote title="Votre épargne reste un choix.">
+        <p>
+          Choisissez votre objectif et votre réserve mensuelle. Cette réserve réduit le disponible sans déplacer
+          d’argent. Un versement enregistré entre un compte courant et un compte d’épargne réduit la réserve restante du
+          mois.
+        </p>
+      </InfoNote>
     </>
   );
 }

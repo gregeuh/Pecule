@@ -20,7 +20,7 @@ try{for(const {width,theme} of [{width:390,theme:'dark'},{width:1440,theme:'ligh
   await dialog.waitFor();
  };
  const nav=page.getByRole('navigation',{name:width<760?'Navigation mobile':'Navigation principale'});
- const accounts=()=>nav.getByRole('button',{name:width<760?'Comptes':'Mes comptes',exact:true}).click();
+ const accounts=async()=>{if(width<760){await nav.getByRole('button',{name:'Accueil',exact:true}).click();await page.locator('.wallet-manage-title').click();}else await nav.getByRole('button',{name:'Mes comptes',exact:true}).click();await page.locator('.account-card').first().waitFor();};
  const account=()=>page.locator('.account-card').filter({hasText:'Compte QA éditeurs'});
  const cents=value=>Math.round(Number(value.replace(/[^\d,−-]/g,'').replace('−','-').replace(',','.'))*100);
  const balance=async()=>cents(await account().locator('.account-balance').innerText());

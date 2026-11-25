@@ -1,4 +1,5 @@
 "use client";
+import InfoNote from "./info-note";
 import { useState } from "react";
 import { subscriptionOverview } from "../lib/subscriptions";
 import { money, shortDate, type Budget, type Rule, type Transaction } from "../lib/budget";
@@ -119,10 +120,9 @@ export default function SubscriptionOverview({
           )}
         </>
       )}
-      <p className="field-hint">
-        « Gérer » modifie les prévisions dans Pécule. Une résiliation ou un changement de tarif se fait auprès du
-        fournisseur.
-      </p>
+      <InfoNote title="« Gérer » ne change que les prévisions de Pécule">
+        <p>Une résiliation ou un changement de tarif se fait auprès du fournisseur.</p>
+      </InfoNote>
     </section>
   );
 }

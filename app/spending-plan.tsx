@@ -1,4 +1,5 @@
 "use client";
+import InfoNote from "./info-note";
 import { inputAmount } from "./download-file";
 import AnimatedDetails from "./animated-details";
 import { useMemo, useRef, useState, type FormEvent } from "react";
@@ -170,24 +171,25 @@ export default function SpendingPlan(p: Props) {
         categories={summary.categories}
       />
       <section className="plan-explanation">
-        <h2>Ce que cette vue compte</h2>
-        <p>
-          Les montants enregistrés incluent les récurrences arrivées à échéance. Les paiements futurs restent dans « À
-          venir ». Les virements entre comptes courants sont exclus ; les versements vers l’épargne comptent une seule
-          fois, diminués des retraits. Une réserve d’objectif ou le solde initial d’un livret ne sont pas de l’épargne
-          nouvellement mise de côté.
-        </p>
-        <p>
-          Les crédits dans une catégorie de dépense diminuent son montant net. Les remboursements identifiés ne gonflent
-          pas le revenu de référence. Vérifiez les opérations par rapport à votre banque.
-        </p>
-        <a
-          href="https://files.consumerfinance.gov/f/documents/201606_cfpb_rules-to-live-by_my-spending-rule-to-live-by.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          La méthode 50/30/20 · source CFPB (en anglais)
-        </a>
+        <InfoNote title="Ce que cette vue compte">
+          <p>
+            Les montants enregistrés incluent les récurrences arrivées à échéance. Les paiements futurs restent dans « À
+            venir ». Les virements entre comptes courants sont exclus ; les versements vers l’épargne comptent une seule
+            fois, diminués des retraits. Une réserve d’objectif ou le solde initial d’un livret ne sont pas de l’épargne
+            nouvellement mise de côté.
+          </p>
+          <p>
+            Les crédits dans une catégorie de dépense diminuent son montant net. Les remboursements identifiés ne
+            gonflent pas le revenu de référence. Vérifiez les opérations par rapport à votre banque.
+          </p>
+          <a
+            href="https://files.consumerfinance.gov/f/documents/201606_cfpb_rules-to-live-by_my-spending-rule-to-live-by.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            La méthode 50/30/20 · source CFPB (en anglais)
+          </a>
+        </InfoNote>
       </section>
     </div>
   );
