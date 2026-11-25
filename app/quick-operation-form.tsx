@@ -1,4 +1,5 @@
 "use client";
+import { inputAmount } from "./download-file";
 import { useState, type FormEvent, type ReactNode } from "react";
 import { captureSuggestions } from "../lib/capture-suggestions";
 import { normalize } from "../lib/merchants";
@@ -206,7 +207,7 @@ export default function QuickOperationForm(p: Props) {
                 pattern={String.raw`[0-9\s\u00a0\u202f]+([.,][0-9]{1,2})?`}
                 autoComplete="off"
                 maxLength={24}
-                defaultValue={p.amount === undefined ? "" : String(p.amount / 100)}
+                defaultValue={p.amount === undefined ? "" : inputAmount(p.amount)}
                 required
                 placeholder="0,00"
                 onChange={() => setAmountError("")}

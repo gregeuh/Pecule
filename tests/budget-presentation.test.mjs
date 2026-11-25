@@ -42,3 +42,13 @@ test("axis labels are rounded, ordered and bound positive, negative and mixed pr
     assert(axis.ticks.every((n, i) => !i || axis.ticks[i - 1] - n === axis.step));
   }
 });
+
+test("goal progress shows the same whole percent everywhere, rounded down", async () => {
+  const { goalProgress } = await import("../lib/budget-presentation.ts");
+  assert.deepEqual(goalProgress(125000, 200000), { share: 62.5, percent: 62 });
+  assert.equal(goalProgress(199999, 200000).percent, 99);
+  assert.equal(goalProgress(200000, 200000).percent, 100);
+  assert.equal(goalProgress(250000, 200000).share, 100);
+  assert.equal(goalProgress(-10, 200000).share, 0);
+  assert.equal(goalProgress(100, 0).share, 0);
+});

@@ -1,4 +1,5 @@
 "use client";
+import { inputAmount } from "./download-file";
 
 /** Shared cents-to-decimal editor; parsing remains in the canonical submit flow. */
 export default function AmountInput({
@@ -26,7 +27,7 @@ export default function AmountInput({
         step="0.01"
         min={positive ? "0.01" : undefined}
         max="1000000000"
-        defaultValue={defaultValue === undefined ? undefined : String(defaultValue / 100)}
+        defaultValue={defaultValue === undefined ? undefined : inputAmount(defaultValue)}
         required={required}
         placeholder="0,00"
       />

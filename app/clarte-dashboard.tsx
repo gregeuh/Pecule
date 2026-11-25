@@ -1,4 +1,5 @@
 "use client";
+import { goalProgress } from "../lib/budget-presentation";
 import { useId, useState } from "react";
 import OperationGesture from "./operation-gesture";
 import SwipeTabs from "./swipe-tabs";
@@ -301,12 +302,12 @@ export default function ClarteDashboard(p: Props) {
       onAdd={p.onAddAccount}
     />
   );
+  const { share: goalShare, percent: goalPercent } = goal
+    ? goalProgress(goal.saved, goal.target)
+    : { share: 0, percent: 0 };
   const goalCard = (
     <section className="clarte-goal">
-      <GoalIllustration
-        icon={goal?.icon ?? "shield"}
-        progress={p.hidden ? 0 : goal ? (goal.saved / goal.target) * 100 : 0}
-      />
+      <GoalIllustration icon={goal?.icon ?? "shield"} progress={p.hidden ? 0 : goalShare} />
       <div>
         <h2>{goal?.name ?? "De la place pour vos projets."}</h2>
         <p className="clarte-goal-mobile">
@@ -358,7 +359,6 @@ export default function ClarteDashboard(p: Props) {
     b.transactions.filter((t) => t.date.startsWith(p.today.slice(0, 7))),
     p.today,
   );
-  const goalProgress = goal ? Math.min(100, Math.max(0, (goal.saved / goal.target) * 100)) : 0;
   const tabs = [
     { id: "overview", label: "Aperçu" },
     { id: "operations", label: "Activité" },
@@ -514,7 +514,7 @@ export default function ClarteDashboard(p: Props) {
                 {goal ? (
                   <button type="button" className="wallet-goal-row" onClick={p.onGoals}>
                     <span className="wallet-goal-icon">
-                      <GoalIllustration icon={goal.icon} progress={p.hidden ? 0 : goalProgress} />
+                      <GoalIllustration icon={goal.icon} progress={p.hidden ? 0 : goalShare} />
                     </span>
                     <span>
                       <strong>{goal.name}</strong>
@@ -522,10 +522,10 @@ export default function ClarteDashboard(p: Props) {
                         {m(goal.saved)} sur {m(goal.target)}
                       </small>
                       <span className="wallet-goal-track" aria-hidden="true">
-                        <i style={{ width: p.hidden ? "0%" : `${goalProgress}%` }} />
+                        <i style={{ width: p.hidden ? "0%" : `${goalShare}%` }} />
                       </span>
                     </span>
-                    <b>{p.hidden ? "Masqué" : `${Math.floor(goalProgress)} %`}</b>
+                    <b>{p.hidden ? "Masqué" : `${goalPercent} %`}</b>
                   </button>
                 ) : (
                   <button type="button" className="secondary full-width" onClick={p.onGoals}>
