@@ -45,7 +45,6 @@ import {
   MoreHorizontal,
   Pencil,
   Trash2,
-  CalendarDays,
   LoaderCircle,
   CircleAlert,
   LockKeyhole,
@@ -58,7 +57,6 @@ import {
   colors,
   demoBudget,
   emptyBudget,
-  futureTransactions,
   materialize,
   money,
   overview,
@@ -96,16 +94,14 @@ import BankImport, { type ImportDraft } from "./bank-import";
 import { mergeBudgets, sameBudgetValue, type MergeConflict } from "../lib/budget-merge";
 import { importBatches, removeImportBatch } from "../lib/import-batches";
 import { budgetSchema } from "../lib/validation";
-import AnimatedDetails from "./animated-details";
 import SettingsPage from "./settings-page";
 import TransactionsPage from "./transactions-page";
 import AccountsPage from "./accounts-page";
 import GoalsPage from "./goals-page";
+import RecurringPage from "./recurring-page";
 import { downloadFile, inputAmount } from "./download-file";
 import { usePrivacyPreference, useNetworkOnline, useGoogleReturn, useCompactViewport } from "./browser-preferences";
 import { FormDraftProvider, useFormDraftStore } from "./form-drafts";
-import SubscriptionOverview from "./subscription-overview";
-import RecurringItem from "./recurring-item";
 import { CaptureRoutine, DailyReview, catchupDate } from "./capture-routine";
 import { CaptureFavorites, FavoriteEditor } from "./capture-favorites";
 import { captureAccount, favoriteFromTransaction, type Favorite } from "../lib/capture";
@@ -118,7 +114,6 @@ import { ErrorMessage } from "./interface-feedback";
 import CategoryIcon from "./category-icon";
 import ForecastOutlook from "./forecast-outlook";
 import ClarteDashboard from "./clarte-dashboard";
-import RecurringSuggestions from "./recurring-suggestions";
 import SpendingPlan from "./spending-plan";
 import MobileDock from "./mobile-dock";
 import SubmitButton from "./submit-button";
@@ -191,7 +186,6 @@ function BudgetAppContent({ user }: BudgetAppProps) {
   const pendingCapture = useRef<Extract<Modal, { type: "transaction" }> | null>(null);
   const [merchantDirection, setMerchantDirection] = useState("expense");
   const [ruleFilter, setRuleFilter] = useState("all");
-  const ruleState = (r: Rule) => (r.endDate && r.endDate < today ? "ended" : r.active ? "active" : "paused");
   const [budget, setBudget] = useState<Budget>(() => demoBudget(todayISO()));
   const [demo, setDemoState] = useState(true),
     [hasBudget, setHasBudget] = useState(false),
@@ -1786,130 +1780,20 @@ function BudgetAppContent({ user }: BudgetAppProps) {
               />
             )}
             {page === "recurring" && (
-              <>
-                <SubscriptionOverview
-                  budget={b}
-                  today={today}
-                  hidden={hidden}
-                  onEdit={(item) => open({ type: "rule", item })}
-                  onCreate={(item) => {
-                    const proposal = transactionRecurrence(item, b, today);
-                    if (proposal) open({ type: "rule", proposal, sourceTransactionId: item.id });
-                    else setToast("Ouvrez cette opération pour vérifier ses données avant de prévoir la suite.");
-                  }}
-                />
-                <div className="recurrence-filters" role="group" aria-label="État des récurrences">
-                  {[
-                    { id: "all", label: "Toutes" },
-                    { id: "active", label: "Actives" },
-                    { id: "paused", label: "En pause" },
-                    { id: "ended", label: "Terminées" },
-                  ].map((f) => (
-                    <button
-                      type="button"
-                      key={f.id}
-                      aria-pressed={ruleFilter === f.id}
-                      onClick={() => setRuleFilter(f.id)}
-                    >
-                      {f.label}
-                      <span>{b.rules.filter((r) => f.id === "all" || ruleState(r) === f.id).length}</span>
-                    </button>
-                  ))}
-                </div>
-                <RecurringSuggestions
-                  budget={b}
-                  today={today}
-                  hidden={hidden}
-                  onReview={(suggestion) => open({ type: "rule", proposal: suggestion.rule })}
-                />
-                <AnimatedDetails className="recurrence-help">
-                  <summary>
-                    <CalendarDays size={18} />
-                    Dates et jours ouvrés
-                    <ChevronDown size={17} />
-                  </summary>
-                  <p>
-                    Choisissez une date fixe ou le dernier jour du mois hors week-end et jours fériés. Les opérations
-                    sont ajoutées à leur échéance, à partir de la date choisie.
-                  </p>
-                </AnimatedDetails>
-                {[true, false].map((income) => {
-                  const allRules = b.rules.filter((r) => r.amount > 0 === income),
-                    rules = allRules.filter((r) => ruleFilter === "all" || ruleState(r) === ruleFilter);
-                  return (
-                    <section className="recurring-section" key={String(income)}>
-                      <div className="section-heading">
-                        <h2>{income ? "Les rentrées d’argent" : "Les dépenses récurrentes"}</h2>
-                        <span>
-                          {rules.length} récurrence{rules.length > 1 ? "s" : ""}
-                        </span>
-                      </div>
-                      {rules.length ? (
-                        <div ref={recurrenceMotion} className="rule-grid">
-                          {rules.map((r) => {
-                            const next = futureTransactions(
-                              { ...b, rules: [r], transactions: [] },
-                              shiftDate(today, 1),
-                              shiftDate(today, 370),
-                            )[0];
-                            return (
-                              <RecurringItem
-                                key={r.id}
-                                rule={r}
-                                state={ruleState(r)}
-                                accountName={b.accounts.find((a) => a.id === r.accountId)?.name}
-                                next={next}
-                                saving={busy}
-                                formatMoney={(n) => m(n, true, true)}
-                                onEdit={() => open({ type: "rule", item: r })}
-                                onToggle={() => {
-                                  void save(
-                                    {
-                                      ...b,
-                                      rules: b.rules.map((x) => (x.id === r.id ? { ...x, active: !x.active } : x)),
-                                    },
-                                    r.active ? "Récurrence mise en pause." : "Récurrence réactivée.",
-                                  );
-                                }}
-                                onDelete={() => remove("rule", r.id)}
-                              />
-                            );
-                          })}
-                        </div>
-                      ) : (
-                        <div className="card">
-                          <Empty
-                            icon={income ? ArrowDownLeft : Repeat2}
-                            title={
-                              allRules.length
-                                ? "Aucune récurrence dans cet état"
-                                : income
-                                  ? "Prévoyez votre prochain revenu"
-                                  : "Anticipez les sorties d’argent"
-                            }
-                            description={
-                              allRules.length
-                                ? "Choisissez Toutes pour retrouver vos récurrences."
-                                : income
-                                  ? "Salaire, allocation, revenu complémentaire : chacun a son rythme."
-                                  : "Loyer, abonnement, assurance… gardez une longueur d’avance."
-                            }
-                            action={
-                              <button
-                                type="button"
-                                className="text-button"
-                                onClick={() => (b.accounts.length ? open({ type: "rule" }) : open({ type: "account" }))}
-                              >
-                                Ajouter une récurrence <Plus size={14} />
-                              </button>
-                            }
-                          />
-                        </div>
-                      )}
-                    </section>
-                  );
-                })}
-              </>
+              <RecurringPage
+                budget={b}
+                today={today}
+                hidden={hidden}
+                busy={busy}
+                m={m}
+                open={open}
+                save={save}
+                setToast={setToast}
+                ruleFilter={ruleFilter}
+                setRuleFilter={setRuleFilter}
+                recurrenceMotion={recurrenceMotion}
+                onRemoveRule={(ruleId) => remove("rule", ruleId)}
+              />
             )}
             {page === "accounts" && (
               <AccountsPage
