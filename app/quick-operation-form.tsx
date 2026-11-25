@@ -43,6 +43,8 @@ type Props = {
   onTransfer: () => void;
   onFavorite: (favorite: Favorite, context: { accountId: string; date: string }) => void;
   onFavorites: () => void;
+  /** Other things to add from the same sheet (récurrence, objectif, compte, import). */
+  onOther?: (target: "rule" | "goal" | "account" | "import") => void;
 };
 /** Same validated write and in-memory drafts as the full editor, with a short capture path. */
 export default function QuickOperationForm(p: Props) {
@@ -286,6 +288,23 @@ export default function QuickOperationForm(p: Props) {
           optionsTitle="Catégorie, logo et note"
         />
         {p.error && <ErrorMessage>{p.error}</ErrorMessage>}
+        {p.onOther && (
+          <nav className="capture-others" aria-label="Ajouter autre chose">
+            <span>Autre chose</span>
+            {(
+              [
+                ["rule", "Récurrence"],
+                ["goal", "Objectif"],
+                ["account", "Compte"],
+                ["import", "Import CSV"],
+              ] as const
+            ).map(([target, label]) => (
+              <button key={target} type="button" disabled={p.saving} onClick={() => p.onOther?.(target)}>
+                {label}
+              </button>
+            ))}
+          </nav>
+        )}
       </div>
       <div className="capture-footer form-actions">
         <SubmitButton busy={p.saving} icon={<Check size={16} />}>

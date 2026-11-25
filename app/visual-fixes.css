@@ -94,3 +94,17 @@
   :root .app-shell .sidebar .nav-count { position: absolute; top: 4px; right: 4px; margin: 0; }
   :root .app-shell .sidebar .profile { justify-content: center; padding-inline: 0; }
 }
+
+/* Lot 3: one way to add. The "+" opens an expense; other things are small shortcuts under the form. */
+:root .capture-others { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+:root .capture-others > span { width: 100%; color: var(--muted); font-size: 13px; }
+:root .capture-others > button { min-height: 40px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 99px; background: transparent; color: var(--blue); font: 500 14px var(--font-body); }
+
+/* Lot 3: the "Ajouter" menu is a compact list; expense, income and transfer come first. */
+:root .modal.actions-modal .quick-action-grid { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+:root .modal.actions-modal .quick-action { flex-direction: row; align-items: center; gap: 12px; min-height: 56px; padding: 8px 40px 8px 10px; }
+:root .modal.actions-modal .quick-action-icon { width: 36px; height: 36px; margin: 0; flex: none; }
+:root .modal.actions-modal .quick-action > strong { font-size: 15px; white-space: nowrap; }
+:root .modal.actions-modal .quick-action > small { max-width: none; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:root .modal.actions-modal .quick-action-chevron { top: 50%; transform: translateY(-50%); }
+:root .modal.actions-modal .quick-action:nth-child(3) { margin-bottom: 10px; }
