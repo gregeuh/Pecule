@@ -51,7 +51,7 @@ export default function SpendingPlan(p: Props) {
           >
             <ChevronLeft size={19} />
           </button>
-          <strong>{p.month}</strong>
+          <strong>{parseDate(p.month + "-01").toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}</strong>
           <button
             type="button"
             className="icon-button"

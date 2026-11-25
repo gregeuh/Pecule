@@ -92,8 +92,8 @@ export default function TransactionsPage({
           <small>
             {full ? (
               <>
+                <span className="transaction-mobile-category">{t.category} · </span>
                 {b.accounts.find((a) => a.id === t.accountId)?.name}
-                <span className="transaction-mobile-category"> · {t.category}</span>
               </>
             ) : (
               t.category
