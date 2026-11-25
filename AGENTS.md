@@ -2,7 +2,7 @@
 
 - L’utilisateur demande un déploiement Vercel après chaque modification livrée. Après les vérifications, procéder au déploiement sans redemander une confirmation de routine.
 - Projet : `gregeuhs-projects/pecule-budget`, site `https://pecule-budget.vercel.app/`.
-- La branche `vercel-compatibility` contient l’application Next.js, Better Auth et PostgreSQL/Neon compatible avec ce site. Préserver ses fonctionnalités et ses données ; ne pas la remplacer par la sauvegarde Sites/Cloudflare de `main`.
+- La branche `main` contient l’application Next.js, Better Auth et PostgreSQL/Neon déployée sur ce site ; c’est la branche de production Vercel (chaque push sur `main` part en production). Travailler sur une branche dédiée et passer par une pull request pour les changements à risque (schéma de base, sauvegarde, authentification) afin de valider la prévisualisation avant fusion. Préserver les fonctionnalités et les données. La base Sites/Cloudflare d’origine reste accessible dans l’historique Git (commit `f847c10`).
 - Utiliser le checkout existant approprié et préserver tout travail local. Vérifier les nouvelles modifications distantes avant de pousser ; ne jamais forcer une mise à jour de branche.
 - Si la CLI Vercel n’est pas authentifiée, utiliser l’intégration GitHub/Vercel existante lorsqu’elle peut déployer la branche. Suivre le statut du commit et vérifier le site de production ; une compilation locale ou un push ne suffit pas à déclarer la publication réussie.
 - Ne pas imprimer les secrets, modifier les variables de production sans nécessité, ni toucher aux budgets personnels pour les tests. Les identifiants restent dans les paramètres sécurisés du service.

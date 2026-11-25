@@ -1,9 +1,9 @@
 name: Quality
 on:
   push:
-    branches: [vercel-compatibility, 'corrections/**']
+    branches: [main]
   pull_request:
-    branches: [vercel-compatibility]
+    branches: [main]
 permissions:
   contents: read
 concurrency:

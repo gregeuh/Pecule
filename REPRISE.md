@@ -1,6 +1,6 @@
 # Reprise de Pécule — 26 octobre 2026
 
-> Historique : ce document décrit la base Sites/Cloudflare du 23 octobre. La branche `vercel-compatibility` a depuis supprimé le code propre à Cloudflare (Workers, D1, Drizzle, connecteurs Sites) ; voir README.md pour l'état actuel.
+> Historique : ce document décrit la base Sites/Cloudflare du 23 octobre. La branche `vercel-compatibility`, fusionnée dans `main` le 25 novembre 2026, a depuis supprimé le code propre à Cloudflare (Workers, D1, Drizzle, connecteurs Sites) ; voir README.md pour l'état actuel.
 
 ## Base retenue
 

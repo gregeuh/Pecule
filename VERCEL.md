@@ -2,11 +2,11 @@
 
 ## Livraison demandée
 
-Le projet cible est `gregeuhs-projects/pecule-budget` et la branche de livraison est `vercel-compatibility`. Après chaque modification validée, livrer via l’intégration GitHub/Vercel et vérifier le statut du commit puis le site de production. Ne jamais déployer directement la sauvegarde Cloudflare de `main` sur ce projet.
+Le projet cible est `gregeuhs-projects/pecule-budget` et la branche de production est `main` (fusionnée depuis `vercel-compatibility` le 25 novembre 2026). Chaque push sur `main` est déployé en production par l’intégration GitHub/Vercel ; vérifier ensuite le statut du commit puis le site de production. Les autres branches produisent des prévisualisations, avec leurs propres tables et cookies.
 
 L’import conserve les colonnes supplémentaires du relevé dans les notes lorsque l’option visible est cochée. L’aperçu « Données reprises » montre les notes et la référence bancaire avant confirmation. Les notes dépassant 1 000 caractères sont exclues avec un message explicite, jamais tronquées ; les modes historique et nouvelles opérations sont conservés.
 
-Base : gregeuh/Pecule, commit f847c100de083e116714cf5b74070709f7f975ef (source du 23 octobre).
+Base d’origine : gregeuh/Pecule, commit f847c100de083e116714cf5b74070709f7f975ef (source Sites/Cloudflare du 23 octobre, conservée dans l’historique).
 
 La compilation est Next.js native : `npm ci`, `npm run build`. `vercel.json` configure les paramètres.
 

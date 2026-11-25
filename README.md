@@ -1,6 +1,6 @@
 # Pécule
 
-Application personnelle de gestion de budget en français, pensée pour iPhone et ordinateur. Cette branche (`vercel-compatibility`) est la version déployée sur Vercel : Next.js, Better Auth et PostgreSQL (Neon). Voir [VERCEL.md](VERCEL.md) pour la livraison et [REPRISE.md](REPRISE.md) pour l'historique de la base Sites/Cloudflare dont elle est issue.
+Application personnelle de gestion de budget en français, pensée pour iPhone et ordinateur. La branche `main` est la version déployée en production sur Vercel : Next.js, Better Auth et PostgreSQL (Neon). Voir [VERCEL.md](VERCEL.md) pour la livraison et [REPRISE.md](REPRISE.md) pour l'historique de la base Sites/Cloudflare dont elle est issue.
 
 ## Fonctionnement
 
@@ -43,4 +43,4 @@ Les valeurs restent exclusivement dans les paramètres Vercel ; ne jamais les ve
 - `npm run format:check` : vérifie le formatage Prettier (`npm run format` pour l'appliquer)
 - Tests d'interface : scripts `test:e2e:*` (Playwright), voir `tests/e2e/README.md`.
 
-La CI (`.github/workflows/quality.yml`) exécute typage, lint, tests unitaires et un sous-ensemble des tests d'interface sur un build de production.
+La CI (`.github/workflows/quality.yml`) s'exécute sur chaque push et pull request vers `main` : typage, lint, tests unitaires et un sous-ensemble des tests d'interface sur un build de production.
