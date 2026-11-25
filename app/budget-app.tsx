@@ -1889,7 +1889,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                   aria-label={short}
                   className={current ? "active" : ""}
                   aria-current={current ? "page" : undefined}
-                  onClick={(e) => mobileNavigate(current ? page : id, e.timeStamp)}
+                  onClick={(e) => mobileNavigate(current && id !== "overview" ? page : id, e.timeStamp)}
                 >
                   <Icon size={21} strokeWidth={1.7} />
                   <span>{short}</span>
