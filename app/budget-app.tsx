@@ -56,6 +56,7 @@ import {
   LockKeyhole,
   Funnel,
   Keyboard,
+  RotateCcw,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -2632,6 +2633,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                               open({
                                 type: "confirm",
                                 title: "Restaurer cette sauvegarde ?",
+                                tone: "restore",
                                 message:
                                   "Cette sauvegarde remplacera votre budget actuel. Téléchargez d’abord votre budget si vous souhaitez le conserver.",
                                 action: () => save(restored, "Votre sauvegarde a été restaurée."),
@@ -2668,6 +2670,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                           open({
                             type: "confirm",
                             title: "Restaurer cette version ?",
+                            tone: "restore",
                             message: `Votre budget reviendra à son état du ${savedAt}. La version actuelle restera disponible dans les versions précédentes.`,
                             action: () => save(restored, "La version a été restaurée."),
                           })
@@ -3903,7 +3906,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                       </button>
                       <button
                         type="button"
-                        className="danger"
+                        className={modal.tone === "restore" ? "primary" : "danger"}
                         disabled={busy}
                         onClick={async () => {
                           if (await modal.action()) {
@@ -3912,7 +3915,14 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                           }
                         }}
                       >
-                        {saving ? <LoaderCircle size={16} className="spin" /> : <Trash2 size={16} />}Confirmer
+                        {saving ? (
+                          <LoaderCircle size={16} className="spin" />
+                        ) : modal.tone === "restore" ? (
+                          <RotateCcw size={16} />
+                        ) : (
+                          <Trash2 size={16} />
+                        )}
+                        {modal.tone === "restore" ? "Restaurer" : "Confirmer"}
                       </button>
                     </div>
                   </div>
