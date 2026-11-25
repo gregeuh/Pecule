@@ -1,12 +1,12 @@
 ---
 version: "1.0"
 colors:
-  background: "#f2f3f7"
-  surface: "#ffffff"
-  ink: "#15171d"
-  muted: "#626b7b"
-  primary: "#245af3"
-  text-accent: "#1d4dd5"
+  background: "#fbeee3"
+  surface: "#fffaf6"
+  ink: "#2b2320"
+  muted: "#6a554b"
+  primary: "#bf4f2a"
+  text-accent: "#a8431f"
 typography:
   body:
     fontFamily: '"DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
