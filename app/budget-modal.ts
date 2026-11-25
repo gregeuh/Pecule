@@ -44,4 +44,12 @@ export type Modal =
   | { type: "start" }
   | { type: "calculation" }
   | { type: "install" }
-  | { type: "confirm"; title: string; message: string; action: () => Promise<boolean>; onDone?: () => void };
+  | {
+      type: "confirm";
+      title: string;
+      message: string;
+      action: () => Promise<boolean>;
+      onDone?: () => void;
+      /** "restore" for actions that replace data without deleting it (neutral button). Defaults to destructive. */
+      tone?: "restore";
+    };
