@@ -36,6 +36,7 @@ import {
   Cloud,
   CloudOff,
   Settings2,
+  Search,
   Download,
   Upload,
   Sparkles,
@@ -58,6 +59,7 @@ import {
   money,
   overview,
   shortDate,
+  parseDate,
   todayISO,
   type Account,
   type Budget,
@@ -93,6 +95,8 @@ import SettingsPage from "./settings-page";
 import TransactionsPage from "./transactions-page";
 import AccountsPage from "./accounts-page";
 import GoalsPage from "./goals-page";
+import GlobalSearch from "./global-search";
+import { postponeExpense, recordPaydaySavings } from "../lib/month-assist";
 import RecurringPage from "./recurring-page";
 import GoalEditor from "./goal-editor";
 import RuleEditor from "./rule-editor";
@@ -546,15 +550,25 @@ function BudgetAppContent({ user }: BudgetAppProps) {
     }
     setModal(value);
   };
-  const captureAction = useEffectEvent((action: "add" | "review") => {
+  const captureAction = useEffectEvent((action: "add" | "review" | "income" | "search") => {
     if (action === "review") open({ type: "review" });
-    else if (b.accounts.length) open({ type: "transaction" });
-    else open({ type: "account" });
+    else if (action === "search") open({ type: "search" });
+    else if (!b.accounts.length) open({ type: "account" });
+    else if (action === "income") open({ type: "transaction", direction: "income" });
+    else open({ type: "transaction" });
+  });
+  /** Shortcuts from the app icon (manifest `shortcuts`, Android and desktop): `/?raccourci=…`. */
+  const iconShortcut = useEffectEvent((name: string) => {
+    if (name === "depense") captureAction("add");
+    else if (name === "revenu") captureAction("income");
+    else if (name === "operations") navigate("transactions");
+    else if (name === "epargne") navigate("goals");
   });
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
+      const search = event.key === "/";
       if (
-        event.key.toLowerCase() !== "n" ||
+        (event.key.toLowerCase() !== "n" && !search) ||
         event.ctrlKey ||
         event.metaKey ||
         event.altKey ||
@@ -564,14 +578,18 @@ function BudgetAppContent({ user }: BudgetAppProps) {
       )
         return;
       event.preventDefault();
-      captureAction("add");
+      captureAction(search ? "search" : "add");
     };
     window.addEventListener("keydown", key);
     const initial = requestAnimationFrame(() => {
-      if (new URLSearchParams(location.search).get("daily-review") === "1") {
-        captureAction("review");
+      const params = new URLSearchParams(location.search);
+      const shortcut = params.get("raccourci");
+      if (params.get("daily-review") === "1") captureAction("review");
+      else if (shortcut) iconShortcut(shortcut);
+      if (params.has("daily-review") || shortcut !== null) {
         const url = new URL(location.href);
         url.searchParams.delete("daily-review");
+        url.searchParams.delete("raccourci");
         history.replaceState(null, "", url.pathname + url.search + url.hash);
       }
     });
@@ -1061,49 +1079,51 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                       ? "Filtrer les opérations"
                       : modal?.type === "navigation"
                         ? "Plus dans Pécule"
-                        : modal?.type === "reconcile"
-                          ? `Rapprocher ${b.accounts.find((a) => a.id === modal.accountId)?.name ?? "le compte"}`
-                          : modal?.type === "bulk"
-                            ? "Modifier plusieurs opérations"
-                            : modal?.type === "match-transfers"
-                              ? "Associer des virements internes"
-                              : modal?.type === "imports"
-                                ? "Vos imports bancaires"
-                                : modal?.type === "actions"
-                                  ? "Ajouter"
-                                  : modal?.type === "transaction"
-                                    ? modal.item
-                                      ? "Le détail de l’opération"
-                                      : "Ajouter une opération"
-                                    : modal?.type === "account"
+                        : modal?.type === "search"
+                          ? "Rechercher"
+                          : modal?.type === "reconcile"
+                            ? `Rapprocher ${b.accounts.find((a) => a.id === modal.accountId)?.name ?? "le compte"}`
+                            : modal?.type === "bulk"
+                              ? "Modifier plusieurs opérations"
+                              : modal?.type === "match-transfers"
+                                ? "Associer des virements internes"
+                                : modal?.type === "imports"
+                                  ? "Vos imports bancaires"
+                                  : modal?.type === "actions"
+                                    ? "Ajouter"
+                                    : modal?.type === "transaction"
                                       ? modal.item
-                                        ? "Modifier le compte"
-                                        : "Un nouveau compte"
-                                      : modal?.type === "rule"
+                                        ? "Le détail de l’opération"
+                                        : "Ajouter une opération"
+                                      : modal?.type === "account"
                                         ? modal.item
-                                          ? "Modifier la récurrence"
-                                          : modal.proposal
-                                            ? "Vérifier cette récurrence"
-                                            : "Prévoir une récurrence"
-                                        : modal?.type === "goal"
+                                          ? "Modifier le compte"
+                                          : "Un nouveau compte"
+                                        : modal?.type === "rule"
                                           ? modal.item
-                                            ? "Modifier votre objectif"
-                                            : "Un projet à concrétiser"
-                                          : modal?.type === "transfer"
-                                            ? "Enregistrer un virement"
-                                            : modal?.type === "contribution"
-                                              ? "Faire grandir votre projet"
-                                              : modal?.type === "import"
-                                                ? "Importer vos opérations"
-                                                : modal?.type === "start"
-                                                  ? "Bienvenue chez vous."
-                                                  : modal?.type === "calculation"
-                                                    ? "Un disponible qui a du sens."
-                                                    : modal?.type === "install"
-                                                      ? "Pécule, à portée de main."
-                                                      : modal?.type === "confirm"
-                                                        ? modal.title
-                                                        : "";
+                                            ? "Modifier la récurrence"
+                                            : modal.proposal
+                                              ? "Vérifier cette récurrence"
+                                              : "Prévoir une récurrence"
+                                          : modal?.type === "goal"
+                                            ? modal.item
+                                              ? "Modifier votre objectif"
+                                              : "Un projet à concrétiser"
+                                            : modal?.type === "transfer"
+                                              ? "Enregistrer un virement"
+                                              : modal?.type === "contribution"
+                                                ? "Faire grandir votre projet"
+                                                : modal?.type === "import"
+                                                  ? "Importer vos opérations"
+                                                  : modal?.type === "start"
+                                                    ? "Bienvenue chez vous."
+                                                    : modal?.type === "calculation"
+                                                      ? "Un disponible qui a du sens."
+                                                      : modal?.type === "install"
+                                                        ? "Pécule, à portée de main."
+                                                        : modal?.type === "confirm"
+                                                          ? modal.title
+                                                          : "";
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!modal) return;
@@ -1528,6 +1548,17 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                 </span>
               </span>
               <button
+                className="icon-button global-search-trigger"
+                type="button"
+                title="Rechercher (touche /)"
+                aria-label="Rechercher dans Pécule"
+                aria-keyshortcuts="/"
+                disabled={!loaded}
+                onClick={() => open({ type: "search" })}
+              >
+                <Search size={19} />
+              </button>
+              <button
                 className="icon-button"
                 type="button"
                 title={hidden ? "Afficher les montants" : "Masquer les montants"}
@@ -1689,6 +1720,19 @@ function BudgetAppContent({ user }: BudgetAppProps) {
             />
             {page === "overview" && (
               <ClarteDashboard
+                onSearch={() => open({ type: "search" })}
+                onPaydaySavings={(plan) =>
+                  void save(
+                    recordPaydaySavings(b, plan, today, uid),
+                    `${money(plan.total)} mis de côté pour vos objectifs.`,
+                  )
+                }
+                onPostpone={(item, date) =>
+                  void save(
+                    postponeExpense(b, item, date),
+                    `${item.label} prévu le ${parseDate(date).toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}.`,
+                  )
+                }
                 pending={offline.entries.length}
                 budget={b}
                 today={today}
@@ -2374,6 +2418,21 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                       />
                     )}
                   </div>
+                )}
+                {modal.type === "search" && (
+                  <GlobalSearch
+                    budget={b}
+                    today={today}
+                    hidden={hidden}
+                    onTransaction={(item) => open({ type: "transaction", item })}
+                    onRule={(item) => open({ type: "rule", item })}
+                    onAccount={(a) => open({ type: "wallet-account", accountId: a.id })}
+                    onGoal={() => {
+                      headingAfterClose.current = true;
+                      setModal(null);
+                      navigate("goals");
+                    }}
+                  />
                 )}
                 {modal.type === "navigation" && (
                   <nav className="navigation-menu" aria-label="Navigation complémentaire">
