@@ -40,3 +40,17 @@ test("the bootstrap sets the palette and never throws without storage", () => {
   new Function("document", "localStorage", paletteBootstrap)(doc2, { getItem: () => "lavande" });
   assert.equal(doc2.documentElement.dataset.palette, "lavande");
 });
+
+test("each light palette has its status bar colour; the bootstrap applies it", async () => {
+  const { paletteThemeColor } = await import("../lib/appearance.ts");
+  assert.equal(paletteThemeColor("lavande"), "#efeaff");
+  assert.equal(paletteThemeColor("ocean"), "#dbe7f3");
+  assert.equal(paletteThemeColor("rose"), "#fbeee3");
+  const meta = { content: "#fbeee3" };
+  const doc = {
+    documentElement: { dataset: {} },
+    querySelector: (s) => (/theme-color/.test(s) && /light/.test(s) ? meta : null),
+  };
+  new Function("document", "localStorage", paletteBootstrap)(doc, { getItem: () => "menthe" });
+  assert.equal(meta.content, "#e8f5ef");
+});

@@ -3,6 +3,7 @@ import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { Check } from "lucide-react";
 import {
+  applyPaletteThemeColor,
   appearanceChoices,
   choiceToStorage,
   PALETTE_KEY,
@@ -21,6 +22,7 @@ const applyPalette = (palette: string) => {
     localStorage.setItem(PALETTE_KEY, palette);
   } catch {}
   document.documentElement.dataset.palette = palette;
+  applyPaletteThemeColor(palette);
   listeners.forEach((listener) => listener());
 };
 const currentPalette = () => readPalette(document.documentElement.dataset.palette ?? null);

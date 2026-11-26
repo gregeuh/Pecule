@@ -35,7 +35,23 @@ export function storageToChoice(mode: string | null, palette: string | null): Ap
   return "auto";
 }
 
-/** Inline, before the first paint: the light palette, without a flash. Never throws. */
-export const paletteBootstrap = `try{var p=localStorage.getItem("${PALETTE_KEY}")}catch(e){}document.documentElement.dataset.palette=${JSON.stringify(
-  lightPalettes.slice(1),
-)}.indexOf(p)>=0?p:"peche";`;
+const themeColors: Record<LightPalette, string> = {
+  peche: "#fbeee3",
+  lavande: "#efeaff",
+  menthe: "#e8f5ef",
+  ocean: "#dbe7f3",
+};
+/** The iPhone status bar colour of a light palette (its --bg). Nuit keeps the dark meta tag. */
+export function paletteThemeColor(palette: string | null): string {
+  return themeColors[readPalette(palette)];
+}
+/** Points the light theme-color meta tag at the palette's ground. */
+export function applyPaletteThemeColor(palette: string | null) {
+  const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"][media*="light"]');
+  if (meta) meta.content = paletteThemeColor(palette);
+}
+
+/** Inline, before the first paint: the light palette and its status bar colour, without a flash. Never throws. */
+export const paletteBootstrap = `try{var p=localStorage.getItem("${PALETTE_KEY}")}catch(e){}var c=${JSON.stringify(
+  themeColors,
+)};p=c.hasOwnProperty(p)?p:"peche";document.documentElement.dataset.palette=p;try{var m=document.querySelector('meta[name="theme-color"][media*="light"]');if(m)m.content=c[p]}catch(e){}`;

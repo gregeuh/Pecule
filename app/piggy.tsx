@@ -20,6 +20,7 @@ export default function Piggy({
   const previous = useRef<{ saved: number; key: string } | null>(null);
   useEffect(() => {
     const element = svg.current;
+    element?.removeAttribute("data-celebrate");
     const before = previous.current;
     previous.current = { saved: savedCents, key: budgetKey };
     if (
@@ -31,7 +32,10 @@ export default function Piggy({
       return;
     element.setAttribute("data-celebrate", "true");
     const timer = setTimeout(() => element.removeAttribute("data-celebrate"), 1200);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      element.removeAttribute("data-celebrate");
+    };
   }, [savedCents, budgetKey, hidden]);
   return (
     <svg
