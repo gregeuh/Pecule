@@ -441,13 +441,18 @@ function BudgetAppContent({ user }: BudgetAppProps) {
     }
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      const dialog = dialogRef.current;
+      // This effect also runs when the open dialog updates: never pull the caret back to the first field
+      // once someone is already typing in another field of the same dialog.
+      const active = document.activeElement;
+      if (dialog && active && dialog.contains(active) && active.matches("input,select,textarea")) return;
       (
-        dialogRef.current?.querySelector<HTMLElement>(
+        dialog?.querySelector<HTMLElement>(
           ".capture-amount input,input:not([type=radio]):not([type=checkbox]),select,textarea",
-        ) ?? dialogRef.current?.querySelector<HTMLElement>("button")
-      )?.focus({ preventScroll: true }),
-    );
+        ) ?? dialog?.querySelector<HTMLElement>("button")
+      )?.focus({ preventScroll: true });
+    });
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && !saveLock.current) setModal(null);
       if (e.key === "Tab") {
