@@ -15,7 +15,15 @@ import {
 const listeners = new Set<() => void>();
 const subscribe = (listener: () => void) => {
   listeners.add(listener);
-  return () => listeners.delete(listener);
+  // Another window may change the palette (app/glass-backdrop.tsx applies it): refresh the radios too.
+  const other = (event: StorageEvent) => {
+    if (event.key === PALETTE_KEY) listener();
+  };
+  window.addEventListener("storage", other);
+  return () => {
+    listeners.delete(listener);
+    window.removeEventListener("storage", other);
+  };
 };
 const applyPalette = (palette: string) => {
   try {
