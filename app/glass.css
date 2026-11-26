@@ -427,3 +427,69 @@
 @keyframes gauge-fill { from { clip-path: inset(0 100% 0 0 round 99px); } to { clip-path: inset(0 0 0 0 round 99px); } }
 :root :is(.app-shell, .auth-shell, .modal) a.primary { display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 99px; background: linear-gradient(180deg, var(--action-from), var(--action-to)); color: var(--on-action); font-weight: 800; box-shadow: inset 0 1px 1px rgba(255, 255, 255, .5), 0 8px 18px var(--glass-shadow); }
 :root :is(.app-shell, .modal) .danger { border-radius: 99px; font-weight: 800; }
+
+/* Récurrences en un coup d’œil: the home block (month progress, next seven days as pills) and the month calendar
+   on the Récurrences page. Dots: coral for a charge, green for an income; the chosen day is the coral bubble. */
+:root .recurrence-week { display: grid; gap: 12px; padding: 16px; }
+:root .recurrence-week .clarte-section-title { margin: 0; }
+:root .recurrence-week-progress { display: grid; gap: 6px; }
+:root .recurrence-week-progress p, :root .recurrence-week-empty p { margin: 0; font-size: 13px; font-weight: 700; color: var(--muted); }
+:root .recurrence-week-progress strong { color: var(--ink); font-weight: 900; }
+:root .recurrence-week-track { display: block; height: 8px; border-radius: 99px; overflow: hidden; background: color-mix(in srgb, var(--muted) 18%, transparent); }
+:root .recurrence-week-track > i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--action-from), var(--action-to)); transform-origin: left center; animation: gauge-fill 900ms var(--motion-settle) both; }
+:root .recurrence-week-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+:root .recurrence-week-days > button, :root .recurrence-calendar-grid > button {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  min-width: 0; padding: 0; border: 0; color: var(--ink); font-family: inherit; cursor: pointer;
+}
+:root .recurrence-week-days > button { min-height: 64px; border-radius: 18px; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); }
+:root .recurrence-week-days > button > small { font-size: 11px; font-weight: 800; color: var(--muted); }
+:root .recurrence-week-days > button > strong { font-size: 17px; font-weight: 900; line-height: 1.1; }
+:root .recurrence-calendar-grid > button { min-height: 46px; border-radius: 16px; background: transparent; }
+:root .recurrence-calendar-grid > button > strong { font-size: 15px; font-weight: 800; }
+:root .recurrence-calendar-grid > button[data-past] { color: var(--muted); }
+:root :is(.recurrence-week-days, .recurrence-calendar-grid) > button[data-today] { box-shadow: inset 0 0 0 2px var(--ink); }
+:root :is(.recurrence-week-days, .recurrence-calendar-grid) > button[aria-pressed="true"] {
+  background: linear-gradient(135deg, var(--action-from), var(--action-to)); color: var(--on-action);
+  box-shadow: 0 6px 14px var(--glass-shadow);
+}
+:root :is(.recurrence-week-days, .recurrence-calendar-grid) > button[aria-pressed="true"] > small { color: inherit; }
+:root .recurrence-dots { display: flex; gap: 3px; height: 6px; }
+:root :is(.recurrence-dots, .recurrence-calendar-legend) i, :root .recurrence-row > i { display: block; width: 6px; height: 6px; border-radius: 99px; background: var(--action-to); }
+:root :is(.recurrence-dots, .recurrence-calendar-legend) i[data-kind="income"], :root .recurrence-row > i[data-kind="income"] { background: var(--green); }
+:root :is(.recurrence-week-days, .recurrence-calendar-grid) > button[aria-pressed="true"] .recurrence-dots i { background: currentColor; }
+:root .recurrence-week-list, :root .recurrence-calendar-day { display: grid; }
+:root .recurrence-week-list-title { display: flex; align-items: center; justify-content: space-between; min-height: 32px; font-size: 13px; font-weight: 800; color: var(--muted); }
+:root .recurrence-row {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 4px 0;
+  border: 0; border-top: 1px solid color-mix(in srgb, var(--muted) 18%, transparent); background: transparent;
+  color: var(--ink); font-family: inherit; text-align: left; cursor: pointer;
+}
+:root .recurrence-row > i { flex: none; width: 10px; height: 10px; }
+:root .recurrence-row > span { display: grid; flex: 1; min-width: 0; }
+:root .recurrence-row strong { font-size: 15px; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:root .recurrence-row small { font-size: 12px; font-weight: 700; color: var(--muted); }
+:root .recurrence-row > b { font-size: 15px; font-weight: 900; white-space: nowrap; }
+:root .recurrence-week-none { margin: 0; min-height: 44px; display: flex; align-items: center; font-size: 14px; font-weight: 700; color: var(--muted); }
+:root .recurrence-week-empty { display: grid; gap: 4px; justify-items: start; }
+:root .recurrence-calendar { display: grid; gap: 8px; padding: 12px 14px 14px; margin-bottom: 16px; }
+:root .recurrence-calendar-head { display: flex; align-items: center; justify-content: space-between; }
+:root .recurrence-calendar-head h2 { margin: 0; font-size: 17px; font-weight: 900; }
+:root .recurrence-calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; }
+:root .recurrence-calendar-weekday { text-align: center; font-size: 12px; font-weight: 800; color: var(--muted); padding-bottom: 2px; }
+:root .recurrence-calendar-legend { display: flex; justify-content: center; gap: 16px; font-size: 12px; font-weight: 700; color: var(--muted); }
+:root .recurrence-calendar-legend span { display: flex; align-items: center; gap: 6px; }
+:root .recurrence-calendar-legend i { width: 8px; height: 8px; }
+:root .recurrence-calendar-day h3 { margin: 4px 0; font-size: 15px; font-weight: 900; }
+@media (min-width: 761px) {
+  :root .recurrence-calendar { grid-template-columns: minmax(0, 480px) minmax(0, 1fr); column-gap: 32px; align-items: start; padding: 16px 20px; }
+  :root .recurrence-calendar > :not(.recurrence-calendar-day) { grid-column: 1; }
+  :root .recurrence-calendar-day { grid-column: 2; grid-row: 1 / span 3; padding-top: 6px; }
+  :root .recurrence-calendar-grid > button { min-height: 54px; }
+}
+@media (prefers-reduced-motion: reduce) { :root .recurrence-week-track > i { animation: none; } }
+@media (forced-colors: active) {
+  :root :is(.recurrence-week-days, .recurrence-calendar-grid) > button { border: 1px solid ButtonText; }
+  :root :is(.recurrence-week-days, .recurrence-calendar-grid) > button[aria-pressed="true"] { border: 3px solid Highlight; }
+  :root :is(.recurrence-dots, .recurrence-calendar-legend) i, :root .recurrence-row > i { background: CanvasText; }
+}
