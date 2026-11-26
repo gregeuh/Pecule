@@ -1,8 +1,10 @@
 "use client";
 import { useId, useState } from "react";
-import { ArrowRight, Plus } from "lucide-react";
+import { ArrowRight, ChevronDown, Plus } from "lucide-react";
 import { parseDate, shiftDate, shortDate, type Budget, type Transaction } from "../lib/budget";
 import { recurrenceDays, recurrenceMonthSummary } from "../lib/recurrence-calendar";
+import CategoryIcon from "./category-icon";
+import { MerchantIcon } from "./merchant-fields";
 
 type Props = {
   budget: Budget;
@@ -35,12 +37,17 @@ export function dayName(date: string, today: string) {
 /** Home: this month's recurrences at a glance, then the next seven days as pills; a day shows only its own. */
 export default function RecurrenceWeek({ budget, today, end, untilPayday, hidden, m, onOpen, onMonth }: Props) {
   const [selected, setSelected] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
+  const choose = (date: string | null) => {
+    setSelected(date);
+    setExpanded(false);
+  };
   const titleId = useId();
   const days = recurrenceDays(budget, today, 7);
   const summary = recurrenceMonthSummary(budget, today, end);
   const pick = days.find((d) => d.date === selected);
   const rows = (pick ? [pick] : days).flatMap((d) => d.items);
-  const shown = rows.slice(0, 5);
+  const shown = expanded ? rows : rows.slice(0, 3);
   const paidShare = summary.charges ? Math.round(((summary.charges - summary.remaining) / summary.charges) * 100) : 0;
   const hasRules = budget.rules.some((r) => r.active);
   return (
@@ -93,7 +100,7 @@ export default function RecurrenceWeek({ budget, today, end, untilPayday, hidden
                     count ? `${count} récurrence${count > 1 ? "s" : ""}` : "rien de prévu"
                   }`}
                   data-today={d.date === today || undefined}
-                  onClick={() => setSelected(selected === d.date ? null : d.date)}
+                  onClick={() => choose(selected === d.date ? null : d.date)}
                 >
                   <small>{weekday(d.date, "short")}</small>
                   <strong>{parseDate(d.date).getDate()}</strong>
@@ -109,7 +116,7 @@ export default function RecurrenceWeek({ budget, today, end, untilPayday, hidden
             <div className="recurrence-week-list-title">
               <span>{pick ? `${dayName(pick.date, today)} ${shortDate(pick.date)}` : "Les 7 prochains jours"}</span>
               {pick && (
-                <button type="button" className="text-button" onClick={() => setSelected(null)}>
+                <button type="button" className="text-button" onClick={() => choose(null)}>
                   Toute la semaine
                 </button>
               )}
@@ -117,7 +124,12 @@ export default function RecurrenceWeek({ budget, today, end, untilPayday, hidden
             {shown.length ? (
               shown.map((t) => (
                 <button type="button" className="recurrence-row" key={t.id} onClick={() => onOpen(t)}>
-                  <i aria-hidden="true" data-kind={t.amount > 0 ? "income" : "charge"} />
+                  <MerchantIcon
+                    label={t.label}
+                    merchantId={t.merchantId}
+                    customIconUrl={t.customIconUrl}
+                    fallback={<CategoryIcon category={t.category} size={19} />}
+                  />
                   <span>
                     <strong>{t.label}</strong>
                     <small>{pick ? rhythm(budget, t) : `${dayName(t.date, today)} · ${shortDate(t.date)}`}</small>
@@ -131,9 +143,14 @@ export default function RecurrenceWeek({ budget, today, end, untilPayday, hidden
               </p>
             )}
             {rows.length > shown.length && (
-              <button type="button" className="text-button" onClick={onMonth}>
-                {rows.length - shown.length} autre{rows.length - shown.length > 1 ? "s" : ""} cette semaine{" "}
-                <ArrowRight size={15} />
+              <button
+                type="button"
+                className="text-button recurrence-week-more"
+                aria-expanded={false}
+                onClick={() => setExpanded(true)}
+              >
+                Voir {rows.length - shown.length === 1 ? "l’autre" : `les ${rows.length - shown.length} autres`}{" "}
+                <ChevronDown size={15} />
               </button>
             )}
           </div>
