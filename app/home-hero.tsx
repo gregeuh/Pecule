@@ -43,7 +43,7 @@ export default function HomeHero({
     >
       <span className="home-hero-text">
         <span className="home-hero-label">{label}</span>
-        <strong className="home-hero-amount">
+        <strong className="home-hero-amount" data-long={format(available).length >= 12}>
           <AnimatedAmount cents={available} hidden={hidden} format={format} />
         </strong>
         <span className="home-hero-pill">
