@@ -42,3 +42,29 @@ test("glass controls keep a visible edge in forced-colors mode", () => {
   });
   assert(found, "forced-colors border on primary buttons, pills and the search capsule");
 });
+
+test("recurrence rows are not individual plates: the group is the glass plate", () => {
+  let cardRule = null;
+  css.walkRules((rule) => {
+    if (
+      /page-recurring/.test(rule.selector) &&
+      /:is\(\.card/.test(rule.selector) &&
+      rule.some((d) => d.prop === "backdrop-filter")
+    )
+      cardRule = rule;
+  });
+  assert(cardRule, "glass card rule for the four pages exists");
+  assert.match(cardRule.selector, /\.card:not\(\.rule-card\)/, "rule cards are excluded");
+  assert.match(cardRule.selector, /\.rule-grid/, "the recurrence group is a glass plate");
+});
+
+test("ended and paused recurrences keep their grey cue", () => {
+  const pill = [];
+  css.walkRules((rule) => {
+    if (/status-pill/.test(rule.selector) && rule.some((d) => d.prop === "background")) pill.push(rule.selector);
+  });
+  assert(
+    pill.every((s) => /:not\(\.neutral\)/.test(s)),
+    "the light pill base skips neutral (paused/ended) pills",
+  );
+});

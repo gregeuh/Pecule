@@ -314,3 +314,55 @@
   :root :is(.operation-filter-fields, .filter-bar) :is(select, .segmented, .month-control),
   :root .glass { border: 1px solid ButtonText; }
 }
+
+/* Lot 4: Équilibre, Récurrences, Épargne, Comptes. Cards become glass plates; gauges fill as the page opens. */
+:root .app-shell:is(.page-plan, .page-recurring, .page-goals, .page-accounts) :is(.card:not(.rule-card), .metric-strip, .rule-grid) {
+  background: linear-gradient(160deg,
+    color-mix(in srgb, var(--glass-base) calc(var(--glass-a) * 100%), transparent),
+    color-mix(in srgb, var(--glass-base) calc(var(--glass-b) * 100%), transparent));
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+  border: 0;
+  border-radius: 24px;
+  box-shadow: inset 0 1px 1px var(--glass-edge), inset 0 -1px 1px rgba(255, 255, 255, .16), 0 10px 26px var(--glass-shadow);
+}
+/* Savings intro: lavender-tinted glass (the savings colour). */
+:root .app-shell.page-goals .goal-intro {
+  background: linear-gradient(160deg, color-mix(in srgb, var(--goal-surface) 88%, transparent), color-mix(in srgb, var(--goal-surface) 62%, transparent));
+}
+:root .app-shell:is(.page-plan, .page-recurring, .page-goals, .page-accounts) :is(button.secondary, .card-actions button.secondary) {
+  border: 0; border-radius: 99px; background: var(--glass-tint); color: var(--blue); font-weight: 800;
+  box-shadow: inset 0 1px 1px var(--glass-edge);
+}
+/* Recurrence filters and the Équilibre / Récurrences switch: glass capsules with a bubble. */
+:root .app-shell .recurrence-filters { padding: 4px; gap: 4px; border-radius: 26px; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); }
+:root .app-shell .recurrence-filters > button { border-radius: 99px; background: transparent; color: var(--muted); font-weight: 800; }
+:root .app-shell .recurrence-filters > button[aria-pressed="true"] { background: rgba(255, 255, 255, .8); color: var(--blue); box-shadow: inset 0 1px 1px #fff, 0 3px 10px var(--glass-shadow); }
+:root[data-theme="dark"] .app-shell .recurrence-filters > button[aria-pressed="true"] { box-shadow: inset 0 1px 1px rgba(255, 255, 255, .3); }
+:root .app-shell .budget-switch { border-radius: 99px; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); }
+:root .app-shell .budget-switch > button { border-radius: 99px; font-weight: 800; }
+:root .app-shell .budget-switch > button[aria-current="page"] { background: rgba(255, 255, 255, .8); color: var(--blue); box-shadow: inset 0 1px 1px #fff, 0 3px 10px var(--glass-shadow); }
+:root[data-theme="dark"] .app-shell .budget-switch > button[aria-current="page"] { box-shadow: inset 0 1px 1px rgba(255, 255, 255, .3); }
+/* Gauges: round, and they fill when the page opens. */
+:root .app-shell :is(.progress-track, .plan-meter) { border-radius: 99px; overflow: hidden; }
+:root .app-shell :is(.progress-track, .plan-meter) > span { border-radius: 99px; opacity: 1; transform-origin: left center; animation: gauge-fill 900ms var(--motion-settle) both; }
+@media (prefers-reduced-motion: reduce) { :root .app-shell :is(.progress-track, .plan-meter) > span { animation: none; } }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root .app-shell:is(.page-plan, .page-recurring, .page-goals, .page-accounts) :is(.card:not(.rule-card), .metric-strip, .rule-grid) { background: var(--glass-solid); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root .app-shell:is(.page-plan, .page-recurring, .page-goals, .page-accounts) :is(.card:not(.rule-card), .metric-strip, .rule-grid) { background: var(--glass-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (forced-colors: active) {
+  :root .app-shell:is(.page-plan, .page-recurring, .page-goals, .page-accounts) :is(.card, button.secondary), :root .app-shell :is(.recurrence-filters, .budget-switch) { border: 1px solid ButtonText; }
+}
+:root .app-shell:is(.page-plan, .page-recurring, .page-goals, .page-accounts) .month-control { border-radius: 99px; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); }
+/* Status pills on glass: a near-opaque light base so the state colour keeps 4.5:1 over any wash. */
+:root:not([data-theme="dark"]) .app-shell .rule-bottom > .status-pill:not(.neutral) { background: rgba(255, 255, 255, .78); }
+/* Recurrences: the group is one glass plate; rows keep their dividers and padding, paused rows their grey tint. */
+:root .app-shell .rule-grid { padding: 4px 18px; border: 0; }
+:root .app-shell .rule-grid .rule-card.paused { background: color-mix(in srgb, var(--surface-inset) 70%, transparent); margin-inline: -18px; padding-inline: 18px; }
+/* Nuit: active bubbles take the main text colour; the accent on a light bubble over a bright wash fell to 3.3:1. */
+:root[data-theme="dark"] .app-shell :is(.recurrence-filters > button[aria-pressed="true"], .budget-switch > button[aria-current="page"]),
+:root[data-theme="dark"] :is(.operation-filter-fields, .filter-bar) .segmented > button.selected,
+:root[data-theme="dark"] .modal .capture-type-picker input:checked + span { color: var(--ink); background: rgba(255, 255, 255, .12); }
