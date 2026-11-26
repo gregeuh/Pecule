@@ -83,6 +83,19 @@ try {
     await page.emulateMedia({ colorScheme: "light" });
     await page.waitForFunction(() => document.documentElement.dataset.theme === "light");
     assert.equal(await html(page, "data-palette"), "lavande", "Automatique keeps the last light palette by day");
+    // Reduced transparency: an in-app switch (Safari does not pass the iPhone setting on), kept per device.
+    await settings();
+    await page.getByRole("checkbox", { name: "Réduire la transparence" }).check();
+    assert.equal(await html(page, "data-transparency"), "reduced");
+    const blur = () => page.evaluate(() => getComputedStyle(document.querySelector(".settings-card")).backdropFilter);
+    assert.equal(await blur(), "none", "no glass blur once reduced");
+    assert.deepEqual(await axe(page), [], "reduced transparency: accessibility");
+    await page.reload();
+    await waitForWallet(page);
+    assert.equal(await html(page, "data-transparency"), "reduced", "kept after reload");
+    await settings();
+    await page.getByRole("checkbox", { name: "Réduire la transparence" }).uncheck();
+    assert.equal(await html(page, "data-transparency"), null);
     // The status bar follows the palette, and another open window follows a change made here.
     await page.getByRole("radio", { name: "Lavande" }).check();
     const other = await context.newPage();
