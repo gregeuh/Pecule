@@ -32,6 +32,7 @@ import {
   CircleAlert,
   TriangleAlert,
   ChevronDown,
+  Plus,
 } from "lucide-react";
 import {
   futureTransactions,
@@ -538,7 +539,8 @@ export default function ClarteDashboard(p: Props) {
                     <b>{p.hidden ? "Masqué" : `${goalPercent} %`}</b>
                   </button>
                 ) : (
-                  <button type="button" className="secondary full-width" onClick={p.onGoals}>
+                  <button type="button" className="secondary full-width wallet-goal-create" onClick={p.onGoals}>
+                    <Plus size={17} aria-hidden="true" />
                     Créer un objectif d’épargne
                   </button>
                 )}
