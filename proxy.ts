@@ -11,6 +11,10 @@ export function proxy(request: NextRequest) {
   const headers = new Headers(request.headers);
   headers.set("x-nonce", nonce);
   headers.set("Content-Security-Policy-Report-Only", policy);
+  // Next.js takes the nonce for its own scripts from the request's CSP header. On Vercel the Report-Only request
+  // header does not reach the page render, so the policy is also passed under the enforced name — on the request
+  // only: the browser still receives Report-Only.
+  headers.set("Content-Security-Policy", policy);
   const response = NextResponse.next({ request: { headers } });
   response.headers.set("Content-Security-Policy-Report-Only", policy);
   response.headers.set("Reporting-Endpoints", 'csp="/api/csp-report"');
