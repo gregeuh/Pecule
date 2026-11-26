@@ -207,3 +207,24 @@
 @media (prefers-reduced-transparency: reduce) {
   :root .wallet-dashboard :is(.clarte-card, .wallet-month-summary, .wallet-account-forecasts, .wallet-goal-row, .budget-alerts, .month-assist-card:not([data-tone]), .wallet-capture, .wallet-tabs) { background: var(--glass-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
+
+/* Lot 2: the capture sheet. Type picker as a glass capsule with a bubble, a big centred amount,
+   fields and balance preview in light glass, the coral gradient on the main action. */
+:root .modal .capture-type-picker { border-radius: 99px; padding: 4px; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); }
+:root .modal .capture-type-picker label > span, :root .modal .capture-type-picker > button { border-radius: 99px; font-weight: 800; color: var(--muted); background: transparent; }
+:root .modal .capture-type-picker input:checked + span { background: rgba(255, 255, 255, .8); color: var(--blue); box-shadow: inset 0 1px 1px #fff, 0 3px 10px var(--glass-shadow); }
+:root[data-theme="dark"] .modal .capture-type-picker input:checked + span { background: rgba(255, 255, 255, .16); color: var(--blue); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .3); }
+:root .modal.capture-modal .capture-amount .amount-input input {
+  text-align: center; font-weight: 900; font-size: 44px; letter-spacing: -.02em; padding-inline: 44px;
+  border: 0; border-radius: 22px; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge);
+}
+:root .modal.capture-modal .capture-amount .amount-input input:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+:root .modal .operation-balance-preview { border-radius: 20px; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); }
+:root .modal .operation-balance-preview[data-negative="true"] { background: var(--error-bg); }
+:root .modal :is(.field input:not([type="checkbox"]):not([type="radio"]), .field select, .field textarea) {
+  border-radius: 16px; border-color: color-mix(in srgb, var(--ink) 12%, transparent); background: color-mix(in srgb, var(--glass-base) 55%, transparent);
+}
+:root .modal button.primary { border: 0; border-radius: 99px; background: linear-gradient(180deg, var(--action-from), var(--action-to)); color: var(--on-action); font-weight: 800; box-shadow: inset 0 1px 1px rgba(255, 255, 255, .5), 0 8px 18px var(--glass-shadow); }
+:root .modal button.primary:hover { background: linear-gradient(180deg, var(--action-from), var(--action-hover)); }
+:root .modal .capture-others > button { border: 0; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); font-weight: 700; }
+:root .modal-backdrop .modal > .modal-heading { background: color-mix(in srgb, var(--glass-solid) 92%, transparent); }
