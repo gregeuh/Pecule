@@ -54,3 +54,16 @@ test("each light palette has its status bar colour; the bootstrap applies it", a
   new Function("document", "localStorage", paletteBootstrap)(doc, { getItem: () => "menthe" });
   assert.equal(meta.content, "#e8f5ef");
 });
+
+test("reduced transparency is remembered per device and applied before the first paint", async () => {
+  const { TRANSPARENCY_KEY } = await import("../lib/appearance.ts");
+  assert.equal(TRANSPARENCY_KEY, "pecule-transparency");
+  const doc = { documentElement: { dataset: {} }, querySelector: () => null };
+  new Function("document", "localStorage", paletteBootstrap)(doc, {
+    getItem: (k) => (k === TRANSPARENCY_KEY ? "reduced" : null),
+  });
+  assert.equal(doc.documentElement.dataset.transparency, "reduced");
+  const plain = { documentElement: { dataset: {} }, querySelector: () => null };
+  new Function("document", "localStorage", paletteBootstrap)(plain, { getItem: () => null });
+  assert.equal(plain.documentElement.dataset.transparency, undefined);
+});

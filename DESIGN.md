@@ -433,3 +433,7 @@ Plan : `docs/superpowers/plans/2026-11-26-liquid-glass-lot5-finitions.md`. Derni
 - Identité : logo « pécule. » en Nunito 900 corail (`--font-brand`) ; marque « P. » corail en dégradé (`public/favicon.svg`) ; icônes de l’app régénérées par `scripts/generate-icons.mjs` ; 56 images de démarrage iPhone régénérées (fond Pêche clair, Nuit sombre, taches de couleur).
 - Barre d’état iPhone à la couleur du thème clair choisi (`meta theme-color`, posée avant le premier rendu puis à chaque changement) ; un changement de thème se propage aux autres fenêtres ouvertes.
 - Page hors connexion en Nunito, couleurs Pêche / Nuit et fonds des autres thèmes ; Nunito mise en cache hors ligne.
+
+## Réduire la transparence et finitions — 26 novembre 2026
+- Réglages › Thème : interrupteur « Réduire la transparence », par appareil (`pecule-transparency`, posé avant le premier rendu par `paletteBootstrap`). Safari ne transmet pas le réglage d’accessibilité de l’iPhone ; ce choix remplace tout le verre par sa teinte opaque (`--glass-solid`), retire les flous et arrête la dérive du fond.
+- Tuile « Ajouter un compte / un objectif » en verre pointillé ; filtres de récurrences inactifs réactifs au survol ; jauges qui se remplissent par découpe (coins intacts) ; liens principaux et boutons de suppression en pastilles ; sur l’écran de démarrage, « Ouverture de Pécule » descend sous 560 px de hauteur pour ne plus frôler le slogan.

@@ -20,7 +20,7 @@
 @keyframes launch-wait { from{opacity:0}to{opacity:1} }
 @keyframes launch-depart { to{opacity:0;visibility:hidden} }
 @media(prefers-reduced-motion:reduce){.launch-mark{animation:none}.launch-reflection{display:none}.launch-exit[data-from-boot],.launch-exit[data-active],html[data-pecule-launch=cold] .launch-exit{animation-duration:80ms}}
-@media(max-height:420px){.launch-mark{width:72px;height:72px;border-radius:20px}.launch-word{font-size:28px;margin-top:12px}.launch-identity{transform:translateY(-8px)}.launch-wait{bottom:20px}}
+@media(max-height:560px){.launch-wait{bottom:max(16px,calc(8px + env(safe-area-inset-bottom)))}}@media(max-height:420px){.launch-mark{width:72px;height:72px;border-radius:20px}.launch-word{font-size:28px;margin-top:12px}.launch-identity{transform:translateY(-8px)}.launch-wait{bottom:20px}}
 @media(forced-colors:active){.launch-screen{background:Canvas;color:CanvasText}.launch-reflection{display:none}.launch-mark{box-shadow:none}.launch-tagline,.launch-wait{color:CanvasText}}
 
 /* Fail open even when animations are disabled by system or browser styles. */

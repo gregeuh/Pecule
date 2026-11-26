@@ -179,7 +179,6 @@
 :root .wallet-dashboard .wallet-account-forecasts > li + li { border-top: 1px solid var(--glass-tint); }
 :root .wallet-dashboard .wallet-goal-row { padding: 12px 14px; }
 :root .wallet-dashboard .wallet-goal-track > i { animation: gauge-fill 900ms var(--motion-settle) both; transform-origin: left center; }
-@keyframes gauge-fill { from { transform: scaleX(0); } to { transform: none; } }
 :root .wallet-dashboard .month-assist-card[data-tone] {
   -webkit-backdrop-filter: blur(18px) saturate(170%);
   backdrop-filter: blur(18px) saturate(170%);
@@ -405,3 +404,26 @@
 
 /* Lot 5: the « pécule » wordmark, rounded and coral, as on the launch screen and icon. */
 :root :is(.mobile-brand, .clarte-mobile-logo, .sidebar .brand > span, .auth-shell .brand > span, .auth-shell .brand) { font-family: var(--font-brand); font-weight: 900; color: var(--blue); letter-spacing: -.02em; }
+
+/* Réglages › Réduire la transparence (per device; Safari does not pass the iPhone setting on): every glass
+   surface becomes its opaque tint, nothing is blurred and the wash stops drifting. */
+:root[data-transparency="reduced"] { --glass-base: var(--glass-solid); --glass-a: 1; --glass-b: 1; }
+:root[data-transparency="reduced"] * { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+:root[data-transparency="reduced"] .glass-backdrop > i { animation: none; opacity: calc(var(--wash-opacity) * .7); }
+:root .transparency-switch { display: flex; align-items: flex-start; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--glass-tint); cursor: pointer; }
+:root .transparency-switch > input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; accent-color: var(--action-bg); }
+:root .transparency-switch > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+:root .transparency-switch strong { color: var(--ink); font-size: 15px; font-weight: 800; }
+:root .transparency-switch small { color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+/* Small finishes. The add tile is a dashed glass plate; inactive recurrence filters react to the pointer;
+   gauges fill with a clip (no squashed corners); every primary link and danger button is a pill. */
+:root .app-shell .add-tile { border: 1.5px dashed color-mix(in srgb, var(--ink) 22%, transparent); border-radius: 24px; background: var(--glass-tint); }
+:root .app-shell .add-tile:hover { border-color: var(--blue); background: color-mix(in srgb, var(--glass-base) 50%, transparent); }
+:root .app-shell .add-tile > span { border: 0; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); color: var(--blue); }
+@media (hover: hover) {
+  :root .app-shell .recurrence-filters > button:not([aria-pressed="true"]):hover { background: color-mix(in srgb, var(--glass-base) 45%, transparent); color: var(--ink); }
+}
+@keyframes gauge-fill { from { clip-path: inset(0 100% 0 0 round 99px); } to { clip-path: inset(0 0 0 0 round 99px); } }
+:root :is(.app-shell, .auth-shell, .modal) a.primary { display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 99px; background: linear-gradient(180deg, var(--action-from), var(--action-to)); color: var(--on-action); font-weight: 800; box-shadow: inset 0 1px 1px rgba(255, 255, 255, .5), 0 8px 18px var(--glass-shadow); }
+:root :is(.app-shell, .modal) .danger { border-radius: 99px; font-weight: 800; }

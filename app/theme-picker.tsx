@@ -7,6 +7,7 @@ import {
   appearanceChoices,
   choiceToStorage,
   PALETTE_KEY,
+  TRANSPARENCY_KEY,
   readPalette,
   storageToChoice,
   type AppearanceChoice,
@@ -33,6 +34,16 @@ const applyPalette = (palette: string) => {
   applyPaletteThemeColor(palette);
   listeners.forEach((listener) => listener());
 };
+const applyTransparency = (reduced: boolean) => {
+  try {
+    if (reduced) localStorage.setItem(TRANSPARENCY_KEY, "reduced");
+    else localStorage.removeItem(TRANSPARENCY_KEY);
+  } catch {}
+  if (reduced) document.documentElement.dataset.transparency = "reduced";
+  else delete document.documentElement.dataset.transparency;
+  listeners.forEach((listener) => listener());
+};
+const currentTransparency = () => document.documentElement.dataset.transparency === "reduced";
 const currentPalette = () => readPalette(document.documentElement.dataset.palette ?? null);
 
 /** Thèmes Liquid Glass : quatre palettes claires, Nuit, et Automatique (palette claire le jour, Nuit le soir). */
@@ -40,6 +51,7 @@ export default function ThemePicker({ onSaved }: { onSaved?: () => void }) {
   const { theme = "system", setTheme } = useTheme();
   const palette = useSyncExternalStore(subscribe, currentPalette, () => "peche" as const);
   const chosen = storageToChoice(theme, palette);
+  const reduced = useSyncExternalStore(subscribe, currentTransparency, () => false);
   const choose = (choice: AppearanceChoice) => {
     const next = choiceToStorage(choice, palette);
     applyPalette(next.palette);
@@ -76,6 +88,20 @@ export default function ThemePicker({ onSaved }: { onSaved?: () => void }) {
       <p className="field-hint">
         Automatique suit l’iPhone : votre dernier thème clair le jour, Nuit le soir. Ce choix s’applique à cet appareil.
       </p>
+      <label className="transparency-switch">
+        <input
+          type="checkbox"
+          checked={reduced}
+          onChange={(event) => {
+            applyTransparency(event.currentTarget.checked);
+            onSaved?.();
+          }}
+        />
+        <span>
+          <strong>Réduire la transparence</strong>
+          <small>Des surfaces pleines à la place du verre, et un fond immobile. Utile sur un iPhone ancien.</small>
+        </span>
+      </label>
     </section>
   );
 }

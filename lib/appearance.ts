@@ -3,6 +3,8 @@ export type LightPalette = "peche" | "lavande" | "menthe" | "ocean";
 export type AppearanceChoice = LightPalette | "nuit" | "auto";
 export const PALETTE_KEY = "pecule-palette";
 export const MODE_KEY = "pecule-theme";
+/** "reduced": solid surfaces instead of glass, no drifting wash (Safari does not expose the iPhone setting). */
+export const TRANSPARENCY_KEY = "pecule-transparency";
 
 const lightPalettes: LightPalette[] = ["peche", "lavande", "menthe", "ocean"];
 
@@ -54,4 +56,4 @@ export function applyPaletteThemeColor(palette: string | null) {
 /** Inline, before the first paint: the light palette and its status bar colour, without a flash. Never throws. */
 export const paletteBootstrap = `try{var p=localStorage.getItem("${PALETTE_KEY}")}catch(e){}var c=${JSON.stringify(
   themeColors,
-)};p=c.hasOwnProperty(p)?p:"peche";document.documentElement.dataset.palette=p;try{var m=document.querySelector('meta[name="theme-color"][media*="light"]');if(m)m.content=c[p]}catch(e){}`;
+)};p=c.hasOwnProperty(p)?p:"peche";document.documentElement.dataset.palette=p;try{var m=document.querySelector('meta[name="theme-color"][media*="light"]');if(m)m.content=c[p]}catch(e){}try{if(localStorage.getItem("${TRANSPARENCY_KEY}")==="reduced")document.documentElement.dataset.transparency="reduced"}catch(e){}`;
