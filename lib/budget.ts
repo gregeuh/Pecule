@@ -16,6 +16,8 @@ export type Transaction = {
   bankLinks?: BankLink[];
   id: string;
   label: string;
+  /** The bank's own label, kept when the operation was given a readable name. */
+  bankLabel?: string;
   amount: number;
   date: string;
   accountId: string;
@@ -36,6 +38,8 @@ export type Rule = {
   customIconUrl?: string;
   id: string;
   label: string;
+  /** The bank's own label, kept when the recurrence was given a readable name. */
+  bankLabel?: string;
   amount: number;
   accountId: string;
   category: string;
@@ -69,6 +73,8 @@ export type Budget = {
     importProfiles?: import("./import-profile").ImportProfile[];
     capture?: CapturePreferences;
     categoryRules?: CategoryRule[];
+    /** Names to give the next imported operations with the same bank label (lib/readable-label.ts). */
+    labelNames?: import("./readable-label").LabelName[];
     dailyComfortCents?: number;
     categoryLimits?: Record<string, number>;
     horizon: "salary" | "month";

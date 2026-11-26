@@ -13,6 +13,7 @@ import {
   Upload,
 } from "lucide-react";
 import type { Budget } from "../lib/budget";
+import { nameProposals, restoreBankLabels } from "../lib/readable-names";
 import type { ConfirmationKind } from "../lib/confirmation-kind";
 import { parseAmount } from "../lib/csv";
 import type { Modal } from "./budget-modal";
@@ -220,6 +221,49 @@ export default function SettingsPage({
             save={save}
             confirm={(title, message, action) => open({ type: "confirm", title, message, action })}
           />
+          {(() => {
+            const waiting = nameProposals(b).length,
+              renamed = b.transactions.filter((t) => t.bankLabel).length + b.rules.filter((r) => r.bankLabel).length;
+            return (
+              <section className="card settings-card">
+                <h3>Noms des opérations</h3>
+                <p>
+                  Des noms lisibles à la place des libellés de la banque : « PRLV SEPA ASSURANCE LCL » devient «
+                  Assurance LCL ». Le libellé d’origine reste visible sur chaque opération.
+                </p>
+                <button
+                  type="button"
+                  className="secondary full-width"
+                  disabled={busy || !waiting}
+                  onClick={() => open({ type: "readable-names" })}
+                >
+                  {waiting
+                    ? waiting > 1
+                      ? `Rendre lisibles ${waiting} libellés`
+                      : "Rendre lisible 1 libellé"
+                    : "Tous vos libellés sont lisibles"}
+                </button>
+                {renamed > 0 && (
+                  <button
+                    type="button"
+                    className="text-button"
+                    disabled={busy}
+                    onClick={() =>
+                      open({
+                        type: "confirm",
+                        tone: "restore",
+                        title: "Remettre les libellés de la banque ?",
+                        message: `${renamed} opération${renamed > 1 ? "s" : ""} et récurrence${renamed > 1 ? "s" : ""} reprendront le libellé exact de votre banque. Les noms mémorisés pour les prochains imports sont conservés.`,
+                        action: () => save(restoreBankLabels(b), "Libellés de la banque remis."),
+                      })
+                    }
+                  >
+                    Remettre les libellés de la banque
+                  </button>
+                )}
+              </section>
+            );
+          })()}
         </div>
       </section>
       <section className="settings-group" id="settings-data" aria-labelledby="data-title">

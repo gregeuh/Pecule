@@ -79,6 +79,7 @@ const transaction = z.object({
   merchantId,
   customIconUrl,
   label: text,
+  bankLabel: text.optional(),
   amount: cents,
   date,
   accountId: id,
@@ -98,6 +99,7 @@ const rule = z
     merchantId,
     customIconUrl,
     label: text,
+    bankLabel: text.optional(),
     amount: cents.refine((n) => n !== 0),
     accountId: id,
     category: text,
@@ -184,6 +186,11 @@ export const budgetSchema = z
           (rows) => new Set(rows.map((r) => `${r.direction}:${r.key}`)).size === rows.length,
           "Règle de catégorie en double",
         )
+        .optional(),
+      labelNames: z
+        .array(z.object({ key: z.string().trim().min(1).max(200), name: text }))
+        .max(200)
+        .refine((rows) => new Set(rows.map((r) => r.key)).size === rows.length, "Nom mémorisé en double")
         .optional(),
       dailyComfortCents: z.number().int().min(1).max(100000000).optional(),
       categoryLimits: z

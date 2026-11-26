@@ -78,8 +78,9 @@ export function parseCSVDate(s: string): string | null {
   const date = new Date(d + "T12:00:00Z");
   return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === d ? d : null;
 }
-export const transactionKey = (t: Pick<Transaction, "date" | "amount" | "label" | "accountId">) =>
-  [t.date, t.amount, t.label.trim().toLocaleLowerCase("fr"), t.accountId].join("|");
+/** Identity of a bank line: an operation renamed in Pécule keeps matching its bank label. */
+export const transactionKey = (t: Pick<Transaction, "date" | "amount" | "label" | "accountId" | "bankLabel">) =>
+  [t.date, t.amount, (t.bankLabel ?? t.label).trim().toLocaleLowerCase("fr"), t.accountId].join("|");
 export function csvCell(value: string): string {
   const safe = /^[=+@\-\t\r]/.test(value) ? "'" + value : value;
   return '"' + safe.replace(/"/g, '""') + '"';

@@ -31,6 +31,7 @@ export function transactionRecurrence(
   if (startDate > "2100-12-31") return null;
   return {
     label: transaction.label,
+    ...(transaction.bankLabel ? { bankLabel: transaction.bankLabel } : {}),
     amount: transaction.amount,
     accountId: transaction.accountId,
     category: transaction.category,
