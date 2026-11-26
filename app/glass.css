@@ -231,3 +231,4 @@
 :root .modal button.primary:hover { background: linear-gradient(180deg, var(--action-from), var(--action-hover)); }
 :root .modal .capture-others > button { border: 0; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); font-weight: 700; }
 :root .modal-backdrop .modal > .modal-heading { background: color-mix(in srgb, var(--glass-solid) 92%, transparent); }
+:root .wallet-dashboard .wallet-capture > summary { padding: 14px 16px; }
