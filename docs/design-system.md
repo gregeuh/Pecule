@@ -1,6 +1,6 @@
 # Pécule — référence Wallet stabilisée
 
-Direction validée le 25 novembre 2026 : **Liquid Glass chaleureux** (voir `docs/superpowers/specs/2026-11-25-liquid-glass-design.md`) : fond de couleurs douces qui dérive lentement, matière verre épaisse avec reflet, police ronde Nunito, tirelire comme mascotte, ton rassurant. Cinq thèmes (Pêche, Lavande, Menthe, Océan, Nuit) et Automatique. La refonte avance par lots ; les écrans pas encore repris gardent leur mise en page Wallet (direction précédente : Revolut et Apple Wallet). Le site est un outil de gestion en français, principalement utilisé dans la PWA sur iPhone. Cette référence remplace les anciennes indications Atelier ; leur historique reste dans DESIGN.md.
+Direction validée le 25 novembre 2026 : **Liquid Glass chaleureux** (voir `docs/superpowers/specs/2026-11-25-liquid-glass-design.md`) : fond de couleurs douces qui dérive lentement, matière verre épaisse avec reflet, police ronde Nunito, tirelire comme mascotte, ton rassurant. Cinq thèmes (Pêche, Lavande, Menthe, Océan, Nuit) et Automatique. Refonte terminée le 26 novembre 2026 (lots 1 à 5) ; la direction précédente (Revolut et Apple Wallet) reste dans l’historique de DESIGN.md. Le site est un outil de gestion en français, principalement utilisé dans la PWA sur iPhone. Cette référence remplace les anciennes indications Atelier ; leur historique reste dans DESIGN.md.
 
 ## Propriétaires
 
@@ -26,17 +26,17 @@ Direction validée le 25 novembre 2026 : **Liquid Glass chaleureux** (voir `docs
 
 | Rôle | Clair | Sombre |
 |---|---|---|
-| Fond | #f2f3f7 | #090909 |
-| Surface de lecture | #ffffff | #171717 |
-| Texte | #15171d | #f5f5f5 |
-| Texte secondaire | #626b7b | #afb0b7 |
-| Accent de texte et focus | #1d4dd5 | #8caaff |
-| Action principale | #245af3, texte blanc | #245af3, texte blanc |
+| Fond | Pêche #fbeee3 (Lavande #efeaff, Menthe #e8f5ef, Océan #dbe7f3) | Nuit #1a1216 |
+| Surface de lecture | #fffaf6 et verre (`--glass-*`) | #2a1f24 et verre sombre |
+| Texte | #2b2320 | #f6ece6 |
+| Texte secondaire | #5f4c44 (selon le thème) | #d2c0b7 |
+| Accent de texte et focus | #823416 (selon le thème) | #ffb08f |
+| Action principale | dégradé #e47a55 → #bf4f2a, texte blanc | dégradé #f6a587 → #e9805f, texte #2b130b |
 | Comptes | cobalt #245af3, or #f4ac36, violet #8248f4 et couleurs personnalisées | mêmes identités |
 
 L’accent textuel clair est un peu plus foncé que l’action pour garder un contraste suffisant sur les fonds de survol. Rouge/orange/vert conservent leur sens négatif/attention/confort ; `budget-signal.css` possède ces signaux. Le violet identifie l’épargne, sans devenir une alerte. Les logos gardent leur couleur de marque sur la tuile lisible existante. Les illustrations de confirmation conservent leur palette d’illustration : elle ne définit pas celle des contrôles.
 
-DM Sans pour le texte ; Inter pour les titres et grands montants, auto-hébergées. Manrope reste la police de la marque. Les tokens `--type-*-weight` dans `theme.css` définissent les graisses : titres/actions 500, montants/libellés 450, corps/secondaire 400. Titres de page 26 px, titres de cartes 18 px, corps 13–14 px ; les champs gardent au moins 16 px sur téléphone. Montants avec chiffres tabulaires. Ne pas tronquer un montant ; laisser les noms importants se replier ou donner accès à leur détail.
+Nunito (auto-hébergée) pour tout le texte, les montants et la marque ; Inter ne sert plus que l’espace fine des milliers (U+202F). Graisses fortes pour les chiffres (800–900) et les libellés d’action (800). Les tokens `--type-*-weight` dans `theme.css` définissent les graisses : titres/actions 500, montants/libellés 450, corps/secondaire 400. Titres de page 26 px, titres de cartes 18 px, corps 13–14 px ; les champs gardent au moins 16 px sur téléphone. Montants avec chiffres tabulaires. Ne pas tronquer un montant ; laisser les noms importants se replier ou donner accès à leur détail.
 
 ## Surfaces, rythme et profondeur
 
