@@ -3,6 +3,7 @@ import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { Check } from "lucide-react";
 import {
+  applyPaletteThemeColor,
   appearanceChoices,
   choiceToStorage,
   PALETTE_KEY,
@@ -14,13 +15,22 @@ import {
 const listeners = new Set<() => void>();
 const subscribe = (listener: () => void) => {
   listeners.add(listener);
-  return () => listeners.delete(listener);
+  // Another window may change the palette (app/glass-backdrop.tsx applies it): refresh the radios too.
+  const other = (event: StorageEvent) => {
+    if (event.key === PALETTE_KEY) listener();
+  };
+  window.addEventListener("storage", other);
+  return () => {
+    listeners.delete(listener);
+    window.removeEventListener("storage", other);
+  };
 };
 const applyPalette = (palette: string) => {
   try {
     localStorage.setItem(PALETTE_KEY, palette);
   } catch {}
   document.documentElement.dataset.palette = palette;
+  applyPaletteThemeColor(palette);
   listeners.forEach((listener) => listener());
 };
 const currentPalette = () => readPalette(document.documentElement.dataset.palette ?? null);

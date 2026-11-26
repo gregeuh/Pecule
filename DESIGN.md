@@ -426,3 +426,10 @@ Plan : `docs/superpowers/plans/2026-11-26-liquid-glass-lot4-budget-epargne-compt
 - Filtres de récurrences (Toutes, Actives, En pause, Terminées) et sélecteur Équilibre / Récurrences en capsules avec bulle. En Nuit, le texte des bulles actives prend la couleur du texte principal (l’accent tombait à 3,3:1).
 - Jauges (objectifs, enveloppes 50/30/20) arrondies, qui se remplissent à l’ouverture ; immobiles si les animations sont réduites.
 - Pastilles d’état des récurrences sur base claire presque opaque pour garder 4,5:1 sur tous les fonds.
+
+## Liquid Glass, lot 5 — finitions — 26 novembre 2026
+Plan : `docs/superpowers/plans/2026-11-26-liquid-glass-lot5-finitions.md`. Dernier lot de la refonte : tous les écrans suivent désormais la direction « Liquid Glass chaleureux ».
+- Réglages et pages de connexion (connexion, mot de passe oublié, réinitialisation, déconnexion) en plaques de verre ; liens de section et actions secondaires en pastilles ; bouton principal en pastille corail.
+- Identité : logo « pécule. » en Nunito 900 corail (`--font-brand`) ; marque « P. » corail en dégradé (`public/favicon.svg`) ; icônes de l’app régénérées par `scripts/generate-icons.mjs` ; 56 images de démarrage iPhone régénérées (fond Pêche clair, Nuit sombre, taches de couleur).
+- Barre d’état iPhone à la couleur du thème clair choisi (`meta theme-color`, posée avant le premier rendu puis à chaque changement) ; un changement de thème se propage aux autres fenêtres ouvertes.
+- Page hors connexion en Nunito, couleurs Pêche / Nuit et fonds des autres thèmes ; Nunito mise en cache hors ligne.

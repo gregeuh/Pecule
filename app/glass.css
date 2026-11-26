@@ -366,3 +366,39 @@
 :root[data-theme="dark"] .app-shell :is(.recurrence-filters > button[aria-pressed="true"], .budget-switch > button[aria-current="page"]),
 :root[data-theme="dark"] :is(.operation-filter-fields, .filter-bar) .segmented > button.selected,
 :root[data-theme="dark"] .modal .capture-type-picker input:checked + span { color: var(--ink); background: rgba(255, 255, 255, .12); }
+
+/* Lot 5: Réglages and the sign-in pages. Cards are glass plates; links to sections and secondary actions are pills. */
+:root .app-shell.page-settings :is(.card, .settings-workspace > details),
+:root .auth-shell .auth-card {
+  background: linear-gradient(160deg,
+    color-mix(in srgb, var(--glass-base) calc(var(--glass-a) * 100%), transparent),
+    color-mix(in srgb, var(--glass-base) calc(var(--glass-b) * 100%), transparent));
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+  border: 0;
+  border-radius: 26px;
+  box-shadow: inset 0 1px 1px var(--glass-edge), inset 0 -1px 1px rgba(255, 255, 255, .16), 0 10px 26px var(--glass-shadow);
+}
+:root .app-shell.page-settings .settings-index > a,
+:root .app-shell.page-settings :is(button, a).secondary,
+:root .auth-shell button.secondary {
+  border: 0; border-radius: 99px; background: var(--glass-tint); color: var(--blue); font-weight: 800;
+  box-shadow: inset 0 1px 1px var(--glass-edge);
+}
+:root .auth-shell button.primary { border: 0; border-radius: 99px; background: linear-gradient(180deg, var(--action-from), var(--action-to)); color: var(--on-action); font-weight: 800; box-shadow: inset 0 1px 1px rgba(255, 255, 255, .5), 0 8px 18px var(--glass-shadow); }
+:root :is(.auth-shell, .app-shell.page-settings) :is(.field input:not([type="checkbox"]):not([type="radio"]), .field select) {
+  border-radius: 16px; border-color: color-mix(in srgb, var(--ink) 12%, transparent); background: color-mix(in srgb, var(--glass-base) 55%, transparent);
+}
+:root .auth-shell .brand { color: var(--blue); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root .app-shell.page-settings :is(.card, .settings-workspace > details), :root .auth-shell .auth-card { background: var(--glass-solid); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root .app-shell.page-settings :is(.card, .settings-workspace > details), :root .auth-shell .auth-card { background: var(--glass-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (forced-colors: active) {
+  :root .app-shell.page-settings :is(.card, .settings-index > a, button.secondary, a.secondary), :root .auth-shell :is(.auth-card, button.primary, button.secondary) { border: 1px solid ButtonText; }
+}
+
+/* Lot 5: the « pécule » wordmark, rounded and coral, as on the launch screen and icon. */
+:root :is(.mobile-brand, .clarte-mobile-logo, .sidebar .brand > span, .auth-shell .brand > span, .auth-shell .brand) { font-family: var(--font-brand); font-weight: 900; color: var(--blue); letter-spacing: -.02em; }

@@ -16,6 +16,10 @@ for (const file of [
   "public/offline.html",
   "public/offline.css",
   "public/fonts/inter-latin.woff2",
+  "public/fonts/nunito-latin.woff2",
+  "public/favicon.svg",
+  "public/icons/icon-192.png",
+  "public/icons/icon-512.png",
   "public/fonts/dm-sans-latin.woff2",
   "public/fonts/manrope-latin.woff2",
 ])

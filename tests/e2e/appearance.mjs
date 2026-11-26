@@ -83,6 +83,21 @@ try {
     await page.emulateMedia({ colorScheme: "light" });
     await page.waitForFunction(() => document.documentElement.dataset.theme === "light");
     assert.equal(await html(page, "data-palette"), "lavande", "Automatique keeps the last light palette by day");
+    // The status bar follows the palette, and another open window follows a change made here.
+    await page.getByRole("radio", { name: "Lavande" }).check();
+    const other = await context.newPage();
+    await other.goto(origin);
+    await waitForWallet(other);
+    await other.getByRole("button", { name: "Réglages" }).first().click();
+    await other.getByRole("radiogroup", { name: "Thème" }).waitFor();
+    await settings();
+    await page.getByRole("radio", { name: "Menthe" }).check();
+    const meta = (p) => p.evaluate(() => document.querySelector('meta[name="theme-color"][media*="light"]')?.content);
+    assert.equal(await meta(page), "#e8f5ef", "status bar takes the Menthe ground");
+    await other.waitForFunction(() => document.documentElement.dataset.palette === "menthe");
+    assert.equal(await meta(other), "#e8f5ef", "the other window follows");
+    assert.equal(await other.getByRole("radio", { name: "Menthe" }).isChecked(), true, "the other window's picker follows");
+    await other.close();
     assert.deepEqual(errors, []);
     await context.close();
 

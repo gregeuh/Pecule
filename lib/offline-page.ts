@@ -7,6 +7,10 @@ try {
   const theme = localStorage.getItem("pecule-theme");
   if (theme === "light" || (theme !== "dark" && matchMedia("(prefers-color-scheme:light)").matches))
     document.documentElement.classList.add("theme-light");
+  const ground =
+    { lavande: "#efeaff", menthe: "#e8f5ef", ocean: "#dbe7f3" }[localStorage.getItem("pecule-palette") ?? ""] ??
+    "#fbeee3";
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", ground);
 } catch {}
 import {
   activeOfflineProfile,
