@@ -29,6 +29,7 @@ try {
     const pages = async (name) => {
     await page.getByRole("button", { name: mobile ? "Accueil" : /^Vue d’ensemble/ }).first().click();
     await page.locator(".home-hero").waitFor();
+    if (mobile) await page.locator(".home-tiles").waitFor();
     assert.deepEqual(await axe(page), [], `${name} home: accessibility`);
     await page
       .getByRole("navigation", { name: mobile ? "Navigation mobile" : "Navigation principale" })
@@ -50,7 +51,8 @@ try {
     await page.locator(".rule-card").first().waitFor();
     assert.deepEqual(await axe(page), [], `${name} recurrences: accessibility`);
     await nav.getByRole("button", { name: mobile ? "Accueil" : /^Vue d’ensemble/ }).click();
-    await page.locator(".wallet-manage-title").first().click();
+    if (mobile) await page.locator(".home-tile-accounts").click();
+    else await page.locator(".wallet-manage-title").first().click();
     await page.locator(".account-card").first().waitFor();
     assert.deepEqual(await axe(page), [], `${name} accounts: accessibility`);
     };

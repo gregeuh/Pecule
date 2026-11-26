@@ -16,6 +16,7 @@ import BudgetAlerts from "./budget-alerts";
 import MonthAssist from "./month-assist";
 import HomeHero from "./home-hero";
 import RecurrenceWeek from "./recurrence-week";
+import HomeTiles from "./home-tiles";
 import type { PaydayPlan } from "../lib/month-assist";
 import { getAvailableSignal } from "../lib/available-signal";
 import {
@@ -369,54 +370,136 @@ export default function ClarteDashboard(p: Props) {
     { id: "operations", label: "Activité" },
     { id: "forecast", label: "Prévisions" },
   ];
+  const header = (
+    <header className="clarte-header">
+      <Link href="/" className="clarte-mobile-logo" aria-label="Pécule, accueil">
+        pecule.
+      </Link>
+      <div className="clarte-desktop-title">
+        <h1>Vue d’ensemble</h1>
+        <p>
+          {parseDate(p.today).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })} ·{" "}
+          {p.demo ? "données de démonstration" : "votre espace personnel"}
+        </p>
+      </div>
+      <h1 className="wallet-mobile-heading sr-only">Vue d’ensemble</h1>
+      <div className="clarte-header-actions">
+        <span className="clarte-sync" title={state} role="status">
+          <span className="sr-only">{state}</span>
+          {p.saving ? (
+            <LoaderCircle size={18} className="spin" />
+          ) : p.online ? (
+            <Cloud size={18} />
+          ) : (
+            <CloudOff size={18} />
+          )}
+        </span>
+        <button
+          type="button"
+          className="icon-button"
+          aria-label="Rechercher dans Pécule"
+          title="Rechercher (touche /)"
+          onClick={p.onSearch}
+        >
+          <Search size={20} />
+        </button>
+        <button
+          type="button"
+          className="icon-button"
+          aria-label={p.hidden ? "Afficher les montants" : "Masquer les montants"}
+          aria-pressed={p.hidden}
+          onClick={p.onToggleHidden}
+        >
+          <PrivacyShutter hidden={p.hidden} />
+        </button>
+        <button type="button" className="icon-button" aria-label="Réglages" onClick={p.onSettings}>
+          <Settings2 size={22} />
+        </button>
+      </div>
+    </header>
+  );
+  const footer = (
+    <div className="clarte-footer">
+      Votre espace est personnel. Vous gardez la main sur votre argent. {p.demo ? "Démonstration" : ""}
+    </div>
+  );
+  if (compact)
+    return (
+      <div className="clarte-dashboard wallet-dashboard home-tiles-layout">
+        {header}
+        {b.accounts.some((a) => a.type !== "savings") && !p.loadError && (
+          <HomeHero
+            available={o.available}
+            daily={o.daily}
+            until={o.salary && b.settings.horizon === "salary" ? o.salary.date : o.end}
+            untilPayday={!!o.salary && b.settings.horizon === "salary"}
+            tone={showSignal ? signal.tone : null}
+            hidden={p.hidden}
+            savedCents={b.goals.reduce((sum, g) => sum + g.saved, 0)}
+            budgetKey={`${b.name}|${b.goals.map((g) => g.id).join(",")}`}
+            onOpen={p.onCalculate}
+          />
+        )}
+        {!p.loadError && (
+          <MonthAssist
+            budget={b}
+            today={p.today}
+            hidden={p.hidden}
+            busy={p.saving}
+            onPaydaySavings={p.onPaydaySavings}
+            onPostpone={p.onPostpone}
+          />
+        )}
+        {!p.loadError && <BudgetAlerts budget={b} today={p.today} hidden={p.hidden} onOperations={p.onTransactions} />}
+        <HomeTiles
+          budget={b}
+          today={p.today}
+          end={o.end}
+          untilPayday={!!o.salary && b.settings.horizon === "salary"}
+          spent={monthly.spent}
+          income={o.income}
+          hidden={p.hidden}
+          m={m}
+          onAccounts={p.onAccounts}
+          onRecurring={p.onRecurring}
+          onTransactions={p.onTransactions}
+          onGoals={p.onGoals}
+        />
+        <div className="wallet-overview-recent">{recentCard(2)}</div>
+        <AnimatedDetails className="wallet-capture home-forecast">
+          <summary>
+            Prévisions et calcul du disponible
+            <ChevronDown size={17} />
+          </summary>
+          <div className="home-forecast-body">
+            {available}
+            <WalletAccounts
+              forecastsOnly
+              budget={b}
+              today={p.today}
+              hidden={p.hidden}
+              onAccount={p.onWalletAccount}
+              onForecast={p.onAccountForecast}
+              onAll={p.onAccounts}
+              onAdd={p.onAddAccount}
+            />
+            {chart}
+            {forecastCard}
+          </div>
+        </AnimatedDetails>
+        <AnimatedDetails className="wallet-capture">
+          <summary>
+            Ma saisie et mes favoris
+            <ChevronDown size={17} />
+          </summary>
+          {p.capture}
+        </AnimatedDetails>
+        {footer}
+      </div>
+    );
   return (
     <div className="clarte-dashboard wallet-dashboard">
-      <header className="clarte-header">
-        <Link href="/" className="clarte-mobile-logo" aria-label="Pécule, accueil">
-          pecule.
-        </Link>
-        <div className="clarte-desktop-title">
-          <h1>Vue d’ensemble</h1>
-          <p>
-            {parseDate(p.today).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })} ·{" "}
-            {p.demo ? "données de démonstration" : "votre espace personnel"}
-          </p>
-        </div>
-        <h1 className="wallet-mobile-heading sr-only">Vue d’ensemble</h1>
-        <div className="clarte-header-actions">
-          <span className="clarte-sync" title={state} role="status">
-            <span className="sr-only">{state}</span>
-            {p.saving ? (
-              <LoaderCircle size={18} className="spin" />
-            ) : p.online ? (
-              <Cloud size={18} />
-            ) : (
-              <CloudOff size={18} />
-            )}
-          </span>
-          <button
-            type="button"
-            className="icon-button"
-            aria-label="Rechercher dans Pécule"
-            title="Rechercher (touche /)"
-            onClick={p.onSearch}
-          >
-            <Search size={20} />
-          </button>
-          <button
-            type="button"
-            className="icon-button"
-            aria-label={p.hidden ? "Afficher les montants" : "Masquer les montants"}
-            aria-pressed={p.hidden}
-            onClick={p.onToggleHidden}
-          >
-            <PrivacyShutter hidden={p.hidden} />
-          </button>
-          <button type="button" className="icon-button" aria-label="Réglages" onClick={p.onSettings}>
-            <Settings2 size={22} />
-          </button>
-        </div>
-      </header>
+      {header}
       <div className="wallet-home-grid">
         <div className="wallet-home-accounts">
           {b.accounts.some((a) => a.type !== "savings") && !p.loadError && (
@@ -576,9 +659,7 @@ export default function ClarteDashboard(p: Props) {
           </SwipeTabs>
         </div>
       </div>
-      <div className="clarte-footer">
-        Votre espace est personnel. Vous gardez la main sur votre argent. {p.demo ? "Démonstration" : ""}
-      </div>
+      {footer}
     </div>
   );
 }

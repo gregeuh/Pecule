@@ -3,9 +3,10 @@ import {existsSync} from "node:fs";
 export const chromiumOptions = {executablePath:process.env.PECULE_E2E_CHROMIUM||(existsSync("/usr/bin/chromium")?"/usr/bin/chromium":undefined),args:process.platform==="win32"?[]:["--no-sandbox"]};
 
 /** Wait for the hydrated app, rather than matching transient streamed markup. */
+/** The home is ready: the account stack on a wide screen, the tiles on an iPhone (one of them, once). */
 export async function waitForWallet(page) {
- await page.waitForFunction(()=>document.querySelectorAll('.wallet-stack').length===1);
- await page.locator('.wallet-front').waitFor();
+ await page.waitForFunction(()=>document.querySelectorAll('.wallet-stack, .home-tiles').length===1);
+ await page.locator('.wallet-front, .home-tiles').first().waitFor();
 }
 
 /** Follow the same disclosures and filter confirmation as a real visitor. */

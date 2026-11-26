@@ -17,7 +17,10 @@ export default function WalletAccounts({
   onAll,
   onAdd,
   onForecast,
+  forecastsOnly = false,
 }: {
+  /** iPhone home in tiles: only the list of balances and forecasts, every account. */
+  forecastsOnly?: boolean;
   onForecast: (account: Account) => void;
   budget: Budget;
   today: string;
@@ -47,11 +50,36 @@ export default function WalletAccounts({
       }),
     [budget, today],
   );
-  const summaries = forecasts.filter(
-    ({ account, projected }) => projected || !cards.some((card) => card.id === account.id),
-  );
+  const summaries = forecastsOnly
+    ? forecasts
+    : forecasts.filter(({ account, projected }) => projected || !cards.some((card) => card.id === account.id));
   const m = useCallback((amount: number) => (hidden ? "•••• €" : money(amount)), [hidden]);
   const total = budget.accounts.reduce((sum, a) => sum + accountBalance(budget, a.id, today), 0);
+  const forecastList = summaries.length > 0 && (
+    <ul className="wallet-account-forecasts" aria-label="Soldes et prévisions des comptes">
+      {summaries.map(({ account, outlook, projected }) => (
+        <li key={account.id}>
+          <button
+            type="button"
+            onClick={() => (projected ? onForecast(account) : onAccount(account))}
+            aria-label={
+              projected
+                ? `Prévision de ${account.name}, actuel ${m(outlook.current)}, ${m(outlook.end.value)} au ${shortDate(outlook.end.date)}`
+                : `${account.name}, ${m(outlook.current)}, voir le détail`
+            }
+          >
+            <span>
+              <strong>{projected ? `Prévu au ${shortDate(outlook.end.date)}` : account.name}</strong>
+              <small>{projected ? account.name : "Solde actuel"}</small>
+            </span>
+            <b>{m(projected ? outlook.end.value : outlook.current)}</b>
+            <ArrowRight size={15} aria-hidden="true" />
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+  if (forecastsOnly) return forecastList || null;
   return (
     <section className="wallet-accounts" aria-label="Soldes de vos comptes">
       <div className="wallet-accounts-heading">
@@ -112,30 +140,7 @@ export default function WalletAccounts({
               </Pressable>
             ))}
           </div>
-          {summaries.length > 0 && (
-            <ul className="wallet-account-forecasts" aria-label="Soldes et prévisions des comptes">
-              {summaries.map(({ account, outlook, projected }) => (
-                <li key={account.id}>
-                  <button
-                    type="button"
-                    onClick={() => (projected ? onForecast(account) : onAccount(account))}
-                    aria-label={
-                      projected
-                        ? `Prévision de ${account.name}, actuel ${m(outlook.current)}, ${m(outlook.end.value)} au ${shortDate(outlook.end.date)}`
-                        : `${account.name}, ${m(outlook.current)}, voir le détail`
-                    }
-                  >
-                    <span>
-                      <strong>{projected ? `Prévu au ${shortDate(outlook.end.date)}` : account.name}</strong>
-                      <small>{projected ? account.name : "Solde actuel"}</small>
-                    </span>
-                    <b>{m(projected ? outlook.end.value : outlook.current)}</b>
-                    <ArrowRight size={15} aria-hidden="true" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+          {forecastList}
           <AccountVerification budget={budget} accountId={first!.id} today={today} compact />
         </>
       ) : (
