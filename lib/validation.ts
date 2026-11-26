@@ -1,4 +1,7 @@
 import { z } from "zod";
+
+// Zod probes `Function("")` to pick a faster validator; the Content Security Policy forbids eval, so skip the probe.
+z.config({ jitless: true });
 import { todayISO } from "./budget.ts";
 import { normalizeIconUrl } from "./icon-url.ts";
 const id = z.string().min(1).max(120);

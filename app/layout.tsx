@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import "./globals.css";
 import "./theme.css";
 import "./reference.css";
@@ -46,7 +47,9 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "#1a1216" },
   ],
 };
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  // Per-request nonce from proxy.ts (Content Security Policy); reading headers keeps every page dynamic.
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
@@ -54,9 +57,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       </head>
       <body>
-        <script dangerouslySetInnerHTML={{ __html: launchBootstrap }} />
-        <script dangerouslySetInnerHTML={{ __html: paletteBootstrap }} />
-        <AppearanceProvider>
+        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: launchBootstrap }} />
+        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: paletteBootstrap }} />
+        <AppearanceProvider nonce={nonce}>
           <GlassBackdrop />
           {children}
         </AppearanceProvider>
