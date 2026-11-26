@@ -1077,53 +1077,51 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                     ? "Solde prévisionnel"
                     : modal?.type === "filters"
                       ? "Filtrer les opérations"
-                      : modal?.type === "navigation"
-                        ? "Plus dans Pécule"
-                        : modal?.type === "search"
-                          ? "Rechercher"
-                          : modal?.type === "reconcile"
-                            ? `Rapprocher ${b.accounts.find((a) => a.id === modal.accountId)?.name ?? "le compte"}`
-                            : modal?.type === "bulk"
-                              ? "Modifier plusieurs opérations"
-                              : modal?.type === "match-transfers"
-                                ? "Associer des virements internes"
-                                : modal?.type === "imports"
-                                  ? "Vos imports bancaires"
-                                  : modal?.type === "actions"
-                                    ? "Ajouter"
-                                    : modal?.type === "transaction"
+                      : modal?.type === "search"
+                        ? "Rechercher"
+                        : modal?.type === "reconcile"
+                          ? `Rapprocher ${b.accounts.find((a) => a.id === modal.accountId)?.name ?? "le compte"}`
+                          : modal?.type === "bulk"
+                            ? "Modifier plusieurs opérations"
+                            : modal?.type === "match-transfers"
+                              ? "Associer des virements internes"
+                              : modal?.type === "imports"
+                                ? "Vos imports bancaires"
+                                : modal?.type === "actions"
+                                  ? "Ajouter"
+                                  : modal?.type === "transaction"
+                                    ? modal.item
+                                      ? "Le détail de l’opération"
+                                      : "Ajouter une opération"
+                                    : modal?.type === "account"
                                       ? modal.item
-                                        ? "Le détail de l’opération"
-                                        : "Ajouter une opération"
-                                      : modal?.type === "account"
+                                        ? "Modifier le compte"
+                                        : "Un nouveau compte"
+                                      : modal?.type === "rule"
                                         ? modal.item
-                                          ? "Modifier le compte"
-                                          : "Un nouveau compte"
-                                        : modal?.type === "rule"
+                                          ? "Modifier la récurrence"
+                                          : modal.proposal
+                                            ? "Vérifier cette récurrence"
+                                            : "Prévoir une récurrence"
+                                        : modal?.type === "goal"
                                           ? modal.item
-                                            ? "Modifier la récurrence"
-                                            : modal.proposal
-                                              ? "Vérifier cette récurrence"
-                                              : "Prévoir une récurrence"
-                                          : modal?.type === "goal"
-                                            ? modal.item
-                                              ? "Modifier votre objectif"
-                                              : "Un projet à concrétiser"
-                                            : modal?.type === "transfer"
-                                              ? "Enregistrer un virement"
-                                              : modal?.type === "contribution"
-                                                ? "Faire grandir votre projet"
-                                                : modal?.type === "import"
-                                                  ? "Importer vos opérations"
-                                                  : modal?.type === "start"
-                                                    ? "Bienvenue chez vous."
-                                                    : modal?.type === "calculation"
-                                                      ? "Un disponible qui a du sens."
-                                                      : modal?.type === "install"
-                                                        ? "Pécule, à portée de main."
-                                                        : modal?.type === "confirm"
-                                                          ? modal.title
-                                                          : "";
+                                            ? "Modifier votre objectif"
+                                            : "Un projet à concrétiser"
+                                          : modal?.type === "transfer"
+                                            ? "Enregistrer un virement"
+                                            : modal?.type === "contribution"
+                                              ? "Faire grandir votre projet"
+                                              : modal?.type === "import"
+                                                ? "Importer vos opérations"
+                                                : modal?.type === "start"
+                                                  ? "Bienvenue chez vous."
+                                                  : modal?.type === "calculation"
+                                                    ? "Un disponible qui a du sens."
+                                                    : modal?.type === "install"
+                                                      ? "Pécule, à portée de main."
+                                                      : modal?.type === "confirm"
+                                                        ? modal.title
+                                                        : "";
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!modal) return;
@@ -1959,7 +1957,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
           >
             <div className="modal-shade" ref={shadeRef} aria-hidden="true" />
             <div
-              className={`modal ${previewOpen ? "context-preview-modal" : ""} ${["import", "reconcile", "bulk", "match-transfers"].includes(modal.type) ? "wide" : ""} ${modal.type === "actions" || modal.type === "navigation" ? "actions-modal" : ""} ${modal.type === "transaction" && !modal.item?.transferId ? "operation-modal" : ""} ${modal.type === "transaction" && !modal.item ? "capture-modal" : ""} ${modal.type === "wallet-account" ? "wallet-account-modal" : ""}`}
+              className={`modal ${previewOpen ? "context-preview-modal" : ""} ${["import", "reconcile", "bulk", "match-transfers"].includes(modal.type) ? "wide" : ""} ${modal.type === "actions" ? "actions-modal" : ""} ${modal.type === "transaction" && !modal.item?.transferId ? "operation-modal" : ""} ${modal.type === "transaction" && !modal.item ? "capture-modal" : ""} ${modal.type === "wallet-account" ? "wallet-account-modal" : ""}`}
               style={
                 modal.type === "wallet-account"
                   ? (walletSurfaceStyles(
@@ -2433,43 +2431,6 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                       navigate("goals");
                     }}
                   />
-                )}
-                {modal.type === "navigation" && (
-                  <nav className="navigation-menu" aria-label="Navigation complémentaire">
-                    {[
-                      ...nav.filter((item) => ["recurring", "goals", "plan"].includes(item.id)),
-                      { id: "settings" as Page, label: "Réglages", short: "Réglages", icon: Settings2 },
-                    ].map(({ id, label, icon: Icon }) => (
-                      <button
-                        type="button"
-                        key={id}
-                        className={page === id ? "selected" : ""}
-                        aria-current={page === id ? "page" : undefined}
-                        onClick={() => {
-                          headingAfterClose.current = true;
-                          setModal(null);
-                          navigate(id);
-                        }}
-                      >
-                        <span className="navigation-menu-icon">
-                          <Icon size={21} />
-                        </span>
-                        <span>
-                          <strong>{label}</strong>
-                          <small>
-                            {id === "recurring"
-                              ? "Vos revenus et charges prévus"
-                              : id === "goals"
-                                ? "Vos projets et réserves d’épargne"
-                                : id === "plan"
-                                  ? "Besoins, envies et épargne"
-                                  : "Apparence et préférences du budget"}
-                          </small>
-                        </span>
-                        <ChevronRight size={18} />
-                      </button>
-                    ))}
-                  </nav>
                 )}
                 {modal.type === "actions" && (
                   <div className="quick-actions">

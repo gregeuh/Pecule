@@ -11,7 +11,6 @@ export type Modal =
   | { type: "favorite"; item?: Favorite }
   | { type: "balance"; accountId: string }
   | { type: "filters" }
-  | { type: "navigation" }
   | { type: "search" }
   | { type: "actions" }
   | {

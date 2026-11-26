@@ -470,3 +470,191 @@
 .wallet-account-forecasts :is(strong, small) { display: block; overflow-wrap: anywhere; }
 .wallet-account-forecasts small { color: var(--muted); }
 .wallet-account-forecasts b { font-variant-numeric: tabular-nums; text-align: end; overflow-wrap: anywhere; }
+
+/* Design review, 25 November 2026 (lots 1 to 5). Formerly visual-fixes.css, loaded last;
+   the :root prefix keeps these rules ahead of older sheets. */
+
+/* Day totals use the amount typeface: in DM Sans semibold the thousands
+   separator (narrow no-break space) rendered under 2 px ("−1243,55 €"). */
+:root .app-shell .date-group > .day-summary > b {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 760px) {
+  /* Day headers on one line when they fit: "Aujourd’hui ……… 1 opération · net −4,80 €".
+     On narrow screens the summary wraps under itself instead of overlapping the date. */
+  .date-group { align-items: baseline; }
+  .date-group > strong { flex: 1 1 auto; min-width: 0; }
+  .date-group > .day-summary {
+    flex: 0 1 auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: baseline;
+    max-width: none;
+    gap: 2px 6px;
+  }
+  .date-group > .day-summary > small { white-space: nowrap; }
+  /* Operation rows: the category and account line stays on one line. */
+  .transaction-row .transaction-title > small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+
+/* Balance preview before an amount is typed: a quiet dash, not a blue link-like "À préciser". */
+:root .balance-preview-values strong[data-empty="true"] { color: var(--muted); font-weight: 450; }
+
+/* One look for "Annuler" in every panel: quiet grey text, never underlined. */
+:root .modal :is(.operation-cancel, .modal-form-cancel) { color: var(--muted); text-decoration: none; background: transparent; }
+@media (hover: hover) {
+  :root .modal :is(.operation-cancel, .modal-form-cancel):hover { color: var(--ink); }
+}
+
+/* Account cards: one separator between "Vérifier avec ma banque" and "Activité du compte". */
+:root .account-verification + .account-activity { border-top: 0; margin-top: 0; }
+
+/* Narrow phones: break a label between words, never inside one ("Réparat / ion"),
+   and keep an amount on one line. "anywhere" also shrank the title column to a few letters. */
+@media (max-width: 760px) {
+  :root .transaction-title > strong { overflow-wrap: break-word; hyphens: auto; }
+  :root .transaction-amount > strong { white-space: nowrap; }
+}
+
+/* iPhone: the sync label stays hidden only when all is well; any problem or pending entry is spelled out.
+   When hidden, the label is still read by screen readers. */
+@media (max-width: 760px) {
+  :root .sync-state:not([data-quiet="true"]) > span { display: inline; }
+  :root .sync-state[data-quiet="true"] > span { display: inline; position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+
+/* Tablet and desktop: secondary texts measured at 9–11 px on the live site are raised to 12 px.
+   iPhone sizes are already owned by wallet.css (--mobile-meta). Sidebar count badges keep their size. */
+@media (min-width: 761px) {
+  :root .app-shell :is(
+    .wallet-accounts-heading > div > span,
+    .wallet-card-bottom > span,
+    .wallet-quick-actions > button,
+    .wallet-month-summary small,
+    .clarte-section-title > .text-button,
+    .day-summary > small,
+    .transaction-title > small,
+    .transaction-amount > small,
+    .recurrence-filters > button > span,
+    .rule-bottom > .status-pill,
+    .goal-progress-label > span,
+    .goal-progress-label > strong,
+    .settings-brand > span,
+    .settings-brand small,
+    .profile small,
+    .wallet-month-summary > div > span,
+    .clarte-transaction small,
+    .wallet-goal-row small,
+    button[aria-label^="Prévision de"] small,
+    .sync-state > span
+  ) { font-size: 12px; }
+}
+
+/* Tablet and small laptop (761–1099 px): the sidebar keeps its icons only (76 px instead of 224–232 px),
+   so totals and import buttons no longer wrap. Labels stay for screen readers and as hover titles;
+   the motto and profile details return from 1100 px. */
+@media (min-width: 761px) and (max-width: 1099px) {
+  :root .app-shell .sidebar { width: 76px; padding: 30px 10px 0; }
+  :root .app-shell .main-wrap { margin-left: 76px; }
+  :root .app-shell .sidebar .brand { justify-content: center; padding: 0; }
+  :root .app-shell .sidebar .brand img { display: block; width: 36px; height: 36px; border-radius: 11px; }
+  :root .app-shell .sidebar :is(.brand > span, .workspace-label, .sidebar-note, .profile > span:not(.avatar), .profile > svg) { display: none; }
+  :root .app-shell .sidebar .nav-item { position: relative; justify-content: center; gap: 0; padding: 13px 0; }
+  :root .app-shell .sidebar .nav-item > span:not(.nav-count) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  :root .app-shell .sidebar .nav-count { position: absolute; top: 4px; right: 4px; margin: 0; }
+  :root .app-shell .sidebar .profile { justify-content: center; padding-inline: 0; }
+}
+
+/* Lot 3: one way to add. The "+" opens an expense; other things are small shortcuts under the form. */
+:root .capture-others { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+:root .capture-others > span { width: 100%; color: var(--muted); font-size: 13px; }
+:root .capture-others > button { min-height: 40px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 99px; background: transparent; color: var(--blue); font: 500 14px var(--font-body); }
+
+/* Lot 3: the "Ajouter" menu is a compact list; expense, income and transfer come first. */
+:root .modal.actions-modal .quick-action-grid { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+:root .modal.actions-modal .quick-action { flex-direction: row; align-items: center; gap: 12px; min-height: 56px; padding: 8px 40px 8px 10px; }
+:root .modal.actions-modal .quick-action-icon { width: 36px; height: 36px; margin: 0; flex: none; }
+:root .modal.actions-modal .quick-action > strong { font-size: 15px; white-space: nowrap; }
+:root .modal.actions-modal .quick-action > small { max-width: none; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:root .modal.actions-modal .quick-action-chevron { top: 50%; transform: translateY(-50%); }
+:root .modal.actions-modal .quick-action:nth-child(3) { margin-bottom: 10px; }
+
+/* Lot 4: "Budget" in the iPhone dock gathers Équilibre and Récurrences; this switch moves between them.
+   Desktop keeps both in the sidebar. */
+:root .budget-switch { display: none; }
+@media (max-width: 760px) {
+  :root .budget-switch { display: flex; gap: 4px; padding: 4px; margin: 4px 0 18px; border-radius: 14px; background: var(--surface-inset, rgba(21, 23, 29, .06)); }
+  :root .budget-switch > button { flex: 1; min-height: 44px; border-radius: 10px; color: var(--muted); font: 500 15px var(--font-body); }
+  :root .budget-switch > button[aria-current="page"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 2px rgba(21, 23, 29, .08); }
+}
+
+/* Lot 4: on desktop each recurrence fits on one line (name and amount | state and next date | actions).
+   Modifier and Mettre en pause stay visible (30 October decision); Supprimer stays apart, behind its divider. */
+@media (min-width: 1100px) {
+  :root .rule-grid .rule-card { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(150px, .9fr) auto; align-items: center; column-gap: 28px; padding: 14px 8px; }
+  :root .rule-grid .rule-card .rule-heading { min-width: 0; }
+  :root .rule-grid .rule-card .rule-amount { font-size: 22px; white-space: nowrap; }
+  :root .rule-grid .rule-card h3 { font-size: 16px; line-height: 1.4; }
+  :root .rule-grid .rule-card .rule-bottom { flex-direction: column; align-items: flex-start; gap: 4px; margin: 0; padding: 0; border: 0; }
+  :root .rule-grid .rule-card .rule-actions { margin: 0; gap: 12px; flex-wrap: nowrap; }
+  :root .rule-grid .rule-card .rule-actions .record-danger { padding-left: 12px; }
+}
+
+/* Lot 4: explanations behind an "i". The title stays; the detail opens on tap. */
+:root .info-note { margin-top: 16px; border-radius: 14px; background: var(--surface-inset); color: var(--muted); }
+:root .info-note > summary { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 10px 14px; cursor: pointer; list-style: none; color: var(--ink); font-size: 14px; font-weight: 500; }
+:root .info-note > summary::-webkit-details-marker { display: none; }
+:root .info-note > summary > span:nth-of-type(1) { flex: 1; min-width: 0; }
+:root .info-note-toggle { display: grid; place-items: center; width: 24px; height: 24px; flex: none; border-radius: 50%; border: 1px solid var(--line); color: var(--blue); font: 600 13px var(--font-display); }
+:root .info-note[open] .info-note-toggle { background: var(--blue); border-color: var(--blue); color: #fff; }
+:root .info-note-body { padding: 0 14px 14px 41px; font-size: 14px; line-height: 1.65; }
+:root .info-note-body p { margin: 0 0 8px; }
+:root .plan-explanation .info-note { margin-top: 0; }
+
+/* Lot 5: one search for the whole budget (header magnifier, key "/"). */
+:root .global-search-field { display: flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 8px 0 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); color: var(--muted); }
+:root .global-search-field:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 18%, transparent); }
+:root .global-search-field input { flex: 1; min-width: 0; height: 48px; border: 0; padding: 0; background: transparent; color: var(--ink); font: 400 16px var(--font-body); outline: none; box-shadow: none; }
+:root .global-search-field input::-webkit-search-cancel-button { display: none; }
+:root .global-search-clear { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: var(--muted); }
+:root .global-search-status { margin: 10px 2px 4px; color: var(--muted); font-size: 13px; }
+:root .global-search section { margin-top: 18px; }
+:root .global-search h3 { margin: 0 2px 6px; color: var(--muted); font: 500 12px var(--font-body); letter-spacing: .04em; text-transform: uppercase; }
+:root .global-search ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+:root .global-search li > button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 8px 2px; border-bottom: 1px solid var(--line); text-align: left; color: var(--ink); }
+:root .global-search li > button > span { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 2px; }
+:root .global-search li > button strong { overflow: hidden; font: 500 15px var(--font-body); text-overflow: ellipsis; white-space: nowrap; }
+:root .global-search li > button small { overflow: hidden; color: var(--muted); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+:root .global-search li > button > b { flex: none; font: 500 15px var(--font-display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+:root .global-search li > button > b.positive { color: var(--green); }
+:root .global-search li > button > svg { flex: none; color: var(--muted); }
+@media (hover: hover) { :root .global-search li > button:hover { background: var(--surface-inset); } }
+:root .global-search-more { margin: 10px 2px 0; color: var(--muted); font-size: 13px; }
+
+/* Lot 5: home helpers under the accounts (savings on payday, tight end of period). */
+:root .month-assist { display: grid; gap: 12px; margin-top: 16px; }
+:root .month-assist-card { padding: 16px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
+:root .month-assist-card[data-tone="attention"] { background: var(--caution-bg); border-color: transparent; }
+:root .month-assist-card[data-tone="negative"] { background: var(--error-bg); border-color: transparent; }
+:root .month-assist-heading { display: flex; gap: 12px; align-items: flex-start; }
+:root .month-assist-icon { display: grid; place-items: center; width: 36px; height: 36px; flex: none; border-radius: 11px; background: var(--goal-surface); color: var(--lavender-accent); }
+:root .month-assist-card[data-tone="attention"] .month-assist-icon { background: var(--card); color: var(--caution-ink); }
+:root .month-assist-card[data-tone="negative"] .month-assist-icon { background: var(--card); color: var(--error-ink); }
+:root .month-assist-card h2 { margin: 0 0 4px; color: var(--ink); font: 600 16px/1.3 var(--font-heading); }
+:root .month-assist-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+:root .month-assist-card[data-tone] p { color: var(--ink); }
+:root .month-assist-card ul { margin: 12px 0 0; padding: 0; list-style: none; }
+:root .month-assist-card li { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 6px 0; border-top: 1px solid var(--line); color: var(--ink); font-size: 15px; }
+:root .month-assist-card[data-tone] li { border-top-color: color-mix(in srgb, var(--ink) 10%, transparent); }
+:root .month-assist-card li > span { display: flex; flex: 1; min-width: 0; flex-direction: column; overflow-wrap: break-word; }
+:root .month-assist-card li small { color: var(--muted); font-size: 13px; }
+:root .month-assist-card li > b { flex: none; font: 500 15px var(--font-display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+:root .month-assist-move { flex: none; min-height: 40px; padding: 6px 12px; border-radius: 99px; background: var(--card); color: var(--blue); font: 500 14px var(--font-body); white-space: nowrap; }
+:root .month-assist-note { margin-top: 10px !important; font-size: 13px !important; color: var(--muted) !important; }
+:root .month-assist-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 14px; }
+:root .month-assist-actions .primary { min-height: 46px; }
+:root .month-assist-later { min-height: 44px; padding: 0 4px; color: var(--muted); font: 500 14px var(--font-body); }

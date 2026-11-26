@@ -7,10 +7,6 @@
 .wallet-action-icon { width: 28px; height: 28px; overflow: visible; flex-shrink: 0; }
 .wallet-flap { transform-origin: 16px 12px; transition: transform var(--motion-layout) var(--motion-settle); }
 .wallet-action-icon[data-open="true"] .wallet-flap { transform: translateY(-3px) rotate(-12deg); }
-.wallet-menu-intro { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
-.wallet-menu-intro > svg { width: 58px; height: 58px; color: var(--blue); }
-.wallet-menu-intro .form-intro { margin: 0; }
-.wallet-menu-intro .wallet-flap { animation: wallet-open var(--motion-illustration) var(--motion-settle) both; }
 .quick-action-grid > button { animation: wallet-option-in var(--motion-arrival) var(--motion-settle) backwards; }
 .quick-action-grid > button:nth-child(2) { animation-delay: 10ms; }
 .quick-action-grid > button:nth-child(3) { animation-delay: 20ms; }
@@ -75,7 +71,7 @@
 @media (prefers-reduced-motion: reduce) {
   .wallet-flap, .quick-action-grid > button, .privacy-door, .navigation-indicator,
   .goal-building-line, .goal-piece, .journey-page { transition: none !important; animation: none; }
-  .wallet-menu-intro .wallet-flap, .app-shell[data-private] .clarte-amount, .calendar-old, .calendar-stamp { animation: none; }
+  .app-shell[data-private] .clarte-amount, .calendar-old, .calendar-stamp { animation: none; }
   .calendar-old { display: none; }
 }
 @media (forced-colors: active) {

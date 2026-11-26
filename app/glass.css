@@ -1,0 +1,124 @@
+/* Liquid Glass (25 November 2026): the colour wash and the glass material.
+   Colours come from app/theme.css; this sheet owns no global variable. Loaded last. */
+
+/* The wash: blurred once with `filter`, never with backdrop-filter, so it costs one layer. */
+.glass-backdrop { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: var(--bg); }
+.glass-backdrop > i { position: absolute; display: block; border-radius: 50%; filter: blur(60px); opacity: var(--wash-opacity); will-change: transform; animation: glass-drift 46s ease-in-out infinite alternate; }
+.glass-backdrop > i:nth-child(1) { width: 70vmax; height: 42vmax; left: -22vmax; top: -14vmax; background: var(--wash-1); animation-duration: 38s; }
+.glass-backdrop > i:nth-child(2) { width: 58vmax; height: 38vmax; right: -24vmax; top: 22vh; background: var(--wash-2); animation-duration: 46s; animation-direction: alternate-reverse; }
+.glass-backdrop > i:nth-child(3) { width: 76vmax; height: 40vmax; left: -12vmax; bottom: -20vmax; background: var(--wash-3); animation-duration: 54s; }
+.glass-backdrop[data-paused] > i { animation-play-state: paused; }
+@keyframes glass-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(8vw, 5vh, 0) scale(1.08); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-backdrop > i { animation: none; }
+}
+
+/* The material: tinted glass over the wash, a lit top edge and a soft shadow.
+   Used by the dock, the + button, header buttons, sheets, the desktop sidebar and `.glass` (later lots). */
+:root :is(.glass, .app-shell .mobile-dock .mobile-nav.floating-nav, :is(.topbar, .clarte-header-actions) .icon-button, .app-shell > .sidebar) {
+  background: linear-gradient(160deg,
+    color-mix(in srgb, var(--glass-base) calc(var(--glass-a) * 100%), transparent),
+    color-mix(in srgb, var(--glass-base) calc(var(--glass-b) * 100%), transparent));
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+  border: 0;
+  box-shadow: inset 0 1px 1px var(--glass-edge), inset 0 -1px 1px rgba(255, 255, 255, .16), 0 10px 26px var(--glass-shadow);
+}
+/* Specular highlight, top left, as on Apple glass. */
+:root :is(.glass, .app-shell .mobile-dock .mobile-nav.floating-nav, .app-shell > .sidebar)::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(120% 70% at 12% -10%, var(--glass-spec), transparent 52%);
+}
+:root .glass { position: relative; border-radius: 24px; }
+
+/* iPhone dock: a floating glass capsule; the active tab sits in a lens bubble that slides (NavigationIndicator). */
+:root .app-shell .mobile-dock .mobile-nav.floating-nav { border-radius: 30px; }
+:root .app-shell .mobile-dock .mobile-nav.floating-nav > button { color: var(--muted); background: transparent; }
+:root .app-shell .mobile-dock .mobile-nav.floating-nav > button.active { color: var(--blue); }
+:root .app-shell .mobile-dock .navigation-indicator {
+  border-radius: 24px;
+  background: rgba(255, 255, 255, .72);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .95), 0 3px 10px var(--glass-shadow);
+}
+:root[data-theme="dark"] .app-shell .mobile-dock .navigation-indicator { background: rgba(255, 255, 255, .14); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .28); }
+
+/* The + button: a coral disc set in a glass ring. */
+:root .app-shell .mobile-add {
+  background: linear-gradient(180deg, var(--action-from), var(--action-to));
+  color: var(--on-action);
+  border: 0;
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--glass-base) calc(var(--glass-a) * 100%), transparent), inset 0 1px 1px rgba(255, 255, 255, .55), 0 10px 22px var(--glass-shadow);
+}
+:root .app-shell .mobile-add:hover { background: linear-gradient(180deg, var(--action-from), var(--action-hover)); }
+
+/* Header buttons: round glass, 40 px drawn, 44 px to touch. */
+:root :is(.topbar, .clarte-header-actions) .icon-button { border-radius: 50%; color: var(--ink); }
+:root :is(.topbar, .clarte-header-actions) .icon-button:hover { color: var(--blue); }
+
+/* Sheets: thicker glass, so the page behind never competes with the text. */
+:root .modal-backdrop .modal {
+  --panel-surface: var(--glass-solid);
+  background: color-mix(in srgb, var(--glass-solid) 86%, transparent);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  backdrop-filter: blur(28px) saturate(160%);
+  border: 0;
+  box-shadow: inset 0 1px 1px var(--glass-edge), 0 -10px 40px var(--glass-shadow);
+  animation-timing-function: var(--motion-spring-out);
+}
+@media (max-width: 760px) { :root .modal-backdrop .modal { border-radius: 32px 32px 0 0; } }
+
+/* Desktop sidebar: a glass slab, lifted off the edges. */
+@media (min-width: 761px) {
+  :root .app-shell > .sidebar { inset: 12px auto 12px 12px; border-radius: 26px; }
+  :root .app-shell > .sidebar .nav-item.active { background: rgba(255, 255, 255, .6); color: var(--blue); }
+  :root[data-theme="dark"] .app-shell > .sidebar .nav-item.active { background: rgba(255, 255, 255, .12); }
+}
+
+/* Touch: glass gives a little under the finger. */
+:root :is(.glass, .icon-button, .mobile-add, .floating-nav > button):active { transform: scale(.96); transition: transform var(--motion-press) ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  :root :is(.glass, .icon-button, .mobile-add, .floating-nav > button):active { transform: none; }
+  :root .modal-backdrop .modal { animation-timing-function: ease-out; }
+}
+
+/* No glass where it cannot be drawn or is not wanted: an opaque tinted surface instead. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root :is(.glass, .app-shell .mobile-dock .mobile-nav.floating-nav, :is(.topbar, .clarte-header-actions) .icon-button, .app-shell > .sidebar, .modal-backdrop .modal) { background: var(--glass-solid); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root :is(.glass, .app-shell .mobile-dock .mobile-nav.floating-nav, :is(.topbar, .clarte-header-actions) .icon-button, .app-shell > .sidebar, .modal-backdrop .modal) { background: var(--glass-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .glass-backdrop > i { opacity: .55; animation: none; }
+}
+
+/* Réglages: the theme picker, six glass tiles with a live preview of each palette. */
+:root .theme-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 14px 0 10px; }
+@media (min-width: 1100px) { :root .theme-choices { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+:root .theme-choice { position: relative; display: flex; flex-direction: column; gap: 6px; cursor: pointer; border-radius: 18px; }
+:root .theme-preview { position: relative; display: block; height: 64px; border-radius: 16px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow var(--motion-feedback) ease, transform var(--motion-press) ease-out; }
+:root .theme-preview > i { position: absolute; width: 60%; height: 70%; border-radius: 50%; filter: blur(10px); opacity: .9; }
+:root .theme-preview > i:nth-child(1) { left: -14%; top: -20%; }
+:root .theme-preview > i:nth-child(2) { right: -16%; top: 20%; }
+:root .theme-preview > i:nth-child(3) { left: 10%; bottom: -36%; }
+:root .theme-preview > b { position: absolute; left: 14%; right: 14%; bottom: 10px; height: 14px; border-radius: 99px; background: rgba(255, 255, 255, .62); box-shadow: inset 0 1px 1px #fff; }
+:root .theme-preview[data-preview="peche"] { background: #fbeee3; }
+:root .theme-preview[data-preview="lavande"] { background: #efeaff; }
+:root .theme-preview[data-preview="menthe"] { background: #e8f5ef; }
+:root .theme-preview[data-preview="ocean"] { background: #dbe7f3; }
+:root .theme-preview[data-preview="nuit"] { background: #1a1216; }
+:root .theme-preview[data-preview="nuit"] > b { background: rgba(255, 255, 255, .16); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .3); }
+:root .theme-preview[data-preview="auto"] { background: linear-gradient(110deg, #fbeee3 50%, #1a1216 50%); }
+:root .theme-name { display: flex; align-items: center; justify-content: center; gap: 4px; min-height: 24px; color: var(--ink); font-size: 14px; font-weight: 600; }
+:root .theme-choice:has(input:checked) .theme-preview { box-shadow: inset 0 0 0 1px var(--line), 0 0 0 3px var(--action-bg); }
+:root .theme-choice:has(input:focus-visible) .theme-preview { outline: 3px solid var(--blue); outline-offset: 3px; }
+:root .theme-choice:active .theme-preview { transform: scale(.96); }
+@media (prefers-reduced-motion: reduce) { :root .theme-choice:active .theme-preview { transform: none; } }
+:root .theme-input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 1; }
+
+/* iPhone sticky header: the wash shows through instead of a flat grey band. */
+@media (max-width: 760px) {
+  :root .app-shell .topbar { background: color-mix(in srgb, var(--bg) 62%, transparent); -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%); }
+}
+@media (prefers-reduced-transparency: reduce) and (max-width: 760px) { :root .app-shell .topbar { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; } }

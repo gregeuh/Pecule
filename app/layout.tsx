@@ -18,10 +18,12 @@ import "./gestures.css";
 import "./wallet-depth.css";
 import "./launch.css";
 import "./save-continuity.css";
-import "./visual-fixes.css";
+import "./glass.css";
 import { launchBootstrap } from "../lib/launch-bootstrap";
+import { paletteBootstrap } from "../lib/appearance";
 import { launchImages } from "../lib/launch-images";
 import AppearanceProvider from "./theme-provider";
+import GlassBackdrop from "./glass-backdrop";
 export const metadata: Metadata = {
   title: "Pécule — Votre argent, l’esprit léger",
   description:
@@ -40,19 +42,24 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f2f3f7" },
-    { media: "(prefers-color-scheme: dark)", color: "#090b10" },
+    { media: "(prefers-color-scheme: light)", color: "#fbeee3" },
+    { media: "(prefers-color-scheme: dark)", color: "#1a1216" },
   ],
 };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
+        <link rel="preload" href="/fonts/nunito-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       </head>
       <body>
         <script dangerouslySetInnerHTML={{ __html: launchBootstrap }} />
-        <AppearanceProvider>{children}</AppearanceProvider>
+        <script dangerouslySetInnerHTML={{ __html: paletteBootstrap }} />
+        <AppearanceProvider>
+          <GlassBackdrop />
+          {children}
+        </AppearanceProvider>
       </body>
     </html>
   );

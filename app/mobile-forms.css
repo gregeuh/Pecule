@@ -21,10 +21,10 @@
 /* Shared mobile geometry. Palette and financial states stay owned by Atelier. */
 @media (max-width: 760px) {
   :root { --mobile-control: 48px; --mobile-target: 44px; }
-  .app-shell, .auth-shell, .setup-page { inline-size: 100%; max-inline-size: 100%; min-inline-size: 0; }
+  .app-shell, .auth-shell { inline-size: 100%; max-inline-size: 100%; min-inline-size: 0; }
   .main-wrap { width: 100%; max-width: 100%; margin-left: 0; }
   .app-shell main { min-width: 0; max-width: 100%; }
-  .app-shell *, .modal *, .auth-shell *, .setup-page * { min-width: 0; }
+  .app-shell *, .modal *, .auth-shell * { min-width: 0; }
   .app-shell main { padding-left: max(24px, env(safe-area-inset-left)); padding-right: max(24px, env(safe-area-inset-right)); }
   .page-overview main { padding-top: max(24px, env(safe-area-inset-top)); }
   .topbar { height: calc(76px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); padding-left: max(24px, env(safe-area-inset-left)); padding-right: max(24px, env(safe-area-inset-right)); }
@@ -76,19 +76,15 @@
     width: 100%; height: 100%; min-width: 0; min-height: 0; max-width: none;
     margin: 0; padding: 0;
   }
-  .setup-choices input { margin-top: 0; }
   .transaction-select-toggle { flex-basis: 44px; width: 44px; }
   .transaction-select-toggle input { margin: 0; }
 
   .primary, .secondary, .danger { min-height: var(--mobile-control); line-height: 1.5; white-space: normal; }
   .primary.compact, .secondary.compact, .danger.compact { min-height: var(--mobile-target); }
-  .icon-button, .icon-button.small, .topbar .icon-button,
-  .clarte-header-actions .icon-button, .modal-heading .icon-button,
-  .setup-charge .icon-button, .setup-summary button {
+  .icon-button, .icon-button.small, .topbar .icon-button, .clarte-header-actions .icon-button, .modal-heading .icon-button {
     width: 44px; height: 44px; min-width: 44px; min-height: 44px; flex-shrink: 0;
   }
-  .text-button, .link-button, .clarte-calculation-link,
-  .clarte-section-title .text-button {
+  .text-button, .clarte-calculation-link, .clarte-section-title .text-button {
     min-width: var(--mobile-target);
     min-height: var(--mobile-target);
     line-height: 1.5;
@@ -97,9 +93,7 @@
   .clarte-section-title > .text-button { flex-shrink: 0; }
   .demo-banner button, .clarte-chart > summary,
   .spending-insights > summary, .brand-picker > summary { min-height: var(--mobile-target); }
-  .account-details-link { min-height: var(--mobile-target); }
   .plan-explanation a { display: inline-flex; align-items: center; min-height: var(--mobile-target); }
-  .danger-icon { min-width: 44px; min-height: 48px; }
   .toast { padding: 10px 12px; }
   .toast > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
   .toast button { width: 44px; height: 44px; min-width: 44px; min-height: 44px; flex-shrink: 0; margin-left: 0; }

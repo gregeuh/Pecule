@@ -1,6 +1,6 @@
 # Pécule — référence Wallet stabilisée
 
-Direction validée : Revolut et Apple Wallet, couleurs franches, lecture dense, profondeur concentrée sur les comptes et les aperçus. Le site est un outil de gestion en français, principalement utilisé dans la PWA sur iPhone. Cette référence remplace les anciennes indications Atelier ; leur historique reste dans DESIGN.md.
+Direction validée le 25 novembre 2026 : **Liquid Glass chaleureux** (voir `docs/superpowers/specs/2026-11-25-liquid-glass-design.md`) : fond de couleurs douces qui dérive lentement, matière verre épaisse avec reflet, police ronde Nunito, tirelire comme mascotte, ton rassurant. Cinq thèmes (Pêche, Lavande, Menthe, Océan, Nuit) et Automatique. La refonte avance par lots ; les écrans pas encore repris gardent leur mise en page Wallet (direction précédente : Revolut et Apple Wallet). Le site est un outil de gestion en français, principalement utilisé dans la PWA sur iPhone. Cette référence remplace les anciennes indications Atelier ; leur historique reste dans DESIGN.md.
 
 ## Propriétaires
 
@@ -9,6 +9,7 @@ Direction validée : Revolut et Apple Wallet, couleurs franches, lecture dense, 
 | Palette, fontes et rôles typographiques | `app/theme.css` |
 | Densité des pages, surfaces, textes, logos | `app/wallet.css` |
 | Profondeur, matière et aperçu | `app/wallet-depth.css` |
+| Fond coloré animé et matière verre (Liquid Glass) | `app/glass.css`, `app/glass-backdrop.tsx` ; couleurs dans `app/theme.css` |
 | Couleurs de compte, contraste et matière personnalisée | `lib/wallet-presentation.ts` |
 | Durées et courbes | `app/motion.css`, consommées par `app/ui-motion.ts` |
 | Présence, ouverture et sortie des dialogues | `app/use-modal-motion.ts`, surface visuelle `app/modal-surface-motion.ts` |

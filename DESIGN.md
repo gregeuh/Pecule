@@ -1,12 +1,12 @@
 ---
 version: "1.0"
 colors:
-  background: "#f2f3f7"
-  surface: "#ffffff"
-  ink: "#15171d"
-  muted: "#626b7b"
-  primary: "#245af3"
-  text-accent: "#1d4dd5"
+  background: "#fbeee3"
+  surface: "#fffaf6"
+  ink: "#2b2320"
+  muted: "#5f4c44"
+  primary: "#bf4f2a"
+  text-accent: "#823416"
 typography:
   body:
     fontFamily: '"DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
@@ -396,3 +396,11 @@ Quatre fonctions validées par l'utilisateur ; aucune nouvelle couleur.
 - Fin de période serrée : quand le disponible par jour passe sous le seuil de confort (Réglages), l'accueil liste les plus grosses dépenses prévues d'ici la paie ou la fin du mois, chacune décalable au jour suivant la période. Pour une récurrence, seule cette date bouge (même règle que la modification d'une occurrence). Couleurs du signal « Attention » / « Négatif » existantes.
 - Raccourcis de l'icône (Android et ordinateur ; iPhone ne les propose pas) : Dépense, Revenu, Opérations, Épargne, via `/?raccourci=…`.
 Les deux cartes de l'accueil se masquent avec les montants.
+
+## Liquid Glass, lot 1 — socle — 25 novembre 2026
+Refonte visuelle demandée par l'utilisateur (conception : `docs/superpowers/specs/2026-11-25-liquid-glass-design.md`, plan : `docs/superpowers/plans/2026-11-25-liquid-glass-lot1-socle.md`). Elle remplace la direction Wallet (Revolut, Apple Wallet) par un mélange « chaleureux + verre + Liquid Glass d'Apple », écran par écran sur cinq lots ; ce premier lot pose le socle.
+- Thèmes : Pêche (défaut), Lavande, Menthe, Océan, Nuit (le thème sombre) et Automatique, choisis dans Réglages par des vignettes d'aperçu, par appareil. Le mode reste dans `pecule-theme` (next-themes, `data-theme`) ; la palette claire dans `pecule-palette` (`data-palette`, posée avant le premier rendu par `paletteBootstrap`). « Clair » devient Pêche, « Sombre » devient Nuit, « Automatique » garde la dernière palette claire le jour.
+- Couleurs dans `app/theme.css` ; `tests/theme-contrast.test.mjs` vérifie 4,5:1 pour le texte, le texte secondaire et l'accent sur le fond, les cartes, le verre et directement sur chaque tache colorée, dans chaque thème. Action corail `#bf4f2a` (dégradé `#e47a55` → `#bf4f2a`), Nuit `#f0936f` avec texte sombre.
+- Fond : trois taches floues (`--wash-1..3`, opacité `--wash-opacity`) qui dérivent en 38 à 54 s, à l'arrêt quand la page est cachée ou que les animations sont réduites (`app/glass-backdrop.tsx`).
+- Verre (`app/glass.css`) : barre du bas en capsule avec bulle glissante, bouton + corail dans un anneau de verre, boutons ronds d'en-tête, en-tête iPhone translucide, feuilles plus opaques (86 %) avec léger rebond, barre latérale décollée des bords sur ordinateur, enfoncement à l'appui. Repli opaque (`--glass-solid`) sans `backdrop-filter` ou avec « réduire la transparence ».
+- Police : Nunito partout dans l'application ; l'espace fine des milliers reste servie par Inter. Le logo, l'écran de lancement et la page hors connexion changent au lot 5.

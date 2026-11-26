@@ -4,37 +4,41 @@
    with its own fallback font, often under 2 px ("1250,00 €"). This face serves that character alone from
    Inter, which has it: the same separator as the amounts set in Inter, on every device. */
 @font-face{font-family:DM Sans;font-style:normal;font-weight:100 1000;font-display:swap;src:url(/fonts/inter-latin.woff2)format("woff2");unicode-range:U+202F}
+/* Liquid Glass: Nunito is the single text and number face. Its latin subset has no U+202F (thousands
+   separator of money()), so that character alone is served by Inter, as for DM Sans above. */
+@font-face{font-family:Nunito;font-style:normal;font-weight:200 1000;font-display:swap;src:url(/fonts/nunito-latin.woff2)format("woff2")}
+@font-face{font-family:Nunito;font-style:normal;font-weight:200 1000;font-display:swap;src:url(/fonts/inter-latin.woff2)format("woff2");unicode-range:U+202F}
 @font-face{font-family:Manrope;font-style:normal;font-weight:200 800;font-display:swap;src:url(/fonts/manrope-latin.woff2)format("woff2")}
 @font-face{font-family:Inter;font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/inter-latin.woff2) format("woff2")}
 :root {
- --bg:#f2f3f7;
- --card:#ffffff;
- --ink:#15171d;
- --muted:#626b7b;
- --subtle:#656e7d;
- --line:#e1e5ee;
- --blue:#1d4dd5;
- --blue-soft:#e6edff;
+ --bg:#fbeee3;
+ --card:#fffaf6;
+ --ink:#2b2320;
+ --muted:#5f4c44;
+ --subtle:#5f4c44;
+ --line:#ecd9cb;
+ --blue:#823416;
+ --blue-soft:#fbe0d4;
  --green:#08734e;
- --font-display:Inter,var(--font-body);
+ --font-display:Nunito,var(--font-body);
  --scroll-thumb:#a1a9ba;
  --scroll-hover:#68758e;
- --action-bg:#245af3;
- --action-hover:#1745cc;
- --soft-hover:#dce5fb;
+ --action-bg:#bf4f2a;
+ --action-hover:#a8431f;
+ --soft-hover:#f6dccd;
  --on-action:#ffffff;
  --overlay:#11182780;
  --toast-bg:#15171d;
  --toast-ink:#ffffff;
  --surface-raised:#ffffff;
- --surface-inset:#eceef4;
+ --surface-inset:#f6e4d6;
  --goal-surface:#ede6fb;
  --lavender-surface:#e5dbfa;
  --lavender-ink:#45316b;
  --lavender-muted:#614c84;
  --lavender-accent:#7141c6;
  --lavender-track:#d0bfea;
- --dock-bg:#ffffff;
+ --dock-bg:#fffaf6;
  --dock-shadow:0 8px 26px #14294c1c;
  --font-heading:var(--font-display);
  --font-brand:Manrope,var(--font-body);
@@ -51,20 +55,20 @@
   --apricot-surface: #f5c39e;
   --apricot-ink: #57341f;
   --apricot-muted: #70492e;
-  --apricot-hover: #edb78e;--font-body:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:light;--danger:#aa394e;--error-ink:#8e263b;--error-bg:#fff0f2;--caution-ink:#714818;--caution-bg:#fff0dc;
+  --apricot-hover: #edb78e;--font-body:Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:light;--danger:#aa394e;--error-ink:#8e263b;--error-bg:#fff0f2;--caution-ink:#714818;--caution-bg:#fff0dc;--wash-1:#ff9d7e;--wash-2:#ffd0a6;--wash-3:#d6c4ff;--wash-opacity:.62;--glass-base:#ffffff;--glass-a:.62;--glass-b:.34;--glass-edge:rgba(255,255,255,.75);--glass-spec:rgba(255,255,255,.7);--glass-shadow:rgba(120,60,30,.14);--glass-tint:rgba(255,255,255,.5);--glass-solid:#fdf5ee;--action-from:#e47a55;--action-to:#bf4f2a;
 }
 :root[data-theme="dark"] {
- --bg:#090909;
- --card:#171717;
- --ink:#f5f5f5;
- --muted:#afb0b7;
- --subtle:#a7a8af;
- --line:#303033;
- --blue:#8caaff;
- --blue-soft:#273756;
- --action-bg:#245af3;
- --action-hover:#376afa;
- --soft-hover:#2c303b;
+ --bg:#1a1216;
+ --card:#2a1f24;
+ --ink:#f6ece6;
+ --muted:#d2c0b7;
+ --subtle:#b9a49a;
+ --line:#3b2d33;
+ --blue:#ffb08f;
+ --blue-soft:#3d2a26;
+ --action-bg:#f0936f;
+ --action-hover:#f6a587;
+ --soft-hover:#3a2b30;
  --green:#72dab2;
  --scroll-thumb:#59595f;
  --scroll-hover:#85858c;
@@ -72,20 +76,25 @@
  --toast-bg:#f3f5fa;
  --toast-ink:#151515;
  --surface-raised:#202020;
- --surface-inset:#121212;
+ --surface-inset:#140d10;
  --goal-surface:#302541;
- --on-action:#ffffff;
+ --on-action:#2b130b;
  --lavender-surface:#302541;
  --lavender-ink:#e6d6ff;
  --lavender-muted:#c6b1e4;
  --lavender-accent:#b895f4;
  --lavender-track:#584078;
- --dock-bg:#171717;
+ --dock-bg:#2a1f24;
  --dock-shadow:0 8px 26px #00000066;
   --surface-shadow: 0 10px 28px #00000029;
   --forecast-surface: #30251e;
   --apricot-surface: #3d2b21;
   --apricot-ink: #ffd7b8;
   --apricot-muted: #dfb99e;
-  --apricot-hover: #51382a;color-scheme:dark;--danger:#ff9cae;--error-ink:#ffc2ce;--error-bg:#472737;--caution-ink:#ffdcac;--caution-bg:#443622;
+  --apricot-hover: #51382a;color-scheme:dark;--danger:#ff9cae;--error-ink:#ffc2ce;--error-bg:#472737;--caution-ink:#ffdcac;--caution-bg:#443622;--wash-1:#8a3423;--wash-2:#4a2f78;--wash-3:#a0561f;--wash-opacity:.45;--glass-base:#1a1216;--glass-a:.6;--glass-b:.48;--glass-edge:rgba(255,255,255,.22);--glass-spec:rgba(255,255,255,.18);--glass-shadow:rgba(0,0,0,.45);--glass-tint:rgba(255,255,255,.1);--glass-solid:#2c2126;--action-from:#f6a587;--action-to:#e9805f;
 }
+
+/* Light palettes chosen in Réglages (lib/appearance.ts). Pêche is :root; Nuit is the dark theme. */
+:root[data-palette="lavande"]:not([data-theme="dark"]) {--bg:#efeaff;--card:#fbf9ff;--ink:#231f33;--muted:#514968;--subtle:#514968;--blue:#863619;--line:#ddd5f3;--blue-soft:#ece4ff;--soft-hover:#e4dbfb;--surface-inset:#e6dff8;--dock-bg:#fbf9ff;--wash-1:#b8a4ff;--wash-2:#ffc0a4;--wash-3:#a9d6ff;--glass-shadow:rgba(70,50,140,.14);--glass-solid:#f7f4ff;}
+:root[data-palette="menthe"]:not([data-theme="dark"]) {--bg:#e8f5ef;--card:#f7fcfa;--ink:#17302a;--muted:#3f584f;--subtle:#3f584f;--blue:#8f391a;--line:#cfe6dc;--blue-soft:#d5ece2;--soft-hover:#d5ece2;--surface-inset:#dbeee5;--dock-bg:#f7fcfa;--wash-1:#8fdcc0;--wash-2:#a9d6ff;--wash-3:#ffe1a8;--glass-shadow:rgba(30,90,70,.14);--glass-solid:#f3faf7;}
+:root[data-palette="ocean"]:not([data-theme="dark"]) {--bg:#dbe7f3;--card:#f4f8fc;--ink:#0f2131;--muted:#2f4459;--subtle:#2f4459;--line:#c6d6e6;--blue:#6f2b13;--blue-soft:#cadbeb;--soft-hover:#cadbeb;--surface-inset:#cfdeec;--dock-bg:#f4f8fc;--wash-1:#7db9ea;--wash-2:#9be8df;--wash-3:#93abe9;--glass-shadow:rgba(20,50,90,.16);--glass-solid:#eef4fa;}
