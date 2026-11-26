@@ -16,10 +16,7 @@ export default function WalletAccounts({
   onAll,
   onAdd,
   onForecast,
-  available,
 }: {
-  /** The home's "disponible", shown as the first summary row (lot 2 of the design review). */
-  available?: { title: string; detail: string; amount: string; onOpen: () => void };
   onForecast: (account: Account) => void;
   budget: Budget;
   today: string;
@@ -114,25 +111,8 @@ export default function WalletAccounts({
               </Pressable>
             ))}
           </div>
-          {(summaries.length > 0 || available) && (
-            <ul className="wallet-account-forecasts" aria-label="Disponible, soldes et prévisions des comptes">
-              {available && (
-                <li>
-                  <button
-                    type="button"
-                    className="wallet-available-row"
-                    onClick={available.onOpen}
-                    aria-label={`${available.title} : ${available.amount}, ${available.detail}. Comprendre le calcul`}
-                  >
-                    <span>
-                      <strong>{available.title}</strong>
-                      <small>{available.detail}</small>
-                    </span>
-                    <b>{available.amount}</b>
-                    <ArrowRight size={15} aria-hidden="true" />
-                  </button>
-                </li>
-              )}
+          {summaries.length > 0 && (
+            <ul className="wallet-account-forecasts" aria-label="Soldes et prévisions des comptes">
               {summaries.map(({ account, outlook, projected }) => (
                 <li key={account.id}>
                   <button

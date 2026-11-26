@@ -140,3 +140,19 @@
 @keyframes piggy-hop { 0% { transform: none; } 30% { transform: translateY(-10px) scale(1.04, .96); } 60% { transform: translateY(0) scale(.98, 1.02); } 100% { transform: none; } }
 @keyframes piggy-coin { 0% { opacity: 0; transform: translateY(-26px); } 20% { opacity: 1; } 85% { opacity: 1; transform: translateY(17px); } 100% { opacity: 0; transform: translateY(20px); } }
 @media (prefers-reduced-motion: reduce) { :root .piggy[data-celebrate] :is(.piggy-body, .piggy-coin) { animation: none; } }
+
+/* Lot 2: home hero, what is left to spend, first thing on the home. */
+:root .home-hero { display: flex; align-items: center; gap: 12px; width: 100%; margin: 0 0 18px; padding: 16px 16px 16px 18px; text-align: left; color: var(--ink); cursor: pointer; font: inherit; }
+:root .home-hero-text { display: flex; flex: 1; min-width: 0; flex-direction: column; align-items: flex-start; gap: 6px; }
+:root .home-hero-label { color: var(--muted); font-size: 14px; font-weight: 700; }
+:root .home-hero-amount { font: 900 clamp(30px, 9vw, 38px)/1.05 var(--font-display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+:root .home-hero-pill { display: inline-flex; padding: 5px 11px; border-radius: 99px; background: var(--glass-tint); color: var(--green); font-size: 13px; font-weight: 800; }
+:root .home-hero[data-tone="attention"] .home-hero-pill { background: var(--caution-bg); color: var(--caution-ink); }
+:root .home-hero[data-tone="negative"] .home-hero-pill { background: var(--error-bg); color: var(--error-ink); }
+:root .home-hero:not([data-tone]) .home-hero-pill { color: var(--muted); }
+:root .home-hero .piggy { width: 64px; height: 64px; align-self: flex-start; }
+@media (min-width: 761px) {
+  :root .home-hero { padding: 22px 24px; }
+  :root .home-hero-amount { font-size: 52px; }
+  :root .home-hero .piggy { width: 92px; height: 92px; align-self: center; }
+}
