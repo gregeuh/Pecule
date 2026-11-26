@@ -15,6 +15,7 @@ import { PrivacyShutter, GoalIllustration, NavigationIndicator } from "./signatu
 import BudgetAlerts from "./budget-alerts";
 import MonthAssist from "./month-assist";
 import HomeHero from "./home-hero";
+import RecurrenceWeek from "./recurrence-week";
 import type { PaydayPlan } from "../lib/month-assist";
 import { getAvailableSignal } from "../lib/available-signal";
 import {
@@ -492,6 +493,18 @@ export default function ClarteDashboard(p: Props) {
                 aria-labelledby={`${tabId}-overview`}
                 hidden={tab !== "overview"}
               >
+                {!p.loadError && (
+                  <RecurrenceWeek
+                    budget={b}
+                    today={p.today}
+                    end={o.end}
+                    untilPayday={!!o.salary && b.settings.horizon === "salary"}
+                    hidden={p.hidden}
+                    m={m}
+                    onOpen={p.onUpcoming}
+                    onMonth={p.onRecurring}
+                  />
+                )}
                 <section className="wallet-month-summary" aria-label="Repères du mois et de la période choisie">
                   <div>
                     <span>Dépenses de {parseDate(p.today).toLocaleDateString("fr-FR", { month: "long" })}</span>

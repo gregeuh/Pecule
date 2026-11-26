@@ -437,3 +437,8 @@ Plan : `docs/superpowers/plans/2026-11-26-liquid-glass-lot5-finitions.md`. Derni
 ## Réduire la transparence et finitions — 26 novembre 2026
 - Réglages › Thème : interrupteur « Réduire la transparence », par appareil (`pecule-transparency`, posé avant le premier rendu par `paletteBootstrap`). Safari ne transmet pas le réglage d’accessibilité de l’iPhone ; ce choix remplace tout le verre par sa teinte opaque (`--glass-solid`), retire les flous et arrête la dérive du fond.
 - Tuile « Ajouter un compte / un objectif » en verre pointillé ; filtres de récurrences inactifs réactifs au survol ; jauges qui se remplissent par découpe (coins intacts) ; liens principaux et boutons de suppression en pastilles ; sur l’écran de démarrage, « Ouverture de Pécule » descend sous 560 px de hauteur pour ne plus frôler le slogan.
+
+## Récurrences en un coup d’œil — 26 novembre 2026
+- Accueil › Aperçu : bloc « Récurrences » en premier (`app/recurrence-week.tsx`). Reste des charges récurrentes à payer avant la paie (ou d’ici la fin de période) avec sa jauge, les 7 prochains jours en pastilles (point corail = charge, vert = revenu, aujourd’hui cerclé), puis la liste de la semaine. Toucher un jour ne montre que lui ; « Toute la semaine » revient. Une ligne ouvre la récurrence ; « Le mois » ouvre la page Récurrences.
+- Récurrences : calendrier du mois en tête (`app/recurrence-calendar.tsx`), semaines commençant le lundi, mois précédent / suivant, détail du jour choisi. Sur ordinateur, grille à gauche et détail à droite.
+- Calculs purs dans `lib/recurrence-calendar.ts` (seules les opérations issues d’une récurrence active comptent ; les opérations ponctuelles prévues restent dans « À venir »). Montants masqués respectés, jauge vide quand ils le sont.
