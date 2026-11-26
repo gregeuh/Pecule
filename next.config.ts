@@ -8,7 +8,8 @@ const nextConfig: NextConfig = {
       {key:"X-Content-Type-Options",value:"nosniff"},
       {key:"Referrer-Policy",value:"strict-origin-when-cross-origin"},
       {key:"Permissions-Policy",value:"camera=(), microphone=(), geolocation=()"},
-      {key:"Content-Security-Policy",value:"frame-ancestors 'none'; base-uri 'self'; object-src 'none'"},
+      // Content-Security-Policy is set by proxy.ts on pages: on Vercel a header set here also reaches the request
+      // under the name Next.js reads its nonce from, which hid the nonce from Next.js's own scripts.
       // The nonce-based script policy (Report-Only for now) is set per request by proxy.ts.
     ]}];
   },
