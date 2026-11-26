@@ -3,6 +3,8 @@ import { useId, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { parseDate, shiftDate, shortDate, type Budget, type Transaction } from "../lib/budget";
 import { monthGrid, recurrencesBetween, shiftMonth } from "../lib/recurrence-calendar";
+import CategoryIcon from "./category-icon";
+import { MerchantIcon } from "./merchant-fields";
 import { dayName, rhythm } from "./recurrence-week";
 
 type Props = {
@@ -89,7 +91,12 @@ export default function RecurrenceCalendar({ budget, today, m, onOpen }: Props) 
         {dayItems.length ? (
           dayItems.map((t) => (
             <button type="button" className="recurrence-row" key={t.id} onClick={() => onOpen(t)}>
-              <i aria-hidden="true" data-kind={t.amount > 0 ? "income" : "charge"} />
+              <MerchantIcon
+                label={t.label}
+                merchantId={t.merchantId}
+                customIconUrl={t.customIconUrl}
+                fallback={<CategoryIcon category={t.category} size={19} />}
+              />
               <span>
                 <strong>{t.label}</strong>
                 <small>

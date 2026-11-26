@@ -512,9 +512,9 @@ export default function ClarteDashboard(p: Props) {
                     <small>Virements internes exclus</small>
                   </div>
                   <div>
-                    <span>Charges à venir</span>
-                    <strong>{m(o.expenses)}</strong>
-                    <small>Jusqu’au {shortDate(o.end)}</small>
+                    <span>Revenus de {parseDate(p.today).toLocaleDateString("fr-FR", { month: "long" })}</span>
+                    <strong>{m(o.income)}</strong>
+                    <small>Reçus jusqu’à aujourd’hui</small>
                   </div>
                 </section>
                 {!p.loadError && (

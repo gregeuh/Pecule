@@ -455,8 +455,8 @@
 }
 :root :is(.recurrence-week-days, .recurrence-calendar-grid) > button[aria-pressed="true"] > small { color: inherit; }
 :root .recurrence-dots { display: flex; gap: 3px; height: 6px; }
-:root :is(.recurrence-dots, .recurrence-calendar-legend) i, :root .recurrence-row > i { display: block; width: 6px; height: 6px; border-radius: 99px; background: var(--action-to); }
-:root :is(.recurrence-dots, .recurrence-calendar-legend) i[data-kind="income"], :root .recurrence-row > i[data-kind="income"] { background: var(--green); }
+:root :is(.recurrence-dots, .recurrence-calendar-legend) i { display: block; width: 6px; height: 6px; border-radius: 99px; background: var(--action-to); }
+:root :is(.recurrence-dots, .recurrence-calendar-legend) i[data-kind="income"] { background: var(--green); }
 :root :is(.recurrence-week-days, .recurrence-calendar-grid) > button[aria-pressed="true"] .recurrence-dots i { background: currentColor; }
 :root .recurrence-week-list, :root .recurrence-calendar-day { display: grid; }
 :root .recurrence-week-list-title { display: flex; align-items: center; justify-content: space-between; min-height: 32px; font-size: 13px; font-weight: 800; color: var(--muted); }
@@ -465,11 +465,11 @@
   border: 0; border-top: 1px solid color-mix(in srgb, var(--muted) 18%, transparent); background: transparent;
   color: var(--ink); font-family: inherit; text-align: left; cursor: pointer;
 }
-:root .recurrence-row > i { flex: none; width: 10px; height: 10px; }
-:root .recurrence-row > span { display: grid; flex: 1; min-width: 0; }
-:root .recurrence-row strong { font-size: 15px; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:root .recurrence-row > span:not(.merchant-icon, .category-icon) { display: grid; flex: 1; min-width: 0; }
+:root .recurrence-row strong { font-size: 15px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 :root .recurrence-row small { font-size: 12px; font-weight: 700; color: var(--muted); }
-:root .recurrence-row > b { font-size: 15px; font-weight: 900; white-space: nowrap; }
+:root .recurrence-row > b { font-size: 15px; font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
+:root .recurrence-week-more { justify-self: start; min-height: 44px; }
 :root .recurrence-week-none { margin: 0; min-height: 44px; display: flex; align-items: center; font-size: 14px; font-weight: 700; color: var(--muted); }
 :root .recurrence-week-empty { display: grid; gap: 4px; justify-items: start; }
 :root .recurrence-calendar { display: grid; gap: 8px; padding: 12px 14px 14px; margin-bottom: 16px; }
@@ -491,5 +491,18 @@
 @media (forced-colors: active) {
   :root :is(.recurrence-week-days, .recurrence-calendar-grid) > button { border: 1px solid ButtonText; }
   :root :is(.recurrence-week-days, .recurrence-calendar-grid) > button[aria-pressed="true"] { border: 3px solid Highlight; }
-  :root :is(.recurrence-dots, .recurrence-calendar-legend) i, :root .recurrence-row > i { background: CanvasText; }
+  :root :is(.recurrence-dots, .recurrence-calendar-legend) i { background: CanvasText; }
+}
+
+/* Home, after a look on a real iPhone: « Dernières opérations » is one opaque glass plate like each day of
+   Opérations (rows stay opaque for the swipe gesture), its title inside the plate; the home's full-width
+   secondary actions become glass pills instead of navy slabs in Nuit. */
+:root .wallet-dashboard .clarte-card.clarte-recent { --card: var(--glass-solid); padding: 6px 14px; background: var(--glass-solid); }
+:root .wallet-dashboard .clarte-recent .clarte-section-title { padding: 0; margin-bottom: 0; }
+:root .wallet-dashboard .clarte-recent :is(.operation-gesture, .clarte-transaction, .operation-more) { background-color: var(--glass-solid); border: 0; border-radius: 0; }
+:root .wallet-dashboard .clarte-recent .clarte-transaction { padding-inline: 0; }
+:root .wallet-dashboard .clarte-recent > .operation-gesture { border-top: 1px solid color-mix(in srgb, var(--muted) 18%, transparent); }
+:root .wallet-dashboard button.secondary.full-width {
+  border: 0; border-radius: 99px; background: var(--glass-tint); color: var(--blue); font-weight: 800;
+  box-shadow: inset 0 1px 1px var(--glass-edge);
 }
