@@ -1,5 +1,6 @@
 "use client";
-import { useContext, useMemo, type CSSProperties } from "react";
+import { useCallback, useContext, useMemo, type CSSProperties } from "react";
+import AnimatedAmount from "./animated-amount";
 import AccountVerification from "./account-verification";
 import Pressable from "./pressable";
 import { GestureActions } from "./operation-gesture";
@@ -16,10 +17,7 @@ export default function WalletAccounts({
   onAll,
   onAdd,
   onForecast,
-  available,
 }: {
-  /** The home's "disponible", shown as the first summary row (lot 2 of the design review). */
-  available?: { title: string; detail: string; amount: string; onOpen: () => void };
   onForecast: (account: Account) => void;
   budget: Budget;
   today: string;
@@ -52,7 +50,7 @@ export default function WalletAccounts({
   const summaries = forecasts.filter(
     ({ account, projected }) => projected || !cards.some((card) => card.id === account.id),
   );
-  const m = (amount: number) => (hidden ? "•••• €" : money(amount));
+  const m = useCallback((amount: number) => (hidden ? "•••• €" : money(amount)), [hidden]);
   const total = budget.accounts.reduce((sum, a) => sum + accountBalance(budget, a.id, today), 0);
   return (
     <section className="wallet-accounts" aria-label="Soldes de vos comptes">
@@ -100,7 +98,7 @@ export default function WalletAccounts({
                   )}
                 </span>
                 <span className="wallet-card-balance" data-long={m(accountBalance(budget, a.id, today)).length > 15}>
-                  {m(accountBalance(budget, a.id, today))}
+                  <AnimatedAmount cents={accountBalance(budget, a.id, today)} hidden={hidden} format={m} />
                 </span>
                 <span className="wallet-card-bottom">
                   <span>{accountKind(a)}</span>
@@ -114,25 +112,8 @@ export default function WalletAccounts({
               </Pressable>
             ))}
           </div>
-          {(summaries.length > 0 || available) && (
-            <ul className="wallet-account-forecasts" aria-label="Disponible, soldes et prévisions des comptes">
-              {available && (
-                <li>
-                  <button
-                    type="button"
-                    className="wallet-available-row"
-                    onClick={available.onOpen}
-                    aria-label={`${available.title} : ${available.amount}, ${available.detail}. Comprendre le calcul`}
-                  >
-                    <span>
-                      <strong>{available.title}</strong>
-                      <small>{available.detail}</small>
-                    </span>
-                    <b>{available.amount}</b>
-                    <ArrowRight size={15} aria-hidden="true" />
-                  </button>
-                </li>
-              )}
+          {summaries.length > 0 && (
+            <ul className="wallet-account-forecasts" aria-label="Soldes et prévisions des comptes">
               {summaries.map(({ account, outlook, projected }) => (
                 <li key={account.id}>
                   <button

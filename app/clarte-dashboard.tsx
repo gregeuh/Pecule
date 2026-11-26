@@ -14,6 +14,7 @@ import EmptyState from "./empty-state";
 import { PrivacyShutter, GoalIllustration, NavigationIndicator } from "./signature-interactions";
 import BudgetAlerts from "./budget-alerts";
 import MonthAssist from "./month-assist";
+import HomeHero from "./home-hero";
 import type { PaydayPlan } from "../lib/month-assist";
 import { getAvailableSignal } from "../lib/available-signal";
 import {
@@ -302,16 +303,6 @@ export default function ClarteDashboard(p: Props) {
       onForecast={p.onAccountForecast}
       onAll={p.onAccounts}
       onAdd={p.onAddAccount}
-      available={
-        b.accounts.some((a) => a.type !== "savings") && !p.loadError
-          ? {
-              title: `Disponible d’ici le ${shortDate(o.salary && b.settings.horizon === "salary" ? o.salary.date : o.end)}`,
-              detail: `${m(Math.floor(o.daily / 100) * 100, false)} par jour${showSignal ? ` · ${signal.label.toLowerCase()}` : ""}`,
-              amount: m(o.available),
-              onOpen: p.onCalculate,
-            }
-          : undefined
-      }
     />
   );
   const { share: goalShare, percent: goalPercent } = goal
@@ -426,6 +417,19 @@ export default function ClarteDashboard(p: Props) {
       </header>
       <div className="wallet-home-grid">
         <div className="wallet-home-accounts">
+          {b.accounts.some((a) => a.type !== "savings") && !p.loadError && (
+            <HomeHero
+              available={o.available}
+              daily={o.daily}
+              until={o.salary && b.settings.horizon === "salary" ? o.salary.date : o.end}
+              untilPayday={!!o.salary && b.settings.horizon === "salary"}
+              tone={showSignal ? signal.tone : null}
+              hidden={p.hidden}
+              savedCents={b.goals.reduce((sum, g) => sum + g.saved, 0)}
+              budgetKey={`${b.name}|${b.goals.map((g) => g.id).join(",")}`}
+              onOpen={p.onCalculate}
+            />
+          )}
           {accounts}
           {!p.loadError && (
             <MonthAssist

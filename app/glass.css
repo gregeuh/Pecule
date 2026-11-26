@@ -122,3 +122,113 @@
   :root .app-shell .topbar { background: color-mix(in srgb, var(--bg) 62%, transparent); -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%); }
 }
 @media (prefers-reduced-transparency: reduce) and (max-width: 760px) { :root .app-shell .topbar { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+
+/* Lot 2: the piggy bank. Calm by default; frowns when the period is tight; hops and swallows a coin on savings. */
+:root .piggy { flex: none; overflow: visible; }
+:root .piggy-skin { fill: #f09a7d; }
+:root .piggy-shine { fill: #ffc1aa; opacity: .7; }
+:root .piggy-snout { fill: #d8644a; }
+:root .piggy-eye { fill: #2b2320; }
+:root .piggy-slot { fill: #2b2320; opacity: .45; }
+:root .piggy-brow { stroke: #2b2320; stroke-width: 2.4; stroke-linecap: round; fill: none; opacity: 0; transition: opacity var(--motion-state) ease; }
+:root .piggy-mouth { stroke: #2b2320; stroke-width: 2.2; stroke-linecap: round; fill: none; opacity: 0; transition: opacity var(--motion-state) ease; }
+:root .piggy[data-mood="worried"] :is(.piggy-brow, .piggy-mouth) { opacity: .8; }
+:root .piggy-coin { fill: #f2c063; stroke: #c98a1e; stroke-width: 2; opacity: 0; }
+:root .piggy-body { transform-origin: 52px 92px; }
+:root .piggy[data-celebrate] .piggy-body { animation: piggy-hop 900ms var(--motion-spring-out) 260ms; }
+:root .piggy[data-celebrate] .piggy-coin { animation: piggy-coin 700ms cubic-bezier(.55, 0, .9, .45); }
+@keyframes piggy-hop { 0% { transform: none; } 30% { transform: translateY(-10px) scale(1.04, .96); } 60% { transform: translateY(0) scale(.98, 1.02); } 100% { transform: none; } }
+@keyframes piggy-coin { 0% { opacity: 0; transform: translateY(-26px); } 20% { opacity: 1; } 85% { opacity: 1; transform: translateY(17px); } 100% { opacity: 0; transform: translateY(20px); } }
+@media (prefers-reduced-motion: reduce) { :root .piggy[data-celebrate] :is(.piggy-body, .piggy-coin) { animation: none; } }
+
+/* Lot 2: home hero, what is left to spend, first thing on the home. */
+:root .home-hero { display: flex; align-items: center; gap: 12px; width: 100%; margin: 0 0 18px; padding: 16px 16px 16px 18px; text-align: left; color: var(--ink); cursor: pointer; font: inherit; }
+:root .home-hero-text { display: flex; flex: 1; min-width: 0; flex-direction: column; align-items: flex-start; gap: 6px; }
+:root .home-hero-label { color: var(--muted); font-size: 14px; font-weight: 700; }
+:root .home-hero-amount { font: 900 clamp(30px, 9vw, 38px)/1.05 var(--font-display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+:root .home-hero-pill { display: inline-flex; padding: 5px 11px; border-radius: 99px; background: var(--glass-tint); color: var(--green); font-size: 13px; font-weight: 800; }
+:root .home-hero[data-tone="attention"] .home-hero-pill { background: var(--caution-bg); color: var(--caution-ink); }
+:root .home-hero[data-tone="negative"] .home-hero-pill { background: var(--error-bg); color: var(--error-ink); }
+:root .home-hero:not([data-tone]) .home-hero-pill { color: var(--muted); }
+:root .home-hero .piggy { width: 64px; height: 64px; align-self: flex-start; }
+/* Long amounts (7 digits, negative): smaller, so they never run under the piggy on a 320 px iPhone. */
+:root .home-hero-amount[data-long="true"] { font-size: clamp(22px, 6.6vw, 30px); }
+@media (max-width: 359px) { :root .home-hero .piggy { width: 48px; height: 48px; } }
+@media (min-width: 761px) {
+  :root .home-hero { padding: 22px 24px; }
+  :root .home-hero-amount { font-size: 52px; }
+  :root .home-hero .piggy { width: 92px; height: 92px; align-self: center; }
+}
+
+/* Lot 2: the home in glass. Cards and lists become glass plates; the stacked account cards keep their own
+   colour (opaque: they overlap) with a glass sheen and a lit edge. */
+:root .wallet-dashboard :is(.clarte-card, .wallet-month-summary, .wallet-account-forecasts, .wallet-goal-row, .budget-alerts, .month-assist-card:not([data-tone]), .wallet-capture) {
+  background: linear-gradient(160deg,
+    color-mix(in srgb, var(--glass-base) calc(var(--glass-a) * 100%), transparent),
+    color-mix(in srgb, var(--glass-base) calc(var(--glass-b) * 100%), transparent));
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+  border: 0;
+  border-radius: 24px;
+  box-shadow: inset 0 1px 1px var(--glass-edge), inset 0 -1px 1px rgba(255, 255, 255, .16), 0 10px 26px var(--glass-shadow);
+}
+:root .wallet-dashboard .wallet-account-forecasts { padding: 4px 14px; list-style: none; margin-top: 14px; }
+:root .wallet-dashboard .wallet-account-forecasts > li + li { border-top: 1px solid var(--glass-tint); }
+:root .wallet-dashboard .wallet-goal-row { padding: 12px 14px; }
+:root .wallet-dashboard .wallet-goal-track > i { animation: gauge-fill 900ms var(--motion-settle) both; transform-origin: left center; }
+@keyframes gauge-fill { from { transform: scaleX(0); } to { transform: none; } }
+:root .wallet-dashboard .month-assist-card[data-tone] {
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+  border-radius: 24px;
+  box-shadow: inset 0 1px 1px var(--glass-edge), 0 10px 26px var(--glass-shadow);
+}
+
+/* Account cards: same colour, glass sheen, lit edge, rounder. */
+:root .wallet-stack .wallet-card.clarte-account {
+  border-radius: 26px;
+  background: linear-gradient(160deg, var(--wallet-reflect), transparent 55%), var(--wallet-color);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .55), inset 0 -1px 1px rgba(0, 0, 0, .08), 0 12px 26px var(--glass-shadow);
+}
+:root .wallet-card .wallet-card-balance { font-weight: 800; letter-spacing: -.02em; }
+
+/* Home tabs (Aperçu, Activité, Prévisions): a glass capsule with a sliding bubble. */
+:root .wallet-dashboard .wallet-tabs { gap: 2px; padding: 4px; border: 0; border-radius: 99px;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--glass-base) calc(var(--glass-a) * 100%), transparent), color-mix(in srgb, var(--glass-base) calc(var(--glass-b) * 100%), transparent));
+  -webkit-backdrop-filter: blur(18px) saturate(170%); backdrop-filter: blur(18px) saturate(170%);
+  box-shadow: inset 0 1px 1px var(--glass-edge), 0 8px 20px var(--glass-shadow); }
+:root .wallet-dashboard .wallet-tabs > button { flex: 1; padding: 0 8px; border-radius: 99px; font-size: 14px; font-weight: 800; }
+:root .wallet-dashboard .wallet-tabs > button[aria-selected="true"]::after { display: none; }
+:root .wallet-dashboard .wallet-tabs > .navigation-indicator { border-radius: 99px; background: rgba(255, 255, 255, .72); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .95), 0 3px 10px var(--glass-shadow); }
+:root .wallet-dashboard .wallet-tabs > .navigation-indicator::after { display: none; }
+:root[data-theme="dark"] .wallet-dashboard .wallet-tabs > .navigation-indicator { background: rgba(255, 255, 255, .14); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .28); }
+
+@media (prefers-reduced-motion: reduce) { :root .wallet-dashboard .wallet-goal-track > i { animation: none; } }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root .wallet-dashboard :is(.clarte-card, .wallet-month-summary, .wallet-account-forecasts, .wallet-goal-row, .budget-alerts, .month-assist-card:not([data-tone]), .wallet-capture, .wallet-tabs) { background: var(--glass-solid); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root .wallet-dashboard :is(.clarte-card, .wallet-month-summary, .wallet-account-forecasts, .wallet-goal-row, .budget-alerts, .month-assist-card:not([data-tone]), .wallet-capture, .wallet-tabs) { background: var(--glass-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
+/* Lot 2: the capture sheet. Type picker as a glass capsule with a bubble, a big centred amount,
+   fields and balance preview in light glass, the coral gradient on the main action. */
+:root .modal .capture-type-picker { border-radius: 99px; padding: 4px; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); }
+:root .modal .capture-type-picker label > span, :root .modal .capture-type-picker > button { border-radius: 99px; font-weight: 800; color: var(--muted); background: transparent; }
+:root .modal .capture-type-picker input:checked + span { background: rgba(255, 255, 255, .8); color: var(--blue); box-shadow: inset 0 1px 1px #fff, 0 3px 10px var(--glass-shadow); }
+:root[data-theme="dark"] .modal .capture-type-picker input:checked + span { background: rgba(255, 255, 255, .16); color: var(--blue); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .3); }
+:root .modal.capture-modal .capture-amount .amount-input input {
+  text-align: center; font-weight: 900; font-size: 44px; letter-spacing: -.02em; padding-inline: 44px;
+  border: 0; border-radius: 22px; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge);
+}
+:root .modal.capture-modal .capture-amount .amount-input input:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+:root .modal .operation-balance-preview { border-radius: 20px; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); }
+:root .modal .operation-balance-preview[data-negative="true"] { background: var(--error-bg); }
+:root .modal :is(.field input:not([type="checkbox"]):not([type="radio"]), .field select, .field textarea) {
+  border-radius: 16px; border-color: color-mix(in srgb, var(--ink) 12%, transparent); background: color-mix(in srgb, var(--glass-base) 55%, transparent);
+}
+:root .modal button.primary { border: 0; border-radius: 99px; background: linear-gradient(180deg, var(--action-from), var(--action-to)); color: var(--on-action); font-weight: 800; box-shadow: inset 0 1px 1px rgba(255, 255, 255, .5), 0 8px 18px var(--glass-shadow); }
+:root .modal button.primary:hover { background: linear-gradient(180deg, var(--action-from), var(--action-hover)); }
+:root .modal .capture-others > button { border: 0; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); font-weight: 700; }
+:root .modal-backdrop .modal > .modal-heading { background: color-mix(in srgb, var(--glass-solid) 92%, transparent); }
+:root .wallet-dashboard .wallet-capture > summary { padding: 14px 16px; }

@@ -82,7 +82,7 @@ try{for(const {width,theme} of [{width:390,theme:'dark'},{width:1440,theme:'ligh
  await dialog.waitFor({state:'hidden'});
  assert.equal(await balance(),-2550);
  await nav.getByRole('button',{name:width<760?'Accueil':'Vue d’ensemble',exact:true}).click();
- await page.getByRole('list',{name:'Disponible, soldes et prévisions des comptes'}).getByRole('button',{name:/Prévision de Compte QA éditeurs/}).click();
+ await page.getByRole('list',{name:'Soldes et prévisions des comptes'}).getByRole('button',{name:/Prévision de Compte QA éditeurs/}).click();
  await dialog.getByText('Prochains mouvements connus',{exact:true}).waitFor();
  assert.equal(await dialog.locator('select[name=forecast-account] option:checked').innerText(),'Compte QA éditeurs');
  assert.equal(await dialog.locator('select[name=forecast-horizon]').inputValue(),'30');
