@@ -25,3 +25,20 @@ test("long home amounts get a smaller size so a 7-digit amount fits on a 320 px 
   const long = decls(':root .home-hero-amount[data-long="true"]').find((d) => d.prop === "font-size");
   assert(long, "a long-amount size exists");
 });
+
+test("the glass search field shows keyboard focus", () => {
+  const ring = decls(":root .modal .global-search-field:focus-within").find((d) => d.prop === "box-shadow");
+  assert(ring && /var\(--blue\)/.test(ring.value), "focus ring uses the accent colour");
+});
+
+test("glass controls keep a visible edge in forced-colors mode", () => {
+  let found = false;
+  css.walkAtRules("media", (at) => {
+    if (!/forced-colors:\s*active/.test(at.params)) return;
+    at.walkRules((rule) => {
+      if (/button\.primary/.test(rule.selector) && /\.search-input/.test(rule.selector))
+        rule.walkDecls("border", (d) => (found ||= /ButtonText/i.test(d.value)));
+    });
+  });
+  assert(found, "forced-colors border on primary buttons, pills and the search capsule");
+});

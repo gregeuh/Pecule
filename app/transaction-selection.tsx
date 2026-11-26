@@ -104,7 +104,7 @@ export default function TransactionSelection({ items, renderRow, dateLabel, onBu
         )}
       </div>
       {[...new Set(visible.map((t) => t.date))].map((date) => (
-        <div key={date}>
+        <div key={date} className="date-block">
           <div className="date-group">
             <strong>{dateLabel(date)}</strong>
             <span className="day-summary">
