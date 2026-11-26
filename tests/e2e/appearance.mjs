@@ -44,6 +44,25 @@ try {
         .click();
       await page.locator(".date-block").first().waitFor();
       assert.deepEqual(await axe(page), [], `${name} operations: accessibility`);
+      const nav = page.getByRole("navigation", { name: mobile ? "Navigation mobile" : "Navigation principale" });
+      for (const [label, ready] of [
+        [mobile ? "Budget" : /^Mon équilibre/, ".plan-meter"],
+        [mobile ? "Épargne" : /^Mon épargne/, ".goal-card"],
+      ]) {
+        await nav.getByRole("button", { name: label }).click();
+        await page.locator(ready).first().waitFor();
+        await page.waitForTimeout(950);
+        assert.deepEqual(await axe(page), [], `${name} ${ready}: accessibility`);
+      }
+      if (mobile) await page.getByRole("navigation", { name: "Budget" }).waitFor({ state: "detached" }).catch(() => {});
+      await nav.getByRole("button", { name: mobile ? "Budget" : /^Récurrences/ }).click();
+      if (mobile) await page.getByRole("navigation", { name: "Budget" }).getByRole("button", { name: "Récurrences" }).click();
+      await page.locator(".rule-card").first().waitFor();
+      assert.deepEqual(await axe(page), [], `${name} recurrences: accessibility`);
+      await nav.getByRole("button", { name: mobile ? "Accueil" : /^Vue d’ensemble/ }).click();
+      await page.locator(".wallet-manage-title").first().click();
+      await page.locator(".account-card").first().waitFor();
+      assert.deepEqual(await axe(page), [], `${name} accounts: accessibility`);
       await settings();
     }
     await page.getByRole("radio", { name: "Lavande" }).check();

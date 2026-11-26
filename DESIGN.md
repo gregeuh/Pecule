@@ -419,3 +419,10 @@ Plan : `docs/superpowers/plans/2026-11-26-liquid-glass-lot3-operations.md`.
 - Recherche de la page en capsule de verre ; « Filtrer », imports et filtres actifs en pastilles de verre ; sélecteur Toutes / Dépenses / Revenus en capsule avec bulle, sur iPhone (feuille) comme sur ordinateur.
 - Recherche globale : champ en capsule, groupes de résultats en plaques, titres de groupe en minuscules (plus de capitales espacées).
 - Boutons principaux de l’application en pastille corail dégradée.
+
+## Liquid Glass, lot 4 — budget, épargne, comptes — 26 novembre 2026
+Plan : `docs/superpowers/plans/2026-11-26-liquid-glass-lot4-budget-epargne-comptes.md`.
+- Équilibre, Récurrences, Épargne et Comptes : cartes en plaques de verre ; carte d’introduction de l’épargne en verre teinté lavande ; boutons secondaires en pastilles de verre ; sélecteur de mois en capsule.
+- Filtres de récurrences (Toutes, Actives, En pause, Terminées) et sélecteur Équilibre / Récurrences en capsules avec bulle. En Nuit, le texte des bulles actives prend la couleur du texte principal (l’accent tombait à 3,3:1).
+- Jauges (objectifs, enveloppes 50/30/20) arrondies, qui se remplissent à l’ouverture ; immobiles si les animations sont réduites.
+- Pastilles d’état des récurrences sur base claire presque opaque pour garder 4,5:1 sur tous les fonds.
