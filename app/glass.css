@@ -122,3 +122,21 @@
   :root .app-shell .topbar { background: color-mix(in srgb, var(--bg) 62%, transparent); -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%); }
 }
 @media (prefers-reduced-transparency: reduce) and (max-width: 760px) { :root .app-shell .topbar { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+
+/* Lot 2: the piggy bank. Calm by default; frowns when the period is tight; hops and swallows a coin on savings. */
+:root .piggy { flex: none; overflow: visible; }
+:root .piggy-skin { fill: #f09a7d; }
+:root .piggy-shine { fill: #ffc1aa; opacity: .7; }
+:root .piggy-snout { fill: #d8644a; }
+:root .piggy-eye { fill: #2b2320; }
+:root .piggy-slot { fill: #2b2320; opacity: .45; }
+:root .piggy-brow { stroke: #2b2320; stroke-width: 2.4; stroke-linecap: round; fill: none; opacity: 0; transition: opacity var(--motion-state) ease; }
+:root .piggy-mouth { stroke: #2b2320; stroke-width: 2.2; stroke-linecap: round; fill: none; opacity: 0; transition: opacity var(--motion-state) ease; }
+:root .piggy[data-mood="worried"] :is(.piggy-brow, .piggy-mouth) { opacity: .8; }
+:root .piggy-coin { fill: #f2c063; stroke: #c98a1e; stroke-width: 2; opacity: 0; }
+:root .piggy-body { transform-origin: 52px 92px; }
+:root .piggy[data-celebrate] .piggy-body { animation: piggy-hop 900ms var(--motion-spring-out) 260ms; }
+:root .piggy[data-celebrate] .piggy-coin { animation: piggy-coin 700ms cubic-bezier(.55, 0, .9, .45); }
+@keyframes piggy-hop { 0% { transform: none; } 30% { transform: translateY(-10px) scale(1.04, .96); } 60% { transform: translateY(0) scale(.98, 1.02); } 100% { transform: none; } }
+@keyframes piggy-coin { 0% { opacity: 0; transform: translateY(-26px); } 20% { opacity: 1; } 85% { opacity: 1; transform: translateY(17px); } 100% { opacity: 0; transform: translateY(20px); } }
+@media (prefers-reduced-motion: reduce) { :root .piggy[data-celebrate] :is(.piggy-body, .piggy-coin) { animation: none; } }
