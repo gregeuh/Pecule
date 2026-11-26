@@ -1,12 +1,12 @@
 /* Approved launch identity; these roles also render the native iOS startup images. */
-.launch-screen { --launch-bg:#f2f3f7;--launch-ink:#15171d;--launch-muted:#626b7b;position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--launch-bg);color:var(--launch-ink);z-index:60;padding:24px;text-align:center; }
-:root[data-theme=dark] .launch-screen { --launch-bg:#090b10;--launch-ink:#f3f5fa;--launch-muted:#a5aec1; }
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .launch-screen{--launch-bg:#090b10;--launch-ink:#f3f5fa;--launch-muted:#a5aec1}}
+.launch-screen { --launch-bg:#fbeee3;--launch-ink:#2b2320;--launch-muted:#5f4c44;--launch-word:#bf4f2a;background-image:radial-gradient(70% 45% at 0% 0%,#ff9d7eb3,transparent 70%),radial-gradient(60% 40% at 100% 35%,#ffd0a6b3,transparent 70%),radial-gradient(80% 45% at 30% 100%,#d6c4ffb3,transparent 70%);position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background-color:var(--launch-bg);color:var(--launch-ink);z-index:60;padding:24px;text-align:center; }
+:root[data-theme=dark] .launch-screen { --launch-bg:#1a1216;--launch-ink:#f6ece6;--launch-muted:#d2c0b7;--launch-word:#ffb08f;background-image:radial-gradient(70% 45% at 0% 0%,#8a342373,transparent 70%),radial-gradient(60% 40% at 100% 35%,#4a2f7873,transparent 70%),radial-gradient(80% 45% at 30% 100%,#a0561f73,transparent 70%); }
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .launch-screen{--launch-bg:#1a1216;--launch-ink:#f6ece6;--launch-muted:#d2c0b7;--launch-word:#ffb08f;background-image:radial-gradient(70% 45% at 0% 0%,#8a342373,transparent 70%),radial-gradient(60% 40% at 100% 35%,#4a2f7873,transparent 70%),radial-gradient(80% 45% at 30% 100%,#a0561f73,transparent 70%)}}
 .launch-identity { transform:translateY(-19px); }
-.launch-mark { position:relative;isolation:isolate;overflow:hidden;border-radius:28px;width:104px;height:104px;margin-inline:auto;box-shadow:0 12px 36px #0003;animation:launch-arrive 360ms cubic-bezier(.16,1,.3,1) both; }
+.launch-mark { position:relative;isolation:isolate;overflow:hidden;border-radius:28px;width:104px;height:104px;margin-inline:auto;box-shadow:0 12px 36px #c4532d40;animation:launch-arrive 360ms cubic-bezier(.16,1,.3,1) both; }
 .launch-mark svg { display:block;width:100%;height:100%; }
 .launch-reflection { position:absolute;inset:-20% -60%;background:linear-gradient(115deg,transparent 35%,#fff5 49%,transparent 60%);transform:translateX(-100%);pointer-events:none;animation:launch-reflection 600ms 180ms ease-out both; }
-.launch-word { font:750 36px/1.3 var(--font-display,Manrope,sans-serif);letter-spacing:-.04em;margin:23px 0 8px; }
+.launch-word { font:900 38px/1.3 var(--font-brand,Nunito,sans-serif);letter-spacing:-.02em;margin:23px 0 8px;color:var(--launch-word,var(--launch-ink)); }
 .launch-tagline { margin:0;font-size:15px;line-height:1.5;color:var(--launch-muted); }
 .launch-wait { position:absolute;bottom:max(64px,calc(36px + env(safe-area-inset-bottom)));left:24px;right:24px;font-size:14px;line-height:1.5;color:var(--launch-muted);animation:launch-wait 180ms 750ms both; }
 .launch-exit { display:none;position:fixed;inset:0;z-index:60;pointer-events:none; }

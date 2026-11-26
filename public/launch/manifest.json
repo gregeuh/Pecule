@@ -4,10 +4,9 @@
     "app/launch.css",
     "lib/launch-images.ts",
     "scripts/generate-launch-assets.mjs",
-    "public/fonts/dm-sans-latin.woff2",
-    "public/fonts/manrope-latin.woff2"
+    "public/fonts/nunito-latin.woff2"
   ],
-  "sourceDigest": "2ba6bea05d04ef917e49f0af246ff3373c7a6d90bbef76fc2a151c93f3d02713",
+  "sourceDigest": "4137d4db5655f1f24c1e83968984581556c6de2f5e006a35dab12f23f054592f",
   "identity": "Pécule public launch identity; no personal data",
   "images": [
     {

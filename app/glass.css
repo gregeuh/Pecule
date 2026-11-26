@@ -399,3 +399,6 @@
 @media (forced-colors: active) {
   :root .app-shell.page-settings :is(.card, .settings-index > a, button.secondary), :root .auth-shell :is(.auth-card, button.primary, button.secondary) { border: 1px solid ButtonText; }
 }
+
+/* Lot 5: the « pécule » wordmark, rounded and coral, as on the launch screen and icon. */
+:root :is(.mobile-brand, .clarte-mobile-logo, .sidebar .brand > span, .auth-shell .brand > span) { font-family: var(--font-brand); font-weight: 900; color: var(--blue); letter-spacing: -.02em; }
