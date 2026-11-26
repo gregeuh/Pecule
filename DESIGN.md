@@ -451,3 +451,7 @@ Plan : `docs/superpowers/plans/2026-11-26-liquid-glass-lot5-finitions.md`. Derni
 - Import : à l’étape de vérification, « Des noms plus lisibles » liste les noms proposés (case à décocher, nom modifiable, « Garder tous les libellés de la banque »). Seules les opérations du lot sont renommées.
 - Fiche d’une opération importée ou d’une récurrence renommée : le champ s’appelle « Nom », le libellé de la banque est affiché dessous avec « Revenir au libellé d’origine », et « Garder ce nom pour la suite » (seulement quand le nom diffère de la proposition automatique) le mémorise pour les prochains imports.
 - Réglages › Noms des opérations : « Rendre lisibles N libellés » pour ce qui est déjà dans le budget, « Remettre les libellés de la banque » pour tout annuler.
+
+## Accueil iPhone en tuiles — 26 novembre 2026
+- Sur iPhone (écran compact), l’accueil devient un tableau de bord d’un coup d’œil (`app/home-tiles.tsx`), d’après la maquette « A · Tuiles » : héros du reste jusqu’à la paie, conseils du mois et alertes s’il y en a, puis quatre tuiles de verre (Comptes, Récurrences, mois en cours, Objectif ou tuile pointillée « Créer un objectif d’épargne »), dernières opérations, et deux sections repliées : « Prévisions et calcul du disponible » (calcul, prévision par compte, graphique, jours qui viennent) et « Ma saisie et mes favoris ». Chaque tuile ouvre sa page. Les onglets Aperçu / Activité / Prévisions restent sur ordinateur, inchangé.
+- Étape suivante prévue : le mode édition (déplacer, retirer, ajouter, taille) avec « Revenir à l’accueil par défaut ».

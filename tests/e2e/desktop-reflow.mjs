@@ -15,6 +15,10 @@ try{for(const {width,theme,zoom} of scenarios){
  const data=await page.evaluate(()=>{
   const box=e=>e.getBoundingClientRect(),root=document.querySelector('.wallet-dashboard'),grid=document.querySelector('.wallet-home-grid'),left=document.querySelector('.wallet-home-accounts'),right=document.querySelector('.wallet-home-content');
   const lines=e=>{const range=document.createRange();range.selectNodeContents(e);return new Set([...range.getClientRects()].filter(r=>r.width&&r.height).map(r=>Math.round(r.top))).size;};
+  // Compact screens get the home in tiles: no columns or tabs, the same rules for amounts and labels.
+  if(!grid){const tiles=document.querySelector('.home-tiles');return{tiles:true,viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth,available:root.clientWidth,rightWidth:tiles.clientWidth,stacked:true,
+   money:[...document.querySelectorAll('.home-tile-figure b,.home-tile-account b,.clarte-transaction>b')].filter(e=>e.checkVisibility()).map(e=>({text:e.textContent,lines:lines(e),overflow:e.scrollWidth>e.clientWidth+1})),
+   labels:[...document.querySelectorAll('.clarte-transaction>span:has(>strong)')].filter(e=>e.checkVisibility()).map(e=>({text:e.querySelector('strong').textContent,width:box(e).width})),tabs:[],contentRight:box(tiles).right};}
   const money=[...document.querySelectorAll('.wallet-month-summary strong,.wallet-card-balance,.clarte-transaction>b')].filter(e=>e.checkVisibility()).map(e=>({text:e.textContent,lines:lines(e),overflow:e.scrollWidth>e.clientWidth+1}));
   const labels=[...document.querySelectorAll('.clarte-transaction>span:has(>strong)')].filter(e=>e.checkVisibility()).map(e=>({text:e.querySelector('strong').textContent,width:box(e).width}));
   const tabs=[...document.querySelectorAll('.wallet-tabs>button')].map(e=>({text:e.textContent,right:box(e).right}));
