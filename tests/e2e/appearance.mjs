@@ -38,6 +38,12 @@ try {
       await page.locator(".home-hero").waitFor();
       await page.waitForTimeout(900);
       assert.deepEqual(await axe(page), [], `${name} home: accessibility`);
+      await page
+        .getByRole("navigation", { name: mobile ? "Navigation mobile" : "Navigation principale" })
+        .getByRole("button", { name: /^Opérations/ })
+        .click();
+      await page.locator(".date-block").first().waitFor();
+      assert.deepEqual(await axe(page), [], `${name} operations: accessibility`);
       await settings();
     }
     await page.getByRole("radio", { name: "Lavande" }).check();

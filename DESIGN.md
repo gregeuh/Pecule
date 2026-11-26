@@ -412,3 +412,10 @@ Plan : `docs/superpowers/plans/2026-11-26-liquid-glass-lot2-accueil.md`.
 - Tirelire (`app/piggy.tsx`, `lib/piggy.ts`) : sourcils et bouche inquiets quand le signal est « attention » ou « négatif » ; saute et avale une pièce quand l’épargne des objectifs augmente dans le même budget (jamais au chargement ni en changeant de budget).
 - Verre : résumé du mois, prévisions, dernières opérations, objectif (jauge qui se remplit), aides du lot 5, onglets Aperçu / Activité / Prévisions en capsule avec bulle. Les cartes de compte gardent leur couleur, opaques car empilées, avec un reflet et un bord lumineux.
 - Feuille d’ajout : type en capsule de verre, montant centré en très grand, champs et aperçu du solde en verre léger, bouton principal en dégradé corail.
+
+## Liquid Glass, lot 3 — opérations et recherche — 26 novembre 2026
+Plan : `docs/superpowers/plans/2026-11-26-liquid-glass-lot3-operations.md`.
+- Opérations : résumé du mois et outils (recherche, Filtrer, imports) en verre ; la carte de liste disparaît, chaque jour devient une plaque (`.date-block`). Les plaques des jours sont opaques (`--glass-solid`, bord lumineux, sans flou) car les lignes doivent rester opaques pour cacher les actions de glissement ; cela évite aussi un flou par jour.
+- Recherche de la page en capsule de verre ; « Filtrer », imports et filtres actifs en pastilles de verre ; sélecteur Toutes / Dépenses / Revenus en capsule avec bulle, sur iPhone (feuille) comme sur ordinateur.
+- Recherche globale : champ en capsule, groupes de résultats en plaques, titres de groupe en minuscules (plus de capitales espacées).
+- Boutons principaux de l’application en pastille corail dégradée.

@@ -232,3 +232,73 @@
 :root .modal .capture-others > button { border: 0; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); font-weight: 700; }
 :root .modal-backdrop .modal > .modal-heading { background: color-mix(in srgb, var(--glass-solid) 92%, transparent); }
 :root .wallet-dashboard .wallet-capture > summary { padding: 14px 16px; }
+
+/* Lot 3: Opérations. The month summary and each day are glass plates; the list card itself disappears.
+   One blur layer per day, never per row. */
+:root .app-shell .metric-strip,
+:root .app-shell .transactions-card .ledger-tools,
+:root .modal .global-search section > ul {
+  background: linear-gradient(160deg,
+    color-mix(in srgb, var(--glass-base) calc(var(--glass-a) * 100%), transparent),
+    color-mix(in srgb, var(--glass-base) calc(var(--glass-b) * 100%), transparent));
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+  border: 0;
+  border-radius: 24px;
+  box-shadow: inset 0 1px 1px var(--glass-edge), inset 0 -1px 1px rgba(255, 255, 255, .16), 0 10px 26px var(--glass-shadow);
+}
+:root .app-shell .metric-strip strong { font-weight: 800; }
+:root .app-shell .transactions-card { background: transparent; box-shadow: none; border: 0; padding: 0; }
+:root .app-shell .transactions-card .transaction-groups > div:has(> .date-group) + div:has(> .date-group) { border-top: 0; margin-top: 12px; }
+:root .app-shell .transactions-card .transaction-groups { padding-inline: 0; }
+/* Days are opaque glass (--glass-solid, lit edge, no blur): rows must stay opaque so swipe actions stay hidden
+   behind them, and an opaque plate keeps rows and plate one surface. */
+:root .app-shell .transactions-card .date-block { padding: 4px 14px 6px; overflow: hidden; border-radius: 24px; background: var(--glass-solid); box-shadow: inset 0 1px 1px var(--glass-edge), 0 10px 26px var(--glass-shadow); }
+:root .app-shell .transactions-card .date-block { --card: var(--glass-solid); }
+:root .app-shell .transactions-card .date-block :is(.operation-gesture, .operation-more) { background-color: var(--glass-solid); }
+:root .app-shell .transactions-card .date-block .date-group { background: transparent; border: 0; padding-inline: 2px; }
+:root .app-shell .transactions-card .date-block .transaction-row { background: transparent; border-color: var(--glass-tint); }
+:root .app-shell .transactions-card .toolbar { background: transparent; border: 0; padding-inline: 0; }
+:root .app-shell .transactions-card .ledger-tools { margin-bottom: 12px; padding-inline: 14px; }
+:root .app-shell .transactions-card .ledger-tools .toolbar { padding-inline: 0; }
+:root .app-shell .transactions-card .search-input,
+:root .modal .global-search-field {
+  border: 0; border-radius: 99px;
+  background: color-mix(in srgb, var(--glass-base) 60%, transparent);
+  box-shadow: inset 0 1px 1px var(--glass-edge), 0 4px 14px var(--glass-shadow);
+}
+:root .app-shell .transactions-card .search-input input { background: transparent; }
+:root .app-shell .transactions-card .operation-filter-trigger,
+:root .app-shell .transactions-card .toolbar-actions > button,
+:root .app-shell .active-filters > button {
+  border: 0; border-radius: 99px; background: var(--glass-tint); color: var(--ink); font-weight: 700;
+  box-shadow: inset 0 1px 1px var(--glass-edge);
+}
+:root .app-shell .active-filters { border-bottom: 0; padding-inline: 2px; }
+
+/* Filter sheet: the type selector is a glass capsule with a bubble, like the capture sheet. */
+:root :is(.operation-filter-fields, .filter-bar) .segmented { padding: 4px; gap: 2px; border-radius: 99px; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); }
+:root :is(.operation-filter-fields, .filter-bar) .segmented > button { border-radius: 99px; background: transparent; color: var(--muted); font-weight: 800; }
+:root :is(.operation-filter-fields, .filter-bar) .segmented > button.selected { background: rgba(255, 255, 255, .8); color: var(--blue); box-shadow: inset 0 1px 1px #fff, 0 3px 10px var(--glass-shadow); }
+:root[data-theme="dark"] :is(.operation-filter-fields, .filter-bar) .segmented > button.selected { background: rgba(255, 255, 255, .16); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .3); }
+:root :is(.operation-filter-fields, .filter-bar) .month-control { border-radius: 99px; background: var(--glass-tint); box-shadow: inset 0 1px 1px var(--glass-edge); }
+
+/* Global search: results grouped on glass plates, group titles in sentence case (no tracked capitals). */
+:root .modal .global-search h3 { margin: 0 4px 8px; font: 800 13px var(--font-body); letter-spacing: 0; text-transform: none; }
+:root .modal .global-search section > ul { border-top: 0; padding: 2px 14px; }
+:root .modal .global-search li + li > button { border-top: 1px solid var(--glass-tint); }
+:root .modal .global-search li > button { border-bottom: 0; }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root .app-shell :is(.metric-strip, .transactions-card .ledger-tools), :root .modal .global-search section > ul { background: var(--glass-solid); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root .app-shell :is(.metric-strip, .transactions-card .ledger-tools), :root .modal .global-search section > ul { background: var(--glass-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
+:root .app-shell .transactions-card .search-input { min-height: 48px; display: flex; align-items: center; padding-inline: 16px 8px; }
+:root .app-shell .transactions-card .search-input input { min-height: 46px; border: 0; box-shadow: none; }
+:root :is(.operation-filter-fields, .filter-bar) select { border-radius: 99px; background: var(--glass-tint); border: 0; box-shadow: inset 0 1px 1px var(--glass-edge); }
+/* Main actions everywhere: the coral gradient pill. */
+:root .app-shell button.primary { border: 0; border-radius: 99px; background: linear-gradient(180deg, var(--action-from), var(--action-to)); color: var(--on-action); font-weight: 800; box-shadow: inset 0 1px 1px rgba(255, 255, 255, .5), 0 8px 18px var(--glass-shadow); }
+:root .app-shell button.primary:hover { background: linear-gradient(180deg, var(--action-from), var(--action-hover)); }
