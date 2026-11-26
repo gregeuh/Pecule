@@ -1,4 +1,6 @@
 "use client";
+import { applyNames, nameProposals } from "../lib/readable-names";
+import ReadableNamesList, { chosenNames, type NameChoice } from "./readable-names-list";
 import SaveOutcome from "./save-outcome";
 import EmptyState from "./empty-state";
 import { ErrorMessage } from "./interface-feedback";
@@ -87,6 +89,7 @@ export default function BankImport({
     [page, setPage] = useState(initialDraft?.page ?? 0),
     [review, setReview] = useState(initialDraft?.review ?? false),
     [confirmed, setConfirmed] = useState(false);
+  const [nameEdits, setNameEdits] = useState<Map<string, NameChoice>>(new Map());
   const [matches, setMatches] = useState<Map<number, string>>(initialDraft?.matches ?? new Map()),
     [rememberFormat, setRememberFormat] = useState(initialDraft?.rememberFormat ?? true),
     [reused, setReused] = useState(false);
@@ -144,6 +147,16 @@ export default function BankImport({
     }
   }, [budget, rows, selected, matches, accountId, today]);
   const chosen = rows.filter((r) => selected.has(r.index));
+  const nameOffers = useMemo(
+    () =>
+      nameProposals(
+        budget,
+        chosen.map((r) => r.transaction.label),
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [budget, rows, selected],
+  );
+  const nameChoices = new Map(nameOffers.map((p) => [p.raw, nameEdits.get(p.raw) ?? { on: true, name: p.name }]));
   const income = chosen.filter((r) => r.transaction.amount > 0).reduce((n, r) => n + r.transaction.amount, 0),
     expenses = chosen.filter((r) => r.transaction.amount < 0).reduce((n, r) => n + r.transaction.amount, 0);
   const account = budget.accounts.find((a) => a.id === accountId),
@@ -662,6 +675,30 @@ export default function BankImport({
       )}
       {review && plan && (
         <div className="bank-import-review">
+          {nameOffers.length > 0 && (
+            <section className="import-names" aria-labelledby="import-names-title">
+              <h3 id="import-names-title">Des noms plus lisibles</h3>
+              <p className="field-hint">
+                Pécule propose un nom pour {nameOffers.length} libellé{nameOffers.length > 1 ? "s" : ""}. Décochez ceux
+                que vous préférez garder tels quels, ou touchez un nom pour le changer. Le libellé de la banque reste
+                visible sur chaque opération.
+              </p>
+              <ReadableNamesList
+                proposals={nameOffers}
+                choices={nameChoices}
+                onChange={setNameEdits}
+                disabled={saving}
+              />
+              <button
+                type="button"
+                className="text-button"
+                disabled={saving}
+                onClick={() => setNameEdits(new Map(nameOffers.map((p) => [p.raw, { on: false, name: p.name }])))}
+              >
+                Garder tous les libellés de la banque
+              </button>
+            </section>
+          )}
           <h3>Vérifier avant d’importer</h3>
           <p>
             {rows.length - selected.size - matches.size} lignes non sélectionnées ne seront pas importées, dont{" "}
@@ -748,9 +785,9 @@ export default function BankImport({
                 lock.current = true;
                 setFileError("");
                 try {
-                  let next = buildReviewedImport(budget, rows, selected, matches, crypto.randomUUID(), () =>
-                    crypto.randomUUID(),
-                  );
+                  const batchId = crypto.randomUUID();
+                  let next = buildReviewedImport(budget, rows, selected, matches, batchId, () => crypto.randomUUID());
+                  next = applyNames(next, chosenNames(nameChoices), (t) => t.importBatch === batchId);
                   if (activePlan)
                     next = rememberFormat
                       ? rememberImportPlan(next, activePlan)

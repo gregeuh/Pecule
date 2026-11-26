@@ -1,4 +1,5 @@
 "use client";
+import { readableLabel } from "../lib/readable-label";
 import { useFormDraftValue } from "./form-drafts";
 import FormOptions from "./form-options";
 import AnimatedDetails from "./animated-details";
@@ -102,7 +103,10 @@ export default function MerchantFields({
   extraDetails,
   optionsTitle,
   suggestions,
+  bankLabel,
 }: {
+  /** The bank's own label behind this operation: shown under the name, with a way back to it. */
+  bankLabel?: string;
   suggestions?: (label: string, apply: (favorite: Favorite) => void) => ReactNode;
   afterLabel?: ReactNode;
   extraDetails?: ReactNode;
@@ -402,7 +406,7 @@ export default function MerchantFields({
   return (
     <>
       <label className="field">
-        <span>Libellé</span>
+        <span>{bankLabel ? "Nom" : "Libellé"}</span>
         <input
           name="label"
           maxLength={120}
@@ -412,6 +416,27 @@ export default function MerchantFields({
           onChange={(e) => setLabel(e.target.value)}
         />
       </label>
+      {bankLabel && (
+        <div className="bank-label-origin">
+          <span>Libellé de la banque</span>
+          <code>{bankLabel}</code>
+          {label.trim() !== bankLabel && (
+            <button type="button" className="text-button" onClick={() => setLabel(bankLabel)}>
+              <RotateCcw size={14} />
+              Revenir au libellé d’origine
+            </button>
+          )}
+          {label.trim() && label.trim() !== bankLabel && label.trim() !== readableLabel(bankLabel) && (
+            <label className="bank-import-confirm">
+              <input type="checkbox" name="rememberName" defaultChecked />
+              <span>
+                {`Garder ce nom pour la suite : les prochaines opérations «\u00a0${bankLabel}\u00a0» importées s’appelleront «\u00a0${label.trim()}\u00a0».`}
+              </span>
+            </label>
+          )}
+          <input type="hidden" name="bankLabel" value={bankLabel} />
+        </div>
+      )}
       {suggestions?.(label, applySuggestion)}
       {afterLabel}
       {compact ? (

@@ -106,6 +106,7 @@ export default function RuleEditor({
             <MerchantFields
               categoryRules={b.settings.categoryRules}
               initialLabel={ruleDraft?.label}
+              bankLabel={ruleDraft?.bankLabel}
               initialCategory={ruleDraft?.category}
               initialMerchantId={ruleDraft?.merchantId}
               initialCustomIconUrl={ruleDraft?.customIconUrl}

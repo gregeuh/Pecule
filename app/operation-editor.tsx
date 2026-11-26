@@ -5,6 +5,7 @@ import { Check, Wallet, Trash2, Info, Repeat2 } from "lucide-react";
 import { shortDate } from "../lib/budget";
 import { captureAccount } from "../lib/capture";
 import { transactionRecurrence } from "../lib/transaction-recurrence";
+import { bankLabelOf } from "../lib/readable-label";
 import type { Modal } from "./budget-modal";
 import QuickOperationForm from "./quick-operation-form";
 import BankLinkDetails from "./bank-link-details";
@@ -185,6 +186,7 @@ export default function OperationEditor({
               categoryRules={b.settings.categoryRules}
               remember
               initialLabel={modal.item?.label ?? modal.initialLabel}
+              bankLabel={modal.item ? bankLabelOf(modal.item) : undefined}
               initialCategory={modal.item?.category ?? modal.initialCategory}
               initialMerchantId={modal.item?.merchantId ?? modal.initialMerchantId}
               initialCustomIconUrl={modal.item?.customIconUrl ?? modal.initialCustomIconUrl}

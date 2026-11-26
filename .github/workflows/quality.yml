@@ -69,6 +69,7 @@ jobs:
           PECULE_DESIGN_LIVE=1 PECULE_E2E_QUICK=1 npm run test:e2e:design
           npm run test:e2e:appearance
           npm run test:e2e:csp
+          npm run test:e2e:names
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

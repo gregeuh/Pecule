@@ -81,6 +81,8 @@ import PendingOperations from "./pending-operations";
 import { useModalViewport } from "./use-modal-viewport";
 import { BudgetSync, BudgetRequestError } from "../lib/budget-sync";
 import { rememberCategory } from "../lib/category-rules";
+import ReadableNamesSheet from "./readable-names-sheet";
+import { keepBankLabel } from "../lib/readable-names";
 import ConflictValue from "./conflict-value";
 import BudgetSetup from "./budget-setup";
 import BankReconciliation, { type ReconciliationDraft } from "./bank-reconciliation";
@@ -1092,41 +1094,43 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                               ? "Associer des virements internes"
                               : modal?.type === "imports"
                                 ? "Vos imports bancaires"
-                                : modal?.type === "actions"
-                                  ? "Ajouter"
-                                  : modal?.type === "transaction"
-                                    ? modal.item
-                                      ? "Le détail de l’opération"
-                                      : "Ajouter une opération"
-                                    : modal?.type === "account"
+                                : modal?.type === "readable-names"
+                                  ? "Des noms plus lisibles"
+                                  : modal?.type === "actions"
+                                    ? "Ajouter"
+                                    : modal?.type === "transaction"
                                       ? modal.item
-                                        ? "Modifier le compte"
-                                        : "Un nouveau compte"
-                                      : modal?.type === "rule"
+                                        ? "Le détail de l’opération"
+                                        : "Ajouter une opération"
+                                      : modal?.type === "account"
                                         ? modal.item
-                                          ? "Modifier la récurrence"
-                                          : modal.proposal
-                                            ? "Vérifier cette récurrence"
-                                            : "Prévoir une récurrence"
-                                        : modal?.type === "goal"
+                                          ? "Modifier le compte"
+                                          : "Un nouveau compte"
+                                        : modal?.type === "rule"
                                           ? modal.item
-                                            ? "Modifier votre objectif"
-                                            : "Un projet à concrétiser"
-                                          : modal?.type === "transfer"
-                                            ? "Enregistrer un virement"
-                                            : modal?.type === "contribution"
-                                              ? "Faire grandir votre projet"
-                                              : modal?.type === "import"
-                                                ? "Importer vos opérations"
-                                                : modal?.type === "start"
-                                                  ? "Bienvenue chez vous."
-                                                  : modal?.type === "calculation"
-                                                    ? "Un disponible qui a du sens."
-                                                    : modal?.type === "install"
-                                                      ? "Pécule, à portée de main."
-                                                      : modal?.type === "confirm"
-                                                        ? modal.title
-                                                        : "";
+                                            ? "Modifier la récurrence"
+                                            : modal.proposal
+                                              ? "Vérifier cette récurrence"
+                                              : "Prévoir une récurrence"
+                                          : modal?.type === "goal"
+                                            ? modal.item
+                                              ? "Modifier votre objectif"
+                                              : "Un projet à concrétiser"
+                                            : modal?.type === "transfer"
+                                              ? "Enregistrer un virement"
+                                              : modal?.type === "contribution"
+                                                ? "Faire grandir votre projet"
+                                                : modal?.type === "import"
+                                                  ? "Importer vos opérations"
+                                                  : modal?.type === "start"
+                                                    ? "Bienvenue chez vous."
+                                                    : modal?.type === "calculation"
+                                                      ? "Un disponible qui a du sens."
+                                                      : modal?.type === "install"
+                                                        ? "Pécule, à portée de main."
+                                                        : modal?.type === "confirm"
+                                                          ? modal.title
+                                                          : "";
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!modal) return;
@@ -1214,6 +1218,12 @@ function BudgetAppContent({ user }: BudgetAppProps) {
       }
       if (!v("customIconUrl")) delete item.customIconUrl;
       if (!v("merchantId")) delete item.merchantId;
+      try {
+        keepBankLabel(item, v("bankLabel"), !!f.get("rememberName"), next);
+      } catch (cause) {
+        setError(cause instanceof Error ? cause.message : "Impossible de mémoriser ce nom.");
+        return;
+      }
       next.transactions = editItem(next.transactions, item);
       next.settings.capture = { ...next.settings.capture, lastAccountId: item.accountId };
       if (f.get("saveFavorite")) {
@@ -1286,6 +1296,12 @@ function BudgetAppContent({ user }: BudgetAppProps) {
         ...(v("merchantId") ? { merchantId: v("merchantId") } : {}),
         ...(v("customIconUrl") ? { customIconUrl: v("customIconUrl") } : {}),
       };
+      try {
+        keepBankLabel(item, v("bankLabel"), !!f.get("rememberName"), next);
+      } catch (cause) {
+        setError(cause instanceof Error ? cause.message : "Impossible de mémoriser ce nom.");
+        return;
+      }
       if (modal.sourceTransactionId) {
         try {
           const converted = convertTransactionToRecurring(next, modal.sourceTransactionId, item, today);
@@ -2363,6 +2379,9 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                       else setModal(null);
                     }}
                   />
+                )}
+                {modal.type === "readable-names" && (
+                  <ReadableNamesSheet budget={b} saving={busy} save={save} onDone={() => setModal(null)} />
                 )}
                 {modal.type === "imports" && (
                   <div>

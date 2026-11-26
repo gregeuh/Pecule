@@ -23,7 +23,7 @@ export function recurringSuggestions(budget: Budget, today: string): RecurringSu
       budget.accounts.find((a) => a.id === t.accountId)?.type === "savings"
     )
       continue;
-    const key = JSON.stringify([t.accountId, identityFor(t.label, t.merchantId), t.amount]);
+    const key = JSON.stringify([t.accountId, identityFor(t.bankLabel ?? t.label, t.merchantId), t.amount]);
     const rows = groups.get(key);
     if (rows) rows.push(t);
     else groups.set(key, [t]);
@@ -57,8 +57,14 @@ export function recurringSuggestions(budget: Budget, today: string): RecurringSu
       daysBetween(last.date, today) > (frequency === "weekly" ? 14 : frequency === "monthly" ? 45 : 400)
     )
       continue;
-    const identity = identityFor(last.label, last.merchantId);
-    if (budget.rules.some((r) => r.accountId === last.accountId && identityFor(r.label, r.merchantId) === identity))
+    const identity = identityFor(last.bankLabel ?? last.label, last.merchantId);
+    if (
+      budget.rules.some(
+        (r) =>
+          r.accountId === last.accountId &&
+          [r.bankLabel ?? r.label, r.label].some((label) => identityFor(label, r.merchantId) === identity),
+      )
+    )
       continue;
     const date = parseDate(last.date),
       day = date.getDate();
@@ -78,6 +84,7 @@ export function recurringSuggestions(budget: Budget, today: string): RecurringSu
       lastDate: last.date,
       rule: {
         label: last.label,
+        ...(last.bankLabel ? { bankLabel: last.bankLabel } : {}),
         amount: last.amount,
         accountId: last.accountId,
         category: last.category,
