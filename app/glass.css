@@ -302,3 +302,15 @@
 /* Main actions everywhere: the coral gradient pill. */
 :root .app-shell button.primary { border: 0; border-radius: 99px; background: linear-gradient(180deg, var(--action-from), var(--action-to)); color: var(--on-action); font-weight: 800; box-shadow: inset 0 1px 1px rgba(255, 255, 255, .5), 0 8px 18px var(--glass-shadow); }
 :root .app-shell button.primary:hover { background: linear-gradient(180deg, var(--action-from), var(--action-hover)); }
+
+/* Keyboard focus on the glass search field (the glass shadow must not hide the ring). */
+:root .modal .global-search-field:focus-within { box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 40%, transparent), inset 0 1px 1px var(--glass-edge); }
+:root .app-shell .transactions-card .search-input:focus-within { box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 40%, transparent), inset 0 1px 1px var(--glass-edge); }
+
+/* Forced colors (Windows high contrast): gradients and shadows vanish, so glass controls get a real edge. */
+@media (forced-colors: active) {
+  :root .app-shell :is(button.primary, .active-filters > button, .operation-filter-trigger, .toolbar-actions > button, .search-input, .mobile-add),
+  :root .modal :is(button.primary, .global-search-field, .capture-type-picker, .operation-balance-preview),
+  :root :is(.operation-filter-fields, .filter-bar) :is(select, .segmented, .month-control),
+  :root .glass { border: 1px solid ButtonText; }
+}
