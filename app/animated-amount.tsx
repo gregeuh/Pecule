@@ -3,8 +3,9 @@ import { useLayoutEffect, useRef } from "react";
 import { COUNT_UP_MS, countUpValue } from "../lib/count-up";
 
 /**
- * An amount that rolls to its value when it appears or changes. Screen readers only get the final value;
- * hidden amounts and reduced motion show the value at once.
+ * An amount that rolls to its value when it appears or changes (700 ms). The rolling lasts less than a screen
+ * reader takes to reach it, and callers that are buttons carry the final value in their label.
+ * Hidden amounts and reduced motion show the value at once.
  */
 export default function AnimatedAmount({
   cents,
@@ -41,11 +42,8 @@ export default function AnimatedAmount({
     return () => cancelAnimationFrame(frame.current);
   }, [cents, hidden, format]);
   return (
-    <>
-      <span ref={visible} className="animated-amount" aria-hidden="true">
-        {format(cents)}
-      </span>
-      <span className="sr-only">{format(cents)}</span>
-    </>
+    <span ref={visible} className="animated-amount">
+      {format(cents)}
+    </span>
   );
 }

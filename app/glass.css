@@ -156,3 +156,54 @@
   :root .home-hero-amount { font-size: 52px; }
   :root .home-hero .piggy { width: 92px; height: 92px; align-self: center; }
 }
+
+/* Lot 2: the home in glass. Cards and lists become glass plates; the stacked account cards keep their own
+   colour (opaque: they overlap) with a glass sheen and a lit edge. */
+:root .wallet-dashboard :is(.clarte-card, .wallet-month-summary, .wallet-account-forecasts, .wallet-goal-row, .budget-alerts, .month-assist-card:not([data-tone]), .wallet-capture) {
+  background: linear-gradient(160deg,
+    color-mix(in srgb, var(--glass-base) calc(var(--glass-a) * 100%), transparent),
+    color-mix(in srgb, var(--glass-base) calc(var(--glass-b) * 100%), transparent));
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+  border: 0;
+  border-radius: 24px;
+  box-shadow: inset 0 1px 1px var(--glass-edge), inset 0 -1px 1px rgba(255, 255, 255, .16), 0 10px 26px var(--glass-shadow);
+}
+:root .wallet-dashboard .wallet-account-forecasts { padding: 4px 14px; list-style: none; margin-top: 14px; }
+:root .wallet-dashboard .wallet-account-forecasts > li + li { border-top: 1px solid var(--glass-tint); }
+:root .wallet-dashboard .wallet-goal-row { padding: 12px 14px; }
+:root .wallet-dashboard .wallet-goal-track > i { animation: gauge-fill 900ms var(--motion-settle) both; transform-origin: left center; }
+@keyframes gauge-fill { from { transform: scaleX(0); } to { transform: none; } }
+:root .wallet-dashboard .month-assist-card[data-tone] {
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+  border-radius: 24px;
+  box-shadow: inset 0 1px 1px var(--glass-edge), 0 10px 26px var(--glass-shadow);
+}
+
+/* Account cards: same colour, glass sheen, lit edge, rounder. */
+:root .wallet-stack .wallet-card.clarte-account {
+  border-radius: 26px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, 0) 55%), var(--wallet-color);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .55), inset 0 -1px 1px rgba(0, 0, 0, .08), 0 12px 26px var(--glass-shadow);
+}
+:root .wallet-card .wallet-card-balance { font-weight: 800; letter-spacing: -.02em; }
+
+/* Home tabs (Aperçu, Activité, Prévisions): a glass capsule with a sliding bubble. */
+:root .wallet-dashboard .wallet-tabs { gap: 2px; padding: 4px; border: 0; border-radius: 99px;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--glass-base) calc(var(--glass-a) * 100%), transparent), color-mix(in srgb, var(--glass-base) calc(var(--glass-b) * 100%), transparent));
+  -webkit-backdrop-filter: blur(18px) saturate(170%); backdrop-filter: blur(18px) saturate(170%);
+  box-shadow: inset 0 1px 1px var(--glass-edge), 0 8px 20px var(--glass-shadow); }
+:root .wallet-dashboard .wallet-tabs > button { flex: 1; padding: 0 8px; border-radius: 99px; font-size: 14px; font-weight: 800; }
+:root .wallet-dashboard .wallet-tabs > button[aria-selected="true"]::after { display: none; }
+:root .wallet-dashboard .wallet-tabs > .navigation-indicator { border-radius: 99px; background: rgba(255, 255, 255, .72); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .95), 0 3px 10px var(--glass-shadow); }
+:root .wallet-dashboard .wallet-tabs > .navigation-indicator::after { display: none; }
+:root[data-theme="dark"] .wallet-dashboard .wallet-tabs > .navigation-indicator { background: rgba(255, 255, 255, .14); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .28); }
+
+@media (prefers-reduced-motion: reduce) { :root .wallet-dashboard .wallet-goal-track > i { animation: none; } }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root .wallet-dashboard :is(.clarte-card, .wallet-month-summary, .wallet-account-forecasts, .wallet-goal-row, .budget-alerts, .month-assist-card:not([data-tone]), .wallet-capture, .wallet-tabs) { background: var(--glass-solid); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root .wallet-dashboard :is(.clarte-card, .wallet-month-summary, .wallet-account-forecasts, .wallet-goal-row, .budget-alerts, .month-assist-card:not([data-tone]), .wallet-capture, .wallet-tabs) { background: var(--glass-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}

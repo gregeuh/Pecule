@@ -34,6 +34,11 @@ try {
       assert.equal(await html(page, "data-palette"), palette, `${name} applied at once`);
       assert.equal(await html(page, "data-theme"), "light");
       assert.deepEqual(await axe(page), [], `${name} settings: accessibility`);
+      await page.getByRole("button", { name: mobile ? "Accueil" : /^Vue d’ensemble/ }).first().click();
+      await page.locator(".home-hero").waitFor();
+      await page.waitForTimeout(900);
+      assert.deepEqual(await axe(page), [], `${name} home: accessibility`);
+      await settings();
     }
     await page.getByRole("radio", { name: "Lavande" }).check();
     await page.reload();
@@ -44,6 +49,11 @@ try {
     await page.getByRole("radio", { name: "Nuit" }).check();
     assert.equal(await html(page, "data-theme"), "dark", "Nuit is the dark theme");
     assert.deepEqual(await axe(page), [], "Nuit settings: accessibility");
+    await page.getByRole("button", { name: mobile ? "Accueil" : /^Vue d’ensemble/ }).first().click();
+    await page.locator(".home-hero").waitFor();
+    await page.waitForTimeout(900);
+    assert.deepEqual(await axe(page), [], "Nuit home: accessibility");
+    await settings();
     await page.emulateMedia({ colorScheme: "dark" });
     await page.getByRole("radio", { name: "Automatique" }).check();
     assert.equal(await html(page, "data-theme"), "dark", "Automatique follows a dark device");
