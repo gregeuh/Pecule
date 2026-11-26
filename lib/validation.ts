@@ -102,6 +102,7 @@ const rule = z
     bankLabel: text.optional(),
     amount: cents.refine((n) => n !== 0),
     accountId: id,
+    toAccountId: id.optional(),
     category: text,
     startDate: date,
     endDate: z.union([date, z.literal("")]),
@@ -112,17 +113,24 @@ const rule = z
     holidays: z.enum(["FR", "none"]),
     excludedDates: z.array(date).max(1000),
   })
-  .refine((r) => !r.endDate || r.endDate >= r.startDate, "La fin précède le début");
-const goal = z.object({
-  id,
-  name: text,
-  target: cents.refine((n) => n > 0),
-  saved: cents.refine((n) => n >= 0),
-  monthly: cents.refine((n) => n >= 0),
-  color,
-  icon: z.enum(["sun", "shield", "home", "plane", "sparkles"]),
-  deadline: z.union([date, z.literal("")]),
-});
+  .refine((r) => !r.endDate || r.endDate >= r.startDate, "La fin précède le début")
+  .refine(
+    (r) => !r.toAccountId || (r.toAccountId !== r.accountId && r.amount < 0),
+    "Un virement récurrent part d’un compte vers un autre",
+  );
+const goal = z
+  .object({
+    accountId: id.optional(),
+    id,
+    name: text,
+    target: cents.refine((n) => n >= 0),
+    saved: cents.refine((n) => n >= 0),
+    monthly: cents.refine((n) => n >= 0),
+    color,
+    icon: z.enum(["sun", "shield", "home", "plane", "sparkles"]),
+    deadline: z.union([date, z.literal("")]),
+  })
+  .refine((g) => g.target > 0 || !!g.accountId, "Indiquez le montant à atteindre");
 const favorite = z.object({
   id,
   label: text,
@@ -264,5 +272,8 @@ export const budgetSchema = z
         });
     for (const row of [...b.transactions, ...b.rules])
       if (!ids.has(row.accountId)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Compte introuvable" });
+    for (const row of [...b.rules.map((r) => r.toAccountId), ...b.goals.map((g) => g.accountId)])
+      if (row && b.accounts.find((a) => a.id === row)?.type !== "savings")
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Choisissez un compte d’épargne" });
   });
 export const saveSchema = z.object({ revision: z.number().int().min(0), budget: budgetSchema });

@@ -82,6 +82,7 @@ import { useModalViewport } from "./use-modal-viewport";
 import { BudgetSync, BudgetRequestError } from "../lib/budget-sync";
 import { rememberCategory } from "../lib/category-rules";
 import ReadableNamesSheet from "./readable-names-sheet";
+import SavingsSetup from "./savings-setup";
 import { keepBankLabel } from "../lib/readable-names";
 import ConflictValue from "./conflict-value";
 import BudgetSetup from "./budget-setup";
@@ -977,7 +978,8 @@ function BudgetAppContent({ user }: BudgetAppProps) {
   function remove(kind: "account" | "transaction" | "rule" | "goal", id: string) {
     if (
       kind === "account" &&
-      (b.transactions.some((t) => t.accountId === id) || b.rules.some((t) => t.accountId === id))
+      (b.transactions.some((t) => t.accountId === id) ||
+        b.rules.some((t) => t.accountId === id || t.toAccountId === id))
     ) {
       setToast("Ce compte contient des opérations ou des récurrences. Supprimez-les d’abord.");
       return;
@@ -1008,7 +1010,13 @@ function BudgetAppContent({ user }: BudgetAppProps) {
             : "Cette action est définitive. Les soldes et les prévisions seront recalculés.",
       action: async () => {
         const next = structuredClone(b);
-        if (kind === "account") next.accounts = next.accounts.filter((a) => a.id !== id);
+        if (kind === "account") {
+          next.accounts = next.accounts.filter((a) => a.id !== id);
+          // Its envelopes become goals followed apart again.
+          next.goals = next.goals.map((g) => (g.accountId === id ? { ...g, accountId: undefined } : g));
+          for (const g of next.goals) if (!g.accountId) delete g.accountId;
+          next.goals = next.goals.map((g) => (g.target > 0 ? g : { ...g, target: Math.max(g.saved, 100) }));
+        }
         if (kind === "rule") next.rules = next.rules.filter((a) => a.id !== id);
         if (kind === "goal") next.goals = next.goals.filter((a) => a.id !== id);
         if (kind === "transaction") {
@@ -1056,6 +1064,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
       "text/csv;charset=utf-8",
     );
   }
+  const livret = b.accounts.find((a) => a.type === "savings");
   const transferSource =
     modal?.type === "transfer" && b.accounts.some((a) => a.id === modal.accountId)
       ? modal.accountId
@@ -1096,41 +1105,47 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                                 ? "Vos imports bancaires"
                                 : modal?.type === "readable-names"
                                   ? "Des noms plus lisibles"
-                                  : modal?.type === "actions"
-                                    ? "Ajouter"
-                                    : modal?.type === "transaction"
-                                      ? modal.item
-                                        ? "Le détail de l’opération"
-                                        : "Ajouter une opération"
-                                      : modal?.type === "account"
+                                  : modal?.type === "savings-setup"
+                                    ? "Ranger dans le livret"
+                                    : modal?.type === "actions"
+                                      ? "Ajouter"
+                                      : modal?.type === "transaction"
                                         ? modal.item
-                                          ? "Modifier le compte"
-                                          : "Un nouveau compte"
-                                        : modal?.type === "rule"
+                                          ? "Le détail de l’opération"
+                                          : "Ajouter une opération"
+                                        : modal?.type === "account"
                                           ? modal.item
-                                            ? "Modifier la récurrence"
-                                            : modal.proposal
-                                              ? "Vérifier cette récurrence"
-                                              : "Prévoir une récurrence"
-                                          : modal?.type === "goal"
+                                            ? "Modifier le compte"
+                                            : "Un nouveau compte"
+                                          : modal?.type === "rule"
                                             ? modal.item
-                                              ? "Modifier votre objectif"
-                                              : "Un projet à concrétiser"
-                                            : modal?.type === "transfer"
-                                              ? "Enregistrer un virement"
-                                              : modal?.type === "contribution"
-                                                ? "Faire grandir votre projet"
-                                                : modal?.type === "import"
-                                                  ? "Importer vos opérations"
-                                                  : modal?.type === "start"
-                                                    ? "Bienvenue chez vous."
-                                                    : modal?.type === "calculation"
-                                                      ? "Un disponible qui a du sens."
-                                                      : modal?.type === "install"
-                                                        ? "Pécule, à portée de main."
-                                                        : modal?.type === "confirm"
-                                                          ? modal.title
-                                                          : "";
+                                              ? "Modifier la récurrence"
+                                              : modal.proposal
+                                                ? "Vérifier cette récurrence"
+                                                : "Prévoir une récurrence"
+                                            : modal?.type === "goal"
+                                              ? modal.item
+                                                ? modal.item.accountId
+                                                  ? "Modifier l’enveloppe"
+                                                  : "Modifier votre objectif"
+                                                : modal.accountId
+                                                  ? "Nouvelle enveloppe"
+                                                  : "Un projet à concrétiser"
+                                              : modal?.type === "transfer"
+                                                ? "Enregistrer un virement"
+                                                : modal?.type === "contribution"
+                                                  ? "Faire grandir votre projet"
+                                                  : modal?.type === "import"
+                                                    ? "Importer vos opérations"
+                                                    : modal?.type === "start"
+                                                      ? "Bienvenue chez vous."
+                                                      : modal?.type === "calculation"
+                                                        ? "Un disponible qui a du sens."
+                                                        : modal?.type === "install"
+                                                          ? "Pécule, à portée de main."
+                                                          : modal?.type === "confirm"
+                                                            ? modal.title
+                                                            : "";
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!modal) return;
@@ -1279,11 +1294,18 @@ function BudgetAppContent({ user }: BudgetAppProps) {
         if (control) revealFormControl(control);
         return;
       }
+      const toAccountId = v("toAccount");
+      if (toAccountId && toAccountId === v("account")) {
+        setError("Choisissez deux comptes différents pour ce virement.");
+        return;
+      }
       const item: Rule = {
         id: modal.item?.id ?? uid(),
         label: v("label"),
-        amount: n * (v("direction") === "expense" ? -1 : 1),
+        // A transfer always leaves the first account.
+        amount: n * (toAccountId || v("direction") === "expense" ? -1 : 1),
         accountId: v("account"),
+        ...(toAccountId ? { toAccountId } : {}),
         category: v("category"),
         startDate: v("date"),
         endDate: v("end"),
@@ -1318,14 +1340,24 @@ function BudgetAppContent({ user }: BudgetAppProps) {
       );
     }
     if (modal.type === "goal") {
-      const target = amount("target"),
+      const goalAccount = v("goalAccount");
+      const target = v("target") || !goalAccount ? amount("target") : 0,
         saved = amount("saved"),
         monthly = amount("monthly");
-      if (target === null || target <= 0 || saved === null || saved < 0 || monthly === null || monthly < 0) {
+      if (
+        target === null ||
+        target < 0 ||
+        (target === 0 && !goalAccount) ||
+        saved === null ||
+        saved < 0 ||
+        monthly === null ||
+        monthly < 0
+      ) {
         setError("Vérifiez les montants de votre objectif.");
         return;
       }
       next.goals = editItem(next.goals, {
+        ...(goalAccount ? { accountId: goalAccount } : {}),
         id: modal.item?.id ?? uid(),
         name: v("name"),
         target,
@@ -1667,7 +1699,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
             {page !== "overview" && (
               <div className="page-heading">
                 <div>
-                  <h1>{pageTitles[page]}</h1>
+                  <h1>{page === "goals" && livret ? "Votre épargne, mois après mois." : pageTitles[page]}</h1>
                   <p>
                     {page === "plan"
                       ? "Vos besoins, vos envies et votre épargne, au même endroit."
@@ -1678,7 +1710,9 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                           : page === "accounts"
                             ? "Une vision claire de votre argent, où qu’il soit."
                             : page === "goals"
-                              ? "Chaque petit pas vous rapproche de ce qui compte."
+                              ? livret
+                                ? "Le solde de votre livret, et à quoi sert chaque part."
+                                : "Chaque petit pas vous rapproche de ce qui compte."
                               : "Un budget qui s’adapte à votre quotidien."}
                   </p>
                 </div>
@@ -1696,14 +1730,17 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                               : page === "recurring"
                                 ? "rule"
                                 : "transaction",
-                      })
+                        ...(page === "goals" && livret ? { accountId: livret.id } : {}),
+                      } as Modal)
                     }
                   >
                     <Plus size={16} />
                     {page === "accounts"
                       ? "Ajouter un compte"
                       : page === "goals"
-                        ? "Créer un objectif"
+                        ? livret
+                          ? "Nouvelle enveloppe"
+                          : "Créer un objectif"
                         : page === "recurring"
                           ? "Ajouter une récurrence"
                           : "Nouvelle opération"}
@@ -1886,6 +1923,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
             {page === "goals" && (
               <GoalsPage
                 budget={b}
+                today={today}
                 hidden={hidden}
                 m={m}
                 open={open}
@@ -2380,6 +2418,18 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                     }}
                   />
                 )}
+                {modal.type === "savings-setup" && (
+                  <SavingsSetup
+                    budget={b}
+                    accountId={modal.accountId}
+                    today={today}
+                    saving={busy}
+                    m={m}
+                    makeId={uid}
+                    save={save}
+                    onDone={() => setModal(null)}
+                  />
+                )}
                 {modal.type === "readable-names" && (
                   <ReadableNamesSheet budget={b} saving={busy} save={save} onDone={() => setModal(null)} />
                 )}
@@ -2643,6 +2693,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                 {modal.type === "goal" && (
                   <GoalEditor
                     modal={modal}
+                    savings={b.accounts.filter((a) => a.type === "savings")}
                     formKey={modalKey(modal)}
                     busy={busy}
                     error={error}

@@ -1,7 +1,7 @@
 "use client";
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { Check, Sparkles } from "lucide-react";
-import { colors, type Goal } from "../lib/budget";
+import { colors, type Account, type Goal } from "../lib/budget";
 import { walletColor } from "../lib/wallet-presentation";
 import AmountInput from "./amount-input";
 import { inputAmount } from "./download-file";
@@ -12,7 +12,9 @@ import SubmitButton from "./submit-button";
 import { FormField, ValidatedForm } from "./validated-form";
 
 export type GoalEditorProps = {
-  modal: { type: "goal"; item?: Goal };
+  modal: { type: "goal"; item?: Goal; accountId?: string };
+  /** Savings accounts a goal can live in, as an envelope. */
+  savings: Account[];
   /** Identifies the form and its saved draft. */
   formKey: string;
   busy: boolean;
@@ -24,7 +26,18 @@ export type GoalEditorProps = {
 };
 
 /** Create or edit a savings goal. */
-export default function GoalEditor({ modal, formKey, busy, error, submit, onReset, onCancel }: GoalEditorProps) {
+export default function GoalEditor({
+  modal,
+  savings,
+  formKey,
+  busy,
+  error,
+  submit,
+  onReset,
+  onCancel,
+}: GoalEditorProps) {
+  const [place, setPlace] = useState(modal.item ? (modal.item.accountId ?? "") : (modal.accountId ?? ""));
+  const envelope = !!place;
   return (
     <ValidatedForm
       key={formKey}
@@ -34,7 +47,7 @@ export default function GoalEditor({ modal, formKey, busy, error, submit, onRese
       actions={
         <>
           <SubmitButton busy={busy} icon={<Sparkles size={16} />}>
-            Enregistrer mon objectif
+            {envelope ? "Enregistrer l’enveloppe" : "Enregistrer mon objectif"}
           </SubmitButton>
           <button type="button" className="text-button panel-cancel" disabled={busy} onClick={onCancel}>
             Annuler
@@ -53,11 +66,34 @@ export default function GoalEditor({ modal, formKey, busy, error, submit, onRese
             defaultValue={modal.item?.name}
           />
         </FormField>
-        <div className="form-grid">
-          <FormField label="Objectif à atteindre">
-            <AmountInput name="target" defaultValue={modal.item?.target} />
+        {savings.length > 0 && (
+          <FormField
+            label="Où est cet argent ?"
+            hint={
+              envelope
+                ? "Une enveloppe est une part de votre livret : son montant compte dans le solde du livret."
+                : "Suivi à part : le montant est noté pour ce projet, sans lien avec un compte."
+            }
+          >
+            <select name="goalAccount" value={place} onChange={(e) => setPlace(e.target.value)}>
+              {savings.map((a) => (
+                <option key={a.id} value={a.id}>
+                  Dans mon {a.name} (une enveloppe)
+                </option>
+              ))}
+              <option value="">Suivi à part, sans compte</option>
+            </select>
           </FormField>
-          <FormField label="Déjà mis de côté">
+        )}
+        <div className="form-grid">
+          <FormField label={envelope ? "Montant visé (facultatif)" : "Objectif à atteindre"}>
+            <AmountInput
+              name="target"
+              required={!envelope}
+              defaultValue={modal.item?.target ? modal.item.target : undefined}
+            />
+          </FormField>
+          <FormField label={envelope ? "Dans l’enveloppe aujourd’hui" : "Déjà mis de côté"}>
             <span className="amount-input">
               <input
                 name="saved"
@@ -126,7 +162,9 @@ export default function GoalEditor({ modal, formKey, busy, error, submit, onRese
           </div>
         </FormOptions>
         <p className="field-hint">
-          Le montant déjà mis de côté sert au suivi de cet objectif. Il ne modifie pas le solde de vos comptes.
+          {envelope
+            ? "Changer le montant d’une enveloppe ne déplace pas d’argent : il dit seulement à quoi sert cette part du livret."
+            : "Le montant déjà mis de côté sert au suivi de cet objectif. Il ne modifie pas le solde de vos comptes."}
         </p>
       </FormSection>
       {error && <ErrorMessage>{error}</ErrorMessage>}

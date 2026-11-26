@@ -133,6 +133,23 @@ export default function RuleEditor({
                   {accountOptions}
                 </select>
               </FormField>
+              {b.accounts.some((a) => a.type === "savings") && (
+                <FormField
+                  label="Vers un compte d’épargne"
+                  hint="Pour un virement chaque mois vers votre livret : la somme quitte le compte ci-contre et arrive sur le livret."
+                >
+                  <select name="toAccount" defaultValue={ruleDraft?.toAccountId ?? ""}>
+                    <option value="">Non, une dépense ou une entrée</option>
+                    {b.accounts
+                      .filter((a) => a.type === "savings")
+                      .map((a) => (
+                        <option key={a.id} value={a.id}>
+                          {a.name}
+                        </option>
+                      ))}
+                  </select>
+                </FormField>
+              )}
             </div>
           </FormSection>
           <FormSection title="Le rythme">

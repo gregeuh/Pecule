@@ -42,6 +42,8 @@ export type Rule = {
   bankLabel?: string;
   amount: number;
   accountId: string;
+  /** A monthly transfer: the money leaves `accountId` and arrives on this account (a savings account). */
+  toAccountId?: string;
   category: string;
   startDate: string;
   endDate: string;
@@ -53,6 +55,8 @@ export type Rule = {
   excludedDates: string[];
 };
 export type Goal = {
+  /** An envelope: this goal is a share of the balance of that savings account. */
+  accountId?: string;
   id: string;
   name: string;
   target: number;
@@ -215,26 +219,49 @@ export function occurrences(rule: Rule, from: string, to: string): Transaction[]
       ...(rule.customIconUrl ? { customIconUrl: rule.customIconUrl } : {}),
     }));
 }
+/** The arrivals of a monthly transfer on its savings account, one per departure. */
+export function transferArrivals(rule: Rule, departures: Transaction[]): Transaction[] {
+  if (!rule.toAccountId) return [];
+  return departures.map((t) => ({
+    id: `${t.id}:to`,
+    label: rule.label,
+    amount: -t.amount,
+    date: t.date,
+    accountId: rule.toAccountId!,
+    category: "Virement",
+    note: "Virement récurrent",
+  }));
+}
 export function materialize(budget: Budget, today = todayISO()): Budget {
   const ids = new Set(budget.transactions.map((t) => t.id));
   const transactions = [...budget.transactions];
   for (const rule of budget.rules) {
-    const acc = budget.accounts.find((a) => a.id === rule.accountId);
-    if (!acc) continue;
-    // The starting balance already includes all operations on its reference date.
-    const from = rule.startDate > acc.openingDate ? rule.startDate : shiftDate(acc.openingDate, 1);
-    for (const t of occurrences(rule, from, today))
-      if (!ids.has(t.id)) {
-        transactions.push(t);
-        ids.add(t.id);
-      }
+    for (const [accountId, arrivals] of [
+      [rule.accountId, false],
+      [rule.toAccountId, true],
+    ] as const) {
+      const acc = accountId && budget.accounts.find((a) => a.id === accountId);
+      if (!acc) continue;
+      // The starting balance already includes all operations on its reference date.
+      const from = rule.startDate > acc.openingDate ? rule.startDate : shiftDate(acc.openingDate, 1);
+      const departures = occurrences(rule, from, today);
+      for (const t of arrivals ? transferArrivals(rule, departures) : departures)
+        if (!ids.has(t.id)) {
+          transactions.push(t);
+          ids.add(t.id);
+        }
+    }
   }
   return { ...budget, transactions };
 }
 export function futureTransactions(budget: Budget, from: string, to: string): Transaction[] {
   const existing = budget.transactions.filter((t) => t.date >= from && t.date <= to),
     ids = new Set(budget.transactions.map((t) => t.id));
-  return [...existing, ...budget.rules.flatMap((r) => occurrences(r, from, to)).filter((t) => !ids.has(t.id))].sort(
+  const planned = budget.rules.flatMap((r) => {
+    const departures = occurrences(r, from, to);
+    return [...departures, ...transferArrivals(r, departures)];
+  });
+  return [...existing, ...planned.filter((t) => !ids.has(t.id))].sort(
     (a, b) => a.date.localeCompare(b.date) || a.label.localeCompare(b.label),
   );
 }
