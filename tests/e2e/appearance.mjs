@@ -25,6 +25,35 @@ try {
       await page.getByRole("button", { name: "Réglages" }).first().click();
       await page.getByRole("radiogroup", { name: "Thème" }).waitFor();
     };
+    /** Every main page, checked with axe in the current theme. */
+    const pages = async (name) => {
+    await page.getByRole("button", { name: mobile ? "Accueil" : /^Vue d’ensemble/ }).first().click();
+    await page.locator(".home-hero").waitFor();
+    assert.deepEqual(await axe(page), [], `${name} home: accessibility`);
+    await page
+      .getByRole("navigation", { name: mobile ? "Navigation mobile" : "Navigation principale" })
+      .getByRole("button", { name: /^Opérations/ })
+      .click();
+    await page.locator(".date-block").first().waitFor();
+    assert.deepEqual(await axe(page), [], `${name} operations: accessibility`);
+    const nav = page.getByRole("navigation", { name: mobile ? "Navigation mobile" : "Navigation principale" });
+    for (const [label, ready] of [
+      [mobile ? "Budget" : /^Mon équilibre/, ".plan-meter"],
+      [mobile ? "Épargne" : /^Mon épargne/, ".goal-card"],
+    ]) {
+      await nav.getByRole("button", { name: label }).click();
+      await page.locator(ready).first().waitFor();
+      assert.deepEqual(await axe(page), [], `${name} ${ready}: accessibility`);
+    }
+    await nav.getByRole("button", { name: mobile ? "Budget" : /^Récurrences/ }).click();
+    if (mobile) await page.getByRole("navigation", { name: "Budget" }).getByRole("button", { name: "Récurrences" }).click();
+    await page.locator(".rule-card").first().waitFor();
+    assert.deepEqual(await axe(page), [], `${name} recurrences: accessibility`);
+    await nav.getByRole("button", { name: mobile ? "Accueil" : /^Vue d’ensemble/ }).click();
+    await page.locator(".wallet-manage-title").first().click();
+    await page.locator(".account-card").first().waitFor();
+    assert.deepEqual(await axe(page), [], `${name} accounts: accessibility`);
+    };
     await page.goto(origin);
     await waitForWallet(page);
     assert.equal(await html(page, "data-palette"), "peche", "Pêche by default");
@@ -34,35 +63,7 @@ try {
       assert.equal(await html(page, "data-palette"), palette, `${name} applied at once`);
       assert.equal(await html(page, "data-theme"), "light");
       assert.deepEqual(await axe(page), [], `${name} settings: accessibility`);
-      await page.getByRole("button", { name: mobile ? "Accueil" : /^Vue d’ensemble/ }).first().click();
-      await page.locator(".home-hero").waitFor();
-      await page.waitForTimeout(900);
-      assert.deepEqual(await axe(page), [], `${name} home: accessibility`);
-      await page
-        .getByRole("navigation", { name: mobile ? "Navigation mobile" : "Navigation principale" })
-        .getByRole("button", { name: /^Opérations/ })
-        .click();
-      await page.locator(".date-block").first().waitFor();
-      assert.deepEqual(await axe(page), [], `${name} operations: accessibility`);
-      const nav = page.getByRole("navigation", { name: mobile ? "Navigation mobile" : "Navigation principale" });
-      for (const [label, ready] of [
-        [mobile ? "Budget" : /^Mon équilibre/, ".plan-meter"],
-        [mobile ? "Épargne" : /^Mon épargne/, ".goal-card"],
-      ]) {
-        await nav.getByRole("button", { name: label }).click();
-        await page.locator(ready).first().waitFor();
-        await page.waitForTimeout(950);
-        assert.deepEqual(await axe(page), [], `${name} ${ready}: accessibility`);
-      }
-      if (mobile) await page.getByRole("navigation", { name: "Budget" }).waitFor({ state: "detached" }).catch(() => {});
-      await nav.getByRole("button", { name: mobile ? "Budget" : /^Récurrences/ }).click();
-      if (mobile) await page.getByRole("navigation", { name: "Budget" }).getByRole("button", { name: "Récurrences" }).click();
-      await page.locator(".rule-card").first().waitFor();
-      assert.deepEqual(await axe(page), [], `${name} recurrences: accessibility`);
-      await nav.getByRole("button", { name: mobile ? "Accueil" : /^Vue d’ensemble/ }).click();
-      await page.locator(".wallet-manage-title").first().click();
-      await page.locator(".account-card").first().waitFor();
-      assert.deepEqual(await axe(page), [], `${name} accounts: accessibility`);
+      await pages(name);
       await settings();
     }
     await page.getByRole("radio", { name: "Lavande" }).check();
@@ -74,10 +75,7 @@ try {
     await page.getByRole("radio", { name: "Nuit" }).check();
     assert.equal(await html(page, "data-theme"), "dark", "Nuit is the dark theme");
     assert.deepEqual(await axe(page), [], "Nuit settings: accessibility");
-    await page.getByRole("button", { name: mobile ? "Accueil" : /^Vue d’ensemble/ }).first().click();
-    await page.locator(".home-hero").waitFor();
-    await page.waitForTimeout(900);
-    assert.deepEqual(await axe(page), [], "Nuit home: accessibility");
+    await pages("Nuit");
     await settings();
     await page.emulateMedia({ colorScheme: "dark" });
     await page.getByRole("radio", { name: "Automatique" }).check();
