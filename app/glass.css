@@ -8,6 +8,9 @@
 .glass-backdrop > i:nth-child(2) { width: 58vmax; height: 38vmax; right: -24vmax; top: 22vh; background: var(--wash-2); animation-duration: 46s; animation-direction: alternate-reverse; }
 .glass-backdrop > i:nth-child(3) { width: 76vmax; height: 40vmax; left: -12vmax; bottom: -20vmax; background: var(--wash-3); animation-duration: 54s; }
 .glass-backdrop[data-paused] > i { animation-play-state: paused; }
+/* iOS paints the status bar in a flat colour (theme-color = --bg): the wash fades out towards the top edge
+   so the status bar and the page meet without a visible band. */
+.glass-backdrop::after { content: ""; position: absolute; inset: 0 0 auto; height: 150px; background: linear-gradient(var(--bg), transparent); pointer-events: none; }
 @keyframes glass-drift {
   from { transform: translate3d(0, 0, 0) scale(1); }
   to { transform: translate3d(8vw, 5vh, 0) scale(1.08); }
