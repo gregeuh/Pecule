@@ -17,6 +17,8 @@ export function proxy(request: NextRequest) {
   headers.set("Content-Security-Policy", policy);
   const response = NextResponse.next({ request: { headers } });
   response.headers.set("Content-Security-Policy-Report-Only", policy);
+  // Enforced already: no framing, no <base> or plugin tricks (the script rules above are still being observed).
+  response.headers.set("Content-Security-Policy", "frame-ancestors 'none'; base-uri 'self'; object-src 'none'");
   response.headers.set("Reporting-Endpoints", 'csp="/api/csp-report"');
   return response;
 }
