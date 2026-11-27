@@ -42,6 +42,7 @@ export type Modal =
   | { type: "match-transfers"; initialDebit?: string; returnAccountId?: string }
   | { type: "imports" }
   | { type: "readable-names" }
+  | { type: "home-layout" }
   | { type: "import"; accountId?: string; returnTo?: "balance" | "reconcile" }
   | { type: "start" }
   | { type: "calculation" }

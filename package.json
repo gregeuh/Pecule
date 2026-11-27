@@ -50,6 +50,7 @@
     "test:e2e:names": "node tests/e2e/readable-names.mjs",
     "test:e2e:savings": "node tests/e2e/savings.mjs",
     "test:e2e:checks": "node tests/e2e/budget-checks.mjs",
+    "test:e2e:home": "node tests/e2e/home-layout.mjs",
     "format": "prettier --write \"{app,lib,tests,scripts}/**/*.{ts,tsx,mts,mjs}\"",
     "format:check": "prettier --check \"{app,lib,tests,scripts}/**/*.{ts,tsx,mts,mjs}\"",
     "install:ci": "npm ci --include=dev --include=optional"

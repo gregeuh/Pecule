@@ -82,6 +82,7 @@ import { useModalViewport } from "./use-modal-viewport";
 import { BudgetSync, BudgetRequestError } from "../lib/budget-sync";
 import { rememberCategory } from "../lib/category-rules";
 import ReadableNamesSheet from "./readable-names-sheet";
+import HomeLayoutEditor from "./home-layout-editor";
 import CalculationSheet from "./calculation-sheet";
 import BudgetChecks from "./budget-checks";
 import SavingsSetup from "./savings-setup";
@@ -1107,47 +1108,49 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                                 ? "Vos imports bancaires"
                                 : modal?.type === "readable-names"
                                   ? "Des noms plus lisibles"
-                                  : modal?.type === "savings-setup"
-                                    ? "Ranger dans le livret"
-                                    : modal?.type === "actions"
-                                      ? "Ajouter"
-                                      : modal?.type === "transaction"
-                                        ? modal.item
-                                          ? "Le détail de l’opération"
-                                          : "Ajouter une opération"
-                                        : modal?.type === "account"
+                                  : modal?.type === "home-layout"
+                                    ? "Mon accueil"
+                                    : modal?.type === "savings-setup"
+                                      ? "Ranger dans le livret"
+                                      : modal?.type === "actions"
+                                        ? "Ajouter"
+                                        : modal?.type === "transaction"
                                           ? modal.item
-                                            ? "Modifier le compte"
-                                            : "Un nouveau compte"
-                                          : modal?.type === "rule"
+                                            ? "Le détail de l’opération"
+                                            : "Ajouter une opération"
+                                          : modal?.type === "account"
                                             ? modal.item
-                                              ? "Modifier la récurrence"
-                                              : modal.proposal
-                                                ? "Vérifier cette récurrence"
-                                                : "Prévoir une récurrence"
-                                            : modal?.type === "goal"
+                                              ? "Modifier le compte"
+                                              : "Un nouveau compte"
+                                            : modal?.type === "rule"
                                               ? modal.item
-                                                ? modal.item.accountId
-                                                  ? "Modifier l’enveloppe"
-                                                  : "Modifier votre objectif"
-                                                : modal.accountId
-                                                  ? "Nouvelle enveloppe"
-                                                  : "Un projet à concrétiser"
-                                              : modal?.type === "transfer"
-                                                ? "Enregistrer un virement"
-                                                : modal?.type === "contribution"
-                                                  ? "Faire grandir votre projet"
-                                                  : modal?.type === "import"
-                                                    ? "Importer vos opérations"
-                                                    : modal?.type === "start"
-                                                      ? "Bienvenue chez vous."
-                                                      : modal?.type === "calculation"
-                                                        ? "Pourquoi ce montant ?"
-                                                        : modal?.type === "install"
-                                                          ? "Pécule, à portée de main."
-                                                          : modal?.type === "confirm"
-                                                            ? modal.title
-                                                            : "";
+                                                ? "Modifier la récurrence"
+                                                : modal.proposal
+                                                  ? "Vérifier cette récurrence"
+                                                  : "Prévoir une récurrence"
+                                              : modal?.type === "goal"
+                                                ? modal.item
+                                                  ? modal.item.accountId
+                                                    ? "Modifier l’enveloppe"
+                                                    : "Modifier votre objectif"
+                                                  : modal.accountId
+                                                    ? "Nouvelle enveloppe"
+                                                    : "Un projet à concrétiser"
+                                                : modal?.type === "transfer"
+                                                  ? "Enregistrer un virement"
+                                                  : modal?.type === "contribution"
+                                                    ? "Faire grandir votre projet"
+                                                    : modal?.type === "import"
+                                                      ? "Importer vos opérations"
+                                                      : modal?.type === "start"
+                                                        ? "Bienvenue chez vous."
+                                                        : modal?.type === "calculation"
+                                                          ? "Pourquoi ce montant ?"
+                                                          : modal?.type === "install"
+                                                            ? "Pécule, à portée de main."
+                                                            : modal?.type === "confirm"
+                                                              ? modal.title
+                                                              : "";
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!modal) return;
@@ -1845,6 +1848,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                   />
                 }
                 chart={<ForecastOutlook budget={b} today={today} hidden={hidden} />}
+                onEditHome={() => open({ type: "home-layout" })}
                 checks={<BudgetChecks budget={b} today={today} busy={busy} m={m} save={save} limit={2} />}
               />
             )}
@@ -2432,6 +2436,9 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                     save={save}
                     onDone={() => setModal(null)}
                   />
+                )}
+                {modal.type === "home-layout" && (
+                  <HomeLayoutEditor budget={b} saving={busy} save={save} onDone={() => setModal(null)} />
                 )}
                 {modal.type === "readable-names" && (
                   <ReadableNamesSheet budget={b} saving={busy} save={save} onDone={() => setModal(null)} />

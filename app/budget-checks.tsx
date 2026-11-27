@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useId, useState, type ReactNode } from "react";
+import FoldButton from "./fold-button";
+import { useCollapsed } from "./use-collapsed";
 import { Check } from "lucide-react";
 import { futureTransactions, shiftDate, shortDate, type Budget, type Rule } from "../lib/budget";
 import {
@@ -55,8 +57,12 @@ export default function BudgetChecks({ budget: b, today, busy, m, save, limit = 
     <section className="budget-checks" aria-label="Vérifications du budget">
       {findings.map((f) =>
         f.kind === "rules" ? (
-          <article key={f.item.key} className="budget-check">
-            <h3>Deux récurrences « {f.item.rules[0].label} » ?</h3>
+          <CheckCard
+            key={f.item.key}
+            id={f.item.key}
+            title={`Deux récurrences « ${f.item.rules[0].label} » ?`}
+            summary={f.item.rules.map((r) => m(r.amount, true, true)).join(" et ")}
+          >
             <p>
               Même nom, montants proches : si c’est le même paiement, il est compté deux fois. Gardez la bonne : l’autre
               est supprimée, avec les échéances que Pécule avait comptées pour elle. Vos opérations importées ou saisies
@@ -92,10 +98,14 @@ export default function BudgetChecks({ budget: b, today, busy, m, save, limit = 
             >
               Ce ne sont pas des doublons
             </button>
-          </article>
+          </CheckCard>
         ) : (
-          <article key={f.item.key} className="budget-check">
-            <h3>« {f.item.rule.label} » compté deux fois ?</h3>
+          <CheckCard
+            key={f.item.key}
+            id={f.item.key}
+            title={`« ${f.item.rule.label} » compté deux fois ?`}
+            summary={`${m(f.item.planned.amount, true, true)} prévu le ${shortDate(f.item.planned.date)} et enregistré le ${shortDate(f.item.recorded.date)}`}
+          >
             <p>L’échéance prévue et une opération enregistrée se ressemblent. Pécule compte les deux.</p>
             <div className="budget-check-pair">
               <div>
@@ -130,9 +140,37 @@ export default function BudgetChecks({ budget: b, today, busy, m, save, limit = 
             >
               Ce sont deux paiements
             </button>
-          </article>
+          </CheckCard>
         ),
       )}
     </section>
+  );
+}
+
+/** One finding, folded to its title and a short summary when the person wants the home lighter. */
+function CheckCard({
+  id,
+  title,
+  summary,
+  children,
+}: {
+  id: string;
+  title: string;
+  summary: string;
+  children: ReactNode;
+}) {
+  const body = useId();
+  const [collapsed, toggle] = useCollapsed(`check:${id}`, id);
+  return (
+    <article className="budget-check" data-collapsed={collapsed || undefined}>
+      <div className="budget-check-heading">
+        <h3>{title}</h3>
+        <FoldButton collapsed={collapsed} title={title} controls={body} onToggle={toggle} />
+      </div>
+      {collapsed && <p className="budget-check-summary">{summary}</p>}
+      <div id={body} hidden={collapsed} className="budget-check-body">
+        {children}
+      </div>
+    </article>
   );
 }

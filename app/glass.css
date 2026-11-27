@@ -548,7 +548,7 @@
 :root .home-tiles-layout { display: flex; flex-direction: column; gap: 12px; }
 :root .home-tiles-layout > * { order: 0; }
 :root .home-tiles-layout > .clarte-footer { order: 1; }
-:root .home-tiles-layout > .home-hero, :root .home-tiles-layout > .wallet-overview-recent > .clarte-recent { margin: 0; }
+:root .home-tiles-layout > .home-hero, :root .home-tiles-layout > .home-block > .wallet-overview-recent > .clarte-recent { margin: 0; }
 :root .home-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 :root .home-tile {
   display: flex; flex-direction: column; align-items: stretch; gap: 7px; min-width: 0; min-height: 150px; padding: 14px;
@@ -721,3 +721,61 @@
 :root .budget-checks-done { display: flex; align-items: center; gap: 8px; margin: 12px 0; padding: 10px 14px; border-radius: 16px; background: color-mix(in srgb, var(--green) 12%, transparent); color: var(--ink); font-size: 13px; font-weight: 700; }
 :root .budget-checks-done svg { color: var(--green); }
 @media (forced-colors: active) { :root .budget-check { border: 1px solid CanvasText; } }
+
+/* Foldable home cards (app/fold-button.tsx, app/use-collapsed.ts) and « Mon accueil » (app/home-layout-editor.tsx). */
+:root .fold-button {
+  display: grid; place-items: center; flex: none; width: 40px; height: 40px; margin: -6px -6px 0 auto; padding: 0;
+  border: 0; border-radius: 99px; background: color-mix(in srgb, currentColor 9%, transparent); color: inherit; cursor: pointer;
+}
+:root .fold-button svg { transition: transform var(--motion-state, 200ms) ease; }
+:root .fold-button[aria-expanded="true"] svg { transform: rotate(180deg); }
+:root .month-assist-heading > div { flex: 1; min-width: 0; }
+:root .month-assist-card[data-collapsed] { padding-block: 12px; }
+:root .month-assist-card[data-collapsed] .month-assist-heading p { font-weight: 700; }
+:root .budget-check-heading { display: flex; align-items: flex-start; gap: 8px; }
+:root .budget-check-heading h3 { flex: 1; }
+:root .budget-check-body { display: grid; gap: 10px; }
+:root .budget-check[data-collapsed] { gap: 2px; padding-block: 12px; }
+:root .budget-check-summary { font-weight: 700 !important; }
+:root .home-block:empty { display: none; }
+:root .home-block { -webkit-touch-callout: none; }
+:root .home-tiles-layout > .home-block { display: grid; }
+:root .home-edit-button {
+  justify-self: center; align-self: center; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px;
+  border: 0; border-radius: 99px; background: var(--glass-tint); color: var(--ink); font: inherit; font-weight: 800;
+  box-shadow: inset 0 1px 1px var(--glass-edge); cursor: pointer;
+}
+:root .home-layout-editor { display: grid; gap: 12px; }
+:root .home-layout-fixed {
+  display: flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 14px; border-radius: 16px;
+  border: 1.5px dashed color-mix(in srgb, var(--ink) 22%, transparent); color: var(--muted); font-size: 14px;
+}
+:root .home-layout-fixed strong { color: var(--ink); }
+:root .home-layout-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+:root .home-layout-list li {
+  display: flex; align-items: center; gap: 6px; min-height: 58px; padding: 4px 6px 4px 12px; border-radius: 18px;
+  background: var(--glass-solid); box-shadow: inset 0 1px 1px var(--glass-edge), 0 6px 14px var(--glass-shadow);
+}
+:root .home-layout-list li > svg { flex: none; color: var(--muted); }
+:root .home-layout-list li > span { display: grid; flex: 1; min-width: 0; }
+:root .home-layout-list strong { font-size: 14px; font-weight: 800; }
+:root .home-layout-list small { font-size: 12px; font-weight: 600; color: var(--muted); }
+:root .home-layout-list button {
+  display: grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 99px;
+  background: color-mix(in srgb, var(--muted) 10%, transparent); color: var(--ink); cursor: pointer;
+}
+:root .home-layout-list button:disabled { opacity: .35; cursor: default; }
+:root .home-layout-list .home-layout-remove { background: var(--error-bg); color: var(--error-ink); }
+:root .home-layout-hidden { display: grid; gap: 8px; }
+:root .home-layout-hidden h3 { margin: 0; font-size: 13px; font-weight: 800; color: var(--muted); }
+:root .home-layout-hidden > div { display: flex; flex-wrap: wrap; gap: 8px; }
+:root .home-layout-hidden button {
+  display: flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border-radius: 99px;
+  border: 1.5px dashed color-mix(in srgb, var(--ink) 28%, transparent); background: var(--glass-tint); color: var(--ink);
+  font: inherit; font-size: 13px; font-weight: 800; cursor: pointer;
+}
+:root .home-layout-editor .form-actions { display: flex; flex-direction: column; align-items: stretch; gap: 4px; }
+:root .home-layout-editor .form-actions > .text-button { align-self: center; min-height: 44px; }
+@media (prefers-reduced-motion: reduce) { :root .fold-button svg { transition: none; } }
+@media (forced-colors: active) { :root :is(.fold-button, .home-layout-list button, .home-edit-button) { border: 1px solid ButtonText; } }
+:root .home-tiles-layout .budget-checks { margin: 0; }
