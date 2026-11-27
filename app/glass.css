@@ -595,3 +595,87 @@
 :root[data-transparency="reduced"] .home-tile:not(.home-tile-add) { background: var(--glass-solid); }
 @media (prefers-reduced-transparency: reduce) { :root .home-tile:not(.home-tile-add) { background: var(--glass-solid); -webkit-backdrop-filter: none; backdrop-filter: none; } }
 @media (forced-colors: active) { :root .home-tile { border: 1px solid ButtonText; } }
+
+/* Mon épargne from the livret (app/savings-overview.tsx) and its home tile. */
+:root .savings-overview { display: grid; gap: 14px; margin-bottom: 18px; }
+:root .savings-accounts-switch { justify-self: start; }
+:root .savings-hero {
+  display: grid; gap: 4px; padding: 20px; border-radius: 26px; background: linear-gradient(160deg, var(--wallet-reflect), transparent 55%), var(--wallet-color);
+  color: var(--wallet-ink); box-shadow: inset 0 1px 1px rgba(255, 255, 255, .5), 0 12px 26px var(--glass-shadow);
+}
+:root .savings-hero > span { font-size: 13px; font-weight: 800; }
+:root .savings-hero > strong { font-size: clamp(34px, 9vw, 48px); font-weight: 900; letter-spacing: -.02em; line-height: 1.05; font-variant-numeric: tabular-nums; }
+:root .savings-hero > small { justify-self: start; margin-top: 6px; padding: 4px 10px; border-radius: 99px; background: color-mix(in srgb, var(--wallet-ink) 12%, transparent); font-size: 13px; font-weight: 800; }
+:root .savings-overview > .card { display: grid; gap: 12px; padding: 16px; margin: 0; }
+:root .savings-section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+:root .savings-section-title h2, :root .savings-cushion h2 { margin: 0; font-size: 16px; font-weight: 900; }
+:root .savings-section-title > span { font-size: 12px; font-weight: 700; color: var(--muted); }
+:root .savings-bars { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 8px; height: 130px; align-items: end; }
+:root .savings-bars > span { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; height: 100%; }
+:root .savings-bars i { display: block; width: 100%; border-radius: 10px 10px 4px 4px; background: color-mix(in srgb, var(--muted) 22%, transparent); transform-origin: bottom; animation: savings-grow 700ms var(--motion-settle) both; }
+:root .savings-bars > span[data-current] i { background: #f0b43c; }
+:root .savings-bars small { font-size: 11px; font-weight: 700; color: var(--muted); }
+@keyframes savings-grow { from { transform: scaleY(0); } }
+:root .savings-cushion { grid-template-columns: auto 1fr; align-items: center; gap: 14px; }
+:root .savings-cushion p { margin: 2px 0 0; font-size: 13px; font-weight: 600; line-height: 1.45; color: var(--muted); }
+:root .savings-ring, :root .home-tile-ring { --ring: var(--green); }
+:root .savings-ring {
+  display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%;
+  background: conic-gradient(var(--ring) 0 var(--share), color-mix(in srgb, var(--muted) 18%, transparent) var(--share) 100%);
+}
+:root .savings-ring > span { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; background: var(--glass-solid); line-height: 1; }
+:root .savings-ring b { font-size: 18px; font-weight: 900; }
+:root .savings-ring small { font-size: 10px; font-weight: 800; color: var(--muted); }
+:root .savings-share-bar { display: flex; gap: 3px; height: 16px; border-radius: 99px; overflow: hidden; }
+:root .savings-share-bar > i { display: block; min-width: 6px; }
+:root .savings-share-bar > i[data-free] { background: color-mix(in srgb, var(--muted) 30%, transparent); }
+:root .savings-envelope-list { list-style: none; margin: 0; padding: 0; }
+:root .savings-envelope-list > li + li { border-top: 1px solid color-mix(in srgb, var(--muted) 18%, transparent); }
+:root .savings-envelope-list :is(button, .savings-envelope-free) {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 6px 0; border: 0; background: transparent;
+  color: var(--ink); font: inherit; text-align: left; cursor: pointer;
+}
+:root .savings-envelope-free { cursor: default; }
+:root .savings-envelope-list i { flex: none; width: 14px; height: 14px; border-radius: 5px; }
+:root .savings-envelope-list li[data-free] i { background: color-mix(in srgb, var(--muted) 35%, transparent); }
+:root .savings-envelope-list span { display: grid; flex: 1; min-width: 0; }
+:root .savings-envelope-list strong { font-size: 15px; font-weight: 800; }
+:root .savings-envelope-list small { font-size: 12px; font-weight: 700; color: var(--muted); }
+:root .savings-envelope-list b { font-size: 15px; font-weight: 900; white-space: nowrap; font-variant-numeric: tabular-nums; }
+:root .savings-add {
+  display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border-radius: 99px;
+  border: 1.5px dashed color-mix(in srgb, var(--ink) 25%, transparent); background: var(--glass-tint); color: var(--ink); font: inherit; font-weight: 800; cursor: pointer;
+}
+:root .savings-migrate { display: grid; gap: 8px; padding: 12px 14px; border-radius: 18px; background: color-mix(in srgb, var(--muted) 8%, transparent); }
+:root .savings-migrate p, :root .savings-warning, :root .savings-empty { margin: 0; font-size: 13px; font-weight: 600; line-height: 1.45; color: var(--muted); }
+:root .savings-warning { color: var(--caution-ink); background: var(--caution-bg); padding: 8px 12px; border-radius: 12px; }
+:root .savings-transfer {
+  display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 12px; border: 0; border-radius: 16px;
+  background: color-mix(in srgb, var(--green) 12%, transparent); color: var(--ink); font: inherit; text-align: left; cursor: pointer;
+}
+:root .savings-transfer > svg { color: var(--green); flex: none; }
+:root .savings-transfer span { display: grid; }
+:root .savings-transfer strong { font-weight: 900; }
+:root .savings-transfer small { font-size: 12px; font-weight: 700; color: var(--muted); }
+:root .savings-move { display: flex; align-items: center; gap: 12px; min-height: 52px; border-top: 1px solid color-mix(in srgb, var(--muted) 18%, transparent); }
+:root .savings-move span { display: grid; flex: 1; min-width: 0; }
+:root .savings-move strong { font-size: 14px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:root .savings-move small { font-size: 12px; color: var(--muted); }
+:root .savings-move b { font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
+:root .savings-loose-title { margin-top: 6px; }
+:root .savings-setup { display: grid; gap: 14px; }
+:root .savings-setup-goals { display: grid; gap: 6px; margin: 0; padding: 0; border: 0; }
+:root .savings-setup-goals legend { margin-bottom: 6px; font-weight: 800; }
+:root .savings-setup-transfer { display: grid; gap: 10px; }
+:root .savings-setup .form-actions { display: flex; flex-direction: column; align-items: stretch; gap: 4px; }
+:root .savings-setup .form-actions > .text-button { align-self: center; min-height: 44px; }
+:root .home-tile-pill { justify-self: start; align-self: flex-start; padding: 3px 8px; border-radius: 99px; font-size: 11px; font-weight: 800; background: color-mix(in srgb, var(--green) 14%, transparent); color: var(--green); }
+:root .home-tile-pill[data-tone="down"] { background: color-mix(in srgb, var(--muted) 14%, transparent); color: var(--muted); }
+:root .home-tile-spark { width: 100%; height: 34px; margin-top: auto; overflow: visible; }
+:root .home-tile-spark polyline { fill: none; stroke: #f0b43c; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+@media (min-width: 761px) {
+  :root .savings-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  :root .savings-overview > :is(.savings-accounts-switch, .savings-hero) { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) { :root .savings-bars i { animation: none; } }
+@media (forced-colors: active) { :root :is(.savings-hero, .savings-add, .savings-transfer) { border: 1px solid CanvasText; } }

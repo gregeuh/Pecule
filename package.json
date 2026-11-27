@@ -48,6 +48,7 @@
     "test:e2e:appearance": "node tests/e2e/appearance.mjs",
     "test:e2e:csp": "node tests/e2e/csp.mjs",
     "test:e2e:names": "node tests/e2e/readable-names.mjs",
+    "test:e2e:savings": "node tests/e2e/savings.mjs",
     "format": "prettier --write \"{app,lib,tests,scripts}/**/*.{ts,tsx,mts,mjs}\"",
     "format:check": "prettier --check \"{app,lib,tests,scripts}/**/*.{ts,tsx,mts,mjs}\"",
     "install:ci": "npm ci --include=dev --include=optional"

@@ -33,7 +33,8 @@ export type Modal =
     }
   | { type: "account"; item?: Account; returnAccountId?: string }
   | { type: "rule"; item?: Rule; proposal?: Omit<Rule, "id">; sourceTransactionId?: string }
-  | { type: "goal"; item?: Goal }
+  | { type: "goal"; item?: Goal; accountId?: string }
+  | { type: "savings-setup"; accountId: string }
   | { type: "transfer"; goal?: Goal; accountId?: string }
   | { type: "contribution"; goal: Goal }
   | { type: "reconcile"; accountId: string }

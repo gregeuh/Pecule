@@ -5,6 +5,7 @@ import { accountBalance, parseDate, shiftDate, type Budget } from "../lib/budget
 import { goalProgress } from "../lib/budget-presentation";
 import { recurrenceMonthSummary, recurrencesBetween } from "../lib/recurrence-calendar";
 import { walletSurfaceStyles } from "../lib/wallet-presentation";
+import { balanceHistory, monthChange, savingsAccounts } from "../lib/savings";
 
 type Props = {
   budget: Budget;
@@ -32,6 +33,17 @@ export default function HomeTiles(p: Props) {
   const summary = recurrenceMonthSummary(b, p.today, p.end);
   const next = recurrencesBetween(b, shiftDate(p.today, 1), shiftDate(p.today, 45)).slice(0, 3);
   const goal = b.goals[0];
+  const livret = savingsAccounts(b)[0];
+  const history = livret ? balanceHistory(b, livret.id, p.today) : [];
+  const change = livret ? monthChange(b, livret.id, p.today) : 0;
+  const top = Math.max(...history.map((h) => h.balance), 1),
+    bottom = Math.min(...history.map((h) => h.balance), 0);
+  const points = history
+    .map(
+      (h, i) =>
+        `${(i / Math.max(1, history.length - 1)) * 136 + 2},${32 - ((h.balance - bottom) / (top - bottom || 1)) * 28}`,
+    )
+    .join(" ");
   const { share, percent } = goal ? goalProgress(goal.saved, goal.target) : { share: 0, percent: 0 };
   const spentShare = p.spent + p.income > 0 ? Math.min(100, (p.spent / Math.max(p.income, p.spent)) * 100) : 0;
   const until = p.untilPayday ? "avant la paie" : "d’ici la fin du mois";
@@ -101,7 +113,29 @@ export default function HomeTiles(p: Props) {
         </span>
       </button>
 
-      {goal ? (
+      {livret ? (
+        <button
+          type="button"
+          className="home-tile home-tile-savings"
+          aria-label={`Épargne, ${livret.name} : ${p.hidden ? "solde masqué" : p.m(accountBalance(b, livret.id, p.today))}`}
+          onClick={p.onGoals}
+        >
+          <span className="home-tile-title">Épargne · {livret.name}</span>
+          <span className="home-tile-figure">
+            <b>{p.m(accountBalance(b, livret.id, p.today))}</b>
+          </span>
+          {change !== 0 && !p.hidden && (
+            <span className="home-tile-pill" data-tone={change > 0 ? "up" : "down"}>
+              {change > 0 ? `${p.m(change, false, true)} en ${month}` : `${p.m(change, false, true)} en ${month}`}
+            </span>
+          )}
+          {!p.hidden && history.length > 1 && (
+            <svg className="home-tile-spark" viewBox="0 0 140 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points={points} />
+            </svg>
+          )}
+        </button>
+      ) : goal ? (
         <button type="button" className="home-tile home-tile-goal" onClick={p.onGoals}>
           <span className="home-tile-title">Objectif</span>
           <span className="home-tile-goal-body">
