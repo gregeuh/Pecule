@@ -1,6 +1,7 @@
 "use client";
-import type { RefObject } from "react";
-import { ChevronRight, Download, Funnel, Plus, Repeat2, Search, Upload, X } from "lucide-react";
+import { useMemo, useState, type RefObject } from "react";
+import { ChevronRight, Download, Funnel, Plus, Repeat2, Search, Sparkles, Upload, X } from "lucide-react";
+import { addedByPecule, notOnStatement } from "../lib/statement-check";
 import { accountBalance, parseDate, shiftDate, shortDate, type Budget, type Transaction } from "../lib/budget";
 import { recordedOperationTotals } from "../lib/operation-totals";
 import Empty from "./budget-empty";
@@ -70,6 +71,8 @@ export default function TransactionsPage({
   importDraft,
   exportCSV,
 }: TransactionsPageProps) {
+  const [addedOnly, setAddedOnly] = useState(false);
+  const missing = useMemo(() => new Set(notOnStatement(b).map((f) => f.transaction.id)), [b]);
   const filterCount =
     Number(typeFilter !== "all") + Number(accountFilter !== "all") + Number(month !== today.slice(0, 7));
   const transactionRows = (items: Transaction[], full = false) =>
@@ -100,6 +103,18 @@ export default function TransactionsPage({
             )}
             {t.ruleId && <Repeat2 size={11} />}
           </small>
+          {addedByPecule(t) && t.date <= today && (
+            <span className="operation-origin">
+              <span className="origin-badge" data-kind="added">
+                Ajoutée par Pécule
+              </span>
+              {missing.has(t.id) && (
+                <span className="origin-badge" data-kind="missing">
+                  Pas sur le relevé
+                </span>
+              )}
+            </span>
+          )}
         </span>
         {full && <span className="category-label">{t.category}</span>}
         <span className="transaction-amount">
@@ -249,10 +264,51 @@ export default function TransactionsPage({
             </button>
           </div>
         )}
+        {missing.size > 0 && (
+          <button type="button" className="statement-banner" onClick={() => open({ type: "not-on-statement" })}>
+            <span>
+              <strong>
+                {missing.size} opération{missing.size > 1 ? "s" : ""} pas sur votre relevé
+              </strong>
+              <small>
+                {missing.size > 1
+                  ? "Ajoutées par Pécule, mais votre banque ne les montre pas."
+                  : "Ajoutée par Pécule, mais votre banque ne la montre pas."}
+              </small>
+            </span>
+            <span className="statement-banner-action">Vérifier</span>
+          </button>
+        )}
+        {(() => {
+          const monthRows = b.transactions.filter((t) => t.date.startsWith(month) && t.date <= today);
+          const added = monthRows.filter(addedByPecule).length;
+          return added > 0 || addedOnly ? (
+            <div className="origin-filter" role="group" aria-label="Afficher">
+              <button
+                type="button"
+                className={addedOnly ? "" : "selected"}
+                aria-pressed={!addedOnly}
+                onClick={() => setAddedOnly(false)}
+              >
+                Toutes
+              </button>
+              <button
+                type="button"
+                className={addedOnly ? "selected" : ""}
+                aria-pressed={addedOnly}
+                onClick={() => setAddedOnly(true)}
+              >
+                <Sparkles size={14} aria-hidden="true" />
+                Ajoutées par Pécule · {added}
+              </button>
+            </div>
+          ) : null;
+        })()}
         {(() => {
           const items = [...b.transactions]
             .filter(
               (t) =>
+                (!addedOnly || (addedByPecule(t) && t.date <= today)) &&
                 t.date.startsWith(month) &&
                 (accountFilter === "all" || t.accountId === accountFilter) &&
                 (typeFilter === "all" || (typeFilter === "expense" ? t.amount < 0 : t.amount > 0)) &&
@@ -263,7 +319,7 @@ export default function TransactionsPage({
             .sort((a, b) => b.date.localeCompare(a.date));
           return items.length ? (
             <TransactionSelection
-              key={JSON.stringify([query, typeFilter, accountFilter, month, transactionEpoch])}
+              key={JSON.stringify([query, typeFilter, accountFilter, month, transactionEpoch, addedOnly])}
               items={items}
               renderRow={(t) => transactionRows([t], true)}
               formatAmount={(n) => m(n, true, true)}

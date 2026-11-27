@@ -202,6 +202,7 @@ export const budgetSchema = z
         .refine((rows) => new Set(rows.map((r) => r.key)).size === rows.length, "Nom mémorisé en double")
         .optional(),
       dismissedChecks: z.array(z.string().trim().min(1).max(300)).max(200).optional(),
+      pastRecurrences: z.enum(["date", "statement"]).optional(),
       homeLayout: z
         .object({ order: z.array(z.enum(HOME_BLOCKS)).max(20), hidden: z.array(z.enum(HOME_BLOCKS)).max(20) })
         .optional(),

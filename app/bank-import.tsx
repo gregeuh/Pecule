@@ -9,6 +9,7 @@ import "./bank-import.css";
 import ImportJourney from "./import-journey";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Upload, ArrowLeft, ArrowRight, Check, LoaderCircle } from "lucide-react";
+import { notOnStatement } from "../lib/statement-check";
 import { buildReviewedImport, importMatchCandidates } from "../lib/import-matching";
 import { rememberedImportPlan, rememberImportPlan, forgetImportPlan } from "../lib/import-profile";
 import { accountBalance, money, type Budget } from "../lib/budget";
@@ -39,6 +40,8 @@ export type ImportDraft = {
 };
 type Props = {
   onBack?: () => void;
+  /** After the import: open « Pas sur votre relevé » when Pécule added operations the statement does not show. */
+  onReviewStatement?: () => void;
   initialDraft: ImportDraft | null;
   initialAccountId?: string;
   onDraftChange: (draft: ImportDraft | null) => void;
@@ -67,6 +70,7 @@ export default function BankImport({
   serverError,
   onView,
   onBack,
+  onReviewStatement,
 }: Props) {
   const [result, setResult] = useState<{
     added: number;
@@ -253,6 +257,26 @@ export default function BankImport({
           Les associations ne créent pas de nouvelle écriture. Retrouvez le lot dans vos imports pour consulter ses
           détails ou l’annuler.
         </p>
+        {(() => {
+          const missing = notOnStatement(budget).filter((i) => i.transaction.accountId === result.accountId);
+          return missing.length && onReviewStatement ? (
+            <div className="statement-after-import">
+              <strong>
+                {missing.length} opération{missing.length > 1 ? "s" : ""} ajoutée{missing.length > 1 ? "s" : ""} par
+                Pécule {missing.length > 1 ? "ne sont" : "n’est"} pas sur ce relevé
+              </strong>
+              <small>
+                {missing
+                  .map((i) => i.transaction.label)
+                  .slice(0, 3)
+                  .join(", ")}
+              </small>
+              <button type="button" className="secondary full-width" onClick={onReviewStatement}>
+                {missing.length > 1 ? "Les vérifier" : "La vérifier"}
+              </button>
+            </div>
+          ) : null;
+        })()}
       </SaveOutcome>
     );
   if (!budget.accounts.length)

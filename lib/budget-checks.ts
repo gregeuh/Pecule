@@ -15,6 +15,23 @@ const shareWord = (a: string, b: string) => {
 };
 const close = (a: number, b: number, share: number) => Math.abs(a - b) <= Math.abs(a) * share;
 
+/**
+ * Could this recorded operation be that date of the recurrence? Same account and direction, within 10 days, amounts
+ * within 3 % in the same category, or within 15 % with a word of the name in common.
+ */
+export function sameOperation(rule: Rule, planned: Transaction, t: Transaction) {
+  const gap = Math.abs(Date.parse(t.date) - Date.parse(planned.date)) / 864e5;
+  return (
+    !t.transferId &&
+    t.accountId === rule.accountId &&
+    t.amount > 0 === rule.amount > 0 &&
+    gap <= 10 &&
+    ((close(planned.amount, t.amount, 0.03) && t.category === rule.category) ||
+      (close(planned.amount, t.amount, 0.15) &&
+        (shareWord(rule.bankLabel ?? rule.label, t.bankLabel ?? t.label) || shareWord(rule.label, t.label))))
+  );
+}
+
 export type DuplicateRules = { key: string; rules: [Rule, Rule] };
 export type DoubleCount = { key: string; rule: Rule; date: string; planned: Transaction; recorded: Transaction };
 
@@ -65,19 +82,7 @@ export function doubleCounts(b: Budget, today: string, days = 62): DoubleCount[]
       if (dismissed.has(key)) continue;
       for (const t of b.transactions) {
         const gap = Math.abs(Date.parse(t.date) - Date.parse(planned.date)) / 864e5;
-        if (
-          t.ruleId ||
-          t.transferId ||
-          t.accountId !== rule.accountId ||
-          t.amount > 0 !== rule.amount > 0 ||
-          gap > 10 ||
-          !(
-            (close(planned.amount, t.amount, 0.03) && t.category === rule.category) ||
-            (close(planned.amount, t.amount, 0.15) &&
-              (shareWord(rule.bankLabel ?? rule.label, t.bankLabel ?? t.label) || shareWord(rule.label, t.label)))
-          )
-        )
-          continue;
+        if (t.ruleId || !sameOperation(rule, planned, t)) continue;
         candidates.push({
           key,
           rule,
