@@ -1,3 +1,4 @@
+import { HOME_BLOCKS } from "./home-layout.ts";
 import { z } from "zod";
 
 // Zod probes `Function("")` to pick a faster validator; the Content Security Policy forbids eval, so skip the probe.
@@ -201,6 +202,9 @@ export const budgetSchema = z
         .refine((rows) => new Set(rows.map((r) => r.key)).size === rows.length, "Nom mémorisé en double")
         .optional(),
       dismissedChecks: z.array(z.string().trim().min(1).max(300)).max(200).optional(),
+      homeLayout: z
+        .object({ order: z.array(z.enum(HOME_BLOCKS)).max(20), hidden: z.array(z.enum(HOME_BLOCKS)).max(20) })
+        .optional(),
       dailyComfortCents: z.number().int().min(1).max(100000000).optional(),
       categoryLimits: z
         .record(

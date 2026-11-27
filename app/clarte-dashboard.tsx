@@ -17,6 +17,9 @@ import MonthAssist from "./month-assist";
 import HomeHero from "./home-hero";
 import RecurrenceWeek from "./recurrence-week";
 import HomeTiles from "./home-tiles";
+import HomeBlockFrame from "./home-block-frame";
+import { visibleBlocks, type HomeBlock } from "../lib/home-layout";
+import { tightPeriod } from "../lib/month-assist";
 import type { PaydayPlan } from "../lib/month-assist";
 import { getAvailableSignal } from "../lib/available-signal";
 import {
@@ -34,6 +37,7 @@ import {
   TriangleAlert,
   ChevronDown,
   Plus,
+  LayoutGrid,
 } from "lucide-react";
 import {
   futureTransactions,
@@ -81,6 +85,8 @@ type Props = {
   capture: ReactNode;
   /** Likely duplicates and double counts, fixed in one tap (app/budget-checks.tsx). */
   checks?: ReactNode;
+  /** Opens « Mon accueil » (order and removal of the iPhone home blocks). */
+  onEditHome: () => void;
 };
 export default function ClarteDashboard(p: Props) {
   const compact = useCompactViewport();
@@ -425,6 +431,73 @@ export default function ClarteDashboard(p: Props) {
       Votre espace est personnel. Vous gardez la main sur votre argent. {p.demo ? "Démonstration" : ""}
     </div>
   );
+  const urgent = !p.hidden && !p.loadError && tightPeriod(b, p.today)?.tone === "negative";
+  const layoutHidden = new Set(b.settings.homeLayout?.hidden ?? []);
+  const blocks: Record<HomeBlock, ReactNode> = {
+    conseils: !p.loadError && (
+      <MonthAssist
+        budget={b}
+        today={p.today}
+        hidden={p.hidden}
+        busy={p.saving}
+        onPaydaySavings={p.onPaydaySavings}
+        onPostpone={p.onPostpone}
+      />
+    ),
+    alertes: !p.loadError && (
+      <BudgetAlerts budget={b} today={p.today} hidden={p.hidden} onOperations={p.onTransactions} />
+    ),
+    verifications: !p.loadError && !p.hidden && p.checks,
+    tuiles: (
+      <HomeTiles
+        budget={b}
+        today={p.today}
+        end={o.end}
+        untilPayday={!!o.salary && b.settings.horizon === "salary"}
+        spent={monthly.spent}
+        income={o.income}
+        hidden={p.hidden}
+        m={m}
+        onAccounts={p.onAccounts}
+        onRecurring={p.onRecurring}
+        onTransactions={p.onTransactions}
+        onGoals={p.onGoals}
+      />
+    ),
+    operations: <div className="wallet-overview-recent">{recentCard(2)}</div>,
+    previsions: (
+      <AnimatedDetails className="wallet-capture home-forecast">
+        <summary>
+          Prévisions et calcul du disponible
+          <ChevronDown size={17} />
+        </summary>
+        <div className="home-forecast-body">
+          {available}
+          <WalletAccounts
+            forecastsOnly
+            budget={b}
+            today={p.today}
+            hidden={p.hidden}
+            onAccount={p.onWalletAccount}
+            onForecast={p.onAccountForecast}
+            onAll={p.onAccounts}
+            onAdd={p.onAddAccount}
+          />
+          {chart}
+          {forecastCard}
+        </div>
+      </AnimatedDetails>
+    ),
+    saisie: (
+      <AnimatedDetails className="wallet-capture">
+        <summary>
+          Ma saisie et mes favoris
+          <ChevronDown size={17} />
+        </summary>
+        {p.capture}
+      </AnimatedDetails>
+    ),
+  };
   if (compact)
     return (
       <div className="clarte-dashboard wallet-dashboard home-tiles-layout">
@@ -442,61 +515,15 @@ export default function ClarteDashboard(p: Props) {
             onOpen={p.onCalculate}
           />
         )}
-        {!p.loadError && (
-          <MonthAssist
-            budget={b}
-            today={p.today}
-            hidden={p.hidden}
-            busy={p.saving}
-            onPaydaySavings={p.onPaydaySavings}
-            onPostpone={p.onPostpone}
-          />
-        )}
-        {!p.loadError && <BudgetAlerts budget={b} today={p.today} hidden={p.hidden} onOperations={p.onTransactions} />}
-        {!p.loadError && !p.hidden && p.checks}
-        <HomeTiles
-          budget={b}
-          today={p.today}
-          end={o.end}
-          untilPayday={!!o.salary && b.settings.horizon === "salary"}
-          spent={monthly.spent}
-          income={o.income}
-          hidden={p.hidden}
-          m={m}
-          onAccounts={p.onAccounts}
-          onRecurring={p.onRecurring}
-          onTransactions={p.onTransactions}
-          onGoals={p.onGoals}
-        />
-        <div className="wallet-overview-recent">{recentCard(2)}</div>
-        <AnimatedDetails className="wallet-capture home-forecast">
-          <summary>
-            Prévisions et calcul du disponible
-            <ChevronDown size={17} />
-          </summary>
-          <div className="home-forecast-body">
-            {available}
-            <WalletAccounts
-              forecastsOnly
-              budget={b}
-              today={p.today}
-              hidden={p.hidden}
-              onAccount={p.onWalletAccount}
-              onForecast={p.onAccountForecast}
-              onAll={p.onAccounts}
-              onAdd={p.onAddAccount}
-            />
-            {chart}
-            {forecastCard}
-          </div>
-        </AnimatedDetails>
-        <AnimatedDetails className="wallet-capture">
-          <summary>
-            Ma saisie et mes favoris
-            <ChevronDown size={17} />
-          </summary>
-          {p.capture}
-        </AnimatedDetails>
+        {visibleBlocks(b.settings.homeLayout, urgent).map((id) => (
+          <HomeBlockFrame key={id} onLongPress={p.onEditHome}>
+            {blocks[id]}
+          </HomeBlockFrame>
+        ))}
+        <button type="button" className="home-edit-button" onClick={p.onEditHome}>
+          <LayoutGrid size={16} aria-hidden="true" />
+          Modifier l’accueil
+        </button>
         {footer}
       </div>
     );
@@ -519,7 +546,7 @@ export default function ClarteDashboard(p: Props) {
             />
           )}
           {accounts}
-          {!p.loadError && (
+          {!p.loadError && (!layoutHidden.has("conseils") || urgent) && (
             <MonthAssist
               budget={b}
               today={p.today}
@@ -529,14 +556,16 @@ export default function ClarteDashboard(p: Props) {
               onPostpone={p.onPostpone}
             />
           )}
-          {!p.loadError && !p.hidden && p.checks}
-          <AnimatedDetails className="wallet-capture">
-            <summary>
-              Ma saisie et mes favoris
-              <ChevronDown size={17} />
-            </summary>
-            {p.capture}
-          </AnimatedDetails>
+          {!p.loadError && !p.hidden && !layoutHidden.has("verifications") && p.checks}
+          {!layoutHidden.has("saisie") && (
+            <AnimatedDetails className="wallet-capture">
+              <summary>
+                Ma saisie et mes favoris
+                <ChevronDown size={17} />
+              </summary>
+              {p.capture}
+            </AnimatedDetails>
+          )}
         </div>
         <div className="wallet-home-content">
           <div className="wallet-tabs" role="tablist" aria-label="Vue du budget">

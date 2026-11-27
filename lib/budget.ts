@@ -81,6 +81,8 @@ export type Budget = {
     labelNames?: import("./readable-label").LabelName[];
     /** Checks the person answered « not a duplicate » to (lib/budget-checks.ts). */
     dismissedChecks?: string[];
+    /** The iPhone home: order of its blocks and the ones removed (lib/home-layout.ts). */
+    homeLayout?: import("./home-layout").HomeLayout;
     dailyComfortCents?: number;
     categoryLimits?: Record<string, number>;
     horizon: "salary" | "month";
