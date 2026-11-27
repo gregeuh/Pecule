@@ -200,6 +200,7 @@ export const budgetSchema = z
         .max(200)
         .refine((rows) => new Set(rows.map((r) => r.key)).size === rows.length, "Nom mémorisé en double")
         .optional(),
+      dismissedChecks: z.array(z.string().trim().min(1).max(300)).max(200).optional(),
       dailyComfortCents: z.number().int().min(1).max(100000000).optional(),
       categoryLimits: z
         .record(

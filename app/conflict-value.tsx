@@ -37,6 +37,7 @@ const labels: Record<string, string> = {
   icon: "Icône",
   categoryRules: "Règles de catégories",
   labelNames: "Noms mémorisés",
+  dismissedChecks: "Vérifications écartées",
   bankLabel: "Libellé de la banque",
   categoryLimits: "Seuils mensuels",
   dailyComfortCents: "Seuil de confort quotidien",

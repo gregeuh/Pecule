@@ -79,6 +79,8 @@ export type Budget = {
     categoryRules?: CategoryRule[];
     /** Names to give the next imported operations with the same bank label (lib/readable-label.ts). */
     labelNames?: import("./readable-label").LabelName[];
+    /** Checks the person answered « not a duplicate » to (lib/budget-checks.ts). */
+    dismissedChecks?: string[];
     dailyComfortCents?: number;
     categoryLimits?: Record<string, number>;
     horizon: "salary" | "month";

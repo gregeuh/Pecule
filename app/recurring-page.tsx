@@ -7,6 +7,7 @@ import AnimatedDetails from "./animated-details";
 import Empty from "./budget-empty";
 import type { Modal } from "./budget-modal";
 import RecurrenceCalendar from "./recurrence-calendar";
+import BudgetChecks from "./budget-checks";
 import RecurringItem from "./recurring-item";
 import RecurringSuggestions from "./recurring-suggestions";
 import SubscriptionOverview from "./subscription-overview";
@@ -45,6 +46,7 @@ export default function RecurringPage({
   const ruleState = (r: Rule) => (r.endDate && r.endDate < today ? "ended" : r.active ? "active" : "paused");
   return (
     <>
+      <BudgetChecks budget={b} today={today} busy={busy} m={m} save={save} />
       <RecurrenceCalendar
         budget={b}
         today={today}

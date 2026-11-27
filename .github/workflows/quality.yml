@@ -71,6 +71,7 @@ jobs:
           npm run test:e2e:csp
           npm run test:e2e:names
           npm run test:e2e:savings
+          npm run test:e2e:checks
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
