@@ -79,6 +79,8 @@ type Props = {
   onAddAccount: () => void;
   chart: ReactNode;
   capture: ReactNode;
+  /** Likely duplicates and double counts, fixed in one tap (app/budget-checks.tsx). */
+  checks?: ReactNode;
 };
 export default function ClarteDashboard(p: Props) {
   const compact = useCompactViewport();
@@ -451,6 +453,7 @@ export default function ClarteDashboard(p: Props) {
           />
         )}
         {!p.loadError && <BudgetAlerts budget={b} today={p.today} hidden={p.hidden} onOperations={p.onTransactions} />}
+        {!p.loadError && !p.hidden && p.checks}
         <HomeTiles
           budget={b}
           today={p.today}
@@ -526,6 +529,7 @@ export default function ClarteDashboard(p: Props) {
               onPostpone={p.onPostpone}
             />
           )}
+          {!p.loadError && !p.hidden && p.checks}
           <AnimatedDetails className="wallet-capture">
             <summary>
               Ma saisie et mes favoris

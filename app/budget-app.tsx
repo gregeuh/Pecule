@@ -82,6 +82,8 @@ import { useModalViewport } from "./use-modal-viewport";
 import { BudgetSync, BudgetRequestError } from "../lib/budget-sync";
 import { rememberCategory } from "../lib/category-rules";
 import ReadableNamesSheet from "./readable-names-sheet";
+import CalculationSheet from "./calculation-sheet";
+import BudgetChecks from "./budget-checks";
 import SavingsSetup from "./savings-setup";
 import { keepBankLabel } from "../lib/readable-names";
 import ConflictValue from "./conflict-value";
@@ -1140,7 +1142,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                                                     : modal?.type === "start"
                                                       ? "Bienvenue chez vous."
                                                       : modal?.type === "calculation"
-                                                        ? "Un disponible qui a du sens."
+                                                        ? "Pourquoi ce montant ?"
                                                         : modal?.type === "install"
                                                           ? "Pécule, à portée de main."
                                                           : modal?.type === "confirm"
@@ -1843,6 +1845,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                   />
                 }
                 chart={<ForecastOutlook budget={b} today={today} hidden={hidden} />}
+                checks={<BudgetChecks budget={b} today={today} busy={busy} m={m} save={save} limit={2} />}
               />
             )}
             {page === "plan" && (
@@ -2756,22 +2759,25 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                 )}
                 {modal.type === "calculation" && (
                   <div className="calculation-detail">
-                    <p>Votre disponible indique ce que vous pouvez encore dépenser après vos engagements connus.</p>
-                    <div>
-                      <span>Comptes courants et espèces</span>
-                      <strong>{m(o.total)}</strong>
-                    </div>
-                    <div>
-                      <span>− Dépenses prévues jusqu’au {shortDate(o.end)}</span>
-                      <strong>{m(o.expenses)}</strong>
-                    </div>
-                    <div>
-                      <span>− Réserve d’épargne restante</span>
-                      <strong>{m(o.reserve)}</strong>
-                    </div>
-                    <section className="reserve-breakdown" aria-label="Détail de la réserve">
-                      <h3>Détail de la réserve</h3>
-                      {reserveLines(b, today).length ? (
+                    <CalculationSheet
+                      budget={b}
+                      today={today}
+                      o={o}
+                      m={m}
+                      checks={<BudgetChecks budget={b} today={today} busy={busy} m={m} save={save} />}
+                      onPayday={() => {
+                        const rule = b.rules.find((r) => r.id === o.salary?.ruleId);
+                        if (rule && b.settings.horizon === "salary") open({ type: "rule", item: rule });
+                        else {
+                          setModal(null);
+                          navigate("settings");
+                        }
+                      }}
+                      onCompare={(accountId) => open({ type: "balance", accountId })}
+                    />
+                    {reserveLines(b, today).length > 0 && (
+                      <section className="reserve-breakdown" aria-label="Détail de la réserve">
+                        <h3>Détail de la réserve</h3>
                         <dl>
                           {reserveLines(b, today).map((row) => (
                             <div key={row.id}>
@@ -2780,14 +2786,8 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                             </div>
                           ))}
                         </dl>
-                      ) : (
-                        <p>Aucune réserve prévue.</p>
-                      )}
-                    </section>
-                    <div className="calculation-total">
-                      <span>Votre marge de manœuvre</span>
-                      <strong>{m(o.available)}</strong>
-                    </div>
+                      </section>
+                    )}
                     <section className="signal-explanation">
                       <h3>Comprendre le signal</h3>
                       <p>
