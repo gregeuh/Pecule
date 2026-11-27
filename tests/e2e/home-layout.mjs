@@ -30,6 +30,8 @@ try {
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto(origin);
     await waitForWallet(page);
+    // The wallet can show before the tiled home: read the order once the tiles are there.
+    await page.locator(".home-tiles-layout .home-tiles").first().waitFor();
     const order = () =>
       page.evaluate(() =>
         [...document.querySelectorAll(".home-tiles-layout > .home-block")]
