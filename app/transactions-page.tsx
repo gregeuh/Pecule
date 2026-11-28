@@ -73,73 +73,69 @@ export default function TransactionsPage({
 }: TransactionsPageProps) {
   const [addedOnly, setAddedOnly] = useState(false);
   const missing = useMemo(() => new Set(notOnStatement(b).map((f) => f.transaction.id)), [b]);
-  const filterCount =
-    Number(typeFilter !== "all") + Number(accountFilter !== "all") + Number(month !== today.slice(0, 7));
-  const transactionRows = (items: Transaction[], full = false) =>
-    items.map((t) => (
-      <OperationGesture
-        id={t.id}
+  const thisMonth = today.slice(0, 7);
+  const filterCount = Number(typeFilter !== "all") + Number(accountFilter !== "all") + Number(month !== thisMonth);
+  const accountName = (id: string) => b.accounts.find((a) => a.id === id)?.name;
+  const search = query.toLocaleLowerCase("fr");
+  // The month totals and the list read the same filters; only the list also shows the operations to come.
+  const matches = (t: Transaction) =>
+    t.date.startsWith(month) &&
+    (accountFilter === "all" || t.accountId === accountFilter) &&
+    (typeFilter === "all" || (typeFilter === "expense" ? t.amount < 0 : t.amount > 0)) &&
+    (t.label + " " + t.category + " " + t.note).toLocaleLowerCase("fr").includes(search);
+  const transactionRow = (t: Transaction) => (
+    <OperationGesture
+      id={t.id}
+      label={t.label}
+      className="transaction-row full"
+      key={t.id}
+      onClick={() => open({ type: "transaction", item: t })}
+    >
+      <MerchantIcon
         label={t.label}
-        className={`transaction-row ${full ? "full" : ""}`}
-        key={t.id}
-        onClick={() => open({ type: "transaction", item: t })}
-      >
-        <MerchantIcon
-          label={t.label}
-          merchantId={t.merchantId}
-          customIconUrl={t.customIconUrl}
-          fallback={<CategoryIcon category={t.category} />}
-        />
-        <span className="transaction-title">
-          <strong>{t.label}</strong>
-          <small>
-            {full ? (
-              <>
-                <span className="transaction-mobile-category">{t.category} · </span>
-                {b.accounts.find((a) => a.id === t.accountId)?.name}
-              </>
-            ) : (
-              t.category
-            )}
-            {t.ruleId && <Repeat2 size={11} />}
-          </small>
-          {addedByPecule(t) && t.date <= today && (
-            <span className="operation-origin">
-              <span className="origin-badge" data-kind="added">
-                Ajoutée par Pécule
-              </span>
-              {missing.has(t.id) && (
-                <span className="origin-badge" data-kind="missing">
-                  Pas sur le relevé
-                </span>
-              )}
+        merchantId={t.merchantId}
+        customIconUrl={t.customIconUrl}
+        fallback={<CategoryIcon category={t.category} />}
+      />
+      <span className="transaction-title">
+        <strong>{t.label}</strong>
+        <small>
+          <span className="transaction-mobile-category">{t.category} · </span>
+          {accountName(t.accountId)}
+          {t.ruleId && <Repeat2 size={11} />}
+        </small>
+        {addedByPecule(t) && t.date <= today && (
+          <span className="operation-origin">
+            <span className="origin-badge" data-kind="added">
+              Ajoutée par Pécule
             </span>
-          )}
-        </span>
-        {full && <span className="category-label">{t.category}</span>}
-        <span className="transaction-amount">
-          <strong className={t.amount > 0 ? "positive" : ""}>{m(t.amount, true, true)}</strong>
-          <small>{shortDate(t.date)}</small>
-        </span>
-        <ChevronRight className="row-chevron" size={15} />
-      </OperationGesture>
-    ));
-  const visibleMonthRows = b.transactions.filter(
-    (t) =>
-      t.date.startsWith(month) &&
-      t.date <= today &&
-      (accountFilter === "all" || t.accountId === accountFilter) &&
-      (typeFilter === "all" || (typeFilter === "expense" ? t.amount < 0 : t.amount > 0)) &&
-      (t.label + " " + t.category + " " + t.note).toLocaleLowerCase("fr").includes(query.toLocaleLowerCase("fr")),
+            {missing.has(t.id) && (
+              <span className="origin-badge" data-kind="missing">
+                Pas sur le relevé
+              </span>
+            )}
+          </span>
+        )}
+      </span>
+      <span className="category-label">{t.category}</span>
+      <span className="transaction-amount">
+        <strong className={t.amount > 0 ? "positive" : ""}>{m(t.amount, true, true)}</strong>
+        <small>{shortDate(t.date)}</small>
+      </span>
+      <ChevronRight className="row-chevron" size={15} />
+    </OperationGesture>
   );
-  const { income: monthIncome, spent: monthSpent } = recordedOperationTotals(visibleMonthRows, today);
+  const { income: monthIncome, spent: monthSpent } = recordedOperationTotals(
+    b.transactions.filter((t) => t.date <= today && matches(t)),
+    today,
+  );
   const monthName = parseDate(month + "-01").toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
   return (
     <>
       {accountFilter !== "all" && b.accounts.some((a) => a.id === accountFilter) && (
         <section className="account-ledger-context" aria-label="Compte sélectionné">
           <div>
-            <span>{b.accounts.find((a) => a.id === accountFilter)?.name}</span>
+            <span>{accountName(accountFilter)}</span>
             <strong>{m(accountBalance(b, accountFilter, today))}</strong>
             <small>Solde actuel</small>
           </div>
@@ -224,7 +220,7 @@ export default function TransactionsPage({
           </div>
         </LedgerTools>
         {!compact && <OperationFilterControls values={filterValues} accounts={b.accounts} onChange={updateFilters} />}
-        {(query || typeFilter !== "all" || accountFilter !== "all" || month !== today.slice(0, 7)) && (
+        {(query || filterCount > 0) && (
           <div className="active-filters" aria-label="Filtres actifs">
             {query && (
               <button type="button" onClick={() => setQuery("")} aria-label="Retirer le filtre de recherche">
@@ -240,13 +236,13 @@ export default function TransactionsPage({
             )}
             {accountFilter !== "all" && (
               <button type="button" onClick={() => setAccountFilter("all")} aria-label="Retirer le filtre de compte">
-                {b.accounts.find((a) => a.id === accountFilter)?.name}
+                {accountName(accountFilter)}
                 <X size={14} />
               </button>
             )}
-            {month !== today.slice(0, 7) && (
-              <button type="button" onClick={() => setMonth(today.slice(0, 7))} aria-label="Revenir au mois actuel">
-                {parseDate(month + "-01").toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}
+            {month !== thisMonth && (
+              <button type="button" onClick={() => setMonth(thisMonth)} aria-label="Revenir au mois actuel">
+                {monthName}
                 <X size={14} />
               </button>
             )}
@@ -257,7 +253,7 @@ export default function TransactionsPage({
                 setQuery("");
                 setTypeFilter("all");
                 setAccountFilter("all");
-                setMonth(today.slice(0, 7));
+                setMonth(thisMonth);
               }}
             >
               Réinitialiser les filtres
@@ -305,23 +301,14 @@ export default function TransactionsPage({
           ) : null;
         })()}
         {(() => {
-          const items = [...b.transactions]
-            .filter(
-              (t) =>
-                (!addedOnly || (addedByPecule(t) && t.date <= today)) &&
-                t.date.startsWith(month) &&
-                (accountFilter === "all" || t.accountId === accountFilter) &&
-                (typeFilter === "all" || (typeFilter === "expense" ? t.amount < 0 : t.amount > 0)) &&
-                (t.label + " " + t.category + " " + t.note)
-                  .toLocaleLowerCase("fr")
-                  .includes(query.toLocaleLowerCase("fr")),
-            )
+          const items = b.transactions
+            .filter((t) => (!addedOnly || (addedByPecule(t) && t.date <= today)) && matches(t))
             .sort((a, b) => b.date.localeCompare(a.date));
           return items.length ? (
             <TransactionSelection
               key={JSON.stringify([query, typeFilter, accountFilter, month, transactionEpoch, addedOnly])}
               items={items}
-              renderRow={(t) => transactionRows([t], true)}
+              renderRow={transactionRow}
               formatAmount={(n) => m(n, true, true)}
               dateLabel={(date) => dateLabel(date, today) + (date > today ? " · À venir" : "")}
               onBulk={(ids) => open({ type: "bulk", ids })}
