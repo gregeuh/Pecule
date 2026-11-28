@@ -153,6 +153,66 @@ const nav: { id: Page; label: string; short: string; icon: LucideIcon }[] = [
   { id: "accounts", label: "Mes comptes", short: "Comptes", icon: Wallet },
   { id: "goals", label: "Mon épargne", short: "Épargne", icon: ChartNoAxesCombined },
 ];
+/** Titles of the windows whose title does not depend on their content. */
+const modalTitles: Record<
+  Exclude<
+    Modal["type"],
+    "wallet-account" | "reconcile" | "favorite" | "transaction" | "account" | "rule" | "goal" | "confirm"
+  >,
+  string
+> = {
+  "operation-actions": "Actions de l’opération",
+  "account-actions": "Raccourcis du compte",
+  review: "Faire le point sur ma saisie",
+  favorites: "Vos favoris",
+  balance: "Ajuster le solde",
+  "account-forecast": "Solde prévisionnel",
+  filters: "Filtrer les opérations",
+  search: "Rechercher",
+  bulk: "Modifier plusieurs opérations",
+  "match-transfers": "Associer des virements internes",
+  imports: "Vos imports bancaires",
+  "readable-names": "Des noms plus lisibles",
+  "home-layout": "Mon accueil",
+  "not-on-statement": "Pas sur votre relevé",
+  "past-recurrences": "Quand compter une récurrence ?",
+  "savings-setup": "Ranger dans le livret",
+  actions: "Ajouter",
+  transfer: "Enregistrer un virement",
+  contribution: "Faire grandir votre projet",
+  import: "Importer vos opérations",
+  start: "Bienvenue chez vous.",
+  calculation: "Pourquoi ce montant ?",
+  install: "Pécule, à portée de main.",
+};
+function windowTitle(modal: Modal, accounts: Account[]) {
+  const name = (id: string) => accounts.find((a) => a.id === id)?.name;
+  switch (modal.type) {
+    case "wallet-account":
+      return name(modal.accountId) ?? "Le compte";
+    case "reconcile":
+      return `Rapprocher ${name(modal.accountId) ?? "le compte"}`;
+    case "favorite":
+      return modal.item ? "Modifier le favori" : "Créer un favori";
+    case "transaction":
+      return modal.item ? "Le détail de l’opération" : "Ajouter une opération";
+    case "account":
+      return modal.item ? "Modifier le compte" : "Un nouveau compte";
+    case "rule":
+      return modal.item
+        ? "Modifier la récurrence"
+        : modal.proposal
+          ? "Vérifier cette récurrence"
+          : "Prévoir une récurrence";
+    case "goal":
+      if (modal.item) return modal.item.accountId ? "Modifier l’enveloppe" : "Modifier votre objectif";
+      return modal.accountId ? "Nouvelle enveloppe" : "Un projet à concrétiser";
+    case "confirm":
+      return modal.title;
+    default:
+      return modalTitles[modal.type];
+  }
+}
 const pageTitles: Record<Page, string> = {
   plan: "Votre équilibre, mois après mois.",
   overview: "Vue d’ensemble",
@@ -499,6 +559,11 @@ function BudgetAppContent({ user }: BudgetAppProps) {
     if (!saving && !conflict) setModal(null);
   });
   const activeNavTap = useRef({ page: "", time: 0 });
+  const scrollToTop = () =>
+    window.scrollTo({
+      top: 0,
+      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+    });
   const mobileNavigate = (target: Page, now: number) => {
     if (target !== page) {
       activeNavTap.current = { page: target, time: 0 };
@@ -507,12 +572,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
     }
     if (target === "transactions" && activeNavTap.current.page === target && now - activeNavTap.current.time < 900) {
       document.querySelector<HTMLInputElement>('[aria-label="Rechercher une opération"]')?.focus();
-    } else {
-      window.scrollTo({
-        top: 0,
-        behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "instant" : "smooth",
-      });
-    }
+    } else scrollToTop();
     activeNavTap.current = { page: target, time: now };
   };
   const operationMotion = useViewMotion<HTMLElement>(`${month}:${typeFilter}:${accountFilter}`);
@@ -520,10 +580,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
   const navigate = (p: Page) => {
     setPage(p);
     setQuery("");
-    window.scrollTo({
-      top: 0,
-      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
-    });
+    scrollToTop();
   };
   const resetDirection = (value: Modal) => {
     if (value.type === "transaction")
@@ -545,18 +602,7 @@ function BudgetAppContent({ user }: BudgetAppProps) {
           page === "transactions" && b.accounts.some((a) => a.id === accountFilter) ? accountFilter : captureAccount(b),
       };
     setError("");
-    if (value.type === "transaction" || value.type === "rule")
-      setMerchantDirection(
-        value.type === "rule"
-          ? ((value.item ?? value.proposal)?.amount ?? 0) > 0
-            ? "income"
-            : "expense"
-          : value.item
-            ? value.item.amount > 0
-              ? "income"
-              : "expense"
-            : (value.direction ?? "expense"),
-      );
+    resetDirection(value);
     if (value.type === "transaction" || value.type === "rule") {
       const direction = drafts?.get(modalKey(value))?.direction?.[0];
       if (direction) setMerchantDirection(direction);
@@ -1077,86 +1123,8 @@ function BudgetAppContent({ user }: BudgetAppProps) {
   const transferTarget =
     b.accounts.find((a) => a.type === "savings" && a.id !== transferSource)?.id ??
     b.accounts.find((a) => a.id !== transferSource)?.id;
-  const modalTitle =
-    modal?.type === "operation-actions"
-      ? "Actions de l’opération"
-      : modal?.type === "account-actions"
-        ? "Raccourcis du compte"
-        : modal?.type === "wallet-account"
-          ? (b.accounts.find((a) => a.id === modal.accountId)?.name ?? "Le compte")
-          : modal?.type === "review"
-            ? "Faire le point sur ma saisie"
-            : modal?.type === "favorites"
-              ? "Vos favoris"
-              : modal?.type === "favorite"
-                ? modal.item
-                  ? "Modifier le favori"
-                  : "Créer un favori"
-                : modal?.type === "balance"
-                  ? "Ajuster le solde"
-                  : modal?.type === "account-forecast"
-                    ? "Solde prévisionnel"
-                    : modal?.type === "filters"
-                      ? "Filtrer les opérations"
-                      : modal?.type === "search"
-                        ? "Rechercher"
-                        : modal?.type === "reconcile"
-                          ? `Rapprocher ${b.accounts.find((a) => a.id === modal.accountId)?.name ?? "le compte"}`
-                          : modal?.type === "bulk"
-                            ? "Modifier plusieurs opérations"
-                            : modal?.type === "match-transfers"
-                              ? "Associer des virements internes"
-                              : modal?.type === "imports"
-                                ? "Vos imports bancaires"
-                                : modal?.type === "readable-names"
-                                  ? "Des noms plus lisibles"
-                                  : modal?.type === "home-layout"
-                                    ? "Mon accueil"
-                                    : modal?.type === "not-on-statement"
-                                      ? "Pas sur votre relevé"
-                                      : modal?.type === "past-recurrences"
-                                        ? "Quand compter une récurrence ?"
-                                        : modal?.type === "savings-setup"
-                                          ? "Ranger dans le livret"
-                                          : modal?.type === "actions"
-                                            ? "Ajouter"
-                                            : modal?.type === "transaction"
-                                              ? modal.item
-                                                ? "Le détail de l’opération"
-                                                : "Ajouter une opération"
-                                              : modal?.type === "account"
-                                                ? modal.item
-                                                  ? "Modifier le compte"
-                                                  : "Un nouveau compte"
-                                                : modal?.type === "rule"
-                                                  ? modal.item
-                                                    ? "Modifier la récurrence"
-                                                    : modal.proposal
-                                                      ? "Vérifier cette récurrence"
-                                                      : "Prévoir une récurrence"
-                                                  : modal?.type === "goal"
-                                                    ? modal.item
-                                                      ? modal.item.accountId
-                                                        ? "Modifier l’enveloppe"
-                                                        : "Modifier votre objectif"
-                                                      : modal.accountId
-                                                        ? "Nouvelle enveloppe"
-                                                        : "Un projet à concrétiser"
-                                                    : modal?.type === "transfer"
-                                                      ? "Enregistrer un virement"
-                                                      : modal?.type === "contribution"
-                                                        ? "Faire grandir votre projet"
-                                                        : modal?.type === "import"
-                                                          ? "Importer vos opérations"
-                                                          : modal?.type === "start"
-                                                            ? "Bienvenue chez vous."
-                                                            : modal?.type === "calculation"
-                                                              ? "Pourquoi ce montant ?"
-                                                              : modal?.type === "install"
-                                                                ? "Pécule, à portée de main."
-                                                                : modal?.type === "confirm"
-                                                                  ? modal.title
-                                                                  : "";
+  const modalTitle = modal ? windowTitle(modal, b.accounts) : "";
+  const batches = modal?.type === "imports" ? importBatches(b, today) : [];
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!modal) return;
@@ -2485,8 +2453,8 @@ function BudgetAppContent({ user }: BudgetAppProps) {
                       Annuler un import supprime les opérations encore présentes de ce lot, y compris celles modifiées
                       depuis. Les autres opérations et les soldes de référence sont conservés.
                     </p>
-                    {importBatches(b, today).length ? (
-                      importBatches(b, today).map((batch) => (
+                    {batches.length ? (
+                      batches.map((batch) => (
                         <section className="card" key={batch.id}>
                           <h3>
                             {batch.count} opérations ajoutées · {batch.matchedCount} associées · {shortDate(batch.from)}{" "}
