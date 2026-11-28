@@ -150,21 +150,25 @@ export default function BankImport({
       return null;
     }
   }, [budget, rows, selected, matches, accountId, today]);
-  const chosen = rows.filter((r) => selected.has(r.index));
+  const chosen = useMemo(() => rows.filter((r) => selected.has(r.index)), [rows, selected]);
   const nameOffers = useMemo(
     () =>
       nameProposals(
         budget,
         chosen.map((r) => r.transaction.label),
       ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [budget, rows, selected],
+    [budget, chosen],
   );
   const nameChoices = new Map(nameOffers.map((p) => [p.raw, nameEdits.get(p.raw) ?? { on: true, name: p.name }]));
   const income = chosen.filter((r) => r.transaction.amount > 0).reduce((n, r) => n + r.transaction.amount, 0),
     expenses = chosen.filter((r) => r.transaction.amount < 0).reduce((n, r) => n + r.transaction.amount, 0);
   const account = budget.accounts.find((a) => a.id === accountId),
     errors = activePlan ? columnErrors(activePlan) : [];
+  const keptDates = rows
+    .filter((r) => selected.has(r.index) || matches.has(r.index))
+    .map((r) => r.transaction.date)
+    .sort();
+  const tally = `${selected.size} ajout${selected.size === 1 ? "" : "s"} et ${matches.size} association${matches.size === 1 ? "" : "s"}`;
   const changed = () => {
     setMatches(new Map());
     setChoices(new Map());
@@ -587,7 +591,7 @@ export default function BankImport({
           <div className="import-preview">
             {rows.slice(page * pageSize, (page + 1) * pageSize).map((r) => (
               <div key={r.index} className="import-row-group">
-                <label className={`import-row ${r.errors.length || r.duplicate ? "disabled" : ""}`} key={r.index}>
+                <label className={`import-row ${r.errors.length || r.duplicate ? "disabled" : ""}`}>
                   <input
                     type="checkbox"
                     disabled={!!r.errors.length || r.duplicate}
@@ -690,10 +694,7 @@ export default function BankImport({
               setFileError("");
             }}
           >
-            {matches.size
-              ? `Vérifier ${selected.size} ajout${selected.size === 1 ? "" : "s"} et ${matches.size} association${matches.size === 1 ? "" : "s"}`
-              : `Vérifier ${selected.size} opérations`}{" "}
-            <ArrowRight size={16} />
+            {matches.size ? `Vérifier ${tally}` : `Vérifier ${selected.size} opérations`} <ArrowRight size={16} />
           </button>
         </>
       )}
@@ -753,18 +754,7 @@ export default function BankImport({
             <div>
               <dt>Période</dt>
               <dd>
-                {
-                  rows
-                    .filter((r) => selected.has(r.index) || matches.has(r.index))
-                    .map((r) => r.transaction.date)
-                    .sort()[0]
-                }{" "}
-                →{" "}
-                {rows
-                  .filter((r) => selected.has(r.index) || matches.has(r.index))
-                  .map((r) => r.transaction.date)
-                  .sort()
-                  .at(-1)}
+                {keptDates[0]} → {keptDates.at(-1)}
               </dd>
             </div>
             <div>
@@ -777,7 +767,7 @@ export default function BankImport({
             </div>
             <div>
               <dt>Impact sur le solde de référence</dt>
-              <dd>{plan.balanceMode === "history" ? money(0) : money(income + expenses)}</dd>
+              <dd>{money(plan.balanceMode === "history" ? 0 : income + expenses)}</dd>
             </div>
           </dl>
           <p>
@@ -827,12 +817,7 @@ export default function BankImport({
                     invalid: rows.filter((r) => r.errors.length).length,
                     account: account?.name ?? "ce compte",
                     accountId,
-                    month:
-                      rows
-                        .filter((r) => selected.has(r.index) || matches.has(r.index))
-                        .map((r) => r.transaction.date.slice(0, 7))
-                        .sort()
-                        .at(-1) ?? today.slice(0, 7),
+                    month: (keptDates.at(-1) ?? today).slice(0, 7),
                   };
                   if (await save(result.data, `${selected.size} opérations ajoutées, ${matches.size} associées.`)) {
                     onDraftChange(null);
@@ -848,9 +833,7 @@ export default function BankImport({
               }}
             >
               {saving ? <LoaderCircle size={16} className="spin" /> : <Check size={16} />}
-              {matches.size
-                ? `Confirmer ${selected.size} ajout${selected.size === 1 ? "" : "s"} et ${matches.size} association${matches.size === 1 ? "" : "s"}`
-                : `Importer ${selected.size} opérations`}
+              {matches.size ? `Confirmer ${tally}` : `Importer ${selected.size} opérations`}
             </button>
           </div>
         </div>
