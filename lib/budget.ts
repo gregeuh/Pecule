@@ -83,6 +83,11 @@ export type Budget = {
     dismissedChecks?: string[];
     /** The iPhone home: order of its blocks and the ones removed (lib/home-layout.ts). */
     homeLayout?: import("./home-layout").HomeLayout;
+    /**
+     * When a past date of a recurrence counts: « date » (default) counts it on its date; « statement » waits for the
+     * bank statement on accounts that have imports (lib/statement-check.ts).
+     */
+    pastRecurrences?: "date" | "statement";
     dailyComfortCents?: number;
     categoryLimits?: Record<string, number>;
     horizon: "salary" | "month";
@@ -236,9 +241,39 @@ export function transferArrivals(rule: Rule, departures: Transaction[]): Transac
     note: "Virement récurrent",
   }));
 }
+/** Days a debit can take to reach the statement after its planned date. */
+export const STATEMENT_DELAY = 3;
+/**
+ * The days a bank statement covers on an account: from its first to its last imported operation. Undefined when
+ * nothing was imported there.
+ */
+export function statementCoverage(budget: Budget, accountId: string): { from: string; to: string } | undefined {
+  let from = "",
+    to = "";
+  for (const t of budget.transactions)
+    if (t.accountId === accountId && t.importBatch) {
+      if (!from || t.date < from) from = t.date;
+      if (t.date > to) to = t.date;
+    }
+  return from ? { from, to } : undefined;
+}
+/**
+ * « Seulement quand elle apparaît sur le relevé »: on an account with imports, Pécule no longer records a past date
+ * of a recurrence by itself from the first imported day on. The statement brings the real operation; until the
+ * statement reaches that day, the date waits (see `waitingForStatement`).
+ */
+function statementDays(budget: Budget) {
+  if (budget.settings.pastRecurrences !== "statement") return () => false;
+  const starts = new Map(budget.accounts.map((a) => [a.id, statementCoverage(budget, a.id)?.from]));
+  return (accountId: string, date: string) => {
+    const from = starts.get(accountId);
+    return !!from && date >= from;
+  };
+}
 export function materialize(budget: Budget, today = todayISO()): Budget {
   const ids = new Set(budget.transactions.map((t) => t.id));
   const transactions = [...budget.transactions];
+  const waits = statementDays(budget);
   for (const rule of budget.rules) {
     for (const [accountId, arrivals] of [
       [rule.accountId, false],
@@ -248,7 +283,7 @@ export function materialize(budget: Budget, today = todayISO()): Budget {
       if (!acc) continue;
       // The starting balance already includes all operations on its reference date.
       const from = rule.startDate > acc.openingDate ? rule.startDate : shiftDate(acc.openingDate, 1);
-      const departures = occurrences(rule, from, today);
+      const departures = occurrences(rule, from, today).filter((t) => !waits(rule.accountId, t.date));
       for (const t of arrivals ? transferArrivals(rule, departures) : departures)
         if (!ids.has(t.id)) {
           transactions.push(t);
@@ -280,6 +315,41 @@ export function accountBalance(budget: Budget, id: string, at = todayISO()): num
       .reduce((s, t) => s + t.amount, 0)
   );
 }
+/**
+ * Past dates of a recurrence the statement has not reached yet (« Seulement quand elle apparaît sur le relevé »):
+ * the bank may still debit them, so they still count in « ce qu’il vous reste », but not in the balance. A date the
+ * statement already covers without the operation is not counted at all; after a month, a date stops waiting.
+ */
+export function waitingForStatement(budget: Budget, today = todayISO()): Transaction[] {
+  if (budget.settings.pastRecurrences !== "statement") return [];
+  const out: Transaction[] = [];
+  for (const rule of budget.rules) {
+    const cover = statementCoverage(budget, rule.accountId),
+      acc = budget.accounts.find((a) => a.id === rule.accountId);
+    if (!cover || !acc) continue;
+    // The last days of a statement can still miss a debit that is on its way.
+    let from = shiftDate(cover.to, -(STATEMENT_DELAY - 1));
+    const monthAgo = shiftDate(today, -31);
+    if (from < monthAgo) from = monthAgo;
+    if (from <= acc.openingDate) from = shiftDate(acc.openingDate, 1);
+    for (const t of occurrences(rule, from, today)) {
+      // Recorded by hand meanwhile, or already linked to this recurrence: nothing to wait for.
+      const seen = budget.transactions.some(
+        (x) =>
+          x.id === t.id ||
+          (x.ruleId === rule.id && !x.id.startsWith("r:") && Math.abs(daysBetween(x.date, t.date)) <= 10) ||
+          (!x.ruleId &&
+            !x.transferId &&
+            x.accountId === t.accountId &&
+            x.amount > 0 === t.amount > 0 &&
+            Math.abs(x.amount - t.amount) <= Math.abs(t.amount) * 0.03 &&
+            Math.abs(daysBetween(x.date, t.date)) <= 10),
+      );
+      if (!seen) out.push({ ...t, note: "En attente du relevé" });
+    }
+  }
+  return out.sort((a, b) => a.date.localeCompare(b.date));
+}
 export function overview(budget: Budget, today = todayISO()) {
   const b = materialize(budget, today),
     current = b.accounts.filter((a) => a.type !== "savings"),
@@ -292,7 +362,10 @@ export function overview(budget: Budget, today = todayISO()) {
   const monthEnd = dateISO(new Date(parseDate(today).getFullYear(), parseDate(today).getMonth() + 1, 0, 12));
   const end = b.settings.horizon === "salary" && salary ? shiftDate(salary.date, -1) : monthEnd;
   const future = futureTransactions(b, shiftDate(today, 1), end).filter((t) => ids.has(t.accountId));
-  const expenses = Math.max(0, -future.filter((t) => t.amount < 0).reduce((s, t) => s + t.amount, 0));
+  // Not on the statement yet: still to be debited (or credited), so counted like the charges to come.
+  const waiting = waitingForStatement(b, today).filter((t) => ids.has(t.accountId));
+  const expenses = Math.max(0, -[...future, ...waiting].filter((t) => t.amount < 0).reduce((s, t) => s + t.amount, 0));
+  const waitingIncome = waiting.filter((t) => t.amount > 0).reduce((s, t) => s + t.amount, 0);
   const monthStart = today.slice(0, 7) + "-01";
   const reserve =
     b.settings.reserve +
@@ -308,7 +381,7 @@ export function overview(budget: Budget, today = todayISO()) {
         ),
       0,
     );
-  const available = total - expenses - reserve,
+  const available = total + waitingIncome - expenses - reserve,
     days = Math.max(1, daysBetween(today, end) + 1);
   const monthly = b.transactions.filter((t) => t.date >= monthStart && t.date <= today && !t.transferId);
   return {
@@ -317,6 +390,8 @@ export function overview(budget: Budget, today = todayISO()) {
     salary,
     end,
     expenses,
+    waiting,
+    waitingIncome,
     reserve,
     available,
     days,

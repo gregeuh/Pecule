@@ -1,7 +1,7 @@
 "use client";
 import type { ReactNode } from "react";
 import { CalendarDays, Scale } from "lucide-react";
-import { futureTransactions, parseDate, shiftDate, shortDate, type Budget } from "../lib/budget";
+import { futureTransactions, parseDate, shiftDate, shortDate, type Budget, type Transaction } from "../lib/budget";
 import { duplicateRules } from "../lib/budget-checks";
 import { latestReconciliation } from "../lib/bank-reconciliation";
 
@@ -12,6 +12,8 @@ type Overview = {
   available: number;
   end: string;
   salary?: { date: string; ruleId?: string };
+  /** Past dates of a recurrence the statement has not shown yet (« Seulement quand elle apparaît sur le relevé »). */
+  waiting?: Transaction[];
 };
 
 /** « Pourquoi ce montant ? »: the real balance, every charge until payday, the reserve, and the payday taken. */
@@ -34,9 +36,11 @@ export default function CalculationSheet({
 }) {
   const current = b.accounts.filter((a) => a.type !== "savings");
   const ids = new Set(current.map((a) => a.id));
-  const charges = futureTransactions(b, shiftDate(today, 1), o.end)
+  const waitingIds = new Set((o.waiting ?? []).map((t) => t.id));
+  const charges = [...(o.waiting ?? []), ...futureTransactions(b, shiftDate(today, 1), o.end)]
     .filter((t) => ids.has(t.accountId) && t.amount < 0)
     .sort((x, y) => x.amount - y.amount);
+  const waitingIncome = (o.waiting ?? []).filter((t) => ids.has(t.accountId) && t.amount > 0);
   const doubled = new Set(duplicateRules(b).flatMap((d) => d.rules.map((r) => r.id)));
   const shown = charges.slice(0, 5),
     rest = charges.slice(5);
@@ -83,6 +87,22 @@ export default function CalculationSheet({
         <b>{m(o.total)}</b>
       </div>
 
+      {waitingIncome.length > 0 && (
+        <div className="calculation-line">
+          <span>
+            <strong>À recevoir, pas encore sur le relevé</strong>
+            <small>{waitingIncome.map((t) => `${t.label} (${shortDate(t.date)})`).join(", ")}</small>
+          </span>
+          <b>
+            {m(
+              waitingIncome.reduce((s, t) => s + t.amount, 0),
+              true,
+              true,
+            )}
+          </b>
+        </div>
+      )}
+
       <div className="calculation-charges">
         <h3>Charges prévues d’ici le {shortDate(o.end)}</h3>
         {shown.length ? (
@@ -93,6 +113,7 @@ export default function CalculationSheet({
                   <strong>{t.label}</strong>
                   <small>
                     {shortDate(t.date)}
+                    {waitingIds.has(t.id) ? " · en attente du relevé" : ""}
                     {t.ruleId && doubled.has(t.ruleId) ? " · même nom qu’une autre récurrence" : ""}
                   </small>
                 </span>

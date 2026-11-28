@@ -43,6 +43,8 @@ export type Modal =
   | { type: "imports" }
   | { type: "readable-names" }
   | { type: "home-layout" }
+  | { type: "not-on-statement" }
+  | { type: "past-recurrences" }
   | { type: "import"; accountId?: string; returnTo?: "balance" | "reconcile" }
   | { type: "start" }
   | { type: "calculation" }

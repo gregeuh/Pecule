@@ -73,6 +73,7 @@ jobs:
           npm run test:e2e:savings
           npm run test:e2e:checks
           npm run test:e2e:home
+          npm run test:e2e:statement
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

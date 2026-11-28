@@ -12,7 +12,7 @@ import {
   Sparkles,
   Upload,
 } from "lucide-react";
-import type { Budget } from "../lib/budget";
+import { money, type Budget } from "../lib/budget";
 import { nameProposals, restoreBankLabels } from "../lib/readable-names";
 import type { ConfirmationKind } from "../lib/confirmation-kind";
 import { parseAmount } from "../lib/csv";
@@ -24,6 +24,7 @@ import { useFormDraftStore } from "./form-drafts";
 import GoogleConnection from "./google-connection";
 import { ErrorMessage } from "./interface-feedback";
 import ReminderSettings from "./reminder-settings";
+import PastRecurrencesSetting from "./past-recurrences-setting";
 import ThemePicker from "./theme-picker";
 import { ValidatedForm, FormField } from "./validated-form";
 import { downloadFile, inputAmount } from "./download-file";
@@ -220,6 +221,13 @@ export default function SettingsPage({
             hidden={hidden}
             save={save}
             confirm={(title, message, action) => open({ type: "confirm", title, message, action })}
+          />
+          <PastRecurrencesSetting
+            budget={b}
+            busy={busy}
+            m={(n, decimals = true, signed = false) => (hidden ? "•••• €" : money(n, decimals, signed))}
+            save={save}
+            onReview={() => open({ type: "not-on-statement" })}
           />
           {(() => {
             const waiting = nameProposals(b).length,

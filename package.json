@@ -51,6 +51,7 @@
     "test:e2e:savings": "node tests/e2e/savings.mjs",
     "test:e2e:checks": "node tests/e2e/budget-checks.mjs",
     "test:e2e:home": "node tests/e2e/home-layout.mjs",
+    "test:e2e:statement": "node tests/e2e/statement-check.mjs",
     "format": "prettier --write \"{app,lib,tests,scripts}/**/*.{ts,tsx,mts,mjs}\"",
     "format:check": "prettier --check \"{app,lib,tests,scripts}/**/*.{ts,tsx,mts,mjs}\"",
     "install:ci": "npm ci --include=dev --include=optional"

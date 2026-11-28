@@ -13,6 +13,7 @@ import {
   type DoubleCount,
   type DuplicateRules,
 } from "../lib/budget-checks";
+import { notOnStatement } from "../lib/statement-check";
 
 type Props = {
   budget: Budget;
@@ -22,6 +23,8 @@ type Props = {
   save: (next: Budget, message?: string) => Promise<boolean>;
   /** How many findings to show at most (the rest stays for later). */
   limit?: number;
+  /** Opens « Pas sur votre relevé ». */
+  onStatement?: () => void;
 };
 
 const rhythm = (r: Rule) =>
@@ -37,13 +40,19 @@ const rhythm = (r: Rule) =>
  * Things that make « ce qu’il vous reste » wrong: two recurrences for one payment, or a planned payment counted
  * next to the real one. Each finding is fixed or dismissed in one tap; nothing changes without it.
  */
-export default function BudgetChecks({ budget: b, today, busy, m, save, limit = 3 }: Props) {
+export default function BudgetChecks({ budget: b, today, busy, m, save, limit = 3, onStatement }: Props) {
   const [done, setDone] = useState("");
   const duplicates = duplicateRules(b);
   const twice = doubleCounts(b, today);
-  const findings: ({ kind: "rules"; item: DuplicateRules } | { kind: "twice"; item: DoubleCount })[] = [
+  const missing = onStatement ? notOnStatement(b) : [];
+  const findings: (
+    | { kind: "rules"; item: DuplicateRules }
+    | { kind: "twice"; item: DoubleCount }
+    | { kind: "statement"; item: { key: string } }
+  )[] = [
     ...duplicates.map((item) => ({ kind: "rules" as const, item })),
     ...twice.map((item) => ({ kind: "twice" as const, item })),
+    ...(missing.length ? [{ kind: "statement" as const, item: { key: `statement:${missing.length}` } }] : []),
   ].slice(0, limit);
   if (!findings.length)
     return done ? (
@@ -56,7 +65,32 @@ export default function BudgetChecks({ budget: b, today, busy, m, save, limit = 
   return (
     <section className="budget-checks" aria-label="Vérifications du budget">
       {findings.map((f) =>
-        f.kind === "rules" ? (
+        f.kind === "statement" ? (
+          <CheckCard
+            key="statement"
+            id="statement"
+            title={`${missing.length} opération${missing.length > 1 ? "s" : ""} pas sur votre relevé`}
+            summary={m(
+              missing.reduce((s, i) => s + i.transaction.amount, 0),
+              true,
+              true,
+            )}
+          >
+            <p>
+              {missing.length > 1
+                ? "Pécule les a ajoutées à partir de vos récurrences, mais votre banque ne les montre pas : "
+                : "Pécule l’a ajoutée à partir d’une récurrence, mais votre banque ne la montre pas : "}
+              {missing
+                .slice(0, 3)
+                .map((i) => i.transaction.label)
+                .join(", ")}
+              {missing.length > 3 ? "…" : "."}
+            </p>
+            <button type="button" className="primary full-width" disabled={busy} onClick={onStatement}>
+              {missing.length > 1 ? "Les vérifier" : "La vérifier"}
+            </button>
+          </CheckCard>
+        ) : f.kind === "rules" ? (
           <CheckCard
             key={f.item.key}
             id={f.item.key}
