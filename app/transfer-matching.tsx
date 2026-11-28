@@ -18,6 +18,12 @@ type Props = {
   onDone: () => void;
   initialDebit?: string;
 };
+type Tab = "suggestions" | "manual" | "linked";
+const tabs: [Tab, string][] = [
+  ["suggestions", "Propositions"],
+  ["manual", "Choisir deux opérations"],
+  ["linked", "Associations existantes"],
+];
 export default function TransferMatching({ budget, saving, hidden, serverError, save, onDone, initialDebit }: Props) {
   const [debitId, setDebitId] = useState(initialDebit ?? ""),
     [creditId, setCreditId] = useState(""),
@@ -27,7 +33,7 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
     [review, setReview] = useState(false),
     [confirmed, setConfirmed] = useState(false),
     [error, setError] = useState(""),
-    [tab, setTab] = useState<"suggestions" | "manual" | "linked">("suggestions");
+    [tab, setTab] = useState<Tab>("suggestions");
   const lock = useRef(false),
     feedback = useRef<HTMLParagraphElement>(null),
     m = (n: number, signed = false) => (hidden ? "•••• €" : money(n, true, signed)),
@@ -61,6 +67,8 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
         .sort((a, b) => b.date.localeCompare(a.date)),
     [budget],
   );
+  const listed = { suggestions, manual: debits, linked }[tab],
+    pages = Math.ceil(listed.length / 20);
   const [unlinkId, setUnlinkId] = useState("");
   const [creditQuery, setCreditQuery] = useState(""),
     [creditPage, setCreditPage] = useState(0);
@@ -81,9 +89,26 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
       creditSelect.current?.scrollIntoView({ block: "center" });
     }
   }, [debitId, review]);
+  function clearCredit(query: string) {
+    setCreditQuery(query);
+    setCreditPage(0);
+    setCreditId("");
+  }
   function fail(message: string) {
     setError(message);
     requestAnimationFrame(() => feedback.current?.focus());
+  }
+  async function submit(next: () => Budget, message: string, failure: string) {
+    if (lock.current) return;
+    lock.current = true;
+    setError("");
+    try {
+      if (await save(next(), message)) onDone();
+    } catch (cause) {
+      fail(cause instanceof Error ? cause.message : failure);
+    } finally {
+      lock.current = false;
+    }
   }
   function row(t: Transaction) {
     return (
@@ -97,7 +122,21 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
       </>
     );
   }
-  function switchTab(value: typeof tab) {
+  function confirmBox(text: string) {
+    return (
+      <label className="bank-tools-check">
+        <input type="checkbox" checked={confirmed} disabled={saving} onChange={(e) => setConfirmed(e.target.checked)} />
+        {text}
+      </label>
+    );
+  }
+  function chooseDebit(id: string) {
+    setDebitId(id);
+    setCreditId("");
+    setCreditQuery("");
+    setCreditPage(0);
+  }
+  function switchTab(value: Tab) {
     setTab(value);
     setPage(0);
     setCreditQuery("");
@@ -119,27 +158,16 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
         {!review && !unlinkId && (
           <>
             <div className="bank-tools-actions" role="group" aria-label="Parcours d’association">
-              <button
-                type="button"
-                className={tab === "suggestions" ? "primary compact" : "secondary compact"}
-                onClick={() => switchTab("suggestions")}
-              >
-                Propositions
-              </button>
-              <button
-                type="button"
-                className={tab === "manual" ? "primary compact" : "secondary compact"}
-                onClick={() => switchTab("manual")}
-              >
-                Choisir deux opérations
-              </button>
-              <button
-                type="button"
-                className={tab === "linked" ? "primary compact" : "secondary compact"}
-                onClick={() => switchTab("linked")}
-              >
-                Associations existantes
-              </button>
+              {tabs.map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  className={tab === value ? "primary compact" : "secondary compact"}
+                  onClick={() => switchTab(value)}
+                >
+                  {label}
+                </button>
+              ))}
             </div>
             {tab === "suggestions" && (
               <>
@@ -179,16 +207,7 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
                             {item.candidateCount > 1 ? "s" : ""}
                           </small>
                         </span>
-                        <button
-                          className="secondary compact"
-                          type="button"
-                          onClick={() => {
-                            setDebitId(item.debit.id);
-                            setCreditId("");
-                            setCreditQuery("");
-                            setCreditPage(0);
-                          }}
-                        >
+                        <button className="secondary compact" type="button" onClick={() => chooseDebit(item.debit.id)}>
                           Examiner
                         </button>
                       </li>
@@ -235,16 +254,7 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
                   {debits.slice(page * 20, (page + 1) * 20).map((t) => (
                     <li key={t.id}>
                       <span>{row(t)}</span>
-                      <button
-                        type="button"
-                        className="secondary compact"
-                        onClick={() => {
-                          setDebitId(t.id);
-                          setCreditId("");
-                          setCreditQuery("");
-                          setCreditPage(0);
-                        }}
-                      >
+                      <button type="button" className="secondary compact" onClick={() => chooseDebit(t.id)}>
                         Choisir ce débit
                       </button>
                     </li>
@@ -253,56 +263,49 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
                 {!debits.length && <p>Aucun débit disponible pour cette recherche.</p>}
               </>
             )}
-            {tab === "linked" && (
-              <>
-                {!linked.length ? (
-                  <p>Aucune association à dissocier.</p>
-                ) : (
-                  <ul className="bank-tools-list">
-                    {linked.slice(page * 20, (page + 1) * 20).map((t) => (
-                      <li key={t.id}>
-                        <span>
-                          {row(t)}
-                          <small>
-                            Vers{" "}
-                            {accountName(
-                              budget.transactions.find(
-                                (other) => other.transferId === t.transferId && other.id !== t.id,
-                              )?.accountId ?? "",
-                            )}
-                          </small>
-                        </span>
-                        <button
-                          type="button"
-                          className="secondary compact"
-                          onClick={() => {
-                            setUnlinkId(t.transferId!);
-                            setConfirmed(false);
-                          }}
-                        >
-                          Dissocier
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </>
-            )}
-            {Math.ceil((tab === "suggestions" ? suggestions : tab === "manual" ? debits : linked).length / 20) > 1 && (
+            {tab === "linked" &&
+              (!linked.length ? (
+                <p>Aucune association à dissocier.</p>
+              ) : (
+                <ul className="bank-tools-list">
+                  {linked.slice(page * 20, (page + 1) * 20).map((t) => (
+                    <li key={t.id}>
+                      <span>
+                        {row(t)}
+                        <small>
+                          Vers{" "}
+                          {accountName(
+                            budget.transactions.find((other) => other.transferId === t.transferId && other.id !== t.id)
+                              ?.accountId ?? "",
+                          )}
+                        </small>
+                      </span>
+                      <button
+                        type="button"
+                        className="secondary compact"
+                        onClick={() => {
+                          setUnlinkId(t.transferId!);
+                          setConfirmed(false);
+                        }}
+                      >
+                        Dissocier
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ))}
+            {pages > 1 && (
               <div className="bank-tools-pages">
                 <button type="button" className="secondary compact" disabled={!page} onClick={() => setPage(page - 1)}>
                   Précédent
                 </button>
                 <span>
-                  Page {page + 1} /{" "}
-                  {Math.ceil((tab === "suggestions" ? suggestions : tab === "manual" ? debits : linked).length / 20)}
+                  Page {page + 1} / {pages}
                 </span>
                 <button
                   type="button"
                   className="secondary compact"
-                  disabled={
-                    (page + 1) * 20 >= (tab === "suggestions" ? suggestions : tab === "manual" ? debits : linked).length
-                  }
+                  disabled={(page + 1) * 20 >= listed.length}
                   onClick={() => setPage(page + 1)}
                 >
                   Suivant
@@ -321,11 +324,7 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
                     <input
                       name="transfer-credit-search"
                       value={creditQuery}
-                      onChange={(e) => {
-                        setCreditQuery(e.target.value);
-                        setCreditPage(0);
-                        setCreditId("");
-                      }}
+                      onChange={(e) => clearCredit(e.target.value)}
                       placeholder="Compte, libellé ou référence…"
                     />
                     {creditQuery && (
@@ -334,9 +333,7 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
                         className="text-button"
                         aria-label="Effacer la recherche du crédit"
                         onClick={(e) => {
-                          setCreditQuery("");
-                          setCreditPage(0);
-                          setCreditId("");
+                          clearCredit("");
                           e.currentTarget.parentElement?.querySelector("input")?.focus();
                         }}
                       >
@@ -436,15 +433,7 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
                 elles appartiennent à deux mois différents.
               </p>
             )}
-            <label className="bank-tools-check">
-              <input
-                type="checkbox"
-                checked={confirmed}
-                disabled={saving}
-                onChange={(e) => setConfirmed(e.target.checked)}
-              />
-              J’ai vérifié sur mes relevés qu’il s’agit du même virement entre mes comptes.
-            </label>
+            {confirmBox("J’ai vérifié sur mes relevés qu’il s’agit du même virement entre mes comptes.")}
             <div className="form-actions">
               <button type="button" className="secondary" disabled={saving} onClick={() => setReview(false)}>
                 Revenir aux opérations
@@ -453,24 +442,13 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
                 type="button"
                 className="primary"
                 disabled={!confirmed || saving}
-                onClick={async () => {
-                  if (lock.current) return;
-                  lock.current = true;
-                  setError("");
-                  try {
-                    if (
-                      await save(
-                        linkTransfer(budget, debit.id, credit.id, crypto.randomUUID()),
-                        "Virement associé. Les soldes sont conservés.",
-                      )
-                    )
-                      onDone();
-                  } catch (cause) {
-                    fail(cause instanceof Error ? cause.message : "Impossible d’associer les opérations.");
-                  } finally {
-                    lock.current = false;
-                  }
-                }}
+                onClick={() =>
+                  submit(
+                    () => linkTransfer(budget, debit.id, credit.id, crypto.randomUUID()),
+                    "Virement associé. Les soldes sont conservés.",
+                    "Impossible d’associer les opérations.",
+                  )
+                }
               >
                 Associer ces deux opérations
               </button>
@@ -498,15 +476,7 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
                   </li>
                 ))}
             </ul>
-            <label className="bank-tools-check">
-              <input
-                type="checkbox"
-                checked={confirmed}
-                disabled={saving}
-                onChange={(e) => setConfirmed(e.target.checked)}
-              />
-              Je confirme la dissociation des deux écritures.
-            </label>
+            {confirmBox("Je confirme la dissociation des deux écritures.")}
             <div className="form-actions">
               <button type="button" className="secondary" disabled={saving} onClick={() => setUnlinkId("")}>
                 Annuler
@@ -515,24 +485,13 @@ export default function TransferMatching({ budget, saving, hidden, serverError, 
                 type="button"
                 className="primary"
                 disabled={!confirmed || saving}
-                onClick={async () => {
-                  if (lock.current) return;
-                  lock.current = true;
-                  setError("");
-                  try {
-                    if (
-                      await save(
-                        unlinkTransfer(budget, unlinkId),
-                        "Association retirée. Les deux opérations sont conservées.",
-                      )
-                    )
-                      onDone();
-                  } catch (cause) {
-                    fail(cause instanceof Error ? cause.message : "Impossible de dissocier les opérations.");
-                  } finally {
-                    lock.current = false;
-                  }
-                }}
+                onClick={() =>
+                  submit(
+                    () => unlinkTransfer(budget, unlinkId),
+                    "Association retirée. Les deux opérations sont conservées.",
+                    "Impossible de dissocier les opérations.",
+                  )
+                }
               >
                 Dissocier les opérations
               </button>

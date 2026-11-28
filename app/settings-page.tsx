@@ -71,6 +71,11 @@ export default function SettingsPage({
   onExploreDemo,
 }: SettingsPageProps) {
   const drafts = useFormDraftStore();
+  const waiting = nameProposals(b).length,
+    renamed = b.transactions.filter((t) => t.bankLabel).length + b.rules.filter((r) => r.bankLabel).length,
+    plural = renamed > 1 ? "s" : "";
+  const confirmRestore = (title: string, message: string, next: Budget, done: string) =>
+    open({ type: "confirm", tone: "restore", title, message, action: () => save(next, done) });
   return (
     <div key={demo ? "demo-settings" : "personal-settings"} className="settings-workspace">
       <ReminderSettings demo={demo} />
@@ -229,49 +234,42 @@ export default function SettingsPage({
             save={save}
             onReview={() => open({ type: "not-on-statement" })}
           />
-          {(() => {
-            const waiting = nameProposals(b).length,
-              renamed = b.transactions.filter((t) => t.bankLabel).length + b.rules.filter((r) => r.bankLabel).length;
-            return (
-              <section className="card settings-card">
-                <h3>Noms des opérations</h3>
-                <p>
-                  Des noms lisibles à la place des libellés de la banque : « PRLV SEPA ASSURANCE LCL » devient «
-                  Assurance LCL ». Le libellé d’origine reste visible sur chaque opération.
-                </p>
-                <button
-                  type="button"
-                  className="secondary full-width"
-                  disabled={busy || !waiting}
-                  onClick={() => open({ type: "readable-names" })}
-                >
-                  {waiting
-                    ? waiting > 1
-                      ? `Rendre lisibles ${waiting} libellés`
-                      : "Rendre lisible 1 libellé"
-                    : "Tous vos libellés sont lisibles"}
-                </button>
-                {renamed > 0 && (
-                  <button
-                    type="button"
-                    className="text-button"
-                    disabled={busy}
-                    onClick={() =>
-                      open({
-                        type: "confirm",
-                        tone: "restore",
-                        title: "Remettre les libellés de la banque ?",
-                        message: `${renamed} opération${renamed > 1 ? "s" : ""} et récurrence${renamed > 1 ? "s" : ""} reprendront le libellé exact de votre banque. Les noms mémorisés pour les prochains imports sont conservés.`,
-                        action: () => save(restoreBankLabels(b), "Libellés de la banque remis."),
-                      })
-                    }
-                  >
-                    Remettre les libellés de la banque
-                  </button>
-                )}
-              </section>
-            );
-          })()}
+          <section className="card settings-card">
+            <h3>Noms des opérations</h3>
+            <p>
+              Des noms lisibles à la place des libellés de la banque : « PRLV SEPA ASSURANCE LCL » devient « Assurance
+              LCL ». Le libellé d’origine reste visible sur chaque opération.
+            </p>
+            <button
+              type="button"
+              className="secondary full-width"
+              disabled={busy || !waiting}
+              onClick={() => open({ type: "readable-names" })}
+            >
+              {waiting
+                ? waiting > 1
+                  ? `Rendre lisibles ${waiting} libellés`
+                  : "Rendre lisible 1 libellé"
+                : "Tous vos libellés sont lisibles"}
+            </button>
+            {renamed > 0 && (
+              <button
+                type="button"
+                className="text-button"
+                disabled={busy}
+                onClick={() =>
+                  confirmRestore(
+                    "Remettre les libellés de la banque ?",
+                    `${renamed} opération${plural} et récurrence${plural} reprendront le libellé exact de votre banque. Les noms mémorisés pour les prochains imports sont conservés.`,
+                    restoreBankLabels(b),
+                    "Libellés de la banque remis.",
+                  )
+                }
+              >
+                Remettre les libellés de la banque
+              </button>
+            )}
+          </section>
         </div>
       </section>
       <section className="settings-group" id="settings-data" aria-labelledby="data-title">
@@ -326,14 +324,12 @@ export default function SettingsPage({
                     const result = budgetSchema.safeParse(JSON.parse(await file.text()));
                     if (!result.success) throw new Error("La sauvegarde Pécule est invalide.");
                     const restored = result.data;
-                    open({
-                      type: "confirm",
-                      title: "Restaurer cette sauvegarde ?",
-                      tone: "restore",
-                      message:
-                        "Cette sauvegarde remplacera votre budget actuel. Téléchargez d’abord votre budget si vous souhaitez le conserver.",
-                      action: () => save(restored, "Votre sauvegarde a été restaurée."),
-                    });
+                    confirmRestore(
+                      "Restaurer cette sauvegarde ?",
+                      "Cette sauvegarde remplacera votre budget actuel. Téléchargez d’abord votre budget si vous souhaitez le conserver.",
+                      restored,
+                      "Votre sauvegarde a été restaurée.",
+                    );
                   } catch (err) {
                     setToast(err instanceof Error ? err.message : "Fichier illisible.");
                   }
@@ -350,24 +346,23 @@ export default function SettingsPage({
               <Sparkles size={16} />
               Explorer la démonstration
             </button>
-            {demo ? (
+            {demo && (
               <button type="button" onClick={() => (hasBudget ? void load() : open({ type: "start" }))}>
                 <ArrowRight size={16} />
                 {hasBudget ? "Retrouver mon budget" : "Créer mon budget personnel"}
               </button>
-            ) : null}
+            )}
           </div>
-          {demo ? null : (
+          {!demo && (
             <BudgetVersions
               onError={setToast}
               onRestore={(restored, savedAt) =>
-                open({
-                  type: "confirm",
-                  title: "Restaurer cette version ?",
-                  tone: "restore",
-                  message: `Votre budget reviendra à son état du ${savedAt}. La version actuelle restera disponible dans les versions précédentes.`,
-                  action: () => save(restored, "La version a été restaurée."),
-                })
+                confirmRestore(
+                  "Restaurer cette version ?",
+                  `Votre budget reviendra à son état du ${savedAt}. La version actuelle restera disponible dans les versions précédentes.`,
+                  restored,
+                  "La version a été restaurée.",
+                )
               }
             />
           )}
