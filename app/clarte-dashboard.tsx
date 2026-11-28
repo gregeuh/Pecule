@@ -96,14 +96,16 @@ export default function ClarteDashboard(p: Props) {
     o = overview(b, p.today),
     m = (n: number, decimals = true, signed = false) => (p.hidden ? "•••• €" : money(n, decimals, signed));
   const signal = getAvailableSignal(o.available, o.days, b.settings.dailyComfortCents);
-  const showSignal = !p.hidden && !p.loadError && b.accounts.some((a) => a.type !== "savings");
+  const hasCurrent = b.accounts.some((a) => a.type !== "savings");
+  const showSignal = !p.hidden && !p.loadError && hasCurrent;
   const SignalIcon =
     signal.tone === "negative" ? CircleAlert : signal.tone === "attention" ? TriangleAlert : ShieldCheck;
   const upcoming = futureTransactions(b, shiftDate(p.today, 1), shiftDate(p.today, 60));
   const recent = [...b.transactions]
     .filter((t) => t.date <= p.today)
     .sort((a, b) => b.date.localeCompare(a.date) || a.label.localeCompare(b.label));
-  const forecast = upcoming.filter((t) => t.date <= (o.salary?.date ?? o.end)).slice(0, 3),
+  const forecastEnd = o.salary?.date ?? o.end;
+  const forecast = upcoming.filter((t) => t.date <= forecastEnd).slice(0, 3),
     goal = b.goals[0];
   const goalReserve = goal
     ? Math.max(
@@ -127,10 +129,21 @@ export default function ClarteDashboard(p: Props) {
           : p.pending
             ? `${p.pending} en attente`
             : "Synchronisé";
-  const until =
-    o.salary && b.settings.horizon === "salary"
-      ? `votre paie, le ${shortDate(o.salary.date)}`
-      : `la fin du mois, le ${shortDate(o.end)}`;
+  const untilPayday = !!o.salary && b.settings.horizon === "salary";
+  const periodEnd = untilPayday && o.salary ? o.salary.date : o.end;
+  const until = `${untilPayday ? "votre paie" : "la fin du mois"}, le ${shortDate(periodEnd)}`;
+  const perDay = `${m(Math.floor(o.daily / 100) * 100, false)} / jour`;
+  const day = (date: string) => {
+    const d = parseDate(date);
+    return (
+      <>
+        <span>{d.toLocaleDateString("fr-FR", { weekday: "short" })}</span>
+        <strong>
+          {d.getDate()} <small>{d.toLocaleDateString("fr-FR", { month: "short" })}</small>
+        </strong>
+      </>
+    );
+  };
   const icon = (t: Transaction) => (
     <MerchantIcon
       label={t.label}
@@ -176,14 +189,14 @@ export default function ClarteDashboard(p: Props) {
             {m(o.available)}
           </strong>
           <div className="clarte-daily-desktop">
-            <strong>{m(Math.floor(o.daily / 100) * 100, false)} / jour</strong>
+            <strong>{perDay}</strong>
             <span>
               sur les {o.days} jour{o.days > 1 ? "s" : ""} restants
             </span>
           </div>
         </div>
         <div className="clarte-mobile-period">
-          <strong>{m(Math.floor(o.daily / 100) * 100, false)} / jour</strong>
+          <strong>{perDay}</strong>
           <span>D’ici {until}</span>
         </div>
         <button type="button" className="text-button clarte-calculation-link" onClick={p.onCalculate}>
@@ -212,26 +225,18 @@ export default function ClarteDashboard(p: Props) {
       <div className="clarte-section-title">
         <h2>Les jours qui viennent</h2>
         <span>
-          {shortDate(p.today)} → {shortDate(o.salary?.date ?? o.end)}
+          {shortDate(p.today)} → {shortDate(forecastEnd)}
         </span>
       </div>
       <div className="clarte-calendar">
         <button type="button" className="current" onClick={p.onAccounts}>
-          <span>{parseDate(p.today).toLocaleDateString("fr-FR", { weekday: "short" })}</span>
-          <strong>
-            {parseDate(p.today).getDate()}{" "}
-            <small>{parseDate(p.today).toLocaleDateString("fr-FR", { month: "short" })}</small>
-          </strong>
+          {day(p.today)}
           <span>Aujourd’hui</span>
           <b>{m(o.total)}</b>
         </button>
         {forecast.map((t) => (
           <button type="button" key={t.id} onClick={() => p.onUpcoming(t)}>
-            <span>{parseDate(t.date).toLocaleDateString("fr-FR", { weekday: "short" })}</span>
-            <strong>
-              {parseDate(t.date).getDate()}{" "}
-              <small>{parseDate(t.date).toLocaleDateString("fr-FR", { month: "short" })}</small>
-            </strong>
+            {day(t.date)}
             <span>{t.label}</span>
             <b>{m(t.amount, true, true)}</b>
           </button>
@@ -242,17 +247,16 @@ export default function ClarteDashboard(p: Props) {
       </p>
     </section>
   );
-  const visibleRecent = recent;
   const recentCard = (limit = compact ? 3 : 5) => (
     <section className="clarte-card clarte-recent">
       <div className="clarte-section-title">
-        <h2>{"Dernières opérations"}</h2>
+        <h2>Dernières opérations</h2>
         <button type="button" className="text-button" onClick={p.onTransactions}>
           Tout voir <ArrowRight size={15} />
         </button>
       </div>
       {recent.length ? (
-        visibleRecent.slice(0, limit).map((t) => (
+        recent.slice(0, limit).map((t) => (
           <OperationGesture
             id={t.id}
             label={t.label}
@@ -373,6 +377,7 @@ export default function ClarteDashboard(p: Props) {
     b.transactions.filter((t) => t.date.startsWith(p.today.slice(0, 7))),
     p.today,
   );
+  const month = parseDate(p.today).toLocaleDateString("fr-FR", { month: "long" });
   const tabs = [
     { id: "overview", label: "Aperçu" },
     { id: "operations", label: "Activité" },
@@ -432,7 +437,6 @@ export default function ClarteDashboard(p: Props) {
     </div>
   );
   const urgent = !p.hidden && !p.loadError && tightPeriod(b, p.today)?.tone === "negative";
-  const layoutHidden = new Set(b.settings.homeLayout?.hidden ?? []);
   const blocks: Record<HomeBlock, ReactNode> = {
     conseils: !p.loadError && (
       <MonthAssist
@@ -453,7 +457,7 @@ export default function ClarteDashboard(p: Props) {
         budget={b}
         today={p.today}
         end={o.end}
-        untilPayday={!!o.salary && b.settings.horizon === "salary"}
+        untilPayday={untilPayday}
         spent={monthly.spent}
         income={o.income}
         hidden={p.hidden}
@@ -498,24 +502,26 @@ export default function ClarteDashboard(p: Props) {
       </AnimatedDetails>
     ),
   };
+  const hero = hasCurrent && !p.loadError && (
+    <HomeHero
+      available={o.available}
+      daily={o.daily}
+      until={periodEnd}
+      untilPayday={untilPayday}
+      tone={showSignal ? signal.tone : null}
+      hidden={p.hidden}
+      savedCents={b.goals.reduce((sum, g) => sum + g.saved, 0)}
+      budgetKey={`${b.name}|${b.goals.map((g) => g.id).join(",")}`}
+      onOpen={p.onCalculate}
+    />
+  );
+  const shown = visibleBlocks(b.settings.homeLayout, urgent);
   if (compact)
     return (
       <div className="clarte-dashboard wallet-dashboard home-tiles-layout">
         {header}
-        {b.accounts.some((a) => a.type !== "savings") && !p.loadError && (
-          <HomeHero
-            available={o.available}
-            daily={o.daily}
-            until={o.salary && b.settings.horizon === "salary" ? o.salary.date : o.end}
-            untilPayday={!!o.salary && b.settings.horizon === "salary"}
-            tone={showSignal ? signal.tone : null}
-            hidden={p.hidden}
-            savedCents={b.goals.reduce((sum, g) => sum + g.saved, 0)}
-            budgetKey={`${b.name}|${b.goals.map((g) => g.id).join(",")}`}
-            onOpen={p.onCalculate}
-          />
-        )}
-        {visibleBlocks(b.settings.homeLayout, urgent).map((id) => (
+        {hero}
+        {shown.map((id) => (
           <HomeBlockFrame key={id} onLongPress={p.onEditHome}>
             {blocks[id]}
           </HomeBlockFrame>
@@ -532,40 +538,11 @@ export default function ClarteDashboard(p: Props) {
       {header}
       <div className="wallet-home-grid">
         <div className="wallet-home-accounts">
-          {b.accounts.some((a) => a.type !== "savings") && !p.loadError && (
-            <HomeHero
-              available={o.available}
-              daily={o.daily}
-              until={o.salary && b.settings.horizon === "salary" ? o.salary.date : o.end}
-              untilPayday={!!o.salary && b.settings.horizon === "salary"}
-              tone={showSignal ? signal.tone : null}
-              hidden={p.hidden}
-              savedCents={b.goals.reduce((sum, g) => sum + g.saved, 0)}
-              budgetKey={`${b.name}|${b.goals.map((g) => g.id).join(",")}`}
-              onOpen={p.onCalculate}
-            />
-          )}
+          {hero}
           {accounts}
-          {!p.loadError && (!layoutHidden.has("conseils") || urgent) && (
-            <MonthAssist
-              budget={b}
-              today={p.today}
-              hidden={p.hidden}
-              busy={p.saving}
-              onPaydaySavings={p.onPaydaySavings}
-              onPostpone={p.onPostpone}
-            />
-          )}
-          {!p.loadError && !p.hidden && !layoutHidden.has("verifications") && p.checks}
-          {!layoutHidden.has("saisie") && (
-            <AnimatedDetails className="wallet-capture">
-              <summary>
-                Ma saisie et mes favoris
-                <ChevronDown size={17} />
-              </summary>
-              {p.capture}
-            </AnimatedDetails>
-          )}
+          {shown.includes("conseils") && blocks.conseils}
+          {shown.includes("verifications") && blocks.verifications}
+          {shown.includes("saisie") && blocks.saisie}
         </div>
         <div className="wallet-home-content">
           <div className="wallet-tabs" role="tablist" aria-label="Vue du budget">
@@ -581,17 +558,14 @@ export default function ClarteDashboard(p: Props) {
                 tabIndex={tab === item.id ? 0 : -1}
                 onClick={() => setTab(item.id)}
                 onKeyDown={(e) => {
-                  const next =
-                    e.key === "ArrowRight"
-                      ? (index + 1) % tabs.length
-                      : e.key === "ArrowLeft"
-                        ? (index + tabs.length - 1) % tabs.length
-                        : e.key === "Home"
-                          ? 0
-                          : e.key === "End"
-                            ? tabs.length - 1
-                            : -1;
-                  if (next < 0) return;
+                  const keys: Partial<Record<string, number>> = {
+                    ArrowRight: (index + 1) % tabs.length,
+                    ArrowLeft: (index + tabs.length - 1) % tabs.length,
+                    Home: 0,
+                    End: tabs.length - 1,
+                  };
+                  const next = keys[e.key];
+                  if (next === undefined) return;
                   e.preventDefault();
                   setTab(tabs[next].id);
                   document.getElementById(`${tabId}-${tabs[next].id}`)?.focus();
@@ -615,7 +589,7 @@ export default function ClarteDashboard(p: Props) {
                     budget={b}
                     today={p.today}
                     end={o.end}
-                    untilPayday={!!o.salary && b.settings.horizon === "salary"}
+                    untilPayday={untilPayday}
                     hidden={p.hidden}
                     m={m}
                     onOpen={p.onUpcoming}
@@ -624,20 +598,18 @@ export default function ClarteDashboard(p: Props) {
                 )}
                 <section className="wallet-month-summary" aria-label="Repères du mois et de la période choisie">
                   <div>
-                    <span>Dépenses de {parseDate(p.today).toLocaleDateString("fr-FR", { month: "long" })}</span>
+                    <span>Dépenses de {month}</span>
                     <strong>{m(monthly.spent)}</strong>
                     <small>Virements internes exclus</small>
                   </div>
                   <div>
-                    <span>Revenus de {parseDate(p.today).toLocaleDateString("fr-FR", { month: "long" })}</span>
+                    <span>Revenus de {month}</span>
                     <strong>{m(o.income)}</strong>
                     <small>Reçus jusqu’à aujourd’hui</small>
                   </div>
                 </section>
-                {!p.loadError && (
-                  <BudgetAlerts budget={b} today={p.today} hidden={p.hidden} onOperations={p.onTransactions} />
-                )}
-                <div className="wallet-overview-recent">{recentCard(2)}</div>
+                {blocks.alertes}
+                {blocks.operations}
                 {goal ? (
                   <button type="button" className="wallet-goal-row" onClick={p.onGoals}>
                     <span className="wallet-goal-icon">
